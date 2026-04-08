@@ -1,6 +1,6 @@
 # Fram3
 
-A declarative UI framework for Unity built on UIToolkit. Compose reactive interfaces in pure C# with no UXML, no USS files, and no code generation.
+Inspired by Flutter, Fram3 is a declarative UI framework for Unity built on UIToolkit. Compose reactive interfaces in pure C# with no UXML, no USS files, and no code generation.
 
 > **This project is under active development and is not ready for use.** The public API is incomplete and will change without notice until a stable release is published.
 
