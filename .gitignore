@@ -33,6 +33,7 @@
 ExportedObj/
 .consulo/
 *.csproj
+!Packages/com.fram3.ui/Tests/Fram3.UI.Tests.csproj
 *.unityproj
 *.sln
 *.suo
@@ -79,3 +80,9 @@ crashlytics-build.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# .NET build artifacts
+[Bb]in/
+[Oo]bj/
+*.nupkg
+TestResults/
