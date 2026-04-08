@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Runtime/">
+    <Project Path="Runtime/Fram3.UI.Runtime.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/Fram3.UI.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,6 +1,7 @@
 using System;
 using Fram3.UI.Core;
 using Fram3.UI.Tests.Mocks;
+using NUnit.Framework;
 
 namespace Fram3.UI.Tests.Core
 {
@@ -53,7 +54,7 @@ namespace Fram3.UI.Tests.Core
         {
             var a = new TestLeafElement("a");
             var b = new TestLeafElement("b");
-            var parent = new TestMultiChildElement(new FElement[] { a, b });
+            var parent = new TestMultiChildElement([a, b]);
 
             var result = parent.GetChildren();
 
@@ -71,7 +72,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void MultiChildElement_NullChildInArray_ThrowsArgumentException()
         {
-            var children = new FElement[]
+            var children = new FElement?[]
             {
                 new TestLeafElement("a"),
                 null,
@@ -84,7 +85,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void MultiChildElement_EmptyArray_IsValid()
         {
-            var parent = new TestMultiChildElement(Array.Empty<FElement>());
+            var parent = new TestMultiChildElement([]);
 
             Assert.That(parent.GetChildren(), Is.Empty);
         }

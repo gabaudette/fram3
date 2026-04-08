@@ -1,6 +1,7 @@
-using System;
 using Fram3.UI.Core;
+using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;
+using NUnit.Framework;
 
 namespace Fram3.UI.Tests.Core
 {
@@ -11,7 +12,7 @@ namespace Fram3.UI.Tests.Core
         public void Build_ReturnsElementFromBuilder()
         {
             var expected = new TestLeafElement("result");
-            var element = new TestStatelessElement(ctx => expected);
+            var element = new TestStatelessElement(_ => expected);
             var node = new FNode(element, null);
 
             var result = element.Build(node.Context);
@@ -28,6 +29,7 @@ namespace Fram3.UI.Tests.Core
                 receivedContext = ctx;
                 return new TestLeafElement("result");
             });
+
             var node = new FNode(element, null);
 
             element.Build(node.Context);
@@ -40,7 +42,7 @@ namespace Fram3.UI.Tests.Core
         public void Key_IsPassedThrough()
         {
             var key = new FValueKey<string>("my-key");
-            var element = new TestStatelessElement(ctx => new TestLeafElement("r"), key);
+            var element = new TestStatelessElement(_ => new TestLeafElement("r"), key);
 
             Assert.That(element.Key, Is.EqualTo(key));
         }

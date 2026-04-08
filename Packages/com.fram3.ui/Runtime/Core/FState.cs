@@ -1,4 +1,5 @@
 using System;
+using Fram3.UI.Core.Internal;
 
 namespace Fram3.UI.Core
 {
@@ -10,27 +11,26 @@ namespace Fram3.UI.Core
     /// </summary>
     public abstract class FState
     {
-        private FNode _node;
-        private bool _mounted;
+        private FNode? _node;
 
         /// <summary>
         /// The element description currently associated with this state.
         /// Updated by the framework when the parent rebuilds and provides
         /// a new element of the same type and key.
         /// </summary>
-        public FStatefulElement Element => _node?.Element as FStatefulElement;
+        protected FStatefulElement? Element => _node?.Element as FStatefulElement;
 
         /// <summary>
         /// The build context providing access to the element's position
         /// in the tree and ancestor lookup capabilities.
         /// Available after InitState has been called.
         /// </summary>
-        public FBuildContext Context => _node?.Context;
+        public FBuildContext? Context => _node?.Context;
 
         /// <summary>
         /// Whether this state is currently mounted in the element tree.
         /// </summary>
-        public bool Mounted => _mounted;
+        public bool Mounted { get; private set; }
 
         /// <summary>
         /// Called exactly once after the state is created and attached to the tree.
@@ -86,9 +86,9 @@ namespace Fram3.UI.Core
         /// <exception cref="InvalidOperationException">
         /// Thrown if called when the state is not mounted.
         /// </exception>
-        public void SetState(Action action)
+        public void SetState(Action? action)
         {
-            if (!_mounted)
+            if (!Mounted)
             {
                 throw new InvalidOperationException(
                     "SetState called on an unmounted state. " +
@@ -97,18 +97,18 @@ namespace Fram3.UI.Core
             }
 
             action?.Invoke();
-            _node.MarkDirty();
+            _node?.MarkDirty();
         }
 
         internal void Mount(FNode node)
         {
             _node = node ?? throw new ArgumentNullException(nameof(node));
-            _mounted = true;
+            Mounted = true;
         }
 
         internal void Unmount()
         {
-            _mounted = false;
+            Mounted = false;
             _node = null;
         }
     }
@@ -124,6 +124,6 @@ namespace Fram3.UI.Core
         /// <summary>
         /// The strongly-typed element description currently associated with this state.
         /// </summary>
-        public new T Element => base.Element as T;
+        public new T? Element => base.Element as T;
     }
 }

@@ -1,3 +1,5 @@
+using NUnit.Framework;
+
 namespace Fram3.UI.Tests
 {
     [TestFixture]

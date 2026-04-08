@@ -2,15 +2,15 @@
   "name": "Fram3.UI.Tests",
   "rootNamespace": "Fram3.UI.Tests",
   "references": [
-    "Fram3.UI"
+    "Fram3.UI",
+    "UnityEngine.TestRunner",
+    "UnityEditor.TestRunner"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
-  "overrideReferences": true,
-  "precompiledReferences": [
-    "nunit.framework.dll"
-  ],
+  "overrideReferences": false,
+  "precompiledReferences": [],
   "autoReferenced": false,
   "defineConstraints": [
     "UNITY_INCLUDE_TESTS"

@@ -24,21 +24,21 @@ namespace Fram3.UI.Core
         /// <summary>
         /// Determines whether this key is equal to another object.
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is FKey other && Equals(other);
         }
 
-        public static bool operator ==(FKey left, FKey right)
+        public static bool operator ==(FKey? left, FKey? right)
         {
             if (left is null)
             {
                 return right is null;
             }
-            return left.Equals(right);
+            return right != null && left.Equals(right);
         }
 
-        public static bool operator !=(FKey left, FKey right)
+        public static bool operator !=(FKey? left, FKey? right)
         {
             return !(left == right);
         }
@@ -50,12 +50,12 @@ namespace Fram3.UI.Core
     /// particularly in lists where items may be reordered.
     /// </summary>
     /// <typeparam name="T">The type of the value used as the key.</typeparam>
-    public sealed class FValueKey<T> : FKey where T : IEquatable<T>
+    public sealed class FValueKey<T> : FKey where T : IEquatable<T>?
     {
         /// <summary>
         /// The value used to identify this key.
         /// </summary>
-        public T Value { get; }
+        public T? Value { get; }
 
         /// <summary>
         /// Creates a new value key with the specified identity value.
@@ -72,6 +72,7 @@ namespace Fram3.UI.Core
             {
                 return EqualityHelper(otherValueKey);
             }
+            
             return false;
         }
 
@@ -86,7 +87,8 @@ namespace Fram3.UI.Core
             {
                 return other.Value is null;
             }
-            return Value.Equals(other.Value);
+            
+            return other.Value != null && Value.Equals(other.Value);
         }
     }
 
@@ -105,7 +107,7 @@ namespace Fram3.UI.Core
         /// Creates a new object key using reference identity of the specified object.
         /// </summary>
         /// <param name="value">The object whose reference identity to use.</param>
-        public FObjectKey(object value)
+        public FObjectKey(object? value)
         {
             Value = value ?? throw new ArgumentNullException(nameof(value));
         }
@@ -116,6 +118,7 @@ namespace Fram3.UI.Core
             {
                 return ReferenceEquals(Value, otherObjectKey.Value);
             }
+            
             return false;
         }
 

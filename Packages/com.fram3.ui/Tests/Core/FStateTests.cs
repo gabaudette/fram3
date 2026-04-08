@@ -1,6 +1,7 @@
 using System;
-using Fram3.UI.Core;
+using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;
+using NUnit.Framework;
 
 namespace Fram3.UI.Tests.Core
 {
@@ -9,7 +10,7 @@ namespace Fram3.UI.Tests.Core
     {
         private TestState CreateMountedState()
         {
-            var state = new TestState(ctx => new TestLeafElement("built"));
+            var state = new TestState(_ => new TestLeafElement("built"));
             var element = new TestStatefulElement(() => state);
             var node = new FNode(element, null);
             state.Mount(node);
@@ -19,10 +20,10 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void CreateState_ReturnsStateInstance()
         {
-            TestState capturedState = null;
+            TestState? capturedState = null;
             var element = new TestStatefulElement(() =>
             {
-                capturedState = new TestState(ctx => new TestLeafElement("x"));
+                capturedState = new TestState(_ => new TestLeafElement("x"));
                 return capturedState;
             });
 
@@ -67,8 +68,11 @@ namespace Fram3.UI.Tests.Core
         {
             var state = CreateMountedState();
 
-            state.Build(state.Context);
-            state.Build(state.Context);
+            if (state.Context != null)
+            {
+                state.Build(state.Context);
+                state.Build(state.Context);
+            }
 
             Assert.That(state.BuildCount, Is.EqualTo(2));
         }
@@ -78,7 +82,7 @@ namespace Fram3.UI.Tests.Core
         {
             var state = CreateMountedState();
             var oldElement = new TestStatefulElement(
-                () => new TestState(ctx => new TestLeafElement("x")),
+                () => new TestState(_ => new TestLeafElement("x")),
                 config: "old"
             );
 
@@ -114,10 +118,7 @@ namespace Fram3.UI.Tests.Core
             var state = CreateMountedState();
             state.Unmount();
 
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                state.SetState(() => { });
-            });
+            Assert.Throws<InvalidOperationException>(() => { state.SetState(() => { }); });
         }
 
         [Test]
@@ -127,7 +128,7 @@ namespace Fram3.UI.Tests.Core
 
             state.SetState(() => { });
 
-            Assert.That(state.Context.Node.IsDirty, Is.True);
+            Assert.That(state.Context != null && state.Context.Node.IsDirty, Is.True);
         }
 
         [Test]
@@ -141,13 +142,13 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void TypedState_ProvidesTypedElementAccess()
         {
-            var state = new TestState(ctx => new TestLeafElement("x"));
+            var state = new TestState(_ => new TestLeafElement("x"));
             var element = new TestStatefulElement(() => state, config: "typed");
             var node = new FNode(element, null);
             state.Mount(node);
 
             Assert.That(state.Element, Is.InstanceOf<TestStatefulElement>());
-            Assert.That(state.Element.Config, Is.EqualTo("typed"));
+            Assert.That(state.Element?.Config, Is.EqualTo("typed"));
         }
     }
 }
