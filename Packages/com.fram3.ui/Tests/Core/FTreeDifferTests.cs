@@ -79,7 +79,7 @@ namespace Fram3.UI.Tests.Core
         public void Diff_DifferentType_RemovesThenInserts()
         {
             var oldNode = MakeNode(new TestLeafElement("a"));
-            var newElement = new TestSingleChildElement(new TestLeafElement("child"));
+            var newElement = new TestSingleChildElement { Child = new TestLeafElement("child") };
 
             var ops = FTreeDiffer.Diff(
                 new List<FNode> { oldNode },
@@ -141,7 +141,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Diff_RemoveOps_PrecedeInsertAndUpdateOps()
         {
-            var nodeToRemove = MakeNode(new TestSingleChildElement(new TestLeafElement("x")));
+            var nodeToRemove = MakeNode(new TestSingleChildElement { Child = new TestLeafElement("x") });
             var nodeToKeep = MakeNode(new TestLeafElement("a"));
             var newElement = new TestLeafElement("b");
 
@@ -157,7 +157,7 @@ namespace Fram3.UI.Tests.Core
         {
             var key = new FValueKey<int>(1);
             var oldNode = MakeNode(new TestLeafElement("a", key));
-            var newElement = new TestSingleChildElement(new TestLeafElement("child"), key);
+            var newElement = new TestSingleChildElement(key) { Child = new TestLeafElement("child") };
 
             var ops = FTreeDiffer.Diff(
                 new List<FNode> { oldNode },

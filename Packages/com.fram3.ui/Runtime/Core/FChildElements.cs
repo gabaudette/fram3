@@ -10,28 +10,46 @@ namespace Fram3.UI.Core
     /// </summary>
     public abstract class FSingleChildElement : FElement
     {
-        /// <summary>
-        /// The single child element wrapped by this element.
-        /// </summary>
-        public FElement Child { get; }
+        private FElement? _child;
 
         /// <summary>
-        /// Creates a new single-child element.
+        /// The single child element wrapped by this element.
+        /// Must be set during object initialization.
         /// </summary>
-        /// <param name="child">The child element to wrap.</param>
-        /// <param name="key">An optional key for reconciliation identity.</param>
-        /// <exception cref="ArgumentNullException">Thrown when child is null.</exception>
-        protected FSingleChildElement(FElement child, FKey? key = null) : base(key)
+        /// <exception cref="ArgumentNullException">Thrown when set to null.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown by <see cref="GetChildren"/> when this property was never assigned.
+        /// </exception>
+        public required FElement Child
         {
-            Child = child ?? throw new ArgumentNullException(nameof(child));
+            get => _child!;
+            init => _child = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        /// <summary>
+        /// Creates a new single-child element with an optional key.
+        /// </summary>
+        /// <param name="key">An optional key for reconciliation identity.</param>
+        protected FSingleChildElement(FKey? key = null) : base(key)
+        {
         }
 
         /// <summary>
         /// Returns a list containing the single child element.
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="Child"/> was never assigned during initialization.
+        /// </exception>
         public override IReadOnlyList<FElement> GetChildren()
         {
-            return new[] { Child };
+            if (_child is null)
+            {
+                throw new InvalidOperationException(
+                    $"{GetType().Name} requires the Child property to be set during initialization."
+                );
+            }
+
+            return new[] { _child };
         }
     }
 
@@ -42,30 +60,55 @@ namespace Fram3.UI.Core
     /// </summary>
     public abstract class FMultiChildElement : FElement
     {
-        private readonly FElement[] _children;
+        private FElement[]? _children;
 
         /// <summary>
         /// The child elements contained in this element.
+        /// Must be set during object initialization.
         /// </summary>
-        public IReadOnlyList<FElement> ElementChildren => _children;
+        /// <exception cref="ArgumentNullException">Thrown when set to null.</exception>
+        /// <exception cref="ArgumentException">Thrown when any element in the array is null.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown by <see cref="GetChildren"/> when this property was never assigned.
+        /// </exception>
+        public required FElement[] Children
+        {
+            get => _children!;
+            init
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                ValidateNoNullChildren(value);
+                _children = value;
+            }
+        }
 
         /// <summary>
-        /// Creates a new multi-child element.
+        /// Creates a new multi-child element with an optional key.
         /// </summary>
-        /// <param name="children">The child elements.</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
-        /// <exception cref="ArgumentNullException">Thrown when children is null.</exception>
-        protected FMultiChildElement(FElement[] children, FKey? key = null) : base(key)
+        protected FMultiChildElement(FKey? key = null) : base(key)
         {
-            _children = children ?? throw new ArgumentNullException(nameof(children));
-            ValidateNoNullChildren(_children);
         }
 
         /// <summary>
         /// Returns the child elements of this element.
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="Children"/> was never assigned during initialization.
+        /// </exception>
         public override IReadOnlyList<FElement> GetChildren()
         {
+            if (_children is null)
+            {
+                throw new InvalidOperationException(
+                    $"{GetType().Name} requires the Children property to be set during initialization."
+                );
+            }
+
             return _children;
         }
 
@@ -77,7 +120,7 @@ namespace Fram3.UI.Core
                 {
                     throw new ArgumentException(
                         $"Child element at index {i} is null. All children must be non-null.",
-                        nameof(children)
+                        "Children"
                     );
                 }
             }
@@ -92,7 +135,7 @@ namespace Fram3.UI.Core
     public abstract class FLeafElement : FElement
     {
         /// <summary>
-        /// Creates a new leaf element.
+        /// Creates a new leaf element with an optional key.
         /// </summary>
         /// <param name="key">An optional key for reconciliation identity.</param>
         protected FLeafElement(FKey? key = null) : base(key)

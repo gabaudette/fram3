@@ -37,7 +37,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Patch_InsertsNewChild()
         {
-            var parentElement = new TestMultiChildElement([]);
+            var parentElement = new TestMultiChildElement { Children = [] };
             var parentNode = _expander?.Mount(parentElement, null);
 
             var newChild = new TestLeafElement("new");
@@ -61,7 +61,7 @@ namespace Fram3.UI.Tests.Core
         public void Patch_RemovesOldChild()
         {
             var child = new TestLeafElement("child");
-            var parentElement = new TestMultiChildElement([child]);
+            var parentElement = new TestMultiChildElement { Children = [child] };
             var parentNode = _expander?.Mount(parentElement, null);
 
             if (parentNode == null)
@@ -83,7 +83,7 @@ namespace Fram3.UI.Tests.Core
         public void Patch_UpdatesChildInPlace()
         {
             var originalChild = new TestLeafElement("old");
-            var parentElement = new TestMultiChildElement([originalChild]);
+            var parentElement = new TestMultiChildElement { Children = [originalChild] };
             var parentNode = _expander?.Mount(parentElement, null);
 
             var originalChildNode = parentNode?.Children[0];
@@ -108,10 +108,10 @@ namespace Fram3.UI.Tests.Core
         public void Patch_RemovesUnmatchedAndInsertsNew()
         {
             var oldChild = new TestLeafElement("old");
-            var parentElement = new TestMultiChildElement([oldChild]);
+            var parentElement = new TestMultiChildElement { Children = [oldChild] };
             var parentNode = _expander?.Mount(parentElement, null);
 
-            var newChild = new TestSingleChildElement(new TestLeafElement("x"));
+            var newChild = new TestSingleChildElement { Child = new TestLeafElement("x") };
             if (parentNode == null)
             {
                 return;
@@ -132,7 +132,7 @@ namespace Fram3.UI.Tests.Core
             var key = new FValueKey<int>(1);
             var keyedChild = new TestLeafElement("keyed", key);
             var unkeyedChild = new TestLeafElement("unkeyed");
-            var parentElement = new TestMultiChildElement([keyedChild, unkeyedChild]);
+            var parentElement = new TestMultiChildElement { Children = [keyedChild, unkeyedChild] };
 
             var parentNode = _expander?.Mount(parentElement, null);
             var keyedNode = parentNode?.Children[0];
@@ -167,7 +167,7 @@ namespace Fram3.UI.Tests.Core
                 return state;
             });
 
-            var parentElement = new TestMultiChildElement([statefulChild]);
+            var parentElement = new TestMultiChildElement { Children = [statefulChild] };
             var parentNode = _expander?.Mount(parentElement, null);
 
             if (parentNode != null)
