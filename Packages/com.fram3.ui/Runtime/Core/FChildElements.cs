@@ -10,7 +10,7 @@ namespace Fram3.UI.Core
     /// </summary>
     public abstract class FSingleChildElement : FElement
     {
-        private FElement? _child;
+        private readonly FElement? _child;
 
         /// <summary>
         /// The single child element wrapped by this element.
@@ -20,7 +20,7 @@ namespace Fram3.UI.Core
         /// <exception cref="InvalidOperationException">
         /// Thrown by <see cref="GetChildren"/> when this property was never assigned.
         /// </exception>
-        public required FElement Child
+        public FElement Child
         {
             get => _child!;
             init => _child = value ?? throw new ArgumentNullException(nameof(value));
@@ -60,7 +60,7 @@ namespace Fram3.UI.Core
     /// </summary>
     public abstract class FMultiChildElement : FElement
     {
-        private FElement[]? _children;
+        private readonly FElement[]? _children;
 
         /// <summary>
         /// The child elements contained in this element.
@@ -71,7 +71,7 @@ namespace Fram3.UI.Core
         /// <exception cref="InvalidOperationException">
         /// Thrown by <see cref="GetChildren"/> when this property was never assigned.
         /// </exception>
-        public required FElement[] Children
+        public FElement[] Children
         {
             get => _children!;
             init
@@ -120,7 +120,7 @@ namespace Fram3.UI.Core
                 {
                     throw new ArgumentException(
                         $"Child element at index {i} is null. All children must be non-null.",
-                        "Children"
+                        nameof(children)
                     );
                 }
             }

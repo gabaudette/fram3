@@ -36,7 +36,7 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal int OldIndex { get; private init; }
 
-        internal static FDiffOp Insert(int newIndex, FElement newElement) =>
+        internal static FDiffOp Insert(int newIndex, FElement? newElement) =>
             new FDiffOp
             {
                 Kind = FDiffOpKind.Insert,
