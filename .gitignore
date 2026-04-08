@@ -88,7 +88,28 @@ Thumbs.db
 
 # .NET build artifacts
 [Bb]in/
+[Bb]in.meta
 [Oo]bj/
+[Oo]bj.meta
 *.nupkg
 TestResults/
 TestBuild/
+
+# Rider per-user settings
+*.DotSettings.user
+*.DotSettings.user.meta
+
+# Unity package manager lock file (auto-generated, not meaningful to track)
+Packages/packages-lock.json
+
+# URP 2D template assets (not part of the framework)
+Assets/Scenes/
+Assets/Scenes.meta
+Assets/Settings/
+Assets/Settings.meta
+Assets/DefaultVolumeProfile.asset
+Assets/DefaultVolumeProfile.asset.meta
+Assets/InputSystem_Actions.inputactions
+Assets/InputSystem_Actions.inputactions.meta
+Assets/UniversalRenderPipelineGlobalSettings.asset
+Assets/UniversalRenderPipelineGlobalSettings.asset.meta
