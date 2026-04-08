@@ -13,13 +13,15 @@ namespace Fram3.UI.Core
     internal class FNode
     {
         private readonly List<FNode> _children = new List<FNode>();
+        private readonly FRebuildScheduler _scheduler;
         private FElement _element;
         private FState _state;
         private bool _dirty;
 
-        internal FNode(FElement element, FNode parent)
+        internal FNode(FElement element, FNode parent, FRebuildScheduler scheduler = null)
         {
             _element = element ?? throw new ArgumentNullException(nameof(element));
+            _scheduler = scheduler;
             Parent = parent;
             Depth = parent != null ? parent.Depth + 1 : 0;
             Context = new FBuildContext(this);
@@ -74,6 +76,7 @@ namespace Fram3.UI.Core
         internal void MarkDirty()
         {
             _dirty = true;
+            _scheduler?.Schedule(this);
         }
     }
 }
