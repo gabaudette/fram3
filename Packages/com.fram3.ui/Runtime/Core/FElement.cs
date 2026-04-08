@@ -17,7 +17,7 @@ namespace Fram3.UI.Core
         /// other elements during reconciliation. Elements with matching runtime
         /// types and keys are updated in place rather than replaced.
         /// </summary>
-        public FKey Key { get; }
+        public FKey? Key { get; }
 
         /// <summary>
         /// Creates a new element with an optional key.
@@ -26,7 +26,7 @@ namespace Fram3.UI.Core
         /// An optional key to control reconciliation identity.
         /// When null, elements are matched by position and type only.
         /// </param>
-        protected FElement(FKey key = null)
+        protected FElement(FKey? key = null)
         {
             Key = key;
         }
@@ -39,17 +39,18 @@ namespace Fram3.UI.Core
         /// <param name="oldElement">The existing element in the tree.</param>
         /// <param name="newElement">The new element to compare against.</param>
         /// <returns>True if the old element can be updated with the new element's configuration.</returns>
-        public static bool CanUpdate(FElement oldElement, FElement newElement)
+        public static bool CanUpdate(FElement? oldElement, FElement? newElement)
         {
             if (oldElement is null || newElement is null)
             {
                 return false;
             }
-            
+
             var isSameType = oldElement.GetType() == newElement.GetType();
-            var isSameKey = oldElement.Key == newElement.Key;
-            
-            return isSameType && isSameKey;
+            var bothUnkeyed = oldElement.Key == null && newElement.Key == null;
+            var bothKeyedAndEqual = oldElement.Key != null && newElement.Key != null && oldElement.Key == newElement.Key;
+
+            return isSameType && (bothUnkeyed || bothKeyedAndEqual);
         }
 
         /// <summary>

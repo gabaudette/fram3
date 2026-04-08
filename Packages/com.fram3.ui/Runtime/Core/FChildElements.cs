@@ -21,7 +21,7 @@ namespace Fram3.UI.Core
         /// <param name="child">The child element to wrap.</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
         /// <exception cref="ArgumentNullException">Thrown when child is null.</exception>
-        protected FSingleChildElement(FElement child, FKey key = null) : base(key)
+        protected FSingleChildElement(FElement child, FKey? key = null) : base(key)
         {
             Child = child ?? throw new ArgumentNullException(nameof(child));
         }
@@ -55,7 +55,7 @@ namespace Fram3.UI.Core
         /// <param name="children">The child elements.</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
         /// <exception cref="ArgumentNullException">Thrown when children is null.</exception>
-        protected FMultiChildElement(FElement[] children, FKey key = null) : base(key)
+        protected FMultiChildElement(FElement[] children, FKey? key = null) : base(key)
         {
             _children = children ?? throw new ArgumentNullException(nameof(children));
             ValidateNoNullChildren(_children);
@@ -71,7 +71,7 @@ namespace Fram3.UI.Core
 
         private static void ValidateNoNullChildren(FElement[] children)
         {
-            for (int i = 0; i < children.Length; i++)
+            for (var i = 0; i < children.Length; i++)
             {
                 if (children[i] is null)
                 {
@@ -95,7 +95,7 @@ namespace Fram3.UI.Core
         /// Creates a new leaf element.
         /// </summary>
         /// <param name="key">An optional key for reconciliation identity.</param>
-        protected FLeafElement(FKey key = null) : base(key)
+        protected FLeafElement(FKey? key = null) : base(key)
         {
         }
     }

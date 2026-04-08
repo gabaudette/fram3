@@ -10,7 +10,7 @@ namespace Fram3.UI.Tests.Core
     [TestFixture]
     internal sealed class FTreeDifferTests
     {
-        private static FNode MakeNode(FElement element, FNode parent = null)
+        private static FNode MakeNode(FElement element, FNode? parent = null)
         {
             return new FNode(element, parent);
         }
@@ -131,8 +131,11 @@ namespace Fram3.UI.Tests.Core
 
             var moveOp = ops.FirstOrDefault(o => o.Kind == FDiffOpKind.Move && o.NewIndex == 1);
             Assert.That(moveOp, Is.Not.Null);
-            Assert.That(moveOp.ExistingNode, Is.SameAs(keyedNode));
-            Assert.That(moveOp.NewIndex, Is.EqualTo(1));
+            Assert.That(moveOp?.ExistingNode, Is.SameAs(keyedNode));
+            if (moveOp != null)
+            {
+                Assert.That(moveOp.NewIndex, Is.EqualTo(1));
+            }
         }
 
         [Test]

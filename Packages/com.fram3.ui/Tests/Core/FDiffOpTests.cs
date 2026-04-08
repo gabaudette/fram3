@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;
 
@@ -12,7 +11,7 @@ namespace Fram3.UI.Tests.Core
         public void Insert_SetsKindAndNewIndexAndNewElement()
         {
             var element = new TestLeafElement("a");
-            FDiffOp op = FDiffOp.Insert(2, element);
+            var op = FDiffOp.Insert(2, element);
 
             Assert.That(op.Kind, Is.EqualTo(FDiffOpKind.Insert));
             Assert.That(op.NewIndex, Is.EqualTo(2));
@@ -22,7 +21,10 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Insert_NullElement_ThrowsArgumentNullException()
         {
-            Assert.That(() => FDiffOp.Insert(0, null), Throws.ArgumentNullException);
+            if (Throws.ArgumentNullException != null)
+            {
+                Assert.That(() => FDiffOp.Insert(0, null), Throws.ArgumentNullException);
+            }
         }
 
         [Test]
@@ -32,7 +34,7 @@ namespace Fram3.UI.Tests.Core
             var node = new FNode(element, null);
             var newElement = new TestLeafElement("b");
 
-            FDiffOp op = FDiffOp.Update(1, node, newElement);
+            var op = FDiffOp.Update(1, node, newElement);
 
             Assert.That(op.Kind, Is.EqualTo(FDiffOpKind.Update));
             Assert.That(op.NewIndex, Is.EqualTo(1));

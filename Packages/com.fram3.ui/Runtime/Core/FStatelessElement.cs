@@ -12,7 +12,7 @@ namespace Fram3.UI.Core
         /// Creates a new stateless element with an optional key.
         /// </summary>
         /// <param name="key">An optional key for reconciliation identity.</param>
-        protected FStatelessElement(FKey key = null) : base(key)
+        protected FStatelessElement(FKey? key = null) : base(key)
         {
         }
 

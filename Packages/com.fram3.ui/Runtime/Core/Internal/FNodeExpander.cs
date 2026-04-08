@@ -1,4 +1,3 @@
-using Fram3.UI.Core;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +11,7 @@ namespace Fram3.UI.Core.Internal
     /// children. Unmounting a node recursively disposes state and clears child references.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class FNodeExpander
     {
         private readonly FRebuildScheduler _scheduler;
@@ -26,7 +26,7 @@ namespace Fram3.UI.Core.Internal
         /// to <paramref name="parent"/>, mounts any required <see cref="FState"/>, and
         /// recursively expands child nodes.
         /// </summary>
-        internal FNode Mount(FElement element, FNode parent)
+        internal FNode Mount(FElement element, FNode? parent)
         {
             var node = new FNode(element, parent, _scheduler);
 

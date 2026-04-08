@@ -15,14 +15,14 @@ namespace Fram3.UI.Tests.Mocks
 
     internal sealed class TestSingleChildElement : FSingleChildElement
     {
-        public TestSingleChildElement(FElement child, FKey key = null) : base(child, key)
+        public TestSingleChildElement(FElement? child, FKey key = null) : base(child, key)
         {
         }
     }
 
     internal sealed class TestMultiChildElement : FMultiChildElement
     {
-        public TestMultiChildElement(FElement[] children, FKey key = null) : base(children, key)
+        public TestMultiChildElement(FElement?[] children, FKey key = null) : base(children, key)
         {
         }
     }

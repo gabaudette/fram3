@@ -1,5 +1,4 @@
 using System;
-using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;
 using NUnit.Framework;
@@ -142,9 +141,10 @@ namespace Fram3.UI.Tests.Core
         {
             var original = new TestLeafElement("original");
             var updated = new TestLeafElement("updated");
-            var node = new FNode(original, null);
-
-            node.Element = updated;
+            var node = new FNode(original, null)
+            {
+                Element = updated
+            };
 
             Assert.That(node.Element, Is.SameAs(updated));
         }

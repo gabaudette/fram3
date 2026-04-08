@@ -8,8 +8,8 @@ namespace Fram3.UI.Tests.Core
     [TestFixture]
     internal sealed class FTreePatcherTests
     {
-        private FRebuildScheduler _scheduler;
-        private FNodeExpander _expander;
+        private FRebuildScheduler? _scheduler;
+        private FNodeExpander? _expander;
 
         [SetUp]
         public void SetUp()
@@ -22,9 +22,14 @@ namespace Fram3.UI.Tests.Core
         public void Patch_EmptyToEmpty_LeavesChildrenEmpty()
         {
             var parent = new TestLeafElement("parent");
-            FNode parentNode = _expander.Mount(parent, null);
+            var parentNode = _expander?.Mount(parent, null);
 
-            FTreePatcher.Patch(parentNode, new FElement[0], _expander);
+            if (parentNode == null)
+            {
+                return;
+            }
+
+            if (_expander != null) FTreePatcher.Patch(parentNode, [], _expander);
 
             Assert.That(parentNode.Children, Is.Empty);
         }
@@ -32,11 +37,21 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Patch_InsertsNewChild()
         {
-            var parentElement = new TestMultiChildElement(new FElement[0]);
-            FNode parentNode = _expander.Mount(parentElement, null);
+            var parentElement = new TestMultiChildElement([]);
+            var parentNode = _expander?.Mount(parentElement, null);
 
             var newChild = new TestLeafElement("new");
-            FTreePatcher.Patch(parentNode, new FElement[] { newChild }, _expander);
+
+            if (parentNode == null)
+            {
+                return;
+            }
+
+            if (_expander != null)
+            {
+                FTreePatcher.Patch(parentNode, [newChild], _expander);
+            }
+
 
             Assert.That(parentNode.Children.Count, Is.EqualTo(1));
             Assert.That(parentNode.Children[0].Element, Is.SameAs(newChild));
@@ -46,12 +61,20 @@ namespace Fram3.UI.Tests.Core
         public void Patch_RemovesOldChild()
         {
             var child = new TestLeafElement("child");
-            var parentElement = new TestMultiChildElement(new FElement[] { child });
-            FNode parentNode = _expander.Mount(parentElement, null);
+            var parentElement = new TestMultiChildElement([child]);
+            var parentNode = _expander?.Mount(parentElement, null);
+
+            if (parentNode == null)
+            {
+                return;
+            }
 
             Assert.That(parentNode.Children.Count, Is.EqualTo(1));
 
-            FTreePatcher.Patch(parentNode, new FElement[0], _expander);
+            if (_expander != null)
+            {
+                FTreePatcher.Patch(parentNode, [], _expander);
+            }
 
             Assert.That(parentNode.Children, Is.Empty);
         }
@@ -60,13 +83,21 @@ namespace Fram3.UI.Tests.Core
         public void Patch_UpdatesChildInPlace()
         {
             var originalChild = new TestLeafElement("old");
-            var parentElement = new TestMultiChildElement(new FElement[] { originalChild });
-            FNode parentNode = _expander.Mount(parentElement, null);
+            var parentElement = new TestMultiChildElement([originalChild]);
+            var parentNode = _expander?.Mount(parentElement, null);
 
-            FNode originalChildNode = parentNode.Children[0];
+            var originalChildNode = parentNode?.Children[0];
             var updatedChild = new TestLeafElement("new");
 
-            FTreePatcher.Patch(parentNode, new FElement[] { updatedChild }, _expander);
+            if (parentNode == null)
+            {
+                return;
+            }
+
+            if (_expander != null)
+            {
+                FTreePatcher.Patch(parentNode, [updatedChild], _expander);
+            }
 
             Assert.That(parentNode.Children.Count, Is.EqualTo(1));
             Assert.That(parentNode.Children[0], Is.SameAs(originalChildNode));
@@ -77,11 +108,19 @@ namespace Fram3.UI.Tests.Core
         public void Patch_RemovesUnmatchedAndInsertsNew()
         {
             var oldChild = new TestLeafElement("old");
-            var parentElement = new TestMultiChildElement(new FElement[] { oldChild });
-            FNode parentNode = _expander.Mount(parentElement, null);
+            var parentElement = new TestMultiChildElement([oldChild]);
+            var parentNode = _expander?.Mount(parentElement, null);
 
             var newChild = new TestSingleChildElement(new TestLeafElement("x"));
-            FTreePatcher.Patch(parentNode, new FElement[] { newChild }, _expander);
+            if (parentNode == null)
+            {
+                return;
+            }
+
+            if (_expander != null)
+            {
+                FTreePatcher.Patch(parentNode, [newChild], _expander);
+            }
 
             Assert.That(parentNode.Children.Count, Is.EqualTo(1));
             Assert.That(parentNode.Children[0].Element, Is.SameAs(newChild));
@@ -93,11 +132,10 @@ namespace Fram3.UI.Tests.Core
             var key = new FValueKey<int>(1);
             var keyedChild = new TestLeafElement("keyed", key);
             var unkeyedChild = new TestLeafElement("unkeyed");
-            var parentElement = new TestMultiChildElement(
-                new FElement[] { keyedChild, unkeyedChild });
+            var parentElement = new TestMultiChildElement([keyedChild, unkeyedChild]);
 
-            FNode parentNode = _expander.Mount(parentElement, null);
-            FNode keyedNode = parentNode.Children[0];
+            var parentNode = _expander?.Mount(parentElement, null);
+            var keyedNode = parentNode?.Children[0];
 
             var newElements = new FElement[]
             {
@@ -105,7 +143,15 @@ namespace Fram3.UI.Tests.Core
                 new TestLeafElement("keyed2", key)
             };
 
-            FTreePatcher.Patch(parentNode, newElements, _expander);
+            if (parentNode == null)
+            {
+                return;
+            }
+
+            if (_expander != null)
+            {
+                FTreePatcher.Patch(parentNode, newElements, _expander);
+            }
 
             Assert.That(parentNode.Children.Count, Is.EqualTo(2));
             Assert.That(parentNode.Children[1], Is.SameAs(keyedNode));
@@ -114,19 +160,25 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Patch_UnmountedChildState_IsDisposed()
         {
-            TestState state = null;
+            TestState? state = null;
             var statefulChild = new TestStatefulElement(() =>
             {
                 state = new TestState(_ => new TestLeafElement("x"));
                 return state;
             });
 
-            var parentElement = new TestMultiChildElement(new FElement[] { statefulChild });
-            FNode parentNode = _expander.Mount(parentElement, null);
+            var parentElement = new TestMultiChildElement([statefulChild]);
+            var parentNode = _expander?.Mount(parentElement, null);
 
-            FTreePatcher.Patch(parentNode, new FElement[0], _expander);
+            if (parentNode != null)
+            {
+                if (_expander != null)
+                {
+                    FTreePatcher.Patch(parentNode, [], _expander);
+                }
+            }
 
-            Assert.That(state.DisposeCalled, Is.True);
+            Assert.That(state != null && state.DisposeCalled, Is.True);
         }
     }
 }

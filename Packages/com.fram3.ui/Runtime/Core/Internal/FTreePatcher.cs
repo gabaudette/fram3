@@ -1,4 +1,4 @@
-using Fram3.UI.Core;
+using System;
 using System.Collections.Generic;
 
 namespace Fram3.UI.Core.Internal
@@ -22,13 +22,13 @@ namespace Fram3.UI.Core.Internal
             IReadOnlyList<FElement> newElements,
             FNodeExpander expander)
         {
-            IReadOnlyList<FDiffOp> ops = FTreeDiffer.Diff(parent.Children, newElements);
+            var ops = FTreeDiffer.Diff(parent.Children, newElements);
             ApplyOps(parent, ops, expander);
         }
 
         private static void ApplyOps(FNode parent, IReadOnlyList<FDiffOp> ops, FNodeExpander expander)
         {
-            foreach (FDiffOp op in ops)
+            foreach (var op in ops)
             {
                 switch (op.Kind)
                 {
@@ -44,32 +44,63 @@ namespace Fram3.UI.Core.Internal
                     case FDiffOpKind.Move:
                         ApplyMove(parent, op, expander);
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
 
         private static void ApplyRemove(FNode parent, FDiffOp op, FNodeExpander expander)
         {
+            if (op.ExistingNode == null)
+            {
+                return;
+            }
+
             expander.Unmount(op.ExistingNode);
             parent.RemoveChild(op.ExistingNode);
         }
 
         private static void ApplyInsert(FNode parent, FDiffOp op, FNodeExpander expander)
         {
-            FNode newNode = expander.Mount(op.NewElement, parent);
+            if (op.NewElement == null)
+            {
+                return;
+            }
+
+            var newNode = expander.Mount(op.NewElement, parent);
             InsertOrAppend(parent, op.NewIndex, newNode);
         }
 
         private static void ApplyUpdate(FDiffOp op, FNodeExpander expander)
         {
-            expander.UpdateElement(op.ExistingNode, op.NewElement);
+            if (op.ExistingNode == null)
+            {
+                return;
+            }
+
+            if (op.NewElement != null)
+            {
+                expander.UpdateElement(op.ExistingNode, op.NewElement);
+            }
+
             expander.Rebuild(op.ExistingNode);
         }
 
         private static void ApplyMove(FNode parent, FDiffOp op, FNodeExpander expander)
         {
+            if (op.ExistingNode == null)
+            {
+                return;
+            }
+
             parent.RemoveChild(op.ExistingNode);
-            expander.UpdateElement(op.ExistingNode, op.NewElement);
+
+            if (op.NewElement != null)
+            {
+                expander.UpdateElement(op.ExistingNode, op.NewElement);
+            }
+
             InsertOrAppend(parent, op.NewIndex, op.ExistingNode);
             expander.Rebuild(op.ExistingNode);
         }

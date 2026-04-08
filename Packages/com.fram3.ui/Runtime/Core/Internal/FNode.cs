@@ -1,4 +1,3 @@
-using Fram3.UI.Core;
 using System;
 using System.Collections.Generic;
 
@@ -14,27 +13,20 @@ namespace Fram3.UI.Core.Internal
     internal class FNode
     {
         private readonly List<FNode> _children = new List<FNode>();
-        private readonly FRebuildScheduler _scheduler;
-        private FElement _element;
-        private FState _state;
-        private bool _dirty;
+        private readonly FRebuildScheduler? _scheduler;
 
-        internal FNode(FElement element, FNode parent, FRebuildScheduler scheduler = null)
+        internal FNode(FElement? element, FNode? parent, FRebuildScheduler? scheduler = null)
         {
-            _element = element ?? throw new ArgumentNullException(nameof(element));
+            Element = element ?? throw new ArgumentNullException(nameof(element));
             _scheduler = scheduler;
             Parent = parent;
             Depth = parent != null ? parent.Depth + 1 : 0;
             Context = new FBuildContext(this);
         }
 
-        internal FElement Element
-        {
-            get => _element;
-            set => _element = value;
-        }
+        internal FElement Element { get; set; }
 
-        internal FNode Parent { get; }
+        internal FNode? Parent { get; }
 
         internal int Depth { get; }
 
@@ -42,17 +34,9 @@ namespace Fram3.UI.Core.Internal
 
         internal IReadOnlyList<FNode> Children => _children;
 
-        internal bool IsDirty
-        {
-            get => _dirty;
-            set => _dirty = value;
-        }
+        internal bool IsDirty { get; set; }
 
-        internal FState State
-        {
-            get => _state;
-            set => _state = value;
-        }
+        internal FState? State { get; set; }
 
         internal void AddChild(FNode child)
         {
@@ -76,7 +60,7 @@ namespace Fram3.UI.Core.Internal
 
         internal void MarkDirty()
         {
-            _dirty = true;
+            IsDirty = true;
             _scheduler?.Schedule(this);
         }
     }

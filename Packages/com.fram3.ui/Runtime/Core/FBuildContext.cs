@@ -12,22 +12,20 @@ namespace Fram3.UI.Core
     /// </summary>
     public class FBuildContext
     {
-        private readonly FNode _node;
-
         internal FBuildContext(FNode node)
         {
-            _node = node ?? throw new ArgumentNullException(nameof(node));
+            Node = node ?? throw new ArgumentNullException(nameof(node));
         }
 
         /// <summary>
         /// The element that this context is associated with.
         /// </summary>
-        public FElement Element => _node.Element;
+        public FElement Element => Node.Element;
 
         /// <summary>
         /// The depth of this context in the element tree. The root element has depth 0.
         /// </summary>
-        public int Depth => _node.Depth;
+        public int Depth => Node.Depth;
 
         /// <summary>
         /// Walks up the element tree looking for the nearest ancestor element of
@@ -35,9 +33,9 @@ namespace Fram3.UI.Core
         /// </summary>
         /// <typeparam name="T">The type of element to search for.</typeparam>
         /// <returns>The nearest ancestor element of type T, or null.</returns>
-        public T FindAncestorOfType<T>() where T : FElement
+        public T? FindAncestorOfType<T>() where T : FElement
         {
-            FNode current = _node.Parent;
+            var current = Node.Parent;
             while (current != null)
             {
                 if (current.Element is T match)
@@ -46,6 +44,7 @@ namespace Fram3.UI.Core
                 }
                 current = current.Parent;
             }
+            
             return null;
         }
 
@@ -58,13 +57,14 @@ namespace Fram3.UI.Core
         /// <exception cref="InvalidOperationException">Thrown when no ancestor of type T exists.</exception>
         public T GetAncestorOfType<T>() where T : FElement
         {
-            T result = FindAncestorOfType<T>();
+            var result = FindAncestorOfType<T>();
             if (result is null)
             {
                 throw new InvalidOperationException(
                     $"No ancestor of type {typeof(T).Name} found in the element tree."
                 );
             }
+            
             return result;
         }
 
@@ -72,6 +72,6 @@ namespace Fram3.UI.Core
         /// Returns the internal node associated with this context.
         /// This is intended for framework use only and should not be called by end users.
         /// </summary>
-        internal FNode Node => _node;
+        internal FNode Node { get; }
     }
 }

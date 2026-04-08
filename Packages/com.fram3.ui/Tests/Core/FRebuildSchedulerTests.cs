@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;
 
@@ -8,8 +7,8 @@ namespace Fram3.UI.Tests.Core
     [TestFixture]
     internal sealed class FRebuildSchedulerTests
     {
-        private FRebuildScheduler _scheduler;
-        private FNodeExpander _expander;
+        private FRebuildScheduler? _scheduler;
+        private FNodeExpander? _expander;
 
         [SetUp]
         public void SetUp()
@@ -21,16 +20,16 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void HasDirtyNodes_InitiallyFalse()
         {
-            Assert.That(_scheduler.HasDirtyNodes, Is.False);
+            Assert.That(_scheduler != null && _scheduler.HasDirtyNodes, Is.False);
         }
 
         [Test]
         public void Schedule_AddsDirtyNode()
         {
             var node = new FNode(new TestLeafElement("a"), null, _scheduler);
-            _scheduler.Schedule(node);
+            _scheduler?.Schedule(node);
 
-            Assert.That(_scheduler.HasDirtyNodes, Is.True);
+            Assert.That(_scheduler != null && _scheduler.HasDirtyNodes, Is.True);
         }
 
         [Test]
@@ -38,26 +37,29 @@ namespace Fram3.UI.Tests.Core
         {
             var firstElement = new TestLeafElement("first");
             var secondElement = new TestLeafElement("second");
-            int buildCount = 0;
+            var buildCount = 0;
 
-            TestState state = null;
+            TestState? state;
             var statefulElement = new TestStatefulElement(() =>
             {
                 state = new TestState(_ => buildCount++ == 0 ? firstElement : secondElement);
                 return state;
             });
 
-            FNode node = _expander.Mount(statefulElement, null);
-            Assert.That(node.Children[0].Element, Is.SameAs(firstElement));
+            var node = _expander?.Mount(statefulElement, null);
+            Assert.That(node?.Children[0].Element, Is.SameAs(firstElement));
 
-            node.MarkDirty();
-            Assert.That(_scheduler.HasDirtyNodes, Is.True);
+            node?.MarkDirty();
+            Assert.That(_scheduler?.HasDirtyNodes, Is.True);
 
-            _scheduler.Flush(_expander);
+            if (_expander != null)
+            {
+                _scheduler?.Flush(_expander);
+            }
 
-            Assert.That(node.Children[0].Element, Is.SameAs(secondElement));
-            Assert.That(_scheduler.HasDirtyNodes, Is.False);
-            Assert.That(node.IsDirty, Is.False);
+            Assert.That(node?.Children[0].Element, Is.SameAs(secondElement));
+            Assert.That(_scheduler != null && _scheduler.HasDirtyNodes, Is.False);
+            Assert.That(node != null && node.IsDirty, Is.False);
         }
 
         [Test]
@@ -65,8 +67,8 @@ namespace Fram3.UI.Tests.Core
         {
             var rebuiltOrder = new System.Collections.Generic.List<int>();
 
-            TestState parentState = null;
-            TestState childState = null;
+            TestState? parentState;
+            TestState? childState;
 
             var childElement = new TestStatefulElement(() =>
             {
@@ -75,6 +77,7 @@ namespace Fram3.UI.Tests.Core
                     rebuiltOrder.Add(2);
                     return new TestLeafElement("child-built");
                 });
+
                 return childState;
             });
 
@@ -88,14 +91,17 @@ namespace Fram3.UI.Tests.Core
                 return parentState;
             });
 
-            FNode parentNode = _expander.Mount(parentElement, null);
+            var parentNode = _expander?.Mount(parentElement, null);
 
-            FNode childNode = parentNode.Children[0];
-            childNode.MarkDirty();
-            parentNode.MarkDirty();
+            var childNode = parentNode?.Children[0];
+            childNode?.MarkDirty();
+            parentNode?.MarkDirty();
 
             rebuiltOrder.Clear();
-            _scheduler.Flush(_expander);
+            if (_expander != null)
+            {
+                _scheduler?.Flush(_expander);
+            }
 
             Assert.That(rebuiltOrder[0], Is.EqualTo(1));
         }
@@ -103,7 +109,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Flush_SkipsNodesAlreadyCleanedByAncestorRebuild()
         {
-            int childBuildCount = 0;
+            var childBuildCount = 0;
 
             var childElement = new TestStatefulElement(() =>
                 new TestState(_ =>
@@ -112,22 +118,25 @@ namespace Fram3.UI.Tests.Core
                     return new TestLeafElement("x");
                 }));
 
-            TestState parentState = null;
+            TestState? parentState;
             var parentElement = new TestStatefulElement(() =>
             {
                 parentState = new TestState(_ => childElement);
                 return parentState;
             });
 
-            FNode parentNode = _expander.Mount(parentElement, null);
-            FNode childNode = parentNode.Children[0];
+            var parentNode = _expander?.Mount(parentElement, null);
+            var childNode = parentNode?.Children[0];
 
-            int initialChildBuilds = childBuildCount;
+            var initialChildBuilds = childBuildCount;
 
-            childNode.MarkDirty();
-            parentNode.MarkDirty();
+            childNode?.MarkDirty();
+            parentNode?.MarkDirty();
 
-            _scheduler.Flush(_expander);
+            if (_expander != null)
+            {
+                _scheduler?.Flush(_expander);
+            }
 
             Assert.That(childBuildCount, Is.EqualTo(initialChildBuilds + 1));
         }
@@ -135,7 +144,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Flush_WhenNotDirty_DoesNotRebuild()
         {
-            int buildCount = 0;
+            var buildCount = 0;
             var element = new TestStatefulElement(() =>
                 new TestState(_ =>
                 {
@@ -143,10 +152,13 @@ namespace Fram3.UI.Tests.Core
                     return new TestLeafElement("x");
                 }));
 
-            _expander.Mount(element, null);
-            int buildsAfterMount = buildCount;
+            _expander?.Mount(element, null);
+            var buildsAfterMount = buildCount;
 
-            _scheduler.Flush(_expander);
+            if (_expander != null)
+            {
+                _scheduler?.Flush(_expander);
+            }
 
             Assert.That(buildCount, Is.EqualTo(buildsAfterMount));
         }

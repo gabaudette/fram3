@@ -1,4 +1,3 @@
-using System;
 using Fram3.UI.Core;
 using Fram3.UI.Tests.Mocks;
 using NUnit.Framework;

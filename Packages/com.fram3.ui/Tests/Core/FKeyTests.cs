@@ -31,7 +31,7 @@ namespace Fram3.UI.Tests.Core
             var key1 = new FValueKey<int>(1);
             var key2 = new FValueKey<string>("1");
 
-            Assert.That(key1.Equals((FKey)key2), Is.False);
+            Assert.That(key1.Equals(key2), Is.False);
         }
 
         [Test]
@@ -46,8 +46,8 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void ValueKeys_WithNullValues_AreEqual()
         {
-            var key1 = new FValueKey<string>(null);
-            var key2 = new FValueKey<string>(null);
+            var key1 = new FValueKey<string?>(null);
+            var key2 = new FValueKey<string?>(null);
 
             Assert.That(key1, Is.EqualTo(key2));
         }
@@ -55,7 +55,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void ValueKeys_OneNullOneNot_AreNotEqual()
         {
-            var key1 = new FValueKey<string>(null);
+            var key1 = new FValueKey<string?>(null);
             var key2 = new FValueKey<string>("hello");
 
             Assert.That(key1, Is.Not.EqualTo(key2));
@@ -115,8 +115,8 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void OperatorEquals_BothNull_ReturnsTrue()
         {
-            FKey key1 = null;
-            FKey key2 = null;
+            FKey? key1 = null;
+            FKey? key2 = null;
 
             Assert.That(key1 == key2, Is.True);
         }
@@ -125,7 +125,7 @@ namespace Fram3.UI.Tests.Core
         public void OperatorEquals_OneNull_ReturnsFalse()
         {
             FKey key1 = new FValueKey<int>(1);
-            FKey key2 = null;
+            FKey? key2 = null;
 
             Assert.That(key1 == key2, Is.False);
             Assert.That(key2 == key1, Is.False);

@@ -1,4 +1,4 @@
-using Fram3.UI.Core;
+using System;
 using System.Collections.Generic;
 
 namespace Fram3.UI.Core.Internal
@@ -33,16 +33,16 @@ namespace Fram3.UI.Core.Internal
             var keyedOldNodes = BuildKeyedIndex(oldNodes);
             var positionalOldByType = BuildPositionalIndex(oldNodes);
 
-            for (int newIndex = 0; newIndex < newElements.Count; newIndex++)
+            for (var newIndex = 0; newIndex < newElements.Count; newIndex++)
             {
-                FElement newElement = newElements[newIndex];
-                FNode candidate = FindMatch(
+                var newElement = newElements[newIndex];
+                var candidate = FindMatch(
                     newElement,
-                    oldNodes,
                     matched,
                     keyedOldNodes,
                     positionalOldByType,
-                    out int oldIndex);
+                    out var oldIndex
+                );
 
                 if (candidate == null)
                 {
@@ -51,15 +51,11 @@ namespace Fram3.UI.Core.Internal
                 else
                 {
                     matched[oldIndex] = true;
-                    bool isInPlace = oldIndex == newIndex && !HasUnmatchedBefore(matched, oldIndex);
-                    if (isInPlace)
-                    {
-                        ops.Add(FDiffOp.Update(newIndex, candidate, newElement));
-                    }
-                    else
-                    {
-                        ops.Add(FDiffOp.Move(newIndex, oldIndex, candidate, newElement));
-                    }
+                    var isInPlace = oldIndex == newIndex && !HasUnmatchedBefore(matched, oldIndex);
+
+                    ops.Add(isInPlace
+                        ? FDiffOp.Update(newIndex, candidate, newElement)
+                        : FDiffOp.Move(newIndex, oldIndex, candidate, newElement));
                 }
             }
 
@@ -72,61 +68,62 @@ namespace Fram3.UI.Core.Internal
             IReadOnlyList<FNode> oldNodes)
         {
             var map = new Dictionary<FKey, (FNode, int)>();
-            for (int i = 0; i < oldNodes.Count; i++)
+            for (var i = 0; i < oldNodes.Count; i++)
             {
-                FKey key = oldNodes[i].Element.Key;
+                var key = oldNodes[i].Element.Key;
                 if (key != null)
                 {
                     map[key] = (oldNodes[i], i);
                 }
             }
+
             return map;
         }
 
-        private static Dictionary<System.Type, Queue<(FNode node, int index)>> BuildPositionalIndex(
+        private static Dictionary<Type, Queue<(FNode node, int index)>> BuildPositionalIndex(
             IReadOnlyList<FNode> oldNodes)
         {
-            var map = new Dictionary<System.Type, Queue<(FNode, int)>>();
-            for (int i = 0; i < oldNodes.Count; i++)
+            var map = new Dictionary<Type, Queue<(FNode, int)>>();
+            for (var i = 0; i < oldNodes.Count; i++)
             {
-                FNode node = oldNodes[i];
+                var node = oldNodes[i];
                 if (node.Element.Key != null)
                 {
                     continue;
                 }
-                System.Type t = node.Element.GetType();
-                if (!map.TryGetValue(t, out Queue<(FNode, int)> queue))
+
+                var t = node.Element.GetType();
+                if (!map.TryGetValue(t, out var queue))
                 {
                     queue = new Queue<(FNode, int)>();
                     map[t] = queue;
                 }
+
                 queue.Enqueue((node, i));
             }
+
             return map;
         }
 
-        private static FNode FindMatch(
+        private static FNode? FindMatch(
             FElement newElement,
-            IReadOnlyList<FNode> oldNodes,
             bool[] matched,
             Dictionary<FKey, (FNode node, int index)> keyedOldNodes,
-            Dictionary<System.Type, Queue<(FNode node, int index)>> positionalOldByType,
+            Dictionary<Type, Queue<(FNode node, int index)>> positionalOldByType,
             out int oldIndex)
         {
-            if (newElement.Key != null)
-            {
-                return FindKeyedMatch(newElement, matched, keyedOldNodes, out oldIndex);
-            }
-            return FindPositionalMatch(newElement, matched, positionalOldByType, out oldIndex);
+            return newElement.Key != null
+                ? FindKeyedMatch(newElement, matched, keyedOldNodes, out oldIndex)
+                : FindPositionalMatch(newElement, matched, positionalOldByType, out oldIndex);
         }
 
-        private static FNode FindKeyedMatch(
+        private static FNode? FindKeyedMatch(
             FElement newElement,
             bool[] matched,
             Dictionary<FKey, (FNode node, int index)> keyedOldNodes,
             out int oldIndex)
         {
-            if (keyedOldNodes.TryGetValue(newElement.Key, out (FNode node, int index) entry))
+            if (newElement.Key != null && keyedOldNodes.TryGetValue(newElement.Key, out var entry))
             {
                 if (!matched[entry.index] && FElement.CanUpdate(entry.node.Element, newElement))
                 {
@@ -134,49 +131,55 @@ namespace Fram3.UI.Core.Internal
                     return entry.node;
                 }
             }
+
             oldIndex = -1;
             return null;
         }
 
-        private static FNode FindPositionalMatch(
+        private static FNode? FindPositionalMatch(
             FElement newElement,
             bool[] matched,
-            Dictionary<System.Type, Queue<(FNode node, int index)>> positionalOldByType,
+            Dictionary<Type, Queue<(FNode node, int index)>> positionalOldByType,
             out int oldIndex)
         {
-            System.Type type = newElement.GetType();
-            if (positionalOldByType.TryGetValue(type, out Queue<(FNode node, int index)> queue))
+            var type = newElement.GetType();
+            if (positionalOldByType.TryGetValue(type, out var queue))
             {
                 while (queue.Count > 0)
                 {
-                    (FNode node, int index) = queue.Peek();
+                    var (node, index) = queue.Peek();
                     if (matched[index])
                     {
                         queue.Dequeue();
                         continue;
                     }
+
                     if (FElement.CanUpdate(node.Element, newElement))
                     {
                         queue.Dequeue();
                         oldIndex = index;
                         return node;
                     }
+
                     break;
                 }
             }
+
             oldIndex = -1;
+
             return null;
         }
 
         private static bool HasUnmatchedBefore(bool[] matched, int index)
         {
-            for (int i = 0; i < index; i++)
+            for (var i = 0; i < index; i++)
             {
                 if (!matched[i])
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -185,7 +188,7 @@ namespace Fram3.UI.Core.Internal
             bool[] matched,
             List<FDiffOp> ops)
         {
-            for (int i = 0; i < oldNodes.Count; i++)
+            for (var i = 0; i < oldNodes.Count; i++)
             {
                 if (!matched[i])
                 {

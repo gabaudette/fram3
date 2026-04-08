@@ -1,5 +1,3 @@
-using Fram3.UI.Core;
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -12,6 +10,7 @@ namespace Fram3.UI.Core.Internal
     /// it re-expands its entire subtree, making any enqueued descendant rebuild moot.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class FRebuildScheduler
     {
         private readonly SortedSet<FNode> _dirtyNodes;
@@ -60,8 +59,7 @@ namespace Fram3.UI.Core.Internal
         {
             while (_dirtyNodes.Count > 0)
             {
-                FNode node = RemoveMin();
-
+                var node = RemoveMin();
                 if (!node.IsDirty)
                 {
                     continue;
@@ -73,8 +71,9 @@ namespace Fram3.UI.Core.Internal
 
         private FNode RemoveMin()
         {
-            FNode min = _dirtyNodes.Min;
+            var min = _dirtyNodes.Min;
             _dirtyNodes.Remove(min);
+
             return min;
         }
 
@@ -88,12 +87,12 @@ namespace Fram3.UI.Core.Internal
                 {
                     return 0;
                 }
-                int depthCompare = x.Depth.CompareTo(y.Depth);
-                if (depthCompare != 0)
-                {
-                    return depthCompare;
-                }
-                return RuntimeHelpers.GetHashCode(x).CompareTo(RuntimeHelpers.GetHashCode(y));
+
+                var depthCompare = x.Depth.CompareTo(y.Depth);
+
+                return depthCompare != 0
+                    ? depthCompare
+                    : RuntimeHelpers.GetHashCode(x).CompareTo(RuntimeHelpers.GetHashCode(y));
             }
         }
     }

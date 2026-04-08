@@ -1,4 +1,3 @@
-using Fram3.UI.Core;
 using System;
 
 namespace Fram3.UI.Core.Internal
@@ -27,10 +26,10 @@ namespace Fram3.UI.Core.Internal
         internal int NewIndex { get; private init; }
 
         /// <summary>The new element to insert or update with.</summary>
-        internal FElement NewElement { get; private init; }
+        internal FElement? NewElement { get; private init; }
 
         /// <summary>The existing node being updated, moved, or removed.</summary>
-        internal FNode ExistingNode { get; private init; }
+        internal FNode? ExistingNode { get; private init; }
 
         /// <summary>
         /// Original index of the node in the old child list (used for Move).
