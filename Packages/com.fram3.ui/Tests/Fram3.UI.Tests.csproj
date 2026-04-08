@@ -17,10 +17,6 @@
     <Compile Include="../Runtime/**/*.cs" Link="Runtime/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="NUnit.Framework" />
-  </ItemGroup>
-
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);FRAM3_PURE_TESTS</DefineConstants>
   </PropertyGroup>

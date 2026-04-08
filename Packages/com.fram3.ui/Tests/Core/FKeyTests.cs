@@ -1,5 +1,6 @@
 using System;
 using Fram3.UI.Core;
+using NUnit.Framework;
 
 namespace Fram3.UI.Tests.Core
 {
