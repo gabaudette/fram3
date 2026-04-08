@@ -44,10 +44,18 @@ public class CounterState : FState<CounterElement>
     private int _count;
 
     public override FElement Build(FBuildContext context) =>
-        new FColumn(
-            new FText($"Count: {_count}"),
-            new FButton("Increment", onPressed: () => SetState(() => _count++))
-        );
+        new FColumn
+        {
+            Children =
+            [
+                new FText { Text = $"Count: {_count}" },
+                new FButton
+                {
+                    Label = "Increment",
+                    OnPressed = () => SetState(() => _count++)
+                }
+            ]
+        };
 }
 ```
 
