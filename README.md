@@ -2,6 +2,8 @@
 
 A declarative UI framework for Unity built on UIToolkit. Compose reactive interfaces in pure C# with no UXML, no USS files, and no code generation.
 
+> **This project is under active development and is not ready for use.** The public API is incomplete and will change without notice until a stable release is published.
+
 ## Overview
 
 Fram3 lets you describe your UI as a tree of immutable element objects. On each build cycle, the framework diffs the new element tree against the previous one and applies the minimal set of changes to the underlying UIToolkit visual tree. State changes trigger targeted rebuilds, not full redraws.
