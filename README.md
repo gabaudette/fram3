@@ -53,16 +53,6 @@ public class CounterState : FState<CounterElement>
 
 Elements are immutable descriptions. `SetState` schedules a rebuild, and the reconciler updates only what changed in the UIToolkit tree.
 
-## Architecture
-
-Fram3 maintains three parallel trees at runtime:
-
-- **FElement** -- immutable descriptions of the UI, recreated on every build
-- **FNode** -- mutable reconciliation nodes that track state and identity across rebuilds
-- **VisualElement** -- the UIToolkit DOM, updated in place by the render bridge
-
-Styling is done through composition. Elements like `FPadding`, `FContainer`, and `FSizedBox` set `VisualElement.style` properties directly in C#.
-
 ## Tests
 
 The test suite runs with `dotnet test` and does not require the Unity editor.
