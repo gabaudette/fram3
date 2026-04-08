@@ -1,6 +1,6 @@
 # Fram3
 
-A declarative UI framework for Unity built on UIToolkit. Compose reactive interfaces in pure C# -- no UXML, no USS files, no code generation.
+A declarative UI framework for Unity built on UIToolkit. Compose reactive interfaces in pure C# with no UXML, no USS files, and no code generation.
 
 ## Overview
 
