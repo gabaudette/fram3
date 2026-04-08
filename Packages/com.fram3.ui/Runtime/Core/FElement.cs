@@ -10,6 +10,14 @@ namespace Fram3.UI.Core
     /// The framework uses elements as blueprints to create and update the actual
     /// rendered UI through the reconciliation process.
     /// </summary>
+    /// <remarks>
+    /// Do not subclass <see cref="FElement"/> directly. Extend one of the provided archetypes:
+    /// <see cref="FStatelessElement"/> for composition without state,
+    /// <see cref="FStatefulElement"/> for composition with mutable state,
+    /// <see cref="FSingleChildElement"/> for structural wrappers with one child,
+    /// <see cref="FMultiChildElement"/> for layout elements with multiple children, or
+    /// <see cref="FLeafElement"/> for terminal elements with no children.
+    /// </remarks>
     public abstract class FElement
     {
         /// <summary>
