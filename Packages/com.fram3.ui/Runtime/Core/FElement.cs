@@ -45,8 +45,11 @@ namespace Fram3.UI.Core
             {
                 return false;
             }
-            return oldElement.GetType() == newElement.GetType()
-                && oldElement.Key == newElement.Key;
+            
+            var isSameType = oldElement.GetType() == newElement.GetType();
+            var isSameKey = oldElement.Key == newElement.Key;
+            
+            return isSameType && isSameKey;
         }
 
         /// <summary>

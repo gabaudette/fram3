@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <BaseOutputPath>../../../TestBuild/bin/Runtime</BaseOutputPath>
+    <BaseIntermediateOutputPath>../../../TestBuild/obj/Runtime/</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>
