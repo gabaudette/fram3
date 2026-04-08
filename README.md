@@ -1,5 +1,7 @@
 # Fram3
 
+> **This project is under active development and is not ready for use.** The public API is incomplete and will change without notice until a stable release is published.
+
 A declarative UI framework for Unity built on UIToolkit. Compose reactive interfaces in pure C# with no UXML, no USS files, and no code generation.
 
 ## Overview
