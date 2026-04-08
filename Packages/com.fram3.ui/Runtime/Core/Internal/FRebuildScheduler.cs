@@ -60,18 +60,26 @@ namespace Fram3.UI.Core.Internal
             while (_dirtyNodes.Count > 0)
             {
                 var node = RemoveMin();
-                if (!node.IsDirty)
+                if (node != null && !node.IsDirty)
                 {
                     continue;
                 }
 
-                expander.Rebuild(node);
+                if (node != null)
+                {
+                    expander.Rebuild(node);
+                }
             }
         }
 
-        private FNode RemoveMin()
+        private FNode? RemoveMin()
         {
             var min = _dirtyNodes.Min;
+            if (min == null)
+            {
+                return null;
+            }
+
             _dirtyNodes.Remove(min);
 
             return min;
@@ -79,13 +87,23 @@ namespace Fram3.UI.Core.Internal
 
         private sealed class DepthAscendingComparer : IComparer<FNode>
         {
-            internal static readonly DepthAscendingComparer Instance = new DepthAscendingComparer();
+            internal static readonly DepthAscendingComparer Instance = new();
 
-            public int Compare(FNode x, FNode y)
+            public int Compare(FNode? x, FNode? y)
             {
                 if (ReferenceEquals(x, y))
                 {
                     return 0;
+                }
+
+                if (x == null)
+                {
+                    return -1;
+                }
+
+                if (y == null)
+                {
+                    return 1;
                 }
 
                 var depthCompare = x.Depth.CompareTo(y.Depth);
