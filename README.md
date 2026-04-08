@@ -31,26 +31,27 @@ Or add it directly to `Packages/manifest.json`:
 }
 ```
 
-## Status
+## Example
 
-The framework is under active development and not yet suitable for production use. Public APIs may change between phases.
+```csharp
+public class CounterElement : FStatefulElement
+{
+    public override FState CreateState() => new CounterState();
+}
 
-| Phase | Scope | Status |
-|-------|-------|--------|
-| 1 | Project scaffolding | Complete |
-| 2 | Core engine (elements, state, build context) | Complete |
-| 3 | Reconciliation (differ, patcher, rebuild scheduler) | Complete |
-| 4 | Styling types | Planned |
-| 5 | Render bridge | Planned |
-| 6 | Basic elements (FText, FColumn, FRow, FContainer, FButton, ...) | Planned |
-| 7 | State and binding (FValueNotifier, FInheritedElement) | Planned |
-| 8 | Input elements (FTextField, FToggle, FSlider, ...) | Planned |
-| 9 | Global state (FProvider, FConsumer, FStore, FCubit, ...) | Planned |
-| 10 | Animation core | Planned |
-| 11 | Implicit animations | Planned |
-| 12 | In-scene navigation (FNavigator, FRoute) | Planned |
-| 13 | Scene navigation (FSceneNavigator) | Planned |
-| 14 | Additional elements (FStack, FScrollView, FImage, ...) | Planned |
+public class CounterState : FState<CounterElement>
+{
+    private int _count;
+
+    public override FElement Build(FBuildContext context) =>
+        new FColumn(
+            new FText($"Count: {_count}"),
+            new FButton("Increment", onPressed: () => SetState(() => _count++))
+        );
+}
+```
+
+Elements are immutable descriptions. `SetState` schedules a rebuild, and the reconciler updates only what changed in the UIToolkit tree.
 
 ## Architecture
 
@@ -71,7 +72,3 @@ dotnet test Packages/com.fram3.ui/Tests/Fram3.UI.Tests.csproj
 ```
 
 CI runs on every pull request targeting `main`.
-
-## License
-
-MIT
