@@ -40,7 +40,7 @@ namespace Fram3.UI.Tests.Core
         public void CanUpdate_DifferentType_ReturnsFalse()
         {
             var old = new TestLeafElement("a");
-            var next = new TestSingleChildElement(new TestLeafElement("b"));
+            var next = new TestSingleChildElement { Child = new TestLeafElement("b") };
 
             Assert.That(FElement.CanUpdate(old, next), Is.False);
         }

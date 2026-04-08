@@ -12,7 +12,7 @@ namespace Fram3.UI.Tests.Core
         public void SingleChildElement_StoresChild()
         {
             var child = new TestLeafElement("child");
-            var parent = new TestSingleChildElement(child);
+            var parent = new TestSingleChildElement { Child = child };
 
             Assert.That(parent.Child, Is.SameAs(child));
         }
@@ -21,7 +21,7 @@ namespace Fram3.UI.Tests.Core
         public void SingleChildElement_GetChildren_ReturnsSingleChild()
         {
             var child = new TestLeafElement("child");
-            var parent = new TestSingleChildElement(child);
+            var parent = new TestSingleChildElement { Child = child };
 
             var children = parent.GetChildren();
 
@@ -32,7 +32,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void SingleChildElement_NullChild_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new TestSingleChildElement(null));
+            Assert.Throws<ArgumentNullException>(() => _ = new TestSingleChildElement { Child = null! });
         }
 
         [Test]
@@ -44,9 +44,9 @@ namespace Fram3.UI.Tests.Core
                 new TestLeafElement("b"),
                 new TestLeafElement("c")
             };
-            var parent = new TestMultiChildElement(children);
+            var parent = new TestMultiChildElement { Children = children };
 
-            Assert.That(parent.ElementChildren, Has.Count.EqualTo(3));
+            Assert.That(parent.Children, Has.Length.EqualTo(3));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Fram3.UI.Tests.Core
         {
             var a = new TestLeafElement("a");
             var b = new TestLeafElement("b");
-            var parent = new TestMultiChildElement([a, b]);
+            var parent = new TestMultiChildElement { Children = [a, b] };
 
             var result = parent.GetChildren();
 
@@ -66,7 +66,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void MultiChildElement_NullArray_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new TestMultiChildElement(null));
+            Assert.Throws<ArgumentNullException>(() => _ = new TestMultiChildElement { Children = null! });
         }
 
         [Test]
@@ -79,13 +79,13 @@ namespace Fram3.UI.Tests.Core
                 new TestLeafElement("c")
             };
 
-            Assert.Throws<ArgumentException>(() => new TestMultiChildElement(children));
+            Assert.Throws<ArgumentException>(() => _ = new TestMultiChildElement { Children = children! });
         }
 
         [Test]
         public void MultiChildElement_EmptyArray_IsValid()
         {
-            var parent = new TestMultiChildElement([]);
+            var parent = new TestMultiChildElement { Children = [] };
 
             Assert.That(parent.GetChildren(), Is.Empty);
         }

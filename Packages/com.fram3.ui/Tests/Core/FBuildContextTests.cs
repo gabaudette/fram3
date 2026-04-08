@@ -47,7 +47,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void FindAncestorOfType_WhenAncestorExists_ReturnsIt()
         {
-            var parentElement = new TestSingleChildElement(new TestLeafElement("inner"));
+            var parentElement = new TestSingleChildElement { Child = new TestLeafElement("inner") };
             var parentNode = new FNode(parentElement, null);
             var childElement = new TestLeafElement("child");
             var childNode = new FNode(childElement, parentNode);
@@ -71,7 +71,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void FindAncestorOfType_SkipsNonMatchingAncestors()
         {
-            var grandparentElement = new TestSingleChildElement(new TestLeafElement("gp-inner"));
+            var grandparentElement = new TestSingleChildElement { Child = new TestLeafElement("gp-inner") };
             var grandparentNode = new FNode(grandparentElement, null);
 
             var parentElement = new TestLeafElement("parent");
@@ -88,7 +88,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void GetAncestorOfType_WhenAncestorExists_ReturnsIt()
         {
-            var parentElement = new TestSingleChildElement(new TestLeafElement("inner"));
+            var parentElement = new TestSingleChildElement { Child = new TestLeafElement("inner") };
             var parentNode = new FNode(parentElement, null);
             var childNode = new FNode(new TestLeafElement("child"), parentNode);
 

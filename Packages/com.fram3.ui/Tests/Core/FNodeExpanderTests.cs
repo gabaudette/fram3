@@ -34,7 +34,7 @@ namespace Fram3.UI.Tests.Core
         public void Mount_SingleChildElement_CreatesNodeWithOneChild()
         {
             var child = new TestLeafElement("child");
-            var element = new TestSingleChildElement(child);
+            var element = new TestSingleChildElement { Child = child };
 
             var node = _expander.Mount(element, null);
 
@@ -45,11 +45,15 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Mount_MultiChildElement_CreatesCorrectNumberOfChildren()
         {
-            var element = new TestMultiChildElement([
-                new TestLeafElement("a"),
-                new TestLeafElement("b"),
-                new TestLeafElement("c")
-            ]);
+            var element = new TestMultiChildElement
+            {
+                Children =
+                [
+                    new TestLeafElement("a"),
+                    new TestLeafElement("b"),
+                    new TestLeafElement("c")
+                ]
+            };
 
             var node = _expander.Mount(element, null);
 
@@ -100,9 +104,13 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Mount_SetsDepthCorrectlyForNestedNodes()
         {
-            var root = new TestSingleChildElement(
-                new TestSingleChildElement(
-                    new TestLeafElement("leaf")));
+            var root = new TestSingleChildElement
+            {
+                Child = new TestSingleChildElement
+                {
+                    Child = new TestLeafElement("leaf")
+                }
+            };
 
             var rootNode = _expander.Mount(root, null);
             var childNode = rootNode.Children[0];
@@ -146,7 +154,7 @@ namespace Fram3.UI.Tests.Core
                 return innerState;
             });
 
-            var root = new TestSingleChildElement(innerStateful);
+            var root = new TestSingleChildElement { Child = innerStateful };
 
             var rootNode = _expander?.Mount(root, null);
             if (rootNode == null)
