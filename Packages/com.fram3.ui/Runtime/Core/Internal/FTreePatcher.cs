@@ -1,6 +1,7 @@
+using Fram3.UI.Core;
 using System.Collections.Generic;
 
-namespace Fram3.UI.Core
+namespace Fram3.UI.Core.Internal
 {
     /// <summary>
     /// Applies a list of <see cref="FDiffOp"/> operations produced by <see cref="FTreeDiffer"/>

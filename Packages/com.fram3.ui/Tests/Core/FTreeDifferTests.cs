@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Fram3.UI.Core;
+using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;
 
 namespace Fram3.UI.Tests.Core

@@ -1,7 +1,8 @@
+using Fram3.UI.Core;
 using System;
 using System.Collections.Generic;
 
-namespace Fram3.UI.Core
+namespace Fram3.UI.Core.Internal
 {
     /// <summary>
     /// Mounts, unmounts, and expands <see cref="FNode"/>s from <see cref="FElement"/>

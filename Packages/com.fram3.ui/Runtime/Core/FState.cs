@@ -1,4 +1,5 @@
 using System;
+using Fram3.UI.Core.Internal;
 
 namespace Fram3.UI.Core
 {

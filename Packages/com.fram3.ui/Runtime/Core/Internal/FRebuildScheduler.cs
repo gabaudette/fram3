@@ -1,8 +1,9 @@
+using Fram3.UI.Core;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Fram3.UI.Core
+namespace Fram3.UI.Core.Internal
 {
     /// <summary>
     /// Collects nodes marked dirty via <see cref="FState.SetState"/> and flushes

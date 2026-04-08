@@ -1,6 +1,7 @@
+using Fram3.UI.Core;
 using System;
 
-namespace Fram3.UI.Core
+namespace Fram3.UI.Core.Internal
 {
     internal enum FDiffOpKind
     {

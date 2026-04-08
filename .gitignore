@@ -81,6 +81,9 @@ crashlytics-build.properties
 ehthumbs.db
 Thumbs.db
 
+# IDE
+.idea/
+
 # .NET build artifacts
 [Bb]in/
 [Oo]bj/
