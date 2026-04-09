@@ -1,5 +1,41 @@
 #if FRAM3_PURE_TESTS
 using System;
+using System.Collections.Generic;
+
+namespace UnityEngine.UIElements
+{
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.VisualElement</c> used in pure C# tests.
+    /// </summary>
+    public class VisualElement
+    {
+        private readonly List<VisualElement> _children = new();
+        private VisualElement? _parent;
+
+        public IReadOnlyList<VisualElement> Children => _children;
+        public VisualElement? Parent => _parent;
+        public int ChildCount => _children.Count;
+
+        public void Add(VisualElement child)
+        {
+            child._parent = this;
+            _children.Add(child);
+        }
+
+        public void Remove(VisualElement child)
+        {
+            if (_children.Remove(child))
+            {
+                child._parent = null;
+            }
+        }
+
+        public void RemoveFromHierarchy()
+        {
+            _parent?.Remove(this);
+        }
+    }
+}
 
 namespace UnityEngine
 {
@@ -22,7 +58,7 @@ namespace UnityEngine
         public static Color blue => new Color(0, 0, 1, 1);
         public static Color clear => new Color(0, 0, 0, 0);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is Color other)
             {

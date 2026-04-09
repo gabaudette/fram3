@@ -15,10 +15,12 @@ namespace Fram3.UI.Core.Internal
     internal sealed class FNodeExpander
     {
         private readonly FRebuildScheduler _scheduler;
+        private readonly IRenderAdapter? _adapter;
 
-        internal FNodeExpander(FRebuildScheduler scheduler)
+        internal FNodeExpander(FRebuildScheduler scheduler, IRenderAdapter? adapter = null)
         {
             _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+            _adapter = adapter;
         }
 
         /// <summary>
@@ -36,6 +38,7 @@ namespace Fram3.UI.Core.Internal
             }
 
             ExpandChildren(node);
+            _adapter?.OnMounted(node);
             return node;
         }
 
@@ -45,6 +48,7 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal void Unmount(FNode node)
         {
+            _adapter?.OnUnmounting(node);
             UnmountChildren(node);
             DisposeState(node);
             node.ClearChildren();
@@ -59,6 +63,7 @@ namespace Fram3.UI.Core.Internal
             IReadOnlyList<FElement> newChildren = ResolveChildren(node);
             FTreePatcher.Patch(node, newChildren, this);
             node.IsDirty = false;
+            _adapter?.OnRebuilt(node);
         }
 
         /// <summary>
@@ -106,7 +111,7 @@ namespace Fram3.UI.Core.Internal
 
         private IReadOnlyList<FElement> ResolveStatefulChildren(FNode node)
         {
-            FElement built = node.State.Build(node.Context);
+            FElement built = node.State!.Build(node.Context);
             return new[] { built };
         }
 

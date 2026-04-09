@@ -14,7 +14,7 @@ namespace Fram3.UI.Core
         /// </summary>
         /// <param name="other">The key to compare against.</param>
         /// <returns>True if the keys are considered equal.</returns>
-        public abstract bool Equals(FKey other);
+        public abstract bool Equals(FKey? other);
 
         /// <summary>
         /// Returns a hash code for this key.
@@ -66,7 +66,7 @@ namespace Fram3.UI.Core
             Value = value;
         }
 
-        public override bool Equals(FKey other)
+        public override bool Equals(FKey? other)
         {
             if (other is FValueKey<T> otherValueKey)
             {
@@ -112,7 +112,7 @@ namespace Fram3.UI.Core
             Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public override bool Equals(FKey other)
+        public override bool Equals(FKey? other)
         {
             if (other is FObjectKey otherObjectKey)
             {
@@ -135,7 +135,7 @@ namespace Fram3.UI.Core
     /// </summary>
     public sealed class FUniqueKey : FKey
     {
-        public override bool Equals(FKey other)
+        public override bool Equals(FKey? other)
         {
             return ReferenceEquals(this, other);
         }

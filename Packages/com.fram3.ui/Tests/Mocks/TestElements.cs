@@ -7,7 +7,21 @@ namespace Fram3.UI.Tests.Mocks
     {
         public string Label { get; }
 
-        public TestLeafElement(string label, FKey key = null) : base(key)
+        public TestLeafElement(string label, FKey? key = null) : base(key)
+        {
+            Label = label;
+        }
+    }
+
+    /// <summary>
+    /// A leaf element used in render bridge tests. Named distinctly from
+    /// <see cref="TestLeafElement"/> to keep rendering tests self-contained.
+    /// </summary>
+    internal sealed class TestRenderLeaf : FLeafElement
+    {
+        public string Label { get; }
+
+        public TestRenderLeaf(string label, FKey? key = null) : base(key)
         {
             Label = label;
         }
@@ -31,7 +45,7 @@ namespace Fram3.UI.Tests.Mocks
     {
         private readonly Func<FBuildContext, FElement> _builder;
 
-        public TestStatelessElement(Func<FBuildContext, FElement> builder, FKey key = null) : base(key)
+        public TestStatelessElement(Func<FBuildContext, FElement> builder, FKey? key = null) : base(key)
         {
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
         }
@@ -48,7 +62,7 @@ namespace Fram3.UI.Tests.Mocks
 
         public string Config { get; }
 
-        public TestStatefulElement(Func<FState> stateFactory, string config = "", FKey key = null) : base(key)
+        public TestStatefulElement(Func<FState> stateFactory, string config = "", FKey? key = null) : base(key)
         {
             _stateFactory = stateFactory ?? throw new ArgumentNullException(nameof(stateFactory));
             Config = config;
@@ -64,7 +78,7 @@ namespace Fram3.UI.Tests.Mocks
     {
         public bool InitStateCalled { get; private set; }
         public bool DisposeCalled { get; private set; }
-        public FStatefulElement LastOldElement { get; private set; }
+        public FStatefulElement? LastOldElement { get; private set; }
         public int BuildCount { get; private set; }
 
         private readonly Func<FBuildContext, FElement> _builder;
