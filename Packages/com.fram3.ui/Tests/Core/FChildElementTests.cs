@@ -54,7 +54,7 @@ namespace Fram3.UI.Tests.Core
         {
             var a = new TestLeafElement("a");
             var b = new TestLeafElement("b");
-            var parent = new TestMultiChildElement { Children = [a, b] };
+            var parent = new TestMultiChildElement { Children = new FElement[] { a, b } };
 
             var result = parent.GetChildren();
 
@@ -85,7 +85,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void MultiChildElement_EmptyArray_IsValid()
         {
-            var parent = new TestMultiChildElement { Children = [] };
+            var parent = new TestMultiChildElement { Children = Array.Empty<FElement>() };
 
             Assert.That(parent.GetChildren(), Is.Empty);
         }

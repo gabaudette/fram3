@@ -47,12 +47,12 @@ namespace Fram3.UI.Tests.Core
         {
             var element = new TestMultiChildElement
             {
-                Children =
-                [
+                Children = new FElement[]
+                {
                     new TestLeafElement("a"),
                     new TestLeafElement("b"),
                     new TestLeafElement("c")
-                ]
+                }
             };
 
             var node = _expander.Mount(element, null);
