@@ -111,7 +111,7 @@ namespace Fram3.UI.Core.Internal
 
         private IReadOnlyList<FElement> ResolveStatefulChildren(FNode node)
         {
-            FElement built = node.State.Build(node.Context);
+            FElement built = node.State!.Build(node.Context);
             return new[] { built };
         }
 

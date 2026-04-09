@@ -21,10 +21,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Insert_NullElement_ThrowsArgumentNullException()
         {
-            if (Throws.ArgumentNullException != null)
-            {
-                Assert.That(() => FDiffOp.Insert(0, null), Throws.ArgumentNullException);
-            }
+            Assert.That(() => FDiffOp.Insert(0, null!), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -46,7 +43,7 @@ namespace Fram3.UI.Tests.Core
         public void Update_NullNode_ThrowsArgumentNullException()
         {
             Assert.That(
-                () => FDiffOp.Update(0, null, new TestLeafElement("a")),
+                () => FDiffOp.Update(0, null!, new TestLeafElement("a")),
                 Throws.ArgumentNullException);
         }
 
@@ -65,7 +62,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Remove_NullNode_ThrowsArgumentNullException()
         {
-            Assert.That(() => FDiffOp.Remove(null), Throws.ArgumentNullException);
+            Assert.That(() => FDiffOp.Remove(null!), Throws.ArgumentNullException);
         }
 
         [Test]

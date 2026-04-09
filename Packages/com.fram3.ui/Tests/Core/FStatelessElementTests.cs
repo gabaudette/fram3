@@ -23,7 +23,7 @@ namespace Fram3.UI.Tests.Core
         [Test]
         public void Build_ReceivesBuildContext()
         {
-            FBuildContext receivedContext = null;
+            FBuildContext? receivedContext = null;
             var element = new TestStatelessElement(ctx =>
             {
                 receivedContext = ctx;

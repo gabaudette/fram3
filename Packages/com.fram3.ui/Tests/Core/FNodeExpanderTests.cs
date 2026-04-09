@@ -8,8 +8,8 @@ namespace Fram3.UI.Tests.Core
     [TestFixture]
     internal sealed class FNodeExpanderTests
     {
-        private FRebuildScheduler? _scheduler;
-        private FNodeExpander? _expander;
+        private FRebuildScheduler _scheduler = null!;
+        private FNodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
@@ -23,7 +23,7 @@ namespace Fram3.UI.Tests.Core
         {
             var element = new TestLeafElement("x");
 
-            var node = _expander?.Mount(element, null);
+            var node = _expander.Mount(element, null);
 
             Assert.That(node.Element, Is.SameAs(element));
             Assert.That(node.Children, Is.Empty);
@@ -73,9 +73,8 @@ namespace Fram3.UI.Tests.Core
             var node = _expander.Mount(element, null);
 
             Assert.That(node.State, Is.Not.Null);
-            Assert.That(capturedState.InitStateCalled, Is.True);
-            Assert.That(capturedState.Mounted, Is.True);
-        }
+            Assert.That(capturedState!.InitStateCalled, Is.True);
+            Assert.That(capturedState.Mounted, Is.True);        }
 
         [Test]
         public void Mount_StatefulElement_BuildsChildFromState()
@@ -131,13 +130,9 @@ namespace Fram3.UI.Tests.Core
                 return state;
             });
 
-            var node = _expander?.Mount(element, null);
-            if (node == null)
-            {
-                return;
-            }
+            var node = _expander.Mount(element, null);
 
-            _expander?.Unmount(node);
+            _expander.Unmount(node);
 
             Assert.That(state != null && state.DisposeCalled, Is.True);
             Assert.That(state != null && state.Mounted, Is.False);
@@ -156,13 +151,9 @@ namespace Fram3.UI.Tests.Core
 
             var root = new TestSingleChildElement { Child = innerStateful };
 
-            var rootNode = _expander?.Mount(root, null);
-            if (rootNode == null)
-            {
-                return;
-            }
+            var rootNode = _expander.Mount(root, null);
 
-            _expander?.Unmount(rootNode);
+            _expander.Unmount(rootNode);
 
             Assert.That(innerState != null && innerState.DisposeCalled, Is.True);
             Assert.That(rootNode.Children, Is.Empty);
@@ -176,7 +167,7 @@ namespace Fram3.UI.Tests.Core
                 config: "v1");
 
             var node = _expander.Mount(original, null);
-            var state = (TestState)node.State;
+            var state = (TestState)node.State!;
 
             var updated = new TestStatefulElement(
                 () => new TestState(_ => new TestLeafElement("x")),
@@ -203,16 +194,12 @@ namespace Fram3.UI.Tests.Core
                 return state;
             });
 
-            var node = _expander?.Mount(element, null);
-            Assert.That(node?.Children[0].Element, Is.SameAs(firstBuilt));
+            var node = _expander.Mount(element, null);
+            Assert.That(node.Children[0].Element, Is.SameAs(firstBuilt));
 
-            node?.MarkDirty();
-            if (node == null)
-            {
-                return;
-            }
-            
-            _expander?.Rebuild(node);
+            node.MarkDirty();
+
+            _expander.Rebuild(node);
 
             Assert.That(node.Children[0].Element, Is.SameAs(secondBuilt));
             Assert.That(node.IsDirty, Is.False);
