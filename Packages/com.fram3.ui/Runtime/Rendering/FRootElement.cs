@@ -1,3 +1,4 @@
+#nullable enable
 using Fram3.UI.Core;
 
 namespace Fram3.UI.Rendering

@@ -1,3 +1,4 @@
+#nullable enable
 namespace Fram3.UI
 {
     /// <summary>
