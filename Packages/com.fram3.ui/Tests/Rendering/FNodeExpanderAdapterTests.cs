@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;

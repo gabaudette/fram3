@@ -1,3 +1,4 @@
+#nullable enable
 using NUnit.Framework;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;

@@ -1,3 +1,4 @@
+#nullable enable
 #if FRAM3_PURE_TESTS
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace UnityEngine.UIElements
 
         public IReadOnlyList<VisualElement> Children => _children;
         public VisualElement? Parent => _parent;
-        public int ChildCount => _children.Count;
+        public int childCount => _children.Count;
 
         public void Add(VisualElement child)
         {

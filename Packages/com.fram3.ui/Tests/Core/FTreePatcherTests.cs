@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using NUnit.Framework;
 using Fram3.UI.Core;

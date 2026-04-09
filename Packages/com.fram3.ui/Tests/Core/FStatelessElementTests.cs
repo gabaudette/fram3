@@ -1,3 +1,4 @@
+#nullable enable
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Mocks;

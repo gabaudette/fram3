@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using Fram3.UI.Core;
 using Fram3.UI.Rendering;
@@ -52,7 +53,7 @@ namespace Fram3.UI.Tests.Rendering
         {
             _renderer.Mount(new TestRenderLeaf("a"), _container);
 
-            Assert.That(_container.ChildCount, Is.GreaterThan(0));
+            Assert.That(_container.childCount, Is.GreaterThan(0));
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace Fram3.UI.Tests.Rendering
 
             _renderer.Mount(element, _container);
 
-            Assert.That(_container.ChildCount, Is.GreaterThan(0));
+            Assert.That(_container.childCount, Is.GreaterThan(0));
         }
 
         [Test]
@@ -70,11 +71,11 @@ namespace Fram3.UI.Tests.Rendering
         {
             _renderer.Mount(new TestRenderLeaf("a"), _container);
 
-            Assert.That(_container.ChildCount, Is.GreaterThan(0));
+            Assert.That(_container.childCount, Is.GreaterThan(0));
 
             _renderer.Dispose();
 
-            Assert.That(_container.ChildCount, Is.EqualTo(0));
+            Assert.That(_container.childCount, Is.EqualTo(0));
         }
 
         [Test]
@@ -102,7 +103,7 @@ namespace Fram3.UI.Tests.Rendering
 
             _renderer.Mount(element, _container);
 
-            int childCountBefore = _container.ChildCount;
+            int childCountBefore = _container.childCount;
 
             toggleState.Toggle();
             _renderer.Tick();
