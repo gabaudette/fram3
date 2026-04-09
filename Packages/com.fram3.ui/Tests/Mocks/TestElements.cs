@@ -13,6 +13,20 @@ namespace Fram3.UI.Tests.Mocks
         }
     }
 
+    /// <summary>
+    /// A leaf element used in render bridge tests. Named distinctly from
+    /// <see cref="TestLeafElement"/> to keep rendering tests self-contained.
+    /// </summary>
+    internal sealed class TestRenderLeaf : FLeafElement
+    {
+        public string Label { get; }
+
+        public TestRenderLeaf(string label, FKey? key = null) : base(key)
+        {
+            Label = label;
+        }
+    }
+
     internal sealed class TestSingleChildElement : FSingleChildElement
     {
         public TestSingleChildElement(FKey? key = null) : base(key)
