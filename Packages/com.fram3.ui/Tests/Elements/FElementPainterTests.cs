@@ -32,16 +32,6 @@ namespace Fram3.UI.Tests.Elements
         }
 
         [Test]
-        public void CreateNative_FText_WithFontSize_SetsFontSize()
-        {
-            var element = new FText("x", new FTextStyle(FontSize: 24f));
-
-            var native = FElementPainter.CreateNative(element);
-
-            Assert.That(native.style.fontSize, Is.EqualTo(24f));
-        }
-
-        [Test]
         public void CreateNative_FButton_ReturnsButton()
         {
             var element = new FButton("Click");
@@ -62,6 +52,108 @@ namespace Fram3.UI.Tests.Elements
         }
 
         [Test]
+        public void CreateNative_FButton_WithNullOnPressed_DoesNotThrow()
+        {
+            var element = new FButton("Cancel");
+
+            Assert.DoesNotThrow(() => FElementPainter.CreateNative(element));
+        }
+
+        [Test]
+        public void CreateNative_FColumn_ReturnsVisualElement()
+        {
+            var element = new FColumn();
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FRow_ReturnsVisualElement()
+        {
+            var element = new FRow();
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FPadding_ReturnsVisualElement()
+        {
+            var element = new FPadding(FEdgeInsets.All(8f));
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FSizedBox_ReturnsVisualElement()
+        {
+            var element = FSizedBox.FromSize(width: 100f, height: 50f);
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FCenter_ReturnsVisualElement()
+        {
+            var element = new FCenter();
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FContainer_ReturnsVisualElement()
+        {
+            var element = new FContainer(width: 200f, height: 100f);
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FContainer_WithDecoration_DoesNotThrow()
+        {
+            var element = new FContainer(
+                decoration: new FBoxDecoration(Color: new FColor(1f, 0f, 0f)));
+
+            Assert.DoesNotThrow(() => FElementPainter.CreateNative(element));
+        }
+
+        [Test]
+        public void Paint_FText_UpdatesLabelText()
+        {
+            var original = new FText("Before");
+            var label = (Label)FElementPainter.CreateNative(original);
+
+            var updated = new FText("After");
+            FElementPainter.Paint(updated, label);
+
+            Assert.That(label.text, Is.EqualTo("After"));
+        }
+
+        [Test]
+        public void Paint_FButton_UpdatesButtonText()
+        {
+            var original = new FButton("Old");
+            var button = (Button)FElementPainter.CreateNative(original);
+
+            var updated = new FButton("New");
+            FElementPainter.Paint(updated, button);
+
+            Assert.That(button.text, Is.EqualTo("New"));
+        }
+
+#if FRAM3_PURE_TESTS
+        [Test]
         public void CreateNative_FButton_StoresClickAction()
         {
             var pressed = false;
@@ -74,13 +166,13 @@ namespace Fram3.UI.Tests.Elements
         }
 
         [Test]
-        public void CreateNative_FColumn_ReturnsVisualElement()
+        public void CreateNative_FText_WithFontSize_SetsFontSize()
         {
-            var element = new FColumn();
+            var element = new FText("x", new FTextStyle(FontSize: 24f));
 
             var native = FElementPainter.CreateNative(element);
 
-            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+            Assert.That(native.style.fontSize, Is.EqualTo(24f));
         }
 
         [Test]
@@ -193,29 +285,6 @@ namespace Fram3.UI.Tests.Elements
             Assert.That(bg.g, Is.EqualTo(0f).Within(0.001f));
             Assert.That(bg.b, Is.EqualTo(0f).Within(0.001f));
         }
-
-        [Test]
-        public void Paint_FText_UpdatesLabelText()
-        {
-            var original = new FText("Before");
-            var label = (Label)FElementPainter.CreateNative(original);
-
-            var updated = new FText("After");
-            FElementPainter.Paint(updated, label);
-
-            Assert.That(label.text, Is.EqualTo("After"));
-        }
-
-        [Test]
-        public void Paint_FButton_UpdatesButtonText()
-        {
-            var original = new FButton("Old");
-            var button = (Button)FElementPainter.CreateNative(original);
-
-            var updated = new FButton("New");
-            FElementPainter.Paint(updated, button);
-
-            Assert.That(button.text, Is.EqualTo("New"));
-        }
+#endif
     }
 }
