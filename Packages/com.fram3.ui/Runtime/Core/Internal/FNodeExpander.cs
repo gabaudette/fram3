@@ -84,12 +84,14 @@ namespace Fram3.UI.Core.Internal
                 node.State.DidUpdateElement(oldStateful);
             }
 
-            if (oldElement is FInheritedElement oldInherited && newElement is FInheritedElement)
+            if (oldElement is not FInheritedElement oldInherited || newElement is not FInheritedElement element)
             {
-                if (((FInheritedElement)newElement).UpdateShouldNotify(oldInherited))
-                {
-                    node.NotifyInheritedDependents();
-                }
+                return;
+            }
+
+            if (element.UpdateShouldNotify(oldInherited))
+            {
+                node.NotifyInheritedDependents();
             }
         }
 
@@ -144,10 +146,7 @@ namespace Fram3.UI.Core.Internal
         private static void RemoveInheritedDependencies(FNode node)
         {
             var ancestorNode = node.FindInheritedAncestor<FInheritedElement>();
-            if (ancestorNode != null)
-            {
-                ancestorNode.RemoveInheritedDependent(node);
-            }
+            ancestorNode?.RemoveInheritedDependent(node);
         }
 
         private static void DisposeState(FNode node)

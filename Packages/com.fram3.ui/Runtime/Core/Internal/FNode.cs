@@ -13,14 +13,14 @@ namespace Fram3.UI.Core.Internal
     /// </summary>
     internal class FNode
     {
-        private readonly List<FNode> _children = new List<FNode>();
+        private readonly List<FNode> _children = new();
         private readonly FRebuildScheduler? _scheduler;
 
         /// <summary>
         /// Nodes that depend on this node when this node holds an FInheritedElement.
         /// These are scheduled for rebuild when UpdateShouldNotify returns true.
         /// </summary>
-        private readonly HashSet<FNode> _inheritedDependents = new HashSet<FNode>();
+        private readonly HashSet<FNode> _inheritedDependents = new();
 
         internal FNode(FElement? element, FNode? parent, FRebuildScheduler? scheduler = null)
         {

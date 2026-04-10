@@ -7,7 +7,7 @@ namespace Fram3.UI.Core.Internal
     /// <summary>
     /// Produces a minimal list of <see cref="FDiffOp"/> operations that transform an
     /// existing list of child <see cref="FNode"/>s to reflect a new list of child
-    /// <see cref="FElement"/>s. The algorithm prioritises keyed matching, then falls
+    /// <see cref="FElement"/>s. The algorithm prioritizes keyed matching, then falls
     /// back to positional matching for unkeyed elements of the same type.
     /// This is an internal framework type not intended for direct use.
     /// </summary>

@@ -105,9 +105,9 @@ namespace Fram3.UI.Core
 
         private void NotifyListeners()
         {
-            for (var i = 0; i < _listeners.Count; i++)
+            foreach (var t in _listeners)
             {
-                _listeners[i].Invoke();
+                t.Invoke();
             }
         }
 
