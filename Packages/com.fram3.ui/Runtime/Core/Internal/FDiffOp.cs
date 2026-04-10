@@ -40,7 +40,7 @@ namespace Fram3.UI.Core.Internal
         internal int OldIndex { get; private init; }
 
         internal static FDiffOp Insert(int newIndex, FElement? newElement) =>
-            new FDiffOp
+            new()
             {
                 Kind = FDiffOpKind.Insert,
                 NewIndex = newIndex,
@@ -48,7 +48,7 @@ namespace Fram3.UI.Core.Internal
             };
 
         internal static FDiffOp Update(int newIndex, FNode existingNode, FElement newElement) =>
-            new FDiffOp
+            new()
             {
                 Kind = FDiffOpKind.Update,
                 NewIndex = newIndex,
@@ -57,14 +57,14 @@ namespace Fram3.UI.Core.Internal
             };
 
         internal static FDiffOp Remove(FNode existingNode) =>
-            new FDiffOp
+            new()
             {
                 Kind = FDiffOpKind.Remove,
                 ExistingNode = existingNode ?? throw new ArgumentNullException(nameof(existingNode))
             };
 
         internal static FDiffOp Move(int newIndex, int oldIndex, FNode existingNode, FElement newElement) =>
-            new FDiffOp
+            new()
             {
                 Kind = FDiffOpKind.Move,
                 NewIndex = newIndex,

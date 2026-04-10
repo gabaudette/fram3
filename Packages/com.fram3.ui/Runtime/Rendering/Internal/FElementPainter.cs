@@ -96,8 +96,8 @@ namespace Fram3.UI.Rendering.Internal
 
             if (style.Color.HasValue)
             {
-                var c = style.Color.Value;
-                native.style.color = new UnityEngine.Color(c.R, c.G, c.B, c.A);
+                var color = style.Color.Value;
+                native.style.color = new UnityEngine.Color(color.R, color.G, color.B, color.A);
             }
 
             var fontStyle = ResolveFontStyle(style.Bold, style.Italic);
@@ -106,22 +106,12 @@ namespace Fram3.UI.Rendering.Internal
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)
         {
-            if (bold && italic)
+            return bold switch
             {
-                return UnityEngine.FontStyle.BoldAndItalic;
-            }
-
-            if (bold)
-            {
-                return UnityEngine.FontStyle.Bold;
-            }
-
-            if (italic)
-            {
-                return UnityEngine.FontStyle.Italic;
-            }
-
-            return UnityEngine.FontStyle.Normal;
+                true when italic => UnityEngine.FontStyle.BoldAndItalic,
+                true => UnityEngine.FontStyle.Bold,
+                _ => italic ? UnityEngine.FontStyle.Italic : UnityEngine.FontStyle.Normal
+            };
         }
 
         private static void ApplyLayout(FElement element, VisualElement native)
@@ -166,6 +156,7 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyPaddingLayout(FPadding padding, VisualElement native)
         {
             var insets = padding.Padding;
+
             native.style.paddingTop = insets.Top;
             native.style.paddingRight = insets.Right;
             native.style.paddingBottom = insets.Bottom;
@@ -228,15 +219,19 @@ namespace Fram3.UI.Rendering.Internal
         {
             if (decoration.Color.HasValue)
             {
-                var c = decoration.Color.Value;
-                native.style.backgroundColor = new UnityEngine.Color(c.R, c.G, c.B, c.A);
+                var decorationColor = decoration.Color.Value;
+                native.style.backgroundColor = new UnityEngine.Color(
+                    decorationColor.R, decorationColor.G,
+                    decorationColor.B, decorationColor.A
+                );
             }
 
             if (decoration.Border != null)
             {
                 var border = decoration.Border;
                 var borderColor = new UnityEngine.Color(
-                    border.Color.R, border.Color.G, border.Color.B, border.Color.A);
+                    border.Color.R, border.Color.G, border.Color.B, border.Color.A
+                );
 
                 native.style.borderTopWidth = border.Width;
                 native.style.borderRightWidth = border.Width;
@@ -249,48 +244,40 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.borderLeftColor = borderColor;
             }
 
-            if (decoration.BorderRadius.HasValue)
+            if (!decoration.BorderRadius.HasValue)
             {
-                var radius = decoration.BorderRadius.Value;
-                native.style.borderTopLeftRadius = radius.TopLeft;
-                native.style.borderTopRightRadius = radius.TopRight;
-                native.style.borderBottomRightRadius = radius.BottomRight;
-                native.style.borderBottomLeftRadius = radius.BottomLeft;
+                return;
             }
+
+            var radius = decoration.BorderRadius.Value;
+            native.style.borderTopLeftRadius = radius.TopLeft;
+            native.style.borderTopRightRadius = radius.TopRight;
+            native.style.borderBottomRightRadius = radius.BottomRight;
+            native.style.borderBottomLeftRadius = radius.BottomLeft;
         }
 
         private static Justify MapMainAxis(FMainAxisAlignment alignment)
         {
-            switch (alignment)
+            return alignment switch
             {
-                case FMainAxisAlignment.End:
-                    return Justify.FlexEnd;
-                case FMainAxisAlignment.Center:
-                    return Justify.Center;
-                case FMainAxisAlignment.SpaceBetween:
-                    return Justify.SpaceBetween;
-                case FMainAxisAlignment.SpaceAround:
-                    return Justify.SpaceAround;
-                case FMainAxisAlignment.SpaceEvenly:
-                    return Justify.SpaceEvenly;
-                default:
-                    return Justify.FlexStart;
-            }
+                FMainAxisAlignment.End => Justify.FlexEnd,
+                FMainAxisAlignment.Center => Justify.Center,
+                FMainAxisAlignment.SpaceBetween => Justify.SpaceBetween,
+                FMainAxisAlignment.SpaceAround => Justify.SpaceAround,
+                FMainAxisAlignment.SpaceEvenly => Justify.SpaceEvenly,
+                _ => Justify.FlexStart
+            };
         }
 
         private static Align MapCrossAxis(FCrossAxisAlignment alignment)
         {
-            switch (alignment)
+            return alignment switch
             {
-                case FCrossAxisAlignment.End:
-                    return Align.FlexEnd;
-                case FCrossAxisAlignment.Center:
-                    return Align.Center;
-                case FCrossAxisAlignment.Stretch:
-                    return Align.Stretch;
-                default:
-                    return Align.FlexStart;
-            }
+                FCrossAxisAlignment.End => Align.FlexEnd,
+                FCrossAxisAlignment.Center => Align.Center,
+                FCrossAxisAlignment.Stretch => Align.Stretch,
+                _ => Align.FlexStart
+            };
         }
     }
 }

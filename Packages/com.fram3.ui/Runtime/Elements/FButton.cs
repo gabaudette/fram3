@@ -24,7 +24,7 @@ namespace Fram3.UI.Elements
         /// <param name="label">The text label to display.</param>
         /// <param name="onPressed">The callback invoked on press. Null means no action.</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
-        public FButton(string label, Action? onPressed = null, FKey? key = null) : base(key)
+        public FButton(string? label, Action? onPressed = null, FKey? key = null) : base(key)
         {
             Label = label ?? string.Empty;
             OnPressed = onPressed;
