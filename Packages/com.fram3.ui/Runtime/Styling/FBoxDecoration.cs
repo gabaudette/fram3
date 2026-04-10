@@ -17,6 +17,6 @@ namespace Fram3.UI.Styling
     )
     {
         /// <summary>A decoration with no fill, no border, no radius, and no shadow.</summary>
-        public static FBoxDecoration None => new FBoxDecoration();
+        public static FBoxDecoration None => new();
     }
 }

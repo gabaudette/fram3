@@ -13,7 +13,7 @@ namespace Fram3.UI.Core.Internal
     /// </summary>
     internal class FNode
     {
-        private readonly List<FNode> _children = new List<FNode>();
+        private readonly List<FNode> _children = new();
         private readonly FRebuildScheduler? _scheduler;
 
         internal FNode(FElement? element, FNode? parent, FRebuildScheduler? scheduler = null)

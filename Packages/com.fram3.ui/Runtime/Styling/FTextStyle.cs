@@ -22,6 +22,6 @@ namespace Fram3.UI.Styling
     )
     {
         /// <summary>A text style with no overrides, inheriting all values from the parent.</summary>
-        public static FTextStyle Inherit => new FTextStyle();
+        public static FTextStyle Inherit => new();
     }
 }

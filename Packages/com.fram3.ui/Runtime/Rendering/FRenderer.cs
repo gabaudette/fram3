@@ -67,7 +67,8 @@ namespace Fram3.UI.Rendering
 
             if (_rootNode != null)
             {
-                throw new InvalidOperationException("FRenderer is already mounted. Call Dispose before mounting again.");
+                throw new InvalidOperationException(
+                    "FRenderer is already mounted. Call Dispose before mounting again.");
             }
 
             var rootElement = new FRootElement { Child = root };
@@ -147,7 +148,7 @@ namespace Fram3.UI.Rendering
                 {
                     return;
                 }
-                
+
                 handle.NativeElement.RemoveFromHierarchy();
                 _handles.Remove(node);
             }

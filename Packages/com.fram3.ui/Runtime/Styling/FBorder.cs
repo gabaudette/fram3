@@ -9,6 +9,6 @@ namespace Fram3.UI.Styling
     public sealed record FBorder(FColor Color, float Width)
     {
         /// <summary>A border with zero width and transparent color.</summary>
-        public static FBorder None => new FBorder(FColor.Transparent, 0f);
+        public static FBorder None => new(FColor.Transparent, 0f);
     }
 }

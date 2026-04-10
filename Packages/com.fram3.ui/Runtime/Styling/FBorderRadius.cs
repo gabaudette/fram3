@@ -39,20 +39,20 @@ namespace Fram3.UI.Styling
         /// <summary>Creates a border radius with the same value on all four corners.</summary>
         /// <param name="all">The radius applied to every corner.</param>
         /// <returns>An <see cref="FBorderRadius"/> with equal values on all corners.</returns>
-        public static FBorderRadius All(float all) => new FBorderRadius(all, all, all, all);
+        public static FBorderRadius All(float all) => new(all, all, all, all);
 
         /// <summary>Creates a border radius with only the top corners rounded.</summary>
         /// <param name="value">The radius applied to the top-left and top-right corners.</param>
         /// <returns>An <see cref="FBorderRadius"/> with only the top corners set.</returns>
-        public static FBorderRadius OnlyTop(float value) => new FBorderRadius(value, value, 0f, 0f);
+        public static FBorderRadius OnlyTop(float value) => new(value, value, 0f, 0f);
 
         /// <summary>Creates a border radius with only the bottom corners rounded.</summary>
         /// <param name="value">The radius applied to the bottom-left and bottom-right corners.</param>
         /// <returns>An <see cref="FBorderRadius"/> with only the bottom corners set.</returns>
-        public static FBorderRadius OnlyBottom(float value) => new FBorderRadius(0f, 0f, value, value);
+        public static FBorderRadius OnlyBottom(float value) => new(0f, 0f, value, value);
 
         /// <summary>Zero radius on all corners (sharp rectangle).</summary>
-        public static FBorderRadius Zero => new FBorderRadius(0f, 0f, 0f, 0f);
+        public static FBorderRadius Zero => new(0f, 0f, 0f, 0f);
 
         /// <inheritdoc />
         public bool Equals(FBorderRadius other) =>

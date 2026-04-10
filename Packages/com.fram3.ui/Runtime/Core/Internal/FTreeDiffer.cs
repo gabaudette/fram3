@@ -54,9 +54,11 @@ namespace Fram3.UI.Core.Internal
                     matched[oldIndex] = true;
                     var isInPlace = oldIndex == newIndex && !HasUnmatchedBefore(matched, oldIndex);
 
-                    ops.Add(isInPlace
-                        ? FDiffOp.Update(newIndex, candidate, newElement)
-                        : FDiffOp.Move(newIndex, oldIndex, candidate, newElement));
+                    ops.Add(
+                        isInPlace
+                            ? FDiffOp.Update(newIndex, candidate, newElement)
+                            : FDiffOp.Move(newIndex, oldIndex, candidate, newElement)
+                    );
                 }
             }
 
@@ -66,7 +68,8 @@ namespace Fram3.UI.Core.Internal
         }
 
         private static Dictionary<FKey, (FNode node, int index)> BuildKeyedIndex(
-            IReadOnlyList<FNode> oldNodes)
+            IReadOnlyList<FNode> oldNodes
+        )
         {
             var map = new Dictionary<FKey, (FNode, int)>();
             for (var i = 0; i < oldNodes.Count; i++)
@@ -82,7 +85,8 @@ namespace Fram3.UI.Core.Internal
         }
 
         private static Dictionary<Type, Queue<(FNode node, int index)>> BuildPositionalIndex(
-            IReadOnlyList<FNode> oldNodes)
+            IReadOnlyList<FNode> oldNodes
+        )
         {
             var map = new Dictionary<Type, Queue<(FNode, int)>>();
             for (var i = 0; i < oldNodes.Count; i++)
@@ -111,7 +115,8 @@ namespace Fram3.UI.Core.Internal
             bool[] matched,
             Dictionary<FKey, (FNode node, int index)> keyedOldNodes,
             Dictionary<Type, Queue<(FNode node, int index)>> positionalOldByType,
-            out int oldIndex)
+            out int oldIndex
+        )
         {
             return newElement.Key != null
                 ? FindKeyedMatch(newElement, matched, keyedOldNodes, out oldIndex)
@@ -122,7 +127,8 @@ namespace Fram3.UI.Core.Internal
             FElement newElement,
             bool[] matched,
             Dictionary<FKey, (FNode node, int index)> keyedOldNodes,
-            out int oldIndex)
+            out int oldIndex
+        )
         {
             if (newElement.Key != null && keyedOldNodes.TryGetValue(newElement.Key, out var entry))
             {
@@ -141,7 +147,8 @@ namespace Fram3.UI.Core.Internal
             FElement newElement,
             bool[] matched,
             Dictionary<Type, Queue<(FNode node, int index)>> positionalOldByType,
-            out int oldIndex)
+            out int oldIndex
+        )
         {
             var type = newElement.GetType();
             if (positionalOldByType.TryGetValue(type, out var queue))
@@ -187,7 +194,8 @@ namespace Fram3.UI.Core.Internal
         private static void AppendRemoveOps(
             IReadOnlyList<FNode> oldNodes,
             bool[] matched,
-            List<FDiffOp> ops)
+            List<FDiffOp> ops
+        )
         {
             for (var i = 0; i < oldNodes.Count; i++)
             {

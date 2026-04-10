@@ -14,6 +14,6 @@ namespace Fram3.UI.Styling
         /// <param name="color">The shadow color.</param>
         /// <param name="blur">The blur radius.</param>
         /// <returns>A centered <see cref="FShadow"/> with the given color and blur.</returns>
-        public static FShadow Ambient(FColor color, float blur) => new FShadow(color, 0f, 0f, blur);
+        public static FShadow Ambient(FColor color, float blur) => new(color, 0f, 0f, blur);
     }
 }

@@ -105,25 +105,25 @@ namespace Fram3.UI.Styling
         /// </summary>
         /// <param name="a">The new alpha value in the range [0, 1].</param>
         /// <returns>A new <see cref="FColor"/> with the updated alpha channel.</returns>
-        public FColor WithAlpha(float a) => new FColor(R, G, B, a);
+        public FColor WithAlpha(float a) => new(R, G, B, a);
 
         /// <summary>Fully transparent black.</summary>
-        public static FColor Transparent => new FColor(0f, 0f, 0f, 0f);
+        public static FColor Transparent => new(0f, 0f, 0f, 0f);
 
         /// <summary>Opaque white.</summary>
-        public static FColor White => new FColor(1f, 1f, 1f, 1f);
+        public static FColor White => new(1f, 1f, 1f);
 
         /// <summary>Opaque black.</summary>
-        public static FColor Black => new FColor(0f, 0f, 0f, 1f);
+        public static FColor Black => new(0f, 0f, 0f);
 
         /// <summary>Opaque red.</summary>
-        public static FColor Red => new FColor(1f, 0f, 0f, 1f);
+        public static FColor Red => new(1f, 0f, 0f);
 
         /// <summary>Opaque green.</summary>
-        public static FColor Green => new FColor(0f, 1f, 0f, 1f);
+        public static FColor Green => new(0f, 1f, 0f);
 
         /// <summary>Opaque blue.</summary>
-        public static FColor Blue => new FColor(0f, 0f, 1f, 1f);
+        public static FColor Blue => new(0f, 0f, 1f);
 
         /// <inheritdoc />
         public bool Equals(FColor other) =>

@@ -33,31 +33,31 @@ namespace Fram3.UI.Styling
         }
 
         /// <summary>Top-left corner.</summary>
-        public static FAlignment TopLeft => new FAlignment(-1f, -1f);
+        public static FAlignment TopLeft => new(-1f, -1f);
 
         /// <summary>Top-center.</summary>
-        public static FAlignment TopCenter => new FAlignment(0f, -1f);
+        public static FAlignment TopCenter => new(0f, -1f);
 
         /// <summary>Top-right corner.</summary>
-        public static FAlignment TopRight => new FAlignment(1f, -1f);
+        public static FAlignment TopRight => new(1f, -1f);
 
         /// <summary>Center-left.</summary>
-        public static FAlignment CenterLeft => new FAlignment(-1f, 0f);
+        public static FAlignment CenterLeft => new(-1f, 0f);
 
         /// <summary>Exact center.</summary>
-        public static FAlignment Center => new FAlignment(0f, 0f);
+        public static FAlignment Center => new(0f, 0f);
 
         /// <summary>Center-right.</summary>
-        public static FAlignment CenterRight => new FAlignment(1f, 0f);
+        public static FAlignment CenterRight => new(1f, 0f);
 
         /// <summary>Bottom-left corner.</summary>
-        public static FAlignment BottomLeft => new FAlignment(-1f, 1f);
+        public static FAlignment BottomLeft => new(-1f, 1f);
 
         /// <summary>Bottom-center.</summary>
-        public static FAlignment BottomCenter => new FAlignment(0f, 1f);
+        public static FAlignment BottomCenter => new(0f, 1f);
 
         /// <summary>Bottom-right corner.</summary>
-        public static FAlignment BottomRight => new FAlignment(1f, 1f);
+        public static FAlignment BottomRight => new(1f, 1f);
 
         /// <inheritdoc />
         public bool Equals(FAlignment other) => X.Equals(other.X) && Y.Equals(other.Y);
