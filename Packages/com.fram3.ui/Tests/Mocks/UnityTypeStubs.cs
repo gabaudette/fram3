@@ -6,6 +6,32 @@ using System.Collections.Generic;
 namespace UnityEngine.UIElements
 {
     /// <summary>
+    /// Stub for UIToolkit change events used by input element callbacks.
+    /// </summary>
+    public sealed class ChangeEvent<T>
+    {
+        public T newValue { get; }
+        public T previousValue { get; }
+
+        public ChangeEvent(T previousValue, T newValue)
+        {
+            this.previousValue = previousValue;
+            this.newValue = newValue;
+        }
+    }
+
+    /// <summary>Stub for UIToolkit ClickEvent.</summary>
+    public sealed class ClickEvent { }
+
+    /// <summary>Stub for UIToolkit PointerEnterEvent.</summary>
+    public sealed class PointerEnterEvent { }
+
+    /// <summary>Stub for UIToolkit PointerLeaveEvent.</summary>
+    public sealed class PointerLeaveEvent { }
+
+    public delegate void EventCallback<TEventType>(TEventType evt);
+
+    /// <summary>
     /// Minimal stub for style properties set by <c>FElementPainter</c> in pure C# tests.
     /// </summary>
     public sealed class StyleSheet
@@ -75,8 +101,9 @@ namespace UnityEngine.UIElements
     /// </summary>
     public class VisualElement
     {
-        private readonly List<VisualElement> _children = new();
+        private readonly List<VisualElement> _children = new List<VisualElement>();
         private VisualElement? _parent;
+        private readonly Dictionary<Type, List<object>> _callbacks = new Dictionary<Type, List<object>>();
 
         public StyleSheet style { get; } = new StyleSheet();
         public IReadOnlyList<VisualElement> Children => _children;
@@ -100,6 +127,34 @@ namespace UnityEngine.UIElements
         public void RemoveFromHierarchy()
         {
             _parent?.Remove(this);
+        }
+
+        public void RegisterCallback<TEventType>(EventCallback<TEventType> callback)
+        {
+            var key = typeof(TEventType);
+            if (!_callbacks.ContainsKey(key))
+            {
+                _callbacks[key] = new List<object>();
+            }
+
+            _callbacks[key].Add(callback);
+        }
+
+        /// <summary>
+        /// Test helper: fires all registered callbacks for the given event type.
+        /// </summary>
+        public void SimulateEvent<TEventType>(TEventType evt)
+        {
+            var key = typeof(TEventType);
+            if (!_callbacks.TryGetValue(key, out var list))
+            {
+                return;
+            }
+
+            foreach (var cb in list)
+            {
+                ((EventCallback<TEventType>)cb)(evt);
+            }
         }
     }
 
@@ -128,6 +183,115 @@ namespace UnityEngine.UIElements
         {
             clickedAction = clicked;
             text = string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Stub for <c>UnityEngine.UIElements.ITextEdition</c>.
+    /// </summary>
+    public sealed class TextEditionStub
+    {
+        public string? placeholder { get; set; }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.TextField</c>.
+    /// </summary>
+    public class TextField : VisualElement
+    {
+        public string value { get; set; } = string.Empty;
+        public bool isReadOnly { get; set; }
+        public bool multiline { get; set; }
+        public TextEditionStub textEdition { get; } = new TextEditionStub();
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<string>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new value.</summary>
+        public void SimulateValueChanged(string newValue)
+        {
+            SimulateEvent(new ChangeEvent<string>(value, newValue));
+        }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.Toggle</c>.
+    /// </summary>
+    public class Toggle : VisualElement
+    {
+        public bool value { get; set; }
+        public string? label { get; set; }
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<bool>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new value.</summary>
+        public void SimulateValueChanged(bool newValue)
+        {
+            SimulateEvent(new ChangeEvent<bool>(value, newValue));
+        }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.Slider</c>.
+    /// </summary>
+    public class Slider : VisualElement
+    {
+        public float value { get; set; }
+        public float lowValue { get; set; }
+        public float highValue { get; set; }
+        public string? label { get; set; }
+
+        public Slider(float start = 0f, float end = 1f)
+        {
+            lowValue = start;
+            highValue = end;
+        }
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<float>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new value.</summary>
+        public void SimulateValueChanged(float newValue)
+        {
+            SimulateEvent(new ChangeEvent<float>(value, newValue));
+        }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.DropdownField</c>.
+    /// </summary>
+    public class DropdownField : VisualElement
+    {
+        public List<string> choices { get; set; }
+        public int index { get; set; }
+        public string? label { get; set; }
+
+        public DropdownField(List<string> choices, int defaultIndex = -1)
+        {
+            this.choices = choices ?? new List<string>();
+            index = defaultIndex;
+        }
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<string>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks simulating a selection change.</summary>
+        public void SimulateIndexChanged(int newIndex)
+        {
+            var prev = index;
+            index = newIndex;
+            var prevValue = prev >= 0 && prev < choices.Count ? choices[prev] : string.Empty;
+            var newValue = newIndex >= 0 && newIndex < choices.Count ? choices[newIndex] : string.Empty;
+            SimulateEvent(new ChangeEvent<string>(prevValue, newValue));
         }
     }
 }

@@ -1,4 +1,5 @@
 #nullable enable
+using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Elements;
 using Fram3.UI.Styling;
@@ -19,7 +20,9 @@ namespace Fram3.UI.Rendering.Internal
         /// <param name="element">The framework element to produce a native element for.</param>
         /// <returns>
         /// A <c>Label</c> for <see cref="FText"/>, a <c>Button</c> for <see cref="FButton"/>,
-        /// or a plain <c>VisualElement</c> for all layout/container elements.
+        /// a <c>TextField</c> for <see cref="FTextField"/>, a <c>Toggle</c> for <see cref="FToggle"/>,
+        /// a <c>Slider</c> for <see cref="FSlider"/>, a <c>DropdownField</c> for <see cref="FDropdown"/>,
+        /// or a plain <c>VisualElement</c> for all layout/container/gesture elements.
         /// </returns>
         internal static VisualElement CreateNative(FElement element)
         {
@@ -29,9 +32,18 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateLabel(text);
                 case FButton button:
                     return CreateButton(button);
+                case FTextField textField:
+                    return CreateTextField(textField);
+                case FToggle toggle:
+                    return CreateToggle(toggle);
+                case FSlider slider:
+                    return CreateSlider(slider);
+                case FDropdown dropdown:
+                    return CreateDropdown(dropdown);
                 default:
                     var native = new VisualElement();
                     ApplyLayout(element, native);
+                    RegisterGestureCallbacks(element, native);
                     return native;
             }
         }
@@ -52,6 +64,18 @@ namespace Fram3.UI.Rendering.Internal
                 case FButton button when native is Button btn:
                     PaintButton(button, btn);
                     break;
+                case FTextField textField when native is TextField tf:
+                    PaintTextField(textField, tf);
+                    break;
+                case FToggle toggle when native is Toggle tgl:
+                    PaintToggle(toggle, tgl);
+                    break;
+                case FSlider slider when native is Slider sld:
+                    PaintSlider(slider, sld);
+                    break;
+                case FDropdown dropdown when native is DropdownField dd:
+                    PaintDropdown(dropdown, dd);
+                    break;
                 default:
                     ApplyLayout(element, native);
                     break;
@@ -69,6 +93,142 @@ namespace Fram3.UI.Rendering.Internal
         {
             var btn = new Button(button.OnPressed) { text = button.Label };
             return btn;
+        }
+
+        private static TextField CreateTextField(FTextField textField)
+        {
+            var tf = new TextField { value = textField.Value, isReadOnly = textField.ReadOnly, multiline = textField.Multiline };
+            if (textField.Placeholder != null)
+            {
+                tf.textEdition.placeholder = textField.Placeholder;
+            }
+
+            if (textField.OnChanged != null)
+            {
+                var callback = textField.OnChanged;
+                tf.RegisterValueChangedCallback(evt => callback(evt.newValue));
+            }
+
+            return tf;
+        }
+
+        private static Toggle CreateToggle(FToggle toggle)
+        {
+            var tgl = new Toggle { value = toggle.Value };
+            if (toggle.Label != null)
+            {
+                tgl.label = toggle.Label;
+            }
+
+            if (toggle.OnChanged != null)
+            {
+                var callback = toggle.OnChanged;
+                tgl.RegisterValueChangedCallback(evt => callback(evt.newValue));
+            }
+
+            return tgl;
+        }
+
+        private static Slider CreateSlider(FSlider slider)
+        {
+            var sld = new Slider(slider.Min, slider.Max) { value = slider.Value };
+            if (slider.Label != null)
+            {
+                sld.label = slider.Label;
+            }
+
+            if (slider.OnChanged != null)
+            {
+                var callback = slider.OnChanged;
+                sld.RegisterValueChangedCallback(evt => callback(evt.newValue));
+            }
+
+            return sld;
+        }
+
+        private static DropdownField CreateDropdown(FDropdown dropdown)
+        {
+            var choices = new List<string>(dropdown.Options);
+            var dd = new DropdownField(choices, dropdown.SelectedIndex);
+            if (dropdown.Label != null)
+            {
+                dd.label = dropdown.Label;
+            }
+
+            if (dropdown.OnChanged != null)
+            {
+                var callback = dropdown.OnChanged;
+                dd.RegisterValueChangedCallback(evt => callback(dd.index));
+            }
+
+            return dd;
+        }
+
+        private static void PaintTextField(FTextField textField, TextField tf)
+        {
+            tf.value = textField.Value;
+            tf.isReadOnly = textField.ReadOnly;
+            tf.multiline = textField.Multiline;
+            if (textField.Placeholder != null)
+            {
+                tf.textEdition.placeholder = textField.Placeholder;
+            }
+        }
+
+        private static void PaintToggle(FToggle toggle, Toggle tgl)
+        {
+            tgl.value = toggle.Value;
+            if (toggle.Label != null)
+            {
+                tgl.label = toggle.Label;
+            }
+        }
+
+        private static void PaintSlider(FSlider slider, Slider sld)
+        {
+            sld.lowValue = slider.Min;
+            sld.highValue = slider.Max;
+            sld.value = slider.Value;
+            if (slider.Label != null)
+            {
+                sld.label = slider.Label;
+            }
+        }
+
+        private static void PaintDropdown(FDropdown dropdown, DropdownField dd)
+        {
+            dd.choices = new List<string>(dropdown.Options);
+            dd.index = dropdown.SelectedIndex;
+            if (dropdown.Label != null)
+            {
+                dd.label = dropdown.Label;
+            }
+        }
+
+        private static void RegisterGestureCallbacks(FElement element, VisualElement native)
+        {
+            if (element is not FGestureDetector gesture)
+            {
+                return;
+            }
+
+            if (gesture.OnTap != null)
+            {
+                var callback = gesture.OnTap;
+                native.RegisterCallback<ClickEvent>(_ => callback());
+            }
+
+            if (gesture.OnPointerEnter != null)
+            {
+                var callback = gesture.OnPointerEnter;
+                native.RegisterCallback<PointerEnterEvent>(_ => callback());
+            }
+
+            if (gesture.OnPointerExit != null)
+            {
+                var callback = gesture.OnPointerExit;
+                native.RegisterCallback<PointerLeaveEvent>(_ => callback());
+            }
         }
 
         private static void PaintText(FText text, Label label)
