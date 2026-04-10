@@ -19,7 +19,9 @@ namespace Fram3.UI.Core.Internal
     /// </summary>
     internal sealed class FDiffOp
     {
-        private FDiffOp() { }
+        private FDiffOp()
+        {
+        }
 
         internal FDiffOpKind Kind { get; private init; }
 

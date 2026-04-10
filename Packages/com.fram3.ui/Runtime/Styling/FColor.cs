@@ -67,7 +67,6 @@ namespace Fram3.UI.Styling
             }
 
             var cleaned = hex.TrimStart('#');
-
             if (cleaned.Length != 6 && cleaned.Length != 8)
             {
                 throw new ArgumentException(

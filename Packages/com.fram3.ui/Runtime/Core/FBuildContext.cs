@@ -43,9 +43,10 @@ namespace Fram3.UI.Core
                 {
                     return match;
                 }
+
                 current = current.Parent;
             }
-            
+
             return null;
         }
 
@@ -65,7 +66,7 @@ namespace Fram3.UI.Core
                     $"No ancestor of type {typeof(T).Name} found in the element tree."
                 );
             }
-            
+
             return result;
         }
 

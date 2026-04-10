@@ -29,7 +29,7 @@ namespace Fram3.UI.Rendering
         private bool _disposed;
 
         /// <summary>
-        /// Initialises a new <see cref="FRenderer"/>.
+        /// Initializes a new <see cref="FRenderer"/>.
         /// </summary>
         public FRenderer()
         {
@@ -53,7 +53,7 @@ namespace Fram3.UI.Rendering
         /// <exception cref="InvalidOperationException">
         /// Thrown when the renderer is already mounted.
         /// </exception>
-        public void Mount(FElement root, VisualElement container)
+        public void Mount(FElement? root, VisualElement container)
         {
             if (root == null)
             {
@@ -143,11 +143,13 @@ namespace Fram3.UI.Rendering
 
             public void OnUnmounting(FNode node)
             {
-                if (_handles.TryGetValue(node, out var handle))
+                if (!_handles.TryGetValue(node, out var handle))
                 {
-                    handle.NativeElement.RemoveFromHierarchy();
-                    _handles.Remove(node);
+                    return;
                 }
+                
+                handle.NativeElement.RemoveFromHierarchy();
+                _handles.Remove(node);
             }
 
             public void OnRebuilt(FNode node)

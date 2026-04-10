@@ -22,7 +22,7 @@ namespace Fram3.UI.Core.Internal
 
         /// <summary>
         /// Called after a node has been rebuilt and its child list updated. Use this
-        /// to synchronise properties on the node's existing native object.
+        /// to synchronize properties on the node's existing native object.
         /// </summary>
         void OnRebuilt(FNode node);
     }

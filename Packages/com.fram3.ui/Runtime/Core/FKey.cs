@@ -36,6 +36,7 @@ namespace Fram3.UI.Core
             {
                 return right is null;
             }
+
             return right != null && left.Equals(right);
         }
 
@@ -73,7 +74,7 @@ namespace Fram3.UI.Core
             {
                 return EqualityHelper(otherValueKey);
             }
-            
+
             return false;
         }
 
@@ -88,7 +89,7 @@ namespace Fram3.UI.Core
             {
                 return other.Value is null;
             }
-            
+
             return other.Value != null && Value.Equals(other.Value);
         }
     }
@@ -119,7 +120,7 @@ namespace Fram3.UI.Core
             {
                 return ReferenceEquals(Value, otherObjectKey.Value);
             }
-            
+
             return false;
         }
 

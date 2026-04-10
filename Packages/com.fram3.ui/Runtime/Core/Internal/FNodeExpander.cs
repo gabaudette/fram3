@@ -61,7 +61,7 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal void Rebuild(FNode node)
         {
-            IReadOnlyList<FElement> newChildren = ResolveChildren(node);
+            var newChildren = ResolveChildren(node);
             FTreePatcher.Patch(node, newChildren, this);
             node.IsDirty = false;
             _adapter?.OnRebuilt(node);
@@ -73,7 +73,7 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal void UpdateElement(FNode node, FElement newElement)
         {
-            FElement oldElement = node.Element;
+            var oldElement = node.Element;
             node.Element = newElement;
 
             if (node.State != null && oldElement is FStatefulElement oldStateful)
@@ -84,7 +84,7 @@ namespace Fram3.UI.Core.Internal
 
         private void MountState(FNode node, FStatefulElement stateful)
         {
-            FState state = stateful.CreateState();
+            var state = stateful.CreateState();
             state.Mount(node);
             node.State = state;
             state.InitState();
@@ -92,10 +92,10 @@ namespace Fram3.UI.Core.Internal
 
         private void ExpandChildren(FNode node)
         {
-            IReadOnlyList<FElement> children = ResolveChildren(node);
-            foreach (FElement child in children)
+            var children = ResolveChildren(node);
+            foreach (var child in children)
             {
-                FNode childNode = Mount(child, node);
+                var childNode = Mount(child, node);
                 node.AddChild(childNode);
             }
         }
@@ -112,19 +112,19 @@ namespace Fram3.UI.Core.Internal
 
         private IReadOnlyList<FElement> ResolveStatefulChildren(FNode node)
         {
-            FElement built = node.State!.Build(node.Context);
+            var built = node.State!.Build(node.Context);
             return new[] { built };
         }
 
         private IReadOnlyList<FElement> ResolveStatelessChildren(FStatelessElement stateless, FNode node)
         {
-            FElement built = stateless.Build(node.Context);
+            var built = stateless.Build(node.Context);
             return new[] { built };
         }
 
         private void UnmountChildren(FNode node)
         {
-            foreach (FNode child in node.Children)
+            foreach (var child in node.Children)
             {
                 Unmount(child);
             }
@@ -132,12 +132,14 @@ namespace Fram3.UI.Core.Internal
 
         private static void DisposeState(FNode node)
         {
-            if (node.State != null)
+            if (node.State == null)
             {
-                node.State.Unmount();
-                node.State.Dispose();
-                node.State = null;
+                return;
             }
+
+            node.State.Unmount();
+            node.State.Dispose();
+            node.State = null;
         }
     }
 }
