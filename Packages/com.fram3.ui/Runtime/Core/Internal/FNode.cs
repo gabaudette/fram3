@@ -13,8 +13,14 @@ namespace Fram3.UI.Core.Internal
     /// </summary>
     internal class FNode
     {
-        private readonly List<FNode> _children = new();
+        private readonly List<FNode> _children = new List<FNode>();
         private readonly FRebuildScheduler? _scheduler;
+
+        /// <summary>
+        /// Nodes that depend on this node when this node holds an FInheritedElement.
+        /// These are scheduled for rebuild when UpdateShouldNotify returns true.
+        /// </summary>
+        private readonly HashSet<FNode> _inheritedDependents = new HashSet<FNode>();
 
         internal FNode(FElement? element, FNode? parent, FRebuildScheduler? scheduler = null)
         {
@@ -63,6 +69,59 @@ namespace Fram3.UI.Core.Internal
         {
             IsDirty = true;
             _scheduler?.Schedule(this);
+        }
+
+        /// <summary>
+        /// Registers <paramref name="dependent"/> as a node that depends on the inherited
+        /// data carried by this node. Called when a descendant's build context invokes
+        /// DependOnInherited and resolves to this node.
+        /// </summary>
+        internal void AddInheritedDependent(FNode dependent)
+        {
+            _inheritedDependents.Add(dependent);
+        }
+
+        /// <summary>
+        /// Removes <paramref name="dependent"/> from the inherited dependents set.
+        /// Called when the dependent node is unmounted.
+        /// </summary>
+        internal void RemoveInheritedDependent(FNode dependent)
+        {
+            _inheritedDependents.Remove(dependent);
+        }
+
+        /// <summary>
+        /// Marks all registered inherited dependents dirty so they are rebuilt
+        /// on the next frame. Called by FTreePatcher when an FInheritedElement
+        /// update returns true from UpdateShouldNotify.
+        /// </summary>
+        internal void NotifyInheritedDependents()
+        {
+            foreach (var dependent in _inheritedDependents)
+            {
+                dependent.MarkDirty();
+            }
+        }
+
+        /// <summary>
+        /// Walks up the ancestor chain to find the nearest FNode whose element is
+        /// an FInheritedElement of type <typeparamref name="T"/>.
+        /// Returns null when no such ancestor exists.
+        /// </summary>
+        internal FNode? FindInheritedAncestor<T>() where T : FInheritedElement
+        {
+            var current = Parent;
+            while (current != null)
+            {
+                if (current.Element is T)
+                {
+                    return current;
+                }
+
+                current = current.Parent;
+            }
+
+            return null;
         }
     }
 }

@@ -52,6 +52,7 @@ namespace Fram3.UI.Core.Internal
             _adapter?.OnUnmounting(node);
             UnmountChildren(node);
             DisposeState(node);
+            RemoveInheritedDependencies(node);
             node.ClearChildren();
         }
 
@@ -70,6 +71,8 @@ namespace Fram3.UI.Core.Internal
         /// <summary>
         /// Updates the element reference on a node and, for stateful nodes, invokes
         /// <see cref="FState.DidUpdateElement"/> with the previous element.
+        /// For inherited element nodes, notifies dependents when
+        /// <see cref="FInheritedElement.UpdateShouldNotify"/> returns true.
         /// </summary>
         internal void UpdateElement(FNode node, FElement newElement)
         {
@@ -79,6 +82,14 @@ namespace Fram3.UI.Core.Internal
             if (node.State != null && oldElement is FStatefulElement oldStateful)
             {
                 node.State.DidUpdateElement(oldStateful);
+            }
+
+            if (oldElement is FInheritedElement oldInherited && newElement is FInheritedElement)
+            {
+                if (((FInheritedElement)newElement).UpdateShouldNotify(oldInherited))
+                {
+                    node.NotifyInheritedDependents();
+                }
             }
         }
 
@@ -127,6 +138,15 @@ namespace Fram3.UI.Core.Internal
             foreach (var child in node.Children)
             {
                 Unmount(child);
+            }
+        }
+
+        private static void RemoveInheritedDependencies(FNode node)
+        {
+            var ancestorNode = node.FindInheritedAncestor<FInheritedElement>();
+            if (ancestorNode != null)
+            {
+                ancestorNode.RemoveInheritedDependent(node);
             }
         }
 
