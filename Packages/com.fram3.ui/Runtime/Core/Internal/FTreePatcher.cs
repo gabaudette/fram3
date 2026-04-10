@@ -21,7 +21,8 @@ namespace Fram3.UI.Core.Internal
         internal static void Patch(
             FNode parent,
             IReadOnlyList<FElement> newElements,
-            FNodeExpander expander)
+            FNodeExpander expander
+        )
         {
             var ops = FTreeDiffer.Diff(parent.Children, newElements);
             ApplyOps(parent, ops, expander);
