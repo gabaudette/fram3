@@ -155,16 +155,17 @@ namespace Fram3.UI.Rendering
 
             public void OnRebuilt(FNode node)
             {
-                // Property-level updates for concrete element types will be wired here
-                // in Phase 6 when concrete elements (FText, FContainer, etc.) are added.
-                // At this phase, rebuilt leaf nodes have their native element retained
-                // and children re-parented by the mount/unmount callbacks that fire
-                // during the reconciliation pass.
+                if (!_handles.TryGetValue(node, out var handle))
+                {
+                    return;
+                }
+
+                FElementPainter.Paint(node.Element, handle.NativeElement);
             }
 
             private VisualElement CreateNativeElement(FNode node)
             {
-                return new VisualElement();
+                return FElementPainter.CreateNative(node.Element);
             }
 
             private void AttachToParent(FNode node, VisualElement native)

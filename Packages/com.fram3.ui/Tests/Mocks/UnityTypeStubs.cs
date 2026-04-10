@@ -6,6 +6,71 @@ using System.Collections.Generic;
 namespace UnityEngine.UIElements
 {
     /// <summary>
+    /// Minimal stub for style properties set by <c>FElementPainter</c> in pure C# tests.
+    /// </summary>
+    public sealed class StyleSheet
+    {
+        public float? flexGrow;
+        public float? flexShrink;
+        public float? width;
+        public float? height;
+        public float? paddingTop;
+        public float? paddingRight;
+        public float? paddingBottom;
+        public float? paddingLeft;
+        public float? marginTop;
+        public float? marginRight;
+        public float? marginBottom;
+        public float? marginLeft;
+        public float? borderTopWidth;
+        public float? borderRightWidth;
+        public float? borderBottomWidth;
+        public float? borderLeftWidth;
+        public float? borderTopLeftRadius;
+        public float? borderTopRightRadius;
+        public float? borderBottomRightRadius;
+        public float? borderBottomLeftRadius;
+        public float? fontSize;
+        public UnityEngine.Color? color;
+        public UnityEngine.Color? backgroundColor;
+        public UnityEngine.Color? borderTopColor;
+        public UnityEngine.Color? borderRightColor;
+        public UnityEngine.Color? borderBottomColor;
+        public UnityEngine.Color? borderLeftColor;
+        public FlexDirection? flexDirection;
+        public Justify? justifyContent;
+        public Align? alignItems;
+        public UnityEngine.FontStyle? unityFontStyleAndWeight;
+    }
+
+    public enum FlexDirection
+    {
+        Column,
+        Row,
+        ColumnReverse,
+        RowReverse
+    }
+
+    public enum Justify
+    {
+        FlexStart,
+        Center,
+        FlexEnd,
+        SpaceBetween,
+        SpaceAround,
+        SpaceEvenly
+    }
+
+    public enum Align
+    {
+        Auto,
+        FlexStart,
+        Center,
+        FlexEnd,
+        Stretch
+    }
+
+    /// <summary>
     /// Minimal stub for <c>UnityEngine.UIElements.VisualElement</c> used in pure C# tests.
     /// </summary>
     public class VisualElement
@@ -13,6 +78,7 @@ namespace UnityEngine.UIElements
         private readonly List<VisualElement> _children = new();
         private VisualElement? _parent;
 
+        public StyleSheet style { get; } = new StyleSheet();
         public IReadOnlyList<VisualElement> Children => _children;
         public VisualElement? Parent => _parent;
         public int childCount => _children.Count;
@@ -36,10 +102,46 @@ namespace UnityEngine.UIElements
             _parent?.Remove(this);
         }
     }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.Label</c>.
+    /// </summary>
+    public class Label : VisualElement
+    {
+        public string text { get; set; }
+
+        public Label(string text = "")
+        {
+            this.text = text ?? string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.Button</c>.
+    /// </summary>
+    public class Button : VisualElement
+    {
+        public string text { get; set; }
+        public Action? clickedAction { get; }
+
+        public Button(Action? clicked = null)
+        {
+            clickedAction = clicked;
+            text = string.Empty;
+        }
+    }
 }
 
 namespace UnityEngine
 {
+    public enum FontStyle
+    {
+        Normal,
+        Bold,
+        Italic,
+        BoldAndItalic
+    }
+
     public struct Color
     {
         public float r, g, b, a;
