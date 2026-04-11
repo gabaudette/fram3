@@ -65,7 +65,7 @@ namespace Fram3.UI.Elements
         private sealed class FSelectorState : FState<FSelector<TCubit, TState, TValue>>
         {
             private TCubit? _cubit;
-            private TValue? _lastValue;
+            private TValue _lastValue = default!;
             private Action<TState>? _listener;
 
             public override void InitState()
