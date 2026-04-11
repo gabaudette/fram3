@@ -66,8 +66,10 @@ namespace UnityEngine.UIElements
         public FlexDirection? flexDirection;
         public Justify? justifyContent;
         public Align? alignItems;
+        public Wrap? flexWrap;
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
         public Position? position;
+        public float? opacity;
     }
 
     public enum Position
@@ -101,6 +103,13 @@ namespace UnityEngine.UIElements
         Center,
         FlexEnd,
         Stretch
+    }
+
+    public enum Wrap
+    {
+        NoWrap,
+        Wrap,
+        WrapReverse
     }
 
     /// <summary>
@@ -322,6 +331,104 @@ namespace UnityEngine.UIElements
         Vertical,
         Horizontal,
         VerticalAndHorizontal
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.IntegerField</c>.
+    /// </summary>
+    public class IntegerField : VisualElement
+    {
+        public int value { get; set; }
+        public string? label { get; set; }
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<int>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new value.</summary>
+        public void SimulateValueChanged(int newValue)
+        {
+            SimulateEvent(new ChangeEvent<int>(value, newValue));
+        }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.FloatField</c>.
+    /// </summary>
+    public class FloatField : VisualElement
+    {
+        public float value { get; set; }
+        public string? label { get; set; }
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<float>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new value.</summary>
+        public void SimulateValueChanged(float newValue)
+        {
+            SimulateEvent(new ChangeEvent<float>(value, newValue));
+        }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.MinMaxSlider</c>.
+    /// </summary>
+    public class MinMaxSlider : VisualElement
+    {
+        public float minValue { get; set; }
+        public float maxValue { get; set; }
+        public float lowLimit { get; set; }
+        public float highLimit { get; set; }
+        public string? label { get; set; }
+
+        public MinMaxSlider(float minValue = 0f, float maxValue = 1f, float lowLimit = 0f, float highLimit = 1f)
+        {
+            this.minValue = minValue;
+            this.maxValue = maxValue;
+            this.lowLimit = lowLimit;
+            this.highLimit = highLimit;
+        }
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<UnityEngine.Vector2>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new range.</summary>
+        public void SimulateValueChanged(float newMin, float newMax)
+        {
+            var prev = new UnityEngine.Vector2(minValue, maxValue);
+            var next = new UnityEngine.Vector2(newMin, newMax);
+            SimulateEvent(new ChangeEvent<UnityEngine.Vector2>(prev, next));
+        }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.EnumField</c>.
+    /// </summary>
+    public class EnumField : VisualElement
+    {
+        public Enum? value { get; set; }
+        public string? label { get; set; }
+
+        public EnumField(Enum? initialValue = null)
+        {
+            value = initialValue;
+        }
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<Enum?>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new enum value.</summary>
+        public void SimulateValueChanged(Enum? newValue)
+        {
+            SimulateEvent(new ChangeEvent<Enum?>(value, newValue));
+        }
     }
 
     /// <summary>

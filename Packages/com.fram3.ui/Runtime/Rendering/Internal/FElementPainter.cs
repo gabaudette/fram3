@@ -53,6 +53,14 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateModal(modal);
                 case FToggle toggle:
                     return CreateToggle(toggle);
+                case FIntField intField:
+                    return CreateIntField(intField);
+                case FFloatField floatField:
+                    return CreateFloatField(floatField);
+                case FMinMaxSlider minMaxSlider:
+                    return CreateMinMaxSlider(minMaxSlider);
+                case IFEnumFieldDescriptor enumField:
+                    return CreateEnumField(enumField);
                 case FSlider slider:
                     return CreateSlider(slider);
                 case FDropdown dropdown:
@@ -69,6 +77,11 @@ namespace Fram3.UI.Rendering.Internal
                     if (element is IFListViewDescriptor listView)
                     {
                         return CreateListView(listView);
+                    }
+
+                    if (element is IFEnumFieldDescriptor enumFieldDesc)
+                    {
+                        return CreateEnumField(enumFieldDesc);
                     }
 
                     var native = new VisualElement();
@@ -129,6 +142,15 @@ namespace Fram3.UI.Rendering.Internal
                 case FToggle toggle when native is Toggle tgl:
                     PaintToggle(toggle, tgl);
                     break;
+                case FIntField intField when native is IntegerField intf:
+                    PaintIntField(intField, intf);
+                    break;
+                case FFloatField floatField when native is FloatField ff:
+                    PaintFloatField(floatField, ff);
+                    break;
+                case FMinMaxSlider minMaxSlider when native is MinMaxSlider mms:
+                    PaintMinMaxSlider(minMaxSlider, mms);
+                    break;
                 case FSlider slider when native is Slider sld:
                     PaintSlider(slider, sld);
                     break;
@@ -151,6 +173,12 @@ namespace Fram3.UI.Rendering.Internal
                     if (element is IFListViewDescriptor listView && native is ListView lv)
                     {
                         PaintListView(listView, lv);
+                        break;
+                    }
+
+                    if (element is IFEnumFieldDescriptor enumFieldDesc && native is EnumField ef)
+                    {
+                        PaintEnumField(enumFieldDesc, ef);
                         break;
                     }
 
@@ -504,10 +532,7 @@ namespace Fram3.UI.Rendering.Internal
             var img = new Image();
             ApplyImageDimensions(icon.Width, icon.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (icon.Source is VectorImage vectorImage)
-            {
-                img.vectorImage = vectorImage;
-            }
+            ApplyIconSource(icon, img);
 #endif
             return img;
         }
@@ -516,12 +541,29 @@ namespace Fram3.UI.Rendering.Internal
         {
             ApplyImageDimensions(icon.Width, icon.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (icon.Source is VectorImage vectorImage)
-            {
-                img.vectorImage = vectorImage;
-            }
+            ApplyIconSource(icon, img);
 #endif
         }
+
+#if !FRAM3_PURE_TESTS
+        private static void ApplyIconSource(FIcon icon, Image img)
+        {
+            if (icon.Source is VectorImage preloaded)
+            {
+                img.vectorImage = preloaded;
+                return;
+            }
+
+            if (icon.SvgPath != null)
+            {
+                var loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<VectorImage>(icon.SvgPath);
+                if (loaded != null)
+                {
+                    img.vectorImage = loaded;
+                }
+            }
+        }
+#endif
 
 #if !FRAM3_PURE_TESTS
         private static FSpinnerElement CreateSpinner(FSpinner spinner)
@@ -694,6 +736,12 @@ namespace Fram3.UI.Rendering.Internal
                 case FTooltip tooltip:
                     ApplyTooltipLayout(tooltip, native);
                     break;
+                case FWrap:
+                    ApplyWrapLayout(native);
+                    break;
+                case FOpacity opacity:
+                    ApplyOpacityLayout(opacity, native);
+                    break;
             }
         }
 
@@ -814,6 +862,133 @@ namespace Fram3.UI.Rendering.Internal
             native.style.borderBottomLeftRadius = radius.BottomLeft;
         }
 
+        private static IntegerField CreateIntField(FIntField intField)
+        {
+            var intf = new IntegerField { value = intField.Value };
+            if (intField.Label != null)
+            {
+                intf.label = intField.Label;
+            }
+
+            if (intField.OnChanged == null)
+            {
+                return intf;
+            }
+
+            var callback = intField.OnChanged;
+            intf.RegisterValueChangedCallback(evt => callback(evt.newValue));
+
+            return intf;
+        }
+
+        private static void PaintIntField(FIntField intField, IntegerField intf)
+        {
+            intf.value = intField.Value;
+            if (intField.Label != null)
+            {
+                intf.label = intField.Label;
+            }
+        }
+
+        private static FloatField CreateFloatField(FFloatField floatField)
+        {
+            var ff = new FloatField { value = floatField.Value };
+            if (floatField.Label != null)
+            {
+                ff.label = floatField.Label;
+            }
+
+            if (floatField.OnChanged == null)
+            {
+                return ff;
+            }
+
+            var callback = floatField.OnChanged;
+            ff.RegisterValueChangedCallback(evt => callback(evt.newValue));
+
+            return ff;
+        }
+
+        private static void PaintFloatField(FFloatField floatField, FloatField ff)
+        {
+            ff.value = floatField.Value;
+            if (floatField.Label != null)
+            {
+                ff.label = floatField.Label;
+            }
+        }
+
+        private static MinMaxSlider CreateMinMaxSlider(FMinMaxSlider minMaxSlider)
+        {
+            var mms = new MinMaxSlider(
+                minMaxSlider.MinValue,
+                minMaxSlider.MaxValue,
+                minMaxSlider.LowLimit,
+                minMaxSlider.HighLimit
+            );
+
+            if (minMaxSlider.Label != null)
+            {
+                mms.label = minMaxSlider.Label;
+            }
+
+            if (minMaxSlider.OnChanged == null)
+            {
+                return mms;
+            }
+
+            var callback = minMaxSlider.OnChanged;
+            mms.RegisterValueChangedCallback(evt => callback(evt.newValue.x, evt.newValue.y));
+
+            return mms;
+        }
+
+        private static void PaintMinMaxSlider(FMinMaxSlider minMaxSlider, MinMaxSlider mms)
+        {
+            mms.minValue = minMaxSlider.MinValue;
+            mms.maxValue = minMaxSlider.MaxValue;
+            mms.lowLimit = minMaxSlider.LowLimit;
+            mms.highLimit = minMaxSlider.HighLimit;
+            if (minMaxSlider.Label != null)
+            {
+                mms.label = minMaxSlider.Label;
+            }
+        }
+
+        private static EnumField CreateEnumField(IFEnumFieldDescriptor enumField)
+        {
+            var ef = new EnumField(enumField.ValueAsEnum);
+            if (enumField.Label != null)
+            {
+                ef.label = enumField.Label;
+            }
+
+            if (!enumField.HasOnChanged)
+            {
+                return ef;
+            }
+
+            var descriptor = enumField;
+            ef.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue != null)
+                {
+                    descriptor.InvokeOnChanged(evt.newValue);
+                }
+            });
+
+            return ef;
+        }
+
+        private static void PaintEnumField(IFEnumFieldDescriptor enumField, EnumField ef)
+        {
+            ef.value = enumField.ValueAsEnum;
+            if (enumField.Label != null)
+            {
+                ef.label = enumField.Label;
+            }
+        }
+
         private static void ApplyExpandedLayout(FExpanded expanded, VisualElement native)
         {
             native.style.flexGrow = expanded.Flex;
@@ -852,6 +1027,17 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyTooltipLayout(FTooltip tooltip, VisualElement native)
         {
             native.tooltip = tooltip.Message;
+        }
+
+        private static void ApplyWrapLayout(VisualElement native)
+        {
+            native.style.flexDirection = FlexDirection.Row;
+            native.style.flexWrap = Wrap.Wrap;
+        }
+
+        private static void ApplyOpacityLayout(FOpacity opacity, VisualElement native)
+        {
+            native.style.opacity = opacity.Value;
         }
 
         private static ScrollViewMode MapScrollMode(FScrollDirection direction)
