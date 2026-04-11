@@ -1,7 +1,7 @@
 #nullable enable
 #if !FRAM3_PURE_TESTS
 using System;
-using System.Text.Json;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Fram3.UI.GlobalState
@@ -12,7 +12,7 @@ namespace Fram3.UI.GlobalState
     /// fits comfortably in a string (settings, preferences, small session data).
     /// </summary>
     /// <typeparam name="TState">
-    /// The type of state to persist. Must be serialisable by <c>System.Text.Json</c>.
+    /// The type of state to persist. Must be serialisable by <c>Newtonsoft.Json</c>.
     /// </typeparam>
     public sealed class PlayerPrefsAdapter<TState> : IPersistenceAdapter<TState>
     {
@@ -36,7 +36,7 @@ namespace Fram3.UI.GlobalState
         /// <inheritdoc/>
         public void Save(TState state)
         {
-            var json = JsonSerializer.Serialize(state);
+            var json = JsonConvert.SerializeObject(state);
             PlayerPrefs.SetString(_key, json);
             PlayerPrefs.Save();
         }
@@ -51,7 +51,7 @@ namespace Fram3.UI.GlobalState
             }
 
             var json = PlayerPrefs.GetString(_key);
-            state = JsonSerializer.Deserialize<TState>(json)!;
+            state = JsonConvert.DeserializeObject<TState>(json)!;
             return true;
         }
     }
