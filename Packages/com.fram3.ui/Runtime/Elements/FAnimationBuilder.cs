@@ -97,7 +97,7 @@ namespace Fram3.UI.Elements
             public override void DidUpdateElement(FStatefulElement oldElement)
             {
                 var old = (FAnimationBuilder)oldElement;
-                if (Mathf.Approximately(old.Duration, Element!.Duration) && ReferenceEquals(old.Curve, Element.Curve))
+                if (old.Duration == Element!.Duration && ReferenceEquals(old.Curve, Element.Curve))
                 {
                     return;
                 }
