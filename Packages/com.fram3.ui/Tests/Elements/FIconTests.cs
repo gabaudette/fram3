@@ -51,5 +51,21 @@ namespace Fram3.UI.Tests.Elements
 
             Assert.That(element.Key, Is.EqualTo(key));
         }
+
+        [Test]
+        public void Constructor_DefaultSvgPath_IsNull()
+        {
+            var element = new FIcon();
+
+            Assert.That(element.SvgPath, Is.Null);
+        }
+
+        [Test]
+        public void Constructor_StoresSvgPath()
+        {
+            var element = new FIcon(svgPath: "Assets/Icons/arrow.svg");
+
+            Assert.That(element.SvgPath, Is.EqualTo("Assets/Icons/arrow.svg"));
+        }
     }
 }
