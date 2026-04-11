@@ -153,9 +153,8 @@ namespace Fram3.UI.Elements
             {
                 var dict = new Dictionary<string, object>();
 
-                for (var i = 0; i < targetValues.Count; i++)
+                foreach (var targetValue in targetValues)
                 {
-                    var targetValue = targetValues[i];
                     var previousValue = FindByKey(previousValues, targetValue.Key) ?? targetValue;
                     dict[targetValue.Key] = targetValue.Interpolate(previousValue, t);
                 }
@@ -184,10 +183,10 @@ namespace Fram3.UI.Elements
                 IReadOnlyList<IFAnimatedValue> current
             )
             {
-                for (var i = 0; i < current.Count; i++)
+                foreach (var animatedValue in current)
                 {
-                    var prev = FindByKey(previous, current[i].Key);
-                    if (prev == null || current[i].HasChangedFrom(prev))
+                    var prev = FindByKey(previous, animatedValue.Key);
+                    if (prev == null || animatedValue.HasChangedFrom(prev))
                     {
                         return true;
                     }
@@ -198,11 +197,11 @@ namespace Fram3.UI.Elements
 
             private static IFAnimatedValue? FindByKey(IReadOnlyList<IFAnimatedValue> list, string key)
             {
-                for (var i = 0; i < list.Count; i++)
+                foreach (var animatedValue in list)
                 {
-                    if (list[i].Key == key)
+                    if (animatedValue.Key == key)
                     {
-                        return list[i];
+                        return animatedValue;
                     }
                 }
 

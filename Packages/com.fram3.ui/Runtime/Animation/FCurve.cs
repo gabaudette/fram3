@@ -37,9 +37,12 @@ namespace Fram3.UI.Animation
         public static readonly FCurve ElasticOut = t =>
         {
             const float c4 = (2f * MathF.PI) / 3f;
-            if (t <= 0f) { return 0f; }
-            if (t >= 1f) { return 1f; }
-            return MathF.Pow(2f, -10f * t) * MathF.Sin((t * 10f - 0.75f) * c4) + 1f;
+            return t switch
+            {
+                <= 0f => 0f,
+                >= 1f => 1f,
+                _ => MathF.Pow(2f, -10f * t) * MathF.Sin((t * 10f - 0.75f) * c4) + 1f
+            };
         };
 
         /// <summary>
@@ -47,40 +50,35 @@ namespace Fram3.UI.Animation
         /// </summary>
         public static readonly FCurve BounceOut = t =>
         {
-            const float parabolicScale  = 7.5625f;
-            const float segmentDivisor  = 2.75f;
+            const float parabolicScale = 7.5625f;
+            const float segmentDivisor = 2.75f;
 
-            const float segment1End     = 1f      / segmentDivisor;  // 0.3636...
-            const float segment2End     = 2f      / segmentDivisor;  // 0.7272...
-            const float segment3End     = 2.5f    / segmentDivisor;  // 0.9090...
+            const float segment1End = 1f / segmentDivisor; // 0.3636...
+            const float segment2End = 2f / segmentDivisor; // 0.7272...
+            const float segment3End = 2.5f / segmentDivisor; // 0.9090...
 
-            const float segment2Centre  = 1.5f    / segmentDivisor;
-            const float segment3Centre  = 2.25f   / segmentDivisor;
-            const float segment4Centre  = 2.625f  / segmentDivisor;
+            const float segment2Centre = 1.5f / segmentDivisor;
+            const float segment3Centre = 2.25f / segmentDivisor;
+            const float segment4Centre = 2.625f / segmentDivisor;
 
-            const float segment2Floor   = 0.75f;
-            const float segment3Floor   = 0.9375f;
-            const float segment4Floor   = 0.984375f;
+            const float segment2Floor = 0.75f;
+            const float segment3Floor = 0.9375f;
+            const float segment4Floor = 0.984375f;
 
-            if (t < segment1End)
+            switch (t)
             {
-                return parabolicScale * t * t;
+                case < segment1End:
+                    return parabolicScale * t * t;
+                case < segment2End:
+                    t -= segment2Centre;
+                    return parabolicScale * t * t + segment2Floor;
+                case < segment3End:
+                    t -= segment3Centre;
+                    return parabolicScale * t * t + segment3Floor;
+                default:
+                    t -= segment4Centre;
+                    return parabolicScale * t * t + segment4Floor;
             }
-
-            if (t < segment2End)
-            {
-                t -= segment2Centre;
-                return parabolicScale * t * t + segment2Floor;
-            }
-
-            if (t < segment3End)
-            {
-                t -= segment3Centre;
-                return parabolicScale * t * t + segment3Floor;
-            }
-
-            t -= segment4Centre;
-            return parabolicScale * t * t + segment4Floor;
         };
     }
 }

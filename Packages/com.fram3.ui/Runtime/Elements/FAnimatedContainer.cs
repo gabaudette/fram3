@@ -110,7 +110,7 @@ namespace Fram3.UI.Elements
             return new FImplicitAnimation(
                 values,
                 Duration,
-                (ctx, snapshot) => new FContainer(
+                (_, snapshot) => new FContainer(
                     decoration: snapshot.Get<FBoxDecoration?>(KeyDecoration),
                     width: snapshot.Get<float?>(KeyWidth),
                     height: snapshot.Get<float?>(KeyHeight),
@@ -129,22 +129,22 @@ namespace Fram3.UI.Elements
                 new FAnimatedValue<FBoxDecoration?>(
                     KeyDecoration,
                     Decoration,
-                    (a, b, t) => InterpolateNullableDecoration(a, b, t)
+                    InterpolateNullableDecoration
                 ),
                 new FAnimatedValue<float?>(
                     KeyWidth,
                     Width,
-                    (a, b, t) => FLerp.NullableFloat(a, b, t)
+                    FLerp.NullableFloat
                 ),
                 new FAnimatedValue<float?>(
                     KeyHeight,
                     Height,
-                    (a, b, t) => FLerp.NullableFloat(a, b, t)
+                    FLerp.NullableFloat
                 ),
                 new FAnimatedValue<FEdgeInsets?>(
                     KeyPadding,
                     Padding,
-                    (a, b, t) => InterpolateNullableEdgeInsets(a, b, t)
+                    InterpolateNullableEdgeInsets
                 ),
             };
 
