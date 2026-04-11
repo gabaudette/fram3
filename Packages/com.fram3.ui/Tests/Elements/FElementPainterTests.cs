@@ -257,6 +257,16 @@ namespace Fram3.UI.Tests.Elements
             Assert.That(native.mode, Is.EqualTo(ScrollViewMode.Horizontal));
         }
 
+        [Test]
+        public void CreateNative_FSpinner_ReturnsVisualElement()
+        {
+            var element = new FSpinner();
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native, Is.InstanceOf<VisualElement>());
+        }
+
 #if FRAM3_PURE_TESTS
         [Test]
         public void CreateNative_FText_WithFontSize_SetsFontSize()

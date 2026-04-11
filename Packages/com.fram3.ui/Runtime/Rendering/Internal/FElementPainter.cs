@@ -24,10 +24,17 @@ namespace Fram3.UI.Rendering.Internal
         /// a <c>Slider</c> for <see cref="FSlider"/>, a <c>DropdownField</c> for <see cref="FDropdown"/>,
         /// a <c>ProgressBar</c> for <see cref="FProgressBar"/>, a <c>ScrollView</c> for <see cref="FScrollView"/>,
         /// an <c>Image</c> for <see cref="FImage"/> or <see cref="FIcon"/>,
+        /// an <c>FSpinnerElement</c> for <see cref="FSpinner"/>,
         /// or a plain <c>VisualElement</c> for all layout/container/gesture elements.
         /// </returns>
         internal static VisualElement CreateNative(FElement element)
         {
+#if !FRAM3_PURE_TESTS
+            if (element is FSpinner spinner)
+            {
+                return CreateSpinner(spinner);
+            }
+#endif
             switch (element)
             {
                 case FText text:
@@ -76,6 +83,13 @@ namespace Fram3.UI.Rendering.Internal
         /// <param name="native">The existing native element to update.</param>
         internal static void Paint(FElement element, VisualElement native)
         {
+#if !FRAM3_PURE_TESTS
+            if (element is FSpinner spinner && native is FSpinnerElement spinnerEl)
+            {
+                spinnerEl.Apply(spinner);
+                return;
+            }
+#endif
             switch (element)
             {
                 case FText text when native is Label label:
@@ -339,6 +353,13 @@ namespace Fram3.UI.Rendering.Internal
             }
 #endif
         }
+
+#if !FRAM3_PURE_TESTS
+        private static FSpinnerElement CreateSpinner(FSpinner spinner)
+        {
+            return new FSpinnerElement(spinner);
+        }
+#endif
 
         private static void ApplyImageDimensions(float? width, float? height, VisualElement native)
         {

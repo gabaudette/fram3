@@ -161,6 +161,26 @@ new FImage(source: mySprite, width: 128f, height: 128f)
 new FIcon(source: settingsIcon, width: 24f, height: 24f)
 ```
 
+### FSpinner
+
+`FSpinner` renders a continuously rotating 270-degree arc drawn via `Painter2D`. The animation is driven by an internal `FAnimationController` and advances automatically on each `FRenderer.Tick`. No external controller setup is required.
+
+```csharp
+new FSpinner(
+    size: 48f,
+    strokeWidth: 5f,
+    color: new FColor(0.2f, 0.6f, 1f),
+    speed: 0.8f
+)
+```
+
+| Property | Default | Description |
+|---|---|---|
+| `Size` | `32` | Diameter in logical pixels |
+| `StrokeWidth` | `4` | Arc thickness in logical pixels |
+| `Color` | `null` | Arc color; null defaults to white |
+| `Speed` | `1` | Seconds per full rotation |
+
 ## Global state
 
 ### FCubit
