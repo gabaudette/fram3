@@ -258,6 +258,61 @@ FLerp.BoxDecoration(decorationA, decorationB, ctrl.Value)
 
 Available overloads: `Float`, `NullableFloat`, `Color`, `NullableColor`, `EdgeInsets`, `Alignment`, `BorderRadius`, `Border`, `Shadow`, `BoxDecoration`, `TextStyle`.
 
+## Implicit animations
+
+Implicit animations automatically tween between old and new property values when those values change between builds. No controller setup is required -- the framework detects changes and drives the interpolation internally.
+
+### FImplicitAnimation
+
+`FImplicitAnimation` is a general-purpose element that takes a list of `FAnimatedValue<T>` entries and a builder. When any target value changes, the element tweens from the previous snapshot to the new target over `duration`. The builder receives an `FImplicitAnimationSnapshot` from which the current interpolated values can be read by key.
+
+```csharp
+new FImplicitAnimation(
+    duration: 0.3f,
+    values: new IFAnimatedValue[]
+    {
+        new FAnimatedValue<float>("opacity", _isVisible ? 1f : 0f, FLerp.Float),
+        new FAnimatedValue<FColor>("color", _isActive ? FColor.Blue : FColor.Grey, FLerp.Color),
+    },
+    builder: (context, snapshot) =>
+        new FContainer(
+            decoration: new FBoxDecoration(
+                Color: snapshot.Get<FColor>("color").WithAlpha(snapshot.Get<float>("opacity"))
+            )
+        )
+)
+```
+
+### FAnimatedContainer
+
+`FAnimatedContainer` is a convenience wrapper that implicitly animates container decoration, width, height, and padding. When any of these properties change between builds, the element tweens smoothly to the new values.
+
+```csharp
+new FAnimatedContainer(
+    duration: 0.3f,
+    curve: FCurves.EaseInOut,
+    child: new FText("Hello"),
+    decoration: _isHighlighted
+        ? new FBoxDecoration(Color: FColor.Blue, BorderRadius: FBorderRadius.All(8f))
+        : new FBoxDecoration(Color: FColor.Grey),
+    width: _isExpanded ? 300f : 100f,
+    padding: FEdgeInsets.All(_isExpanded ? 16f : 8f)
+)
+```
+
+### FAnimatedValue
+
+`FAnimatedValue<T>` pairs a target value with a lerp function. Use the built-in `FLerp` methods for Fram3 types, or supply a custom delegate for any value type.
+
+```csharp
+// Built-in type with FLerp.
+new FAnimatedValue<float>("radius", targetRadius, FLerp.Float)
+
+// Custom lerp for a game-specific value type.
+new FAnimatedValue<Vector2>("position", targetPos, (a, b, t) =>
+    new Vector2(FLerp.Float(a.x, b.x, t), FLerp.Float(a.y, b.y, t)))
+```
+
 ## Tests
 
 The test suite runs with `dotnet test` and does not require the Unity editor.
