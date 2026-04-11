@@ -63,6 +63,104 @@ public class CounterState : FState<CounterElement>
 
 Elements are immutable descriptions. `SetState` schedules a rebuild, and the reconciler updates only what changed in the UIToolkit tree.
 
+## Elements
+
+### FStack
+
+`FStack` overlays its children using absolute positioning. Children are painted in order; the last child appears on top. Use it to layer a badge over an icon or a translucent overlay on top of content.
+
+```csharp
+new FStack
+{
+    Children = new FElement[]
+    {
+        new FImage(source: backgroundTexture, width: 200f, height: 200f),
+        new FContainer(decoration: new FBoxDecoration(Color: FColor.Black.WithAlpha(0.4f))),
+        new FCenter { Child = new FText("Overlay text") }
+    }
+}
+```
+
+### FScrollView
+
+`FScrollView` wraps a single child in a scrollable region. It maps to UIToolkit's `ScrollView`. The default scroll axis is vertical; pass `FScrollDirection.Horizontal` or `FScrollDirection.Both` to change it.
+
+```csharp
+new FScrollView(FScrollDirection.Vertical)
+{
+    Child = new FColumn
+    {
+        Children = items.Select(i => new FText(i.Name)).ToArray<FElement>()
+    }
+}
+```
+
+### FExpanded
+
+`FExpanded` causes its child to grow and fill the remaining space along the parent flex container's main axis. Multiple `FExpanded` siblings divide the available space according to their `Flex` factors.
+
+```csharp
+new FRow
+{
+    Children = new FElement[]
+    {
+        new FExpanded(flex: 2f) { Child = new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue)) },
+        new FExpanded(flex: 1f) { Child = new FContainer(decoration: new FBoxDecoration(Color: FColor.Grey)) },
+    }
+}
+```
+
+### FDivider
+
+`FDivider` is a thin separator line. The default axis is horizontal. Use `Thickness` to control the line weight, `Color` to set its color, and `Indent` to add a margin on each end perpendicular to the axis.
+
+```csharp
+new FColumn
+{
+    Children = new FElement[]
+    {
+        new FText("Section one"),
+        new FDivider(thickness: 1f, color: new FColor(0.2f, 0.2f, 0.2f), indent: 16f),
+        new FText("Section two"),
+    }
+}
+```
+
+### FProgressBar
+
+`FProgressBar` displays a read-only progress bar backed by UIToolkit's native `ProgressBar`. Set `Value` between `Min` (default 0) and `Max` (default 100). An optional `Title` label is rendered inside the bar.
+
+```csharp
+new FProgressBar(value: _loadProgress * 100f, title: "Loading...")
+```
+
+### FTooltip
+
+`FTooltip` attaches a hover tooltip to its child by setting UIToolkit's `tooltip` property on the native element. No additional markup is required.
+
+```csharp
+new FTooltip("Saves your progress")
+{
+    Child = new FButton("Save")
+}
+```
+
+### FImage
+
+`FImage` displays a `UnityEngine.Sprite` or `UnityEngine.Texture2D` using UIToolkit's native `Image` element. Pass optional `Width` and `Height` to constrain the display size.
+
+```csharp
+new FImage(source: mySprite, width: 128f, height: 128f)
+```
+
+### FIcon
+
+`FIcon` displays a `UnityEngine.UIElements.VectorImage` asset using UIToolkit's native `Image` element. It is intended for scalable icon assets. Pass optional `Width` and `Height` to fix the display size.
+
+```csharp
+new FIcon(source: settingsIcon, width: 24f, height: 24f)
+```
+
 ## Global state
 
 ### FCubit

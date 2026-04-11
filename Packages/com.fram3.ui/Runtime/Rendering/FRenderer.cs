@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fram3.UI.Animation;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
+using Fram3.UI.Elements;
 using Fram3.UI.Rendering.Internal;
 using UnityEngine.UIElements;
 
@@ -184,9 +185,16 @@ namespace Fram3.UI.Rendering
                     return;
                 }
 
-                if (_handles.TryGetValue(node.Parent, out var parentHandle))
+                if (!_handles.TryGetValue(node.Parent, out var parentHandle))
                 {
-                    parentHandle.NativeElement.Add(native);
+                    return;
+                }
+
+                parentHandle.NativeElement.Add(native);
+
+                if (node.Parent.Element is FStack)
+                {
+                    FElementPainter.ApplyAsStackChild(native);
                 }
             }
         }
