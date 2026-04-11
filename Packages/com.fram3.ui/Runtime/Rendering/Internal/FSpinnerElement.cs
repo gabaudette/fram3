@@ -126,6 +126,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var c = color.Value;
+
             return new Color(c.R, c.G, c.B, c.A);
         }
     }

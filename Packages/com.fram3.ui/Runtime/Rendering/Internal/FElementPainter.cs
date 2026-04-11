@@ -41,6 +41,8 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateLabel(text);
                 case FButton button:
                     return CreateButton(button);
+                case FPasswordField passwordField:
+                    return CreatePasswordField(passwordField);
                 case FTextField textField:
                     return CreateTextField(textField);
                 case FToggle toggle:
@@ -58,6 +60,11 @@ namespace Fram3.UI.Rendering.Internal
                 case FIcon icon:
                     return CreateIcon(icon);
                 default:
+                    if (element is IFListViewDescriptor listView)
+                    {
+                        return CreateListView(listView);
+                    }
+
                     var native = new VisualElement();
                     ApplyLayout(element, native);
                     RegisterGestureCallbacks(element, native);
@@ -98,6 +105,9 @@ namespace Fram3.UI.Rendering.Internal
                 case FButton button when native is Button btn:
                     PaintButton(button, btn);
                     break;
+                case FPasswordField passwordField when native is TextField ptf:
+                    PaintPasswordField(passwordField, ptf);
+                    break;
                 case FTextField textField when native is TextField tf:
                     PaintTextField(textField, tf);
                     break;
@@ -123,6 +133,12 @@ namespace Fram3.UI.Rendering.Internal
                     PaintIcon(icon, iconImg);
                     break;
                 default:
+                    if (element is IFListViewDescriptor listView && native is ListView lv)
+                    {
+                        PaintListView(listView, lv);
+                        break;
+                    }
+
                     ApplyLayout(element, native);
                     break;
             }
@@ -141,10 +157,40 @@ namespace Fram3.UI.Rendering.Internal
             return btn;
         }
 
+        private static TextField CreatePasswordField(FPasswordField passwordField)
+        {
+            var tf = new TextField
+            {
+                value = passwordField.Value,
+                isReadOnly = passwordField.ReadOnly,
+                isPasswordField = true
+            };
+
+            if (passwordField.Placeholder != null)
+            {
+                tf.textEdition.placeholder = passwordField.Placeholder;
+            }
+
+            if (passwordField.OnChanged == null)
+            {
+                return tf;
+            }
+
+            var callback = passwordField.OnChanged;
+            tf.RegisterValueChangedCallback(evt => callback(evt.newValue));
+
+            return tf;
+        }
+
         private static TextField CreateTextField(FTextField textField)
         {
             var tf = new TextField
-                { value = textField.Value, isReadOnly = textField.ReadOnly, multiline = textField.Multiline };
+            {
+                value = textField.Value,
+                isReadOnly = textField.ReadOnly,
+                multiline = textField.Multiline
+            };
+
             if (textField.Placeholder != null)
             {
                 tf.textEdition.placeholder = textField.Placeholder;
@@ -219,6 +265,16 @@ namespace Fram3.UI.Rendering.Internal
             return dd;
         }
 
+        private static void PaintPasswordField(FPasswordField passwordField, TextField tf)
+        {
+            tf.value = passwordField.Value;
+            tf.isReadOnly = passwordField.ReadOnly;
+            if (passwordField.Placeholder != null)
+            {
+                tf.textEdition.placeholder = passwordField.Placeholder;
+            }
+        }
+
         private static void PaintTextField(FTextField textField, TextField tf)
         {
             tf.value = textField.Value;
@@ -279,6 +335,7 @@ namespace Fram3.UI.Rendering.Internal
                 lowValue = progressBar.Min,
                 highValue = progressBar.Max
             };
+
             if (progressBar.Title != null)
             {
                 pb.title = progressBar.Title;
@@ -303,13 +360,14 @@ namespace Fram3.UI.Rendering.Internal
             var img = new Image();
             ApplyImageDimensions(image.Width, image.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (image.Source is UnityEngine.Sprite sprite)
+            switch (image.Source)
             {
-                img.sprite = sprite;
-            }
-            else if (image.Source is UnityEngine.Texture2D texture)
-            {
-                img.image = texture;
+                case UnityEngine.Sprite sprite:
+                    img.sprite = sprite;
+                    break;
+                case UnityEngine.Texture2D texture:
+                    img.image = texture;
+                    break;
             }
 #endif
             return img;
@@ -319,13 +377,14 @@ namespace Fram3.UI.Rendering.Internal
         {
             ApplyImageDimensions(image.Width, image.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (image.Source is UnityEngine.Sprite sprite)
+            switch (image.Source)
             {
-                img.sprite = sprite;
-            }
-            else if (image.Source is UnityEngine.Texture2D texture)
-            {
-                img.image = texture;
+                case UnityEngine.Sprite sprite:
+                    img.sprite = sprite;
+                    break;
+                case UnityEngine.Texture2D texture:
+                    img.image = texture;
+                    break;
             }
 #endif
         }
@@ -335,7 +394,7 @@ namespace Fram3.UI.Rendering.Internal
             var img = new Image();
             ApplyImageDimensions(icon.Width, icon.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (icon.Source is UnityEngine.UIElements.VectorImage vectorImage)
+            if (icon.Source is VectorImage vectorImage)
             {
                 img.vectorImage = vectorImage;
             }
@@ -347,7 +406,7 @@ namespace Fram3.UI.Rendering.Internal
         {
             ApplyImageDimensions(icon.Width, icon.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (icon.Source is UnityEngine.UIElements.VectorImage vectorImage)
+            if (icon.Source is VectorImage vectorImage)
             {
                 img.vectorImage = vectorImage;
             }
@@ -360,6 +419,56 @@ namespace Fram3.UI.Rendering.Internal
             return new FSpinnerElement(spinner);
         }
 #endif
+
+        private static ListView CreateListView(IFListViewDescriptor listView)
+        {
+            var lv = new ListView
+            {
+                fixedItemHeight = listView.ItemHeight,
+                selectionType = MapSelectionType(listView.SelectionMode),
+                makeItem = () => new VisualElement(),
+                bindItem = (item, index) =>
+                {
+                    var childElement = listView.BuildItemAt(index);
+                    var childNative = CreateNative(childElement);
+                    item.Add(childNative);
+                }
+            };
+
+            // ReSharper disable once InvertIf
+            if (listView.OnSelectionChangedUntyped != null)
+            {
+                var callback = listView.OnSelectionChangedUntyped;
+                lv.selectionChanged += items =>
+                {
+                    var list = new List<object?>();
+                    foreach (var item in items)
+                    {
+                        list.Add(item);
+                    }
+
+                    callback(list);
+                };
+            }
+
+            return lv;
+        }
+
+        private static void PaintListView(IFListViewDescriptor listView, ListView lv)
+        {
+            lv.fixedItemHeight = listView.ItemHeight;
+            lv.selectionType = MapSelectionType(listView.SelectionMode);
+        }
+
+        private static SelectionType MapSelectionType(FListSelectionMode mode)
+        {
+            return mode switch
+            {
+                FListSelectionMode.Single => SelectionType.Single,
+                FListSelectionMode.Multiple => SelectionType.Multiple,
+                _ => SelectionType.None
+            };
+        }
 
         private static void ApplyImageDimensions(float? width, float? height, VisualElement native)
         {
@@ -621,11 +730,13 @@ namespace Fram3.UI.Rendering.Internal
                 }
             }
 
-            if (divider.Color.HasValue)
+            if (!divider.Color.HasValue)
             {
-                var c = divider.Color.Value;
-                native.style.backgroundColor = new UnityEngine.Color(c.R, c.G, c.B, c.A);
+                return;
             }
+
+            var c = divider.Color.Value;
+            native.style.backgroundColor = new UnityEngine.Color(c.R, c.G, c.B, c.A);
         }
 
         private static void ApplyTooltipLayout(FTooltip tooltip, VisualElement native)
