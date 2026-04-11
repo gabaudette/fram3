@@ -92,7 +92,7 @@ namespace Fram3.UI.Tests.Rendering
         {
             _renderer.Mount(new TestRenderLeaf("a"), _container);
 
-            Assert.DoesNotThrow(() => _renderer.Tick());
+            Assert.DoesNotThrow(() => _renderer.Tick(0f));
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Fram3.UI.Tests.Rendering
             int childCountBefore = _container.childCount;
 
             toggleState.Toggle();
-            _renderer.Tick();
+            _renderer.Tick(0f);
 
             Assert.That(toggleState.BuildCount, Is.GreaterThanOrEqualTo(2));
         }
