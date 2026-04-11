@@ -1,5 +1,6 @@
 #nullable enable
 using System.Collections.Generic;
+using Fram3.UI.Rendering;
 
 namespace Fram3.UI.Animation
 {
@@ -38,9 +39,9 @@ namespace Fram3.UI.Animation
             _tickBuffer.Clear();
             _tickBuffer.AddRange(_controllers);
 
-            for (var i = 0; i < _tickBuffer.Count; i++)
+            foreach (var tickBuffer in _tickBuffer)
             {
-                _tickBuffer[i].Tick(deltaTime);
+                tickBuffer.Tick(deltaTime);
             }
         }
 

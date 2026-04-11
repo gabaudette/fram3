@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using Fram3.UI.Rendering;
 
 namespace Fram3.UI.Animation
 {
@@ -57,7 +58,8 @@ namespace Fram3.UI.Animation
             if (duration <= 0f)
             {
                 throw new ArgumentOutOfRangeException(nameof(duration),
-                    "Duration must be greater than zero.");
+                    "Duration must be greater than zero."
+                );
             }
 
             Duration = duration;
@@ -196,9 +198,9 @@ namespace Fram3.UI.Animation
         private void NotifyListeners()
         {
             var value = Value;
-            for (var i = 0; i < _listeners.Count; i++)
+            foreach (var listener in _listeners)
             {
-                _listeners[i](value);
+                listener(value);
             }
         }
 

@@ -5,13 +5,12 @@ namespace Fram3.UI.GlobalState
 {
     /// <summary>
     /// A Redux-style reactive state container. Holds a single immutable state value
-    /// and mutates it exclusively through a pure <see cref="Reducer{TState}"/> function
+    /// and mutates it exclusively through a pure reducer function
     /// that maps the current state and a dispatched <see cref="FAction"/> to a new state.
     /// </summary>
     /// <typeparam name="TState">
     /// The type that represents the application state held by this store.
-    /// Value equality is used to suppress redundant rebuilds. Use a C# <c>record</c>
-    /// type or subclass <see cref="Fram3.UI.Core.FEquatable"/> to express structural equality.
+    /// Value equality is used to suppress redundant rebuilds.
     /// </typeparam>
     /// <remarks>
     /// Expose the store to the element tree by wrapping the root with

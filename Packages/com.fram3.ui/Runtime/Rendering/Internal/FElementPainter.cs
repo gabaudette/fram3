@@ -97,17 +97,20 @@ namespace Fram3.UI.Rendering.Internal
 
         private static TextField CreateTextField(FTextField textField)
         {
-            var tf = new TextField { value = textField.Value, isReadOnly = textField.ReadOnly, multiline = textField.Multiline };
+            var tf = new TextField
+                { value = textField.Value, isReadOnly = textField.ReadOnly, multiline = textField.Multiline };
             if (textField.Placeholder != null)
             {
                 tf.textEdition.placeholder = textField.Placeholder;
             }
 
-            if (textField.OnChanged != null)
+            if (textField.OnChanged == null)
             {
-                var callback = textField.OnChanged;
-                tf.RegisterValueChangedCallback(evt => callback(evt.newValue));
+                return tf;
             }
+
+            var callback = textField.OnChanged;
+            tf.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return tf;
         }
@@ -120,11 +123,13 @@ namespace Fram3.UI.Rendering.Internal
                 tgl.label = toggle.Label;
             }
 
-            if (toggle.OnChanged != null)
+            if (toggle.OnChanged == null)
             {
-                var callback = toggle.OnChanged;
-                tgl.RegisterValueChangedCallback(evt => callback(evt.newValue));
+                return tgl;
             }
+
+            var callback = toggle.OnChanged;
+            tgl.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return tgl;
         }
@@ -137,11 +142,13 @@ namespace Fram3.UI.Rendering.Internal
                 sld.label = slider.Label;
             }
 
-            if (slider.OnChanged != null)
+            if (slider.OnChanged == null)
             {
-                var callback = slider.OnChanged;
-                sld.RegisterValueChangedCallback(evt => callback(evt.newValue));
+                return sld;
             }
+
+            var callback = slider.OnChanged;
+            sld.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return sld;
         }
@@ -155,11 +162,13 @@ namespace Fram3.UI.Rendering.Internal
                 dd.label = dropdown.Label;
             }
 
-            if (dropdown.OnChanged != null)
+            if (dropdown.OnChanged == null)
             {
-                var callback = dropdown.OnChanged;
-                dd.RegisterValueChangedCallback(evt => callback(dd.index));
+                return dd;
             }
+
+            var callback = dropdown.OnChanged;
+            dd.RegisterValueChangedCallback(_ => callback(dd.index));
 
             return dd;
         }
@@ -224,6 +233,7 @@ namespace Fram3.UI.Rendering.Internal
                 native.RegisterCallback<PointerEnterEvent>(_ => callback());
             }
 
+            // ReSharper disable once InvertIf
             if (gesture.OnPointerExit != null)
             {
                 var callback = gesture.OnPointerExit;
@@ -293,7 +303,7 @@ namespace Fram3.UI.Rendering.Internal
                 case FContainer container:
                     ApplyContainerLayout(container, native);
                     break;
-                case FCenter _:
+                case FCenter:
                     ApplyCenterLayout(native);
                     break;
             }

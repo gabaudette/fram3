@@ -17,12 +17,11 @@ namespace Fram3.UI.GlobalState
     /// The type that represents the state of this cubit.
     /// Value equality is used to suppress rebuilds when the new state is
     /// equivalent to the current one. Use a C# <c>record</c> type or subclass
-    /// <see cref="Fram3.UI.Core.FEquatable"/> to express structural equality.
     /// </typeparam>
     public abstract class FCubit<TState> : IDisposable
     {
         private TState _state;
-        private readonly List<Action<TState>> _listeners = new List<Action<TState>>();
+        private readonly List<Action<TState>> _listeners = new();
         private bool _disposed;
 
         /// <summary>
@@ -108,8 +107,7 @@ namespace Fram3.UI.GlobalState
         /// Transitions to <paramref name="newState"/>, notifying all listeners.
         /// If <paramref name="newState"/> is equal to the current state the call is a no-op
         /// and no listeners are invoked. Equality is determined via
-        /// <see cref="EqualityComparer{T}.Default"/>, which respects value equality on
-        /// records and <see cref="Fram3.UI.Core.FEquatable"/> subclasses.
+        /// <see cref="EqualityComparer{T}.Default"/>
         /// </summary>
         /// <param name="newState">The state to transition to.</param>
         /// <exception cref="ObjectDisposedException">Thrown when called after disposal.</exception>

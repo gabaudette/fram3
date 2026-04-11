@@ -45,7 +45,7 @@ namespace Fram3.UI.GlobalState
             _adapter.Save(state);
         }
 
-        private static TState ResolveInitialState(TState fallback, IPersistenceAdapter<TState> adapter)
+        private static TState ResolveInitialState(TState fallback, IPersistenceAdapter<TState>? adapter)
         {
             if (adapter is null)
             {

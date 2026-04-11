@@ -38,7 +38,8 @@ namespace Fram3.UI.Elements
             Action? onTap = null,
             Action? onPointerEnter = null,
             Action? onPointerExit = null,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Child = child ?? throw new ArgumentNullException(nameof(child));
             OnTap = onTap;

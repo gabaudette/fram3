@@ -12,7 +12,7 @@ namespace Fram3.UI.GlobalState
     /// fits comfortably in a string (settings, preferences, small session data).
     /// </summary>
     /// <typeparam name="TState">
-    /// The type of state to persist. Must be serialisable by <c>Newtonsoft.Json</c>.
+    /// The type of state to persist. Must be serializable by <c>Newtonsoft.Json</c>.
     /// </typeparam>
     public sealed class PlayerPrefsAdapter<TState> : IPersistenceAdapter<TState>
     {

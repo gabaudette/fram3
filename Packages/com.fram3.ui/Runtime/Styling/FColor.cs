@@ -135,10 +135,8 @@ namespace Fram3.UI.Styling
         /// <inheritdoc />
         public override int GetHashCode() => HashCode.Combine(R, G, B, A);
 
-        /// <inheritdoc />
         public static bool operator ==(FColor left, FColor right) => left.Equals(right);
 
-        /// <inheritdoc />
         public static bool operator !=(FColor left, FColor right) => !left.Equals(right);
 
         /// <inheritdoc />

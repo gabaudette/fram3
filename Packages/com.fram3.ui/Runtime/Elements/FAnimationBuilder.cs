@@ -2,6 +2,7 @@
 using System;
 using Fram3.UI.Animation;
 using Fram3.UI.Core;
+using UnityEngine;
 
 namespace Fram3.UI.Elements
 {
@@ -58,12 +59,14 @@ namespace Fram3.UI.Elements
             float duration,
             Func<FBuildContext, FAnimationController, FElement> builder,
             FCurve? curve = null,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             if (duration <= 0f)
             {
                 throw new ArgumentOutOfRangeException(nameof(duration),
-                    "Duration must be greater than zero.");
+                    "Duration must be greater than zero."
+                );
             }
 
             Duration = duration;
@@ -94,27 +97,29 @@ namespace Fram3.UI.Elements
             public override void DidUpdateElement(FStatefulElement oldElement)
             {
                 var old = (FAnimationBuilder)oldElement;
-                if (old.Duration == Element!.Duration && ReferenceEquals(old.Curve, Element.Curve))
+                if (Mathf.Approximately(old.Duration, Element!.Duration) && ReferenceEquals(old.Curve, Element.Curve))
                 {
                     return;
                 }
 
                 _controller!.RemoveListener(_listener!);
                 var wasRunning = _controller.Status == FAnimationStatus.Forward
-                    || _controller.Status == FAnimationStatus.Reverse;
+                                 || _controller.Status == FAnimationStatus.Reverse;
+
                 var previousStatus = _controller.Status;
                 _controller.Dispose();
 
                 _controller = new FAnimationController(Element.Duration, Element.Curve);
                 _controller.AddListener(_listener!);
 
-                if (wasRunning && previousStatus == FAnimationStatus.Forward)
+                switch (wasRunning)
                 {
-                    _controller.Forward();
-                }
-                else if (wasRunning && previousStatus == FAnimationStatus.Reverse)
-                {
-                    _controller.Reverse();
+                    case true when previousStatus == FAnimationStatus.Forward:
+                        _controller.Forward();
+                        break;
+                    case true when previousStatus == FAnimationStatus.Reverse:
+                        _controller.Reverse();
+                        break;
                 }
             }
 
