@@ -381,6 +381,57 @@ nav.CanPop
     : new FSizedBox()
 ```
 
+### FSceneNavigator
+
+`FSceneNavigator.GoTo` loads a Unity scene by name, replacing the current scene. It is a static call -- no build context or element tree is required.
+
+```csharp
+FSceneNavigator.GoTo("MainMenu");
+```
+
+`GoTo` returns an `FSceneOperation` that tracks loading progress. Subscribe to `Completed` to run logic once the scene is active, or poll `Progress` each frame to drive a loading bar.
+
+```csharp
+var op = FSceneNavigator.GoTo("GameScene");
+op.Completed += () => Debug.Log("Scene loaded.");
+```
+
+A typical loading screen stores the operation in state and updates progress on each renderer tick:
+
+```csharp
+public class LoadingScreen : FStatefulElement
+{
+    public string TargetScene { get; init; } = string.Empty;
+    public override FState CreateState() => new LoadingScreenState();
+}
+
+public class LoadingScreenState : FState<LoadingScreen>
+{
+    private FSceneOperation _operation = null!;
+
+    public override void InitState()
+    {
+        _operation = FSceneNavigator.GoTo(Element!.TargetScene);
+        _operation.Completed += () => SetState(null);
+    }
+
+    public override FElement Build(FBuildContext context) =>
+        new FText { Text = $"{_operation.Progress * 100:0}%" };
+}
+```
+
+Call `SetState(null)` from a `MonoBehaviour.Update` or from a per-frame listener to refresh the progress display each frame. `Completed` fires once when the scene is fully active, triggering a final rebuild.
+
+For simpler cases where you only need to trigger a scene change on button press:
+
+```csharp
+new FButton
+{
+    Label = "Play",
+    OnPressed = () => FSceneNavigator.GoTo("GameScene")
+}
+```
+
 ### Nested navigators
 
 Multiple `FNavigator` instances can coexist in the same tree. `context.GetInherited<FNavigatorScope>()` always resolves to the nearest enclosing navigator, so nested navigators manage their own independent stacks.
