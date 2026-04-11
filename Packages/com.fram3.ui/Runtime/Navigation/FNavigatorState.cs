@@ -58,7 +58,8 @@ namespace Fram3.UI.Navigation
             {
                 throw new ArgumentException(
                     $"No route named '{routeName}' is registered in this FNavigator.",
-                    nameof(routeName));
+                    nameof(routeName)
+                );
             }
 
             return builder;

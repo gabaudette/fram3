@@ -51,7 +51,8 @@ namespace Fram3.UI.Navigation
         public FNavigator(
             IReadOnlyDictionary<string, Func<FBuildContext, FElement>> routes,
             string initialRoute,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             if (routes == null)
             {
@@ -72,7 +73,8 @@ namespace Fram3.UI.Navigation
             {
                 throw new ArgumentException(
                     $"Initial route '{initialRoute}' is not registered in routes.",
-                    nameof(initialRoute));
+                    nameof(initialRoute)
+                );
             }
 
             Routes = routes;
