@@ -45,6 +45,12 @@ namespace Fram3.UI.Rendering.Internal
                     return CreatePasswordField(passwordField);
                 case FTextField textField:
                     return CreateTextField(textField);
+                case FCheckbox checkbox:
+                    return CreateCheckbox(checkbox);
+                case FRadioGroup radioGroup:
+                    return CreateRadioGroup(radioGroup);
+                case FModal modal:
+                    return CreateModal(modal);
                 case FToggle toggle:
                     return CreateToggle(toggle);
                 case FSlider slider:
@@ -110,6 +116,15 @@ namespace Fram3.UI.Rendering.Internal
                     break;
                 case FTextField textField when native is TextField tf:
                     PaintTextField(textField, tf);
+                    break;
+                case FCheckbox checkbox when native is Toggle chkTgl:
+                    PaintCheckbox(checkbox, chkTgl);
+                    break;
+                case FRadioGroup radioGroup when native is RadioButtonGroup rbg:
+                    PaintRadioGroup(radioGroup, rbg);
+                    break;
+                case FModal modal:
+                    PaintModal(modal, native);
                     break;
                 case FToggle toggle when native is Toggle tgl:
                     PaintToggle(toggle, tgl);
@@ -224,6 +239,101 @@ namespace Fram3.UI.Rendering.Internal
             tgl.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return tgl;
+        }
+
+        private static Toggle CreateCheckbox(FCheckbox checkbox)
+        {
+            var tgl = new Toggle { value = checkbox.Value };
+            if (checkbox.Label != null)
+            {
+                tgl.label = checkbox.Label;
+            }
+
+            if (checkbox.OnChanged == null)
+            {
+                return tgl;
+            }
+
+            var callback = checkbox.OnChanged;
+            tgl.RegisterValueChangedCallback(evt => callback(evt.newValue));
+
+            return tgl;
+        }
+
+        private static RadioButtonGroup CreateRadioGroup(FRadioGroup radioGroup)
+        {
+            var rbg = new RadioButtonGroup();
+            rbg.choices = new List<string>(radioGroup.Options);
+            rbg.value = ResolveRadioIndex(radioGroup);
+
+            if (radioGroup.OnChanged == null)
+            {
+                return rbg;
+            }
+
+            var callback = radioGroup.OnChanged;
+            var options = radioGroup.Options;
+            rbg.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue >= 0 && evt.newValue < options.Count)
+                {
+                    callback(options[evt.newValue]);
+                }
+            });
+
+            return rbg;
+        }
+
+        private static VisualElement CreateModal(FModal modal)
+        {
+            var native = new VisualElement();
+            native.style.position = Position.Absolute;
+
+            if (modal.BarrierDismissible && modal.OnDismiss != null)
+            {
+                var callback = modal.OnDismiss;
+                native.RegisterCallback<ClickEvent>(_ => callback());
+            }
+
+            return native;
+        }
+
+        private static void PaintCheckbox(FCheckbox checkbox, Toggle tgl)
+        {
+            tgl.value = checkbox.Value;
+            if (checkbox.Label != null)
+            {
+                tgl.label = checkbox.Label;
+            }
+        }
+
+        private static void PaintRadioGroup(FRadioGroup radioGroup, RadioButtonGroup rbg)
+        {
+            rbg.choices = new List<string>(radioGroup.Options);
+            rbg.value = ResolveRadioIndex(radioGroup);
+        }
+
+        private static int ResolveRadioIndex(FRadioGroup radioGroup)
+        {
+            if (radioGroup.SelectedValue == null)
+            {
+                return -1;
+            }
+
+            for (var i = 0; i < radioGroup.Options.Count; i++)
+            {
+                if (radioGroup.Options[i] == radioGroup.SelectedValue)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private static void PaintModal(FModal modal, VisualElement native)
+        {
+            native.style.position = Position.Absolute;
         }
 
         private static Slider CreateSlider(FSlider slider)

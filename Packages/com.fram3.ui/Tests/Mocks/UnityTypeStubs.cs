@@ -352,6 +352,26 @@ namespace UnityEngine.UIElements
     }
 
     /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.RadioButtonGroup</c>.
+    /// </summary>
+    public class RadioButtonGroup : VisualElement
+    {
+        public int value { get; set; } = -1;
+        public List<string> choices { get; set; } = new List<string>();
+
+        public void RegisterValueChangedCallback(EventCallback<ChangeEvent<int>> callback)
+        {
+            RegisterCallback(callback);
+        }
+
+        /// <summary>Test helper: fires value-changed callbacks with the given new index.</summary>
+        public void SimulateValueChanged(int newIndex)
+        {
+            SimulateEvent(new ChangeEvent<int>(value, newIndex));
+        }
+    }
+
+    /// <summary>
     /// Minimal stub for <c>UnityEngine.UIElements.ListView</c>.
     /// </summary>
     public class ListView : VisualElement
