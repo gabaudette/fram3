@@ -79,6 +79,7 @@ namespace Fram3.UI.Elements
 
         private sealed class FAnimationBuilderState : FState<FAnimationBuilder>
         {
+            private const float DurationTolerance = 0.0001f;
             private FAnimationController? _controller;
             private Action<float>? _listener;
 
@@ -97,7 +98,7 @@ namespace Fram3.UI.Elements
             public override void DidUpdateElement(FStatefulElement oldElement)
             {
                 var old = (FAnimationBuilder)oldElement;
-                if (old.Duration == Element!.Duration && ReferenceEquals(old.Curve, Element.Curve))
+                if (Math.Abs(old.Duration - Element!.Duration) < DurationTolerance && ReferenceEquals(old.Curve, Element.Curve))
                 {
                     return;
                 }
