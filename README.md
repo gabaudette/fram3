@@ -109,11 +109,11 @@ public class CounterStore : FStore<CounterState>
 new FProvider<CounterCubit>
 {
     Value = new CounterCubit(),
-    Child = new MyWidget()
+    Child = new MyCustomElement()
 }
 
 // Read it anywhere in that subtree.
-public class MyWidget : FStatelessElement
+public class MyCustomElement : FStatelessElement
 {
     public override FElement Build(FBuildContext context)
     {
