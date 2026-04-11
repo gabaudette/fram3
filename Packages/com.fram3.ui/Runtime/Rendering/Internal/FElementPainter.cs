@@ -41,6 +41,8 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateLabel(text);
                 case FButton button:
                     return CreateButton(button);
+                case FPasswordField passwordField:
+                    return CreatePasswordField(passwordField);
                 case FTextField textField:
                     return CreateTextField(textField);
                 case FToggle toggle:
@@ -58,6 +60,11 @@ namespace Fram3.UI.Rendering.Internal
                 case FIcon icon:
                     return CreateIcon(icon);
                 default:
+                    if (element is IFListViewDescriptor listView)
+                    {
+                        return CreateListView(listView);
+                    }
+
                     var native = new VisualElement();
                     ApplyLayout(element, native);
                     RegisterGestureCallbacks(element, native);
@@ -98,6 +105,9 @@ namespace Fram3.UI.Rendering.Internal
                 case FButton button when native is Button btn:
                     PaintButton(button, btn);
                     break;
+                case FPasswordField passwordField when native is TextField ptf:
+                    PaintPasswordField(passwordField, ptf);
+                    break;
                 case FTextField textField when native is TextField tf:
                     PaintTextField(textField, tf);
                     break;
@@ -123,6 +133,12 @@ namespace Fram3.UI.Rendering.Internal
                     PaintIcon(icon, iconImg);
                     break;
                 default:
+                    if (element is IFListViewDescriptor listView && native is ListView lv)
+                    {
+                        PaintListView(listView, lv);
+                        break;
+                    }
+
                     ApplyLayout(element, native);
                     break;
             }
@@ -139,6 +155,26 @@ namespace Fram3.UI.Rendering.Internal
         {
             var btn = new Button(button.OnPressed) { text = button.Label };
             return btn;
+        }
+
+        private static TextField CreatePasswordField(FPasswordField passwordField)
+        {
+            var tf = new TextField
+                { value = passwordField.Value, isReadOnly = passwordField.ReadOnly, isPasswordField = true };
+            if (passwordField.Placeholder != null)
+            {
+                tf.textEdition.placeholder = passwordField.Placeholder;
+            }
+
+            if (passwordField.OnChanged == null)
+            {
+                return tf;
+            }
+
+            var callback = passwordField.OnChanged;
+            tf.RegisterValueChangedCallback(evt => callback(evt.newValue));
+
+            return tf;
         }
 
         private static TextField CreateTextField(FTextField textField)
@@ -217,6 +253,16 @@ namespace Fram3.UI.Rendering.Internal
             dd.RegisterValueChangedCallback(_ => callback(dd.index));
 
             return dd;
+        }
+
+        private static void PaintPasswordField(FPasswordField passwordField, TextField tf)
+        {
+            tf.value = passwordField.Value;
+            tf.isReadOnly = passwordField.ReadOnly;
+            if (passwordField.Placeholder != null)
+            {
+                tf.textEdition.placeholder = passwordField.Placeholder;
+            }
         }
 
         private static void PaintTextField(FTextField textField, TextField tf)
@@ -360,6 +406,56 @@ namespace Fram3.UI.Rendering.Internal
             return new FSpinnerElement(spinner);
         }
 #endif
+
+        private static ListView CreateListView(IFListViewDescriptor listView)
+        {
+            var lv = new ListView
+            {
+                fixedItemHeight = listView.ItemHeight,
+                selectionType = MapSelectionType(listView.SelectionMode)
+            };
+
+            lv.makeItem = () => new VisualElement();
+            lv.bindItem = (item, index) =>
+            {
+                var childElement = listView.BuildItemAt(index);
+                var childNative = CreateNative(childElement);
+                item.Add(childNative);
+            };
+
+            if (listView.OnSelectionChangedUntyped != null)
+            {
+                var callback = listView.OnSelectionChangedUntyped;
+                lv.onSelectionChange += items =>
+                {
+                    var list = new List<object?>();
+                    foreach (var item in items)
+                    {
+                        list.Add(item);
+                    }
+
+                    callback(list);
+                };
+            }
+
+            return lv;
+        }
+
+        private static void PaintListView(IFListViewDescriptor listView, ListView lv)
+        {
+            lv.fixedItemHeight = listView.ItemHeight;
+            lv.selectionType = MapSelectionType(listView.SelectionMode);
+        }
+
+        private static SelectionType MapSelectionType(FListSelectionMode mode)
+        {
+            return mode switch
+            {
+                FListSelectionMode.Single => SelectionType.Single,
+                FListSelectionMode.Multiple => SelectionType.Multiple,
+                _ => SelectionType.None
+            };
+        }
 
         private static void ApplyImageDimensions(float? width, float? height, VisualElement native)
         {

@@ -210,6 +210,7 @@ namespace UnityEngine.UIElements
         public string value { get; set; } = string.Empty;
         public bool isReadOnly { get; set; }
         public bool multiline { get; set; }
+        public bool isPasswordField { get; set; }
         public TextEditionStub textEdition { get; } = new TextEditionStub();
 
         public void RegisterValueChangedCallback(EventCallback<ChangeEvent<string>> callback)
@@ -341,6 +342,45 @@ namespace UnityEngine.UIElements
     {
         public object? sprite { get; set; }
         public object? vectorImage { get; set; }
+    }
+
+    public enum SelectionType
+    {
+        None,
+        Single,
+        Multiple
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.ListView</c>.
+    /// </summary>
+    public class ListView : VisualElement
+    {
+        public Func<VisualElement>? makeItem { get; set; }
+        public Action<VisualElement, int>? bindItem { get; set; }
+        public float fixedItemHeight { get; set; } = 32f;
+        public SelectionType selectionType { get; set; } = SelectionType.None;
+
+        private readonly List<object> _selectedItems = new List<object>();
+        public IReadOnlyList<object> selectedItems => _selectedItems;
+
+        private Action<IEnumerable<object>>? _onSelectionChange;
+
+        public event Action<IEnumerable<object>> onSelectionChange
+        {
+            add { _onSelectionChange += value; }
+            remove { _onSelectionChange -= value; }
+        }
+
+        public void SetSelectionWithoutNotify(IEnumerable<int> indices)
+        {
+        }
+
+        /// <summary>Test helper: fires onSelectionChange with the provided items.</summary>
+        public void SimulateSelectionChange(IEnumerable<object> items)
+        {
+            _onSelectionChange?.Invoke(items);
+        }
     }
 }
 
