@@ -364,22 +364,22 @@ namespace UnityEngine.UIElements
         private readonly List<object> _selectedItems = new List<object>();
         public IReadOnlyList<object> selectedItems => _selectedItems;
 
-        private Action<IEnumerable<object>>? _onSelectionChange;
+        private Action<IEnumerable<object>>? _selectionChanged;
 
-        public event Action<IEnumerable<object>> onSelectionChange
+        public event Action<IEnumerable<object>> selectionChanged
         {
-            add { _onSelectionChange += value; }
-            remove { _onSelectionChange -= value; }
+            add { _selectionChanged += value; }
+            remove { _selectionChanged -= value; }
         }
 
         public void SetSelectionWithoutNotify(IEnumerable<int> indices)
         {
         }
 
-        /// <summary>Test helper: fires onSelectionChange with the provided items.</summary>
+        /// <summary>Test helper: fires selectionChanged with the provided items.</summary>
         public void SimulateSelectionChange(IEnumerable<object> items)
         {
-            _onSelectionChange?.Invoke(items);
+            _selectionChanged?.Invoke(items);
         }
     }
 }

@@ -180,7 +180,12 @@ namespace Fram3.UI.Rendering.Internal
         private static TextField CreateTextField(FTextField textField)
         {
             var tf = new TextField
-                { value = textField.Value, isReadOnly = textField.ReadOnly, multiline = textField.Multiline };
+            {
+                value = textField.Value,
+                isReadOnly = textField.ReadOnly,
+                multiline = textField.Multiline
+            };
+
             if (textField.Placeholder != null)
             {
                 tf.textEdition.placeholder = textField.Placeholder;
@@ -325,6 +330,7 @@ namespace Fram3.UI.Rendering.Internal
                 lowValue = progressBar.Min,
                 highValue = progressBar.Max
             };
+
             if (progressBar.Title != null)
             {
                 pb.title = progressBar.Title;
@@ -349,13 +355,14 @@ namespace Fram3.UI.Rendering.Internal
             var img = new Image();
             ApplyImageDimensions(image.Width, image.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (image.Source is UnityEngine.Sprite sprite)
+            switch (image.Source)
             {
-                img.sprite = sprite;
-            }
-            else if (image.Source is UnityEngine.Texture2D texture)
-            {
-                img.image = texture;
+                case UnityEngine.Sprite sprite:
+                    img.sprite = sprite;
+                    break;
+                case UnityEngine.Texture2D texture:
+                    img.image = texture;
+                    break;
             }
 #endif
             return img;
@@ -365,13 +372,14 @@ namespace Fram3.UI.Rendering.Internal
         {
             ApplyImageDimensions(image.Width, image.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (image.Source is UnityEngine.Sprite sprite)
+            switch (image.Source)
             {
-                img.sprite = sprite;
-            }
-            else if (image.Source is UnityEngine.Texture2D texture)
-            {
-                img.image = texture;
+                case UnityEngine.Sprite sprite:
+                    img.sprite = sprite;
+                    break;
+                case UnityEngine.Texture2D texture:
+                    img.image = texture;
+                    break;
             }
 #endif
         }
@@ -381,7 +389,7 @@ namespace Fram3.UI.Rendering.Internal
             var img = new Image();
             ApplyImageDimensions(icon.Width, icon.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (icon.Source is UnityEngine.UIElements.VectorImage vectorImage)
+            if (icon.Source is VectorImage vectorImage)
             {
                 img.vectorImage = vectorImage;
             }
@@ -393,7 +401,7 @@ namespace Fram3.UI.Rendering.Internal
         {
             ApplyImageDimensions(icon.Width, icon.Height, img);
 #if !FRAM3_PURE_TESTS
-            if (icon.Source is UnityEngine.UIElements.VectorImage vectorImage)
+            if (icon.Source is VectorImage vectorImage)
             {
                 img.vectorImage = vectorImage;
             }
@@ -412,21 +420,21 @@ namespace Fram3.UI.Rendering.Internal
             var lv = new ListView
             {
                 fixedItemHeight = listView.ItemHeight,
-                selectionType = MapSelectionType(listView.SelectionMode)
+                selectionType = MapSelectionType(listView.SelectionMode),
+                makeItem = () => new VisualElement(),
+                bindItem = (item, index) =>
+                {
+                    var childElement = listView.BuildItemAt(index);
+                    var childNative = CreateNative(childElement);
+                    item.Add(childNative);
+                }
             };
 
-            lv.makeItem = () => new VisualElement();
-            lv.bindItem = (item, index) =>
-            {
-                var childElement = listView.BuildItemAt(index);
-                var childNative = CreateNative(childElement);
-                item.Add(childNative);
-            };
-
+            // ReSharper disable once InvertIf
             if (listView.OnSelectionChangedUntyped != null)
             {
                 var callback = listView.OnSelectionChangedUntyped;
-                lv.onSelectionChange += items =>
+                lv.selectionChanged += items =>
                 {
                     var list = new List<object?>();
                     foreach (var item in items)
