@@ -144,9 +144,8 @@ namespace Fram3.UI.Tests.GlobalState
         }
 
         [Test]
-        public void FEquatableState_SameValue_DoesNotNotify()
+        public void RecordState_SameValue_DoesNotNotify()
         {
-            // Verify that FEquatable-based states use value equality.
             var cubit = new EquatableCubit(new EquatableState(7));
             var callCount = 0;
             cubit.AddListener(_ => callCount++);
@@ -157,7 +156,7 @@ namespace Fram3.UI.Tests.GlobalState
         }
 
         [Test]
-        public void FEquatableState_DifferentValue_Notifies()
+        public void RecordState_DifferentValue_Notifies()
         {
             var cubit = new EquatableCubit(new EquatableState(7));
             var callCount = 0;
@@ -168,15 +167,7 @@ namespace Fram3.UI.Tests.GlobalState
             Assert.That(callCount, Is.EqualTo(1));
         }
 
-        // Helpers for FEquatable tests.
-        private sealed class EquatableState : Fram3.UI.Core.FEquatable
-        {
-            public int Value { get; }
-            public EquatableState(int value) { Value = value; }
-            public override bool Equals(Fram3.UI.Core.FEquatable? other)
-                => other is EquatableState s && s.Value == Value;
-            public override int GetHashCode() => Value.GetHashCode();
-        }
+        private record EquatableState(int Value);
 
         private sealed class EquatableCubit : FCubit<EquatableState>
         {
