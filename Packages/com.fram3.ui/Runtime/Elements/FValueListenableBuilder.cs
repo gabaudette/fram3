@@ -40,7 +40,8 @@ namespace Fram3.UI.Elements
         public FValueListenableBuilder(
             FValueNotifier<T> notifier,
             Func<FBuildContext, T, FElement> builder,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Notifier = notifier ?? throw new ArgumentNullException(nameof(notifier));
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));

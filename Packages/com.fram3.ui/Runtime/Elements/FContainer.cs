@@ -46,7 +46,8 @@ namespace Fram3.UI.Elements
             float? width = null,
             float? height = null,
             FEdgeInsets? padding = null,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Decoration = decoration;
             Width = width;

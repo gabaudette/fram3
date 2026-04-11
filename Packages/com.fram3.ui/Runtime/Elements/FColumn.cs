@@ -32,7 +32,8 @@ namespace Fram3.UI.Elements
         public FColumn(
             FMainAxisAlignment mainAxisAlignment = FMainAxisAlignment.Start,
             FCrossAxisAlignment crossAxisAlignment = FCrossAxisAlignment.Start,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             MainAxisAlignment = mainAxisAlignment;
             CrossAxisAlignment = crossAxisAlignment;

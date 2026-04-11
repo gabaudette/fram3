@@ -68,10 +68,8 @@ namespace Fram3.UI.Styling
         /// <inheritdoc />
         public override int GetHashCode() => HashCode.Combine(X, Y);
 
-        /// <inheritdoc />
         public static bool operator ==(FAlignment left, FAlignment right) => left.Equals(right);
 
-        /// <inheritdoc />
         public static bool operator !=(FAlignment left, FAlignment right) => !left.Equals(right);
 
         /// <inheritdoc />

@@ -53,7 +53,8 @@ namespace Fram3.UI.Elements
         public FSelector(
             Func<TState, TValue> selector,
             Func<FBuildContext, TValue, FElement> builder,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Selector = selector ?? throw new ArgumentNullException(nameof(selector));
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));

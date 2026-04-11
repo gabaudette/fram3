@@ -106,14 +106,13 @@ public class CounterStore : FStore<CounterState>
 
 ```csharp
 // Provide a cubit to a subtree.
-new FProvider<CounterCubit>
-{
-    Value = new CounterCubit(),
-    Child = new MyCustomElement()
-}
+new FProvider<CounterCubit>(
+    value: new CounterCubit(),
+    child: new MyWidget()
+)
 
 // Read it anywhere in that subtree.
-public class MyCustomElement : FStatelessElement
+public class MyWidget : FStatelessElement
 {
     public override FElement Build(FBuildContext context)
     {
@@ -121,6 +120,16 @@ public class MyCustomElement : FStatelessElement
         return new FText { Text = $"State: {cubit.State}" };
     }
 }
+```
+
+### FCubitBuilder
+
+`FCubitBuilder<TCubit, TState>` subscribes to a cubit from the nearest `FProvider<TCubit>` and rebuilds its subtree whenever the state changes.
+
+```csharp
+new FCubitBuilder<CounterCubit, int>(
+    (context, count) => new FText { Text = $"Count: {count}" }
+)
 ```
 
 ### FCubitBuilder
@@ -140,11 +149,10 @@ new FCubitBuilder<CounterCubit, int>
 
 ```csharp
 // Only rebuilds when the parity of the count changes.
-new FSelector<CounterCubit, int, bool>
-{
-    Selector = count => count % 2 == 0,
-    Builder = (context, isEven) => new FText { Text = isEven ? "Even" : "Odd" }
-}
+new FSelector<CounterCubit, int, bool>(
+    selector: count => count % 2 == 0,
+    builder: (context, isEven) => new FText { Text = isEven ? "Even" : "Odd" }
+)
 ```
 
 ### FPersistentStore
@@ -160,6 +168,95 @@ public class SettingsCubit : FPersistentStore<SettingsState>
     public void SetVolume(float v) => Emit(State with { Volume = v });
 }
 ```
+
+## Animation
+
+### FAnimationController
+
+`FAnimationController` is a time-driven 0-to-1 value that advances each frame. Create one inside `FState.InitState`, start it with `Forward` or `Reverse`, and dispose it in `FState.Dispose`. The controller is ticked automatically by `FRenderer.Tick(deltaTime)`.
+
+```csharp
+public class FadeElement : FStatefulElement
+{
+    public override FState CreateState() => new FadeState();
+}
+
+public class FadeState : FState<FadeElement>
+{
+    private FAnimationController _controller = null!;
+
+    public override void InitState()
+    {
+        _controller = new FAnimationController(duration: 0.4f, curve: FCurves.EaseOut);
+        _controller.AddListener(_ => SetState(null));
+        _controller.Forward();
+    }
+
+    public override FElement Build(FBuildContext context) =>
+        new FContainer(
+            decoration: new FBoxDecoration(
+                Color: FColor.Blue.WithAlpha(_controller.Value)
+            )
+        );
+
+    public override void Dispose()
+    {
+        _controller.Dispose();
+    }
+}
+```
+
+### FAnimationBuilder
+
+`FAnimationBuilder` is a self-contained element that owns its controller. Supply a duration, an optional easing curve, and a builder that receives the controller. Start playback by calling `Forward` or `Reverse` on the controller from within the builder or a gesture handler.
+
+```csharp
+new FAnimationBuilder(
+    duration: 0.3f,
+    curve: FCurves.EaseInOut,
+    builder: (context, ctrl) =>
+        new FGestureDetector(
+            onTap: () => ctrl.Status == FAnimationStatus.Forward
+                ? ctrl.Reverse()
+                : ctrl.Forward(),
+            child: new FContainer(
+                decoration: new FBoxDecoration(
+                    Color: FLerp.Color(FColor.White, FColor.Blue, ctrl.Value)
+                )
+            )
+        )
+)
+```
+
+### FCurves
+
+A set of built-in easing curves available as static fields on `FCurves`. Any `Func<float, float>` is also a valid curve.
+
+| Curve | Description |
+|---|---|
+| `FCurves.Linear` | Constant rate |
+| `FCurves.EaseIn` | Starts slowly, accelerates |
+| `FCurves.EaseOut` | Starts quickly, decelerates |
+| `FCurves.EaseInOut` | Slow at both ends |
+| `FCurves.ElasticOut` | Overshoots then settles |
+| `FCurves.BounceOut` | Bounces at the end |
+
+### FLerp
+
+`FLerp` provides linear interpolation for all Fram3 styling types. Pass a start value, an end value, and the controller's current `Value` to blend between them each frame.
+
+```csharp
+// Blend a color.
+FLerp.Color(FColor.Black, FColor.White, ctrl.Value)
+
+// Blend padding.
+FLerp.EdgeInsets(FEdgeInsets.All(0f), FEdgeInsets.All(24f), ctrl.Value)
+
+// Blend a full box decoration.
+FLerp.BoxDecoration(decorationA, decorationB, ctrl.Value)
+```
+
+Available overloads: `Float`, `NullableFloat`, `Color`, `NullableColor`, `EdgeInsets`, `Alignment`, `BorderRadius`, `Border`, `Shadow`, `BoxDecoration`, `TextStyle`.
 
 ## Tests
 

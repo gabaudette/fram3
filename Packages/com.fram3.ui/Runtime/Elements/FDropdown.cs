@@ -45,7 +45,8 @@ namespace Fram3.UI.Elements
             int selectedIndex = -1,
             Action<int>? onChanged = null,
             string? label = null,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Options = options ?? throw new ArgumentNullException(nameof(options));
             SelectedIndex = selectedIndex;

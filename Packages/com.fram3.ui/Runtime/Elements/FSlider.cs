@@ -45,7 +45,8 @@ namespace Fram3.UI.Elements
             float max = 1f,
             Action<float>? onChanged = null,
             string? label = null,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Value = value;
             Min = min;

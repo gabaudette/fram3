@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using Fram3.UI.Animation;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Rendering.Internal;
@@ -77,11 +78,18 @@ namespace Fram3.UI.Rendering
         }
 
         /// <summary>
-        /// Flushes all pending rebuilds scheduled by <see cref="FState.SetState"/>
-        /// calls since the last tick. Call this from <c>MonoBehaviour.Update</c>.
+        /// Advances all active animation controllers by <paramref name="deltaTime"/> seconds,
+        /// then flushes all pending rebuilds scheduled by <see cref="FState.SetState"/>
+        /// calls since the last tick. Call this from <c>MonoBehaviour.Update</c>,
+        /// passing <c>UnityEngine.Time.deltaTime</c> as the argument.
         /// </summary>
-        public void Tick()
+        /// <param name="deltaTime">
+        /// Elapsed time in seconds since the previous frame. Must be non-negative.
+        /// </param>
+        public void Tick(float deltaTime)
         {
+            FAnimationSystem.Tick(deltaTime);
+
             if (_scheduler.HasDirtyNodes)
             {
                 _scheduler.Flush(_expander);

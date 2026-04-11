@@ -67,14 +67,17 @@ namespace Fram3.UI.Styling
         /// <inheritdoc />
         public override int GetHashCode() => HashCode.Combine(TopLeft, TopRight, BottomRight, BottomLeft);
 
-        /// <inheritdoc />
         public static bool operator ==(FBorderRadius left, FBorderRadius right) => left.Equals(right);
 
-        /// <inheritdoc />
         public static bool operator !=(FBorderRadius left, FBorderRadius right) => !left.Equals(right);
 
         /// <inheritdoc />
         public override string ToString() =>
-            $"FBorderRadius(topLeft:{TopLeft}, topRight:{TopRight}, bottomRight:{BottomRight}, bottomLeft:{BottomLeft})";
+            $"FBorderRadius(" +
+            $"topLeft:{TopLeft}, " +
+            $"topRight:{TopRight}," +
+            $" bottomRight:{BottomRight}, " +
+            $"bottomLeft:{BottomLeft}" +
+            $")";
     }
 }

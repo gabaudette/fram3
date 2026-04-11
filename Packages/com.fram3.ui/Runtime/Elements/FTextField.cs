@@ -49,7 +49,8 @@ namespace Fram3.UI.Elements
             string? placeholder = null,
             bool readOnly = false,
             bool multiline = false,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Value = value ?? string.Empty;
             OnChanged = onChanged;

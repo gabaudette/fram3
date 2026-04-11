@@ -35,7 +35,8 @@ namespace Fram3.UI.Elements
             bool value = false,
             Action<bool>? onChanged = null,
             string? label = null,
-            FKey? key = null) : base(key)
+            FKey? key = null
+        ) : base(key)
         {
             Value = value;
             OnChanged = onChanged;
