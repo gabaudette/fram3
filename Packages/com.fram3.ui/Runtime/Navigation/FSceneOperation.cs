@@ -10,8 +10,6 @@ namespace Fram3.UI.Navigation
     /// </summary>
     public sealed class FSceneOperation
     {
-        private float _progress;
-
         /// <summary>
         /// Raised once when the scene load reaches completion and
         /// <see cref="IsCompleted"/> transitions to <c>true</c>.
@@ -19,18 +17,11 @@ namespace Fram3.UI.Navigation
         public event Action? Completed;
 
         /// <summary>
-        /// The normalised load progress in the range [0, 1].
+        /// The normalized load progress in the range [0, 1].
         /// Updated continuously during an async load. Equals <c>1</c> when
         /// <see cref="IsCompleted"/> is <c>true</c>.
         /// </summary>
-        public float Progress
-        {
-            get => _progress;
-            internal set
-            {
-                _progress = value;
-            }
-        }
+        public float Progress { get; internal set; }
 
         /// <summary>
         /// <c>true</c> once the scene has finished loading and is active.
@@ -49,7 +40,7 @@ namespace Fram3.UI.Navigation
                 return;
             }
 
-            _progress = 1f;
+            Progress = 1f;
             IsCompleted = true;
             Completed?.Invoke();
         }

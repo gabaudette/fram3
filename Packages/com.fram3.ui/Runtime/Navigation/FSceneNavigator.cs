@@ -36,12 +36,9 @@ namespace Fram3.UI.Navigation
         /// </exception>
         public static FSceneOperation GoTo(string sceneName)
         {
-            if (string.IsNullOrEmpty(sceneName))
-            {
-                throw new ArgumentNullException(nameof(sceneName));
-            }
-
-            return _adapter.LoadAsync(sceneName);
+            return string.IsNullOrEmpty(sceneName)
+                ? throw new ArgumentNullException(nameof(sceneName))
+                : _adapter.LoadAsync(sceneName);
         }
 
         /// <summary>

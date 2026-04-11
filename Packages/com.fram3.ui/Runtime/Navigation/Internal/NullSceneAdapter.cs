@@ -1,6 +1,5 @@
 #nullable enable
 #if FRAM3_PURE_TESTS
-
 namespace Fram3.UI.Navigation.Internal
 {
     internal sealed class NullSceneAdapter : ISceneAdapter
