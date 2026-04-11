@@ -132,17 +132,6 @@ new FCubitBuilder<CounterCubit, int>(
 )
 ```
 
-### FCubitBuilder
-
-`FCubitBuilder<TCubit, TState>` subscribes to a cubit from the nearest `FProvider<TCubit>` and rebuilds its subtree whenever the state changes.
-
-```csharp
-new FCubitBuilder<CounterCubit, int>
-{
-    Builder = (context, count) => new FText { Text = $"Count: {count}" }
-}
-```
-
 ### FSelector
 
 `FSelector<TCubit, TState, TValue>` is like `FCubitBuilder` but only rebuilds when a derived value changes, skipping unnecessary rebuilds.
@@ -311,6 +300,100 @@ new FAnimatedValue<float>("radius", targetRadius, FLerp.Float)
 // Custom lerp for a game-specific value type.
 new FAnimatedValue<Vector2>("position", targetPos, (a, b, t) =>
     new Vector2(FLerp.Float(a.x, b.x, t), FLerp.Float(a.y, b.y, t)))
+```
+
+## Navigation
+
+### FNavigator
+
+`FNavigator` is a stack-based in-scene navigator. Declare your routes as a dictionary mapping names to builder functions, provide an initial route name, and place the navigator anywhere in your element tree.
+
+```csharp
+new FNavigator(
+    routes: new Dictionary<string, Func<FBuildContext, FElement>>
+    {
+        { "home",   _ => new HomePage() },
+        { "detail", _ => new DetailPage() },
+        { "settings", _ => new SettingsPage() },
+    },
+    initialRoute: "home"
+)
+```
+
+Only the top route is built and visible at any time. The navigator renders its content as a subtree -- wrap it in a container to constrain its size within a larger layout.
+
+### Pushing and popping
+
+Any descendant can obtain the navigator handle from context and call `Push` or `Pop` on it.
+
+```csharp
+public class HomePage : FStatelessElement
+{
+    public override FElement Build(FBuildContext context)
+    {
+        var nav = context.GetInherited<FNavigatorScope>().Navigator;
+
+        return new FButton
+        {
+            Label = "Go to detail",
+            OnPressed = () => nav.Push("detail")
+        };
+    }
+}
+```
+
+`Push` accepts an optional arguments object that is forwarded to the route builder:
+
+```csharp
+nav.Push("detail", arguments: new DetailArgs(id: 42));
+```
+
+`Pop` removes the top route. It is a no-op when the stack contains only the initial route:
+
+```csharp
+public class DetailPage : FStatelessElement
+{
+    public override FElement Build(FBuildContext context)
+    {
+        var nav = context.GetInherited<FNavigatorScope>().Navigator;
+
+        return new FColumn
+        {
+            Children = new FElement[]
+            {
+                new FText { Text = "Detail" },
+                new FButton
+                {
+                    Label = "Back",
+                    OnPressed = () => nav.Pop()
+                }
+            }
+        };
+    }
+}
+```
+
+Use `CanPop` to check whether a back action is available before showing a back button:
+
+```csharp
+nav.CanPop
+    ? new FButton { Label = "Back", OnPressed = () => nav.Pop() }
+    : new FSizedBox()
+```
+
+### Nested navigators
+
+Multiple `FNavigator` instances can coexist in the same tree. `context.GetInherited<FNavigatorScope>()` always resolves to the nearest enclosing navigator, so nested navigators manage their own independent stacks.
+
+```csharp
+new FRow
+{
+    Children = new FElement[]
+    {
+        new FNavigator(routes: sidebarRoutes, initialRoute: "menu"),
+        new FNavigator(routes: contentRoutes, initialRoute: "home"),
+    }
+}
 ```
 
 ## Tests
