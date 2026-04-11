@@ -67,5 +67,84 @@ namespace Fram3.UI.Tests.Styling
         {
             Assert.That(FBorderRadius.All(4f), Is.Not.EqualTo(FBorderRadius.All(8f)));
         }
+
+        [Test]
+        public void Only_NoArguments_ProducesZeroRadius()
+        {
+            var radius = FBorderRadius.Only();
+
+            Assert.That(radius, Is.EqualTo(FBorderRadius.Zero));
+        }
+
+        [Test]
+        public void Only_TopLeftOnly_SetsTopLeftCorner()
+        {
+            var radius = FBorderRadius.Only(topLeft: 10f);
+
+            Assert.That(radius.TopLeft, Is.EqualTo(10f));
+            Assert.That(radius.TopRight, Is.EqualTo(0f));
+            Assert.That(radius.BottomRight, Is.EqualTo(0f));
+            Assert.That(radius.BottomLeft, Is.EqualTo(0f));
+        }
+
+        [Test]
+        public void Only_BottomRightOnly_SetsBottomRightCorner()
+        {
+            var radius = FBorderRadius.Only(bottomRight: 5f);
+
+            Assert.That(radius.TopLeft, Is.EqualTo(0f));
+            Assert.That(radius.TopRight, Is.EqualTo(0f));
+            Assert.That(radius.BottomRight, Is.EqualTo(5f));
+            Assert.That(radius.BottomLeft, Is.EqualTo(0f));
+        }
+
+        [Test]
+        public void Only_AllCornersSpecified_SetsAllCorners()
+        {
+            var radius = FBorderRadius.Only(topLeft: 1f, topRight: 2f, bottomRight: 3f, bottomLeft: 4f);
+
+            Assert.That(radius.TopLeft, Is.EqualTo(1f));
+            Assert.That(radius.TopRight, Is.EqualTo(2f));
+            Assert.That(radius.BottomRight, Is.EqualTo(3f));
+            Assert.That(radius.BottomLeft, Is.EqualTo(4f));
+        }
+
+        [Test]
+        public void Horizontal_SetsLeftAndRightSideCornersIndependently()
+        {
+            var radius = FBorderRadius.Horizontal(left: 8f, right: 4f);
+
+            Assert.That(radius.TopLeft, Is.EqualTo(8f));
+            Assert.That(radius.BottomLeft, Is.EqualTo(8f));
+            Assert.That(radius.TopRight, Is.EqualTo(4f));
+            Assert.That(radius.BottomRight, Is.EqualTo(4f));
+        }
+
+        [Test]
+        public void Horizontal_DefaultsToZero()
+        {
+            var radius = FBorderRadius.Horizontal();
+
+            Assert.That(radius, Is.EqualTo(FBorderRadius.Zero));
+        }
+
+        [Test]
+        public void Vertical_SetsTopAndBottomCornersIndependently()
+        {
+            var radius = FBorderRadius.Vertical(top: 12f, bottom: 6f);
+
+            Assert.That(radius.TopLeft, Is.EqualTo(12f));
+            Assert.That(radius.TopRight, Is.EqualTo(12f));
+            Assert.That(radius.BottomLeft, Is.EqualTo(6f));
+            Assert.That(radius.BottomRight, Is.EqualTo(6f));
+        }
+
+        [Test]
+        public void Vertical_DefaultsToZero()
+        {
+            var radius = FBorderRadius.Vertical();
+
+            Assert.That(radius, Is.EqualTo(FBorderRadius.Zero));
+        }
     }
 }

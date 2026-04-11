@@ -68,5 +68,115 @@ namespace Fram3.UI.Tests.Styling
 
             Assert.That(a, Is.Not.EqualTo(b));
         }
+
+        [Test]
+        public void AsBold_ReturnsCopyWithBoldTrue()
+        {
+            var original = new FTextStyle();
+            var bold = original.AsBold();
+
+            Assert.That(bold.Bold, Is.True);
+            Assert.That(original.Bold, Is.False);
+        }
+
+        [Test]
+        public void AsBold_PreservesOtherProperties()
+        {
+            var original = new FTextStyle(FontSize: 14f, Color: FColor.Black);
+            var bold = original.AsBold();
+
+            Assert.That(bold.FontSize, Is.EqualTo(14f));
+            Assert.That(bold.Color, Is.EqualTo(FColor.Black));
+        }
+
+        [Test]
+        public void AsItalic_ReturnsCopyWithItalicTrue()
+        {
+            var original = new FTextStyle();
+            var italic = original.AsItalic();
+
+            Assert.That(italic.Italic, Is.True);
+            Assert.That(original.Italic, Is.False);
+        }
+
+        [Test]
+        public void AsItalic_PreservesOtherProperties()
+        {
+            var original = new FTextStyle(FontSize: 18f);
+            var italic = original.AsItalic();
+
+            Assert.That(italic.FontSize, Is.EqualTo(18f));
+        }
+
+        [Test]
+        public void AsUnderlined_ReturnsCopyWithUnderlineTrue()
+        {
+            var original = new FTextStyle();
+            var underlined = original.AsUnderlined();
+
+            Assert.That(underlined.Underline, Is.True);
+            Assert.That(original.Underline, Is.False);
+        }
+
+        [Test]
+        public void WithSize_ReturnsCopyWithGivenFontSize()
+        {
+            var original = new FTextStyle();
+            var sized = original.WithSize(20f);
+
+            Assert.That(sized.FontSize, Is.EqualTo(20f));
+            Assert.That(original.FontSize, Is.Null);
+        }
+
+        [Test]
+        public void WithColor_ReturnsCopyWithGivenColor()
+        {
+            var original = new FTextStyle();
+            var colored = original.WithColor(FColor.White);
+
+            Assert.That(colored.Color, Is.EqualTo(FColor.White));
+            Assert.That(original.Color, Is.Null);
+        }
+
+        [Test]
+        public void WithLetterSpacing_ReturnsCopyWithGivenSpacing()
+        {
+            var original = new FTextStyle();
+            var spaced = original.WithLetterSpacing(2.5f);
+
+            Assert.That(spaced.LetterSpacing, Is.EqualTo(2.5f));
+            Assert.That(original.LetterSpacing, Is.EqualTo(0f));
+        }
+
+        [Test]
+        public void WithLineHeight_ReturnsCopyWithGivenLineHeight()
+        {
+            var original = new FTextStyle();
+            var lined = original.WithLineHeight(1.5f);
+
+            Assert.That(lined.LineHeight, Is.EqualTo(1.5f));
+            Assert.That(original.LineHeight, Is.Null);
+        }
+
+        [Test]
+        public void FluentChaining_ProducesCorrectStyle()
+        {
+            var style = FTextStyle.Inherit
+                .WithSize(16f)
+                .WithColor(FColor.Black)
+                .AsBold()
+                .AsItalic()
+                .AsUnderlined()
+                .WithLetterSpacing(1f)
+                .WithLineHeight(1.4f);
+
+            Assert.That(style.FontSize, Is.EqualTo(16f));
+            Assert.That(style.Color, Is.EqualTo(FColor.Black));
+            Assert.That(style.Bold, Is.True);
+            Assert.That(style.Italic, Is.True);
+            Assert.That(style.Underline, Is.True);
+            Assert.That(style.LetterSpacing, Is.EqualTo(1f));
+            Assert.That(style.LineHeight, Is.EqualTo(1.4f));
+        }
     }
 }

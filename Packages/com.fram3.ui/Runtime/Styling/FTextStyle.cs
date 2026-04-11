@@ -23,5 +23,30 @@ namespace Fram3.UI.Styling
     {
         /// <summary>A text style with no overrides, inheriting all values from the parent.</summary>
         public static FTextStyle Inherit => new();
+
+        /// <summary>Returns a copy of this style with <see cref="Bold"/> set to <c>true</c>.</summary>
+        public FTextStyle AsBold() => this with { Bold = true };
+
+        /// <summary>Returns a copy of this style with <see cref="Italic"/> set to <c>true</c>.</summary>
+        public FTextStyle AsItalic() => this with { Italic = true };
+
+        /// <summary>Returns a copy of this style with <see cref="Underline"/> set to <c>true</c>.</summary>
+        public FTextStyle AsUnderlined() => this with { Underline = true };
+
+        /// <summary>Returns a copy of this style with the given <see cref="FontSize"/>.</summary>
+        /// <param name="size">The font size in logical pixels.</param>
+        public FTextStyle WithSize(float size) => this with { FontSize = size };
+
+        /// <summary>Returns a copy of this style with the given <see cref="Color"/>.</summary>
+        /// <param name="color">The text color.</param>
+        public FTextStyle WithColor(FColor color) => this with { Color = color };
+
+        /// <summary>Returns a copy of this style with the given <see cref="LetterSpacing"/>.</summary>
+        /// <param name="spacing">Additional spacing between characters in logical pixels.</param>
+        public FTextStyle WithLetterSpacing(float spacing) => this with { LetterSpacing = spacing };
+
+        /// <summary>Returns a copy of this style with the given <see cref="LineHeight"/>.</summary>
+        /// <param name="lineHeight">Line height as a multiplier of the font size.</param>
+        public FTextStyle WithLineHeight(float lineHeight) => this with { LineHeight = lineHeight };
     }
 }
