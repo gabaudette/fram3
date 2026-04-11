@@ -84,7 +84,7 @@ namespace Fram3.UI.Elements
 
         Action<IReadOnlyList<object?>>? IFListViewDescriptor.OnSelectionChangedUntyped =>
             OnSelectionChanged == null
-                ? (Action<IReadOnlyList<object?>>?)null
+                ? null
                 : items =>
                 {
                     var typed = new List<T>(items.Count);
@@ -95,6 +95,7 @@ namespace Fram3.UI.Elements
                             typed.Add(t);
                         }
                     }
+
                     OnSelectionChanged(typed);
                 };
     }

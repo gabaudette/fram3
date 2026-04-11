@@ -160,7 +160,12 @@ namespace Fram3.UI.Rendering.Internal
         private static TextField CreatePasswordField(FPasswordField passwordField)
         {
             var tf = new TextField
-                { value = passwordField.Value, isReadOnly = passwordField.ReadOnly, isPasswordField = true };
+            {
+                value = passwordField.Value,
+                isReadOnly = passwordField.ReadOnly,
+                isPasswordField = true
+            };
+
             if (passwordField.Placeholder != null)
             {
                 tf.textEdition.placeholder = passwordField.Placeholder;
@@ -725,11 +730,13 @@ namespace Fram3.UI.Rendering.Internal
                 }
             }
 
-            if (divider.Color.HasValue)
+            if (!divider.Color.HasValue)
             {
-                var c = divider.Color.Value;
-                native.style.backgroundColor = new UnityEngine.Color(c.R, c.G, c.B, c.A);
+                return;
             }
+
+            var c = divider.Color.Value;
+            native.style.backgroundColor = new UnityEngine.Color(c.R, c.G, c.B, c.A);
         }
 
         private static void ApplyTooltipLayout(FTooltip tooltip, VisualElement native)
