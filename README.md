@@ -48,20 +48,118 @@ public class CounterState : FState<CounterElement>
     public override FElement Build(FBuildContext context) =>
         new FColumn
         {
-            Children =
-            [
+            Children = new FElement[]
+            {
                 new FText { Text = $"Count: {_count}" },
                 new FButton
                 {
                     Label = "Increment",
                     OnPressed = () => SetState(() => _count++)
                 }
-            ]
+            }
         };
 }
 ```
 
 Elements are immutable descriptions. `SetState` schedules a rebuild, and the reconciler updates only what changed in the UIToolkit tree.
+
+## Global state
+
+### FCubit
+
+`FCubit<TState>` is a reactive state holder. Subclass it, call `Emit` to transition state, and attach listeners to react to changes. Equality is checked before notifying; identical states are ignored.
+
+```csharp
+public class CounterCubit : FCubit<int>
+{
+    public CounterCubit() : base(0) { }
+
+    public void Increment() => Emit(State + 1);
+    public void Decrement() => Emit(State - 1);
+}
+```
+
+`FStore<TState>` extends `FCubit` with a Redux-style reducer for action-driven transitions:
+
+```csharp
+public record CounterState(int Count);
+
+public class IncrementAction : FAction { }
+public class DecrementAction : FAction { }
+
+public class CounterStore : FStore<CounterState>
+{
+    public CounterStore() : base(
+        new CounterState(0),
+        (state, action) => action switch
+        {
+            IncrementAction => state with { Count = state.Count + 1 },
+            DecrementAction => state with { Count = state.Count - 1 },
+            _ => state
+        }) { }
+}
+```
+
+### FProvider and FConsumer
+
+`FProvider<T>` injects a value into the subtree. `FConsumer<T>` reads the nearest `FProvider<T>` above it.
+
+```csharp
+// Provide a cubit to a subtree.
+new FProvider<CounterCubit>
+{
+    Value = new CounterCubit(),
+    Child = new MyWidget()
+}
+
+// Read it anywhere in that subtree.
+public class MyWidget : FStatelessElement
+{
+    public override FElement Build(FBuildContext context)
+    {
+        var cubit = FConsumer<CounterCubit>.Of(context);
+        return new FText { Text = $"State: {cubit.State}" };
+    }
+}
+```
+
+### FCubitBuilder
+
+`FCubitBuilder<TCubit, TState>` subscribes to a cubit from the nearest `FProvider<TCubit>` and rebuilds its subtree whenever the state changes.
+
+```csharp
+new FCubitBuilder<CounterCubit, int>
+{
+    Builder = (context, count) => new FText { Text = $"Count: {count}" }
+}
+```
+
+### FSelector
+
+`FSelector<TCubit, TState, TValue>` is like `FCubitBuilder` but only rebuilds when a derived value changes, skipping unnecessary rebuilds.
+
+```csharp
+// Only rebuilds when the parity of the count changes.
+new FSelector<CounterCubit, int, bool>
+{
+    Selector = count => count % 2 == 0,
+    Builder = (context, isEven) => new FText { Text = isEven ? "Even" : "Odd" }
+}
+```
+
+### FPersistentStore
+
+`FPersistentStore<TState>` extends `FCubit` and automatically persists state through an `IPersistenceAdapter<TState>`. In Unity, use `PlayerPrefsAdapter<TState>` which serialises state to `PlayerPrefs` via JSON.
+
+```csharp
+public class SettingsCubit : FPersistentStore<SettingsState>
+{
+    public SettingsCubit()
+        : base(new SettingsState(Volume: 1f), new PlayerPrefsAdapter<SettingsState>("settings")) { }
+
+    public void SetVolume(float v) => Emit(State with { Volume = v });
+}
+```
 
 ## Tests
 
