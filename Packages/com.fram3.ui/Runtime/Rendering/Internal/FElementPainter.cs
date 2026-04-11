@@ -22,6 +22,8 @@ namespace Fram3.UI.Rendering.Internal
         /// A <c>Label</c> for <see cref="FText"/>, a <c>Button</c> for <see cref="FButton"/>,
         /// a <c>TextField</c> for <see cref="FTextField"/>, a <c>Toggle</c> for <see cref="FToggle"/>,
         /// a <c>Slider</c> for <see cref="FSlider"/>, a <c>DropdownField</c> for <see cref="FDropdown"/>,
+        /// a <c>ProgressBar</c> for <see cref="FProgressBar"/>, a <c>ScrollView</c> for <see cref="FScrollView"/>,
+        /// an <c>Image</c> for <see cref="FImage"/> or <see cref="FIcon"/>,
         /// or a plain <c>VisualElement</c> for all layout/container/gesture elements.
         /// </returns>
         internal static VisualElement CreateNative(FElement element)
@@ -40,12 +42,30 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateSlider(slider);
                 case FDropdown dropdown:
                     return CreateDropdown(dropdown);
+                case FProgressBar progressBar:
+                    return CreateProgressBar(progressBar);
+                case FScrollView scrollView:
+                    return CreateScrollView(scrollView);
+                case FImage image:
+                    return CreateImage(image);
+                case FIcon icon:
+                    return CreateIcon(icon);
                 default:
                     var native = new VisualElement();
                     ApplyLayout(element, native);
                     RegisterGestureCallbacks(element, native);
                     return native;
             }
+        }
+
+        /// <summary>
+        /// Applies absolute positioning to a native element so that it behaves as a
+        /// layer inside an <see cref="FStack"/> container. Called by the renderer after
+        /// attaching the child to a stack parent.
+        /// </summary>
+        internal static void ApplyAsStackChild(VisualElement native)
+        {
+            native.style.position = Position.Absolute;
         }
 
         /// <summary>
@@ -75,6 +95,18 @@ namespace Fram3.UI.Rendering.Internal
                     break;
                 case FDropdown dropdown when native is DropdownField dd:
                     PaintDropdown(dropdown, dd);
+                    break;
+                case FProgressBar progressBar when native is ProgressBar pb:
+                    PaintProgressBar(progressBar, pb);
+                    break;
+                case FScrollView scrollView when native is ScrollView sv:
+                    PaintScrollView(scrollView, sv);
+                    break;
+                case FImage image when native is Image img:
+                    PaintImage(image, img);
+                    break;
+                case FIcon icon when native is Image iconImg:
+                    PaintIcon(icon, iconImg);
                     break;
                 default:
                     ApplyLayout(element, native);
@@ -214,6 +246,113 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
+        private static ScrollView CreateScrollView(FScrollView scrollView)
+        {
+            var sv = new ScrollView(MapScrollMode(scrollView.ScrollDirection));
+            return sv;
+        }
+
+        private static void PaintScrollView(FScrollView scrollView, ScrollView sv)
+        {
+            sv.mode = MapScrollMode(scrollView.ScrollDirection);
+        }
+
+        private static ProgressBar CreateProgressBar(FProgressBar progressBar)
+        {
+            var pb = new ProgressBar
+            {
+                value = progressBar.Value,
+                lowValue = progressBar.Min,
+                highValue = progressBar.Max
+            };
+            if (progressBar.Title != null)
+            {
+                pb.title = progressBar.Title;
+            }
+
+            return pb;
+        }
+
+        private static void PaintProgressBar(FProgressBar progressBar, ProgressBar pb)
+        {
+            pb.value = progressBar.Value;
+            pb.lowValue = progressBar.Min;
+            pb.highValue = progressBar.Max;
+            if (progressBar.Title != null)
+            {
+                pb.title = progressBar.Title;
+            }
+        }
+
+        private static Image CreateImage(FImage image)
+        {
+            var img = new Image();
+            ApplyImageDimensions(image.Width, image.Height, img);
+#if !FRAM3_PURE_TESTS
+            if (image.Source is UnityEngine.Sprite sprite)
+            {
+                img.sprite = sprite;
+            }
+            else if (image.Source is UnityEngine.Texture2D texture)
+            {
+                img.image = texture;
+            }
+#endif
+            return img;
+        }
+
+        private static void PaintImage(FImage image, Image img)
+        {
+            ApplyImageDimensions(image.Width, image.Height, img);
+#if !FRAM3_PURE_TESTS
+            if (image.Source is UnityEngine.Sprite sprite)
+            {
+                img.sprite = sprite;
+            }
+            else if (image.Source is UnityEngine.Texture2D texture)
+            {
+                img.image = texture;
+            }
+#endif
+        }
+
+        private static Image CreateIcon(FIcon icon)
+        {
+            var img = new Image();
+            ApplyImageDimensions(icon.Width, icon.Height, img);
+#if !FRAM3_PURE_TESTS
+            if (icon.Source is UnityEngine.UIElements.VectorImage vectorImage)
+            {
+                img.vectorImage = vectorImage;
+            }
+#endif
+            return img;
+        }
+
+        private static void PaintIcon(FIcon icon, Image img)
+        {
+            ApplyImageDimensions(icon.Width, icon.Height, img);
+#if !FRAM3_PURE_TESTS
+            if (icon.Source is UnityEngine.UIElements.VectorImage vectorImage)
+            {
+                img.vectorImage = vectorImage;
+            }
+#endif
+        }
+
+        private static void ApplyImageDimensions(float? width, float? height, VisualElement native)
+        {
+            if (width.HasValue)
+            {
+                native.style.width = width.Value;
+            }
+
+            if (height.HasValue)
+            {
+                native.style.height = height.Value;
+            }
+        }
+
         private static void RegisterGestureCallbacks(FElement element, VisualElement native)
         {
             if (element is not FGestureDetector gesture)
@@ -305,6 +444,15 @@ namespace Fram3.UI.Rendering.Internal
                     break;
                 case FCenter:
                     ApplyCenterLayout(native);
+                    break;
+                case FExpanded expanded:
+                    ApplyExpandedLayout(expanded, native);
+                    break;
+                case FDivider divider:
+                    ApplyDividerLayout(divider, native);
+                    break;
+                case FTooltip tooltip:
+                    ApplyTooltipLayout(tooltip, native);
                     break;
             }
         }
@@ -424,6 +572,54 @@ namespace Fram3.UI.Rendering.Internal
             native.style.borderTopRightRadius = radius.TopRight;
             native.style.borderBottomRightRadius = radius.BottomRight;
             native.style.borderBottomLeftRadius = radius.BottomLeft;
+        }
+
+        private static void ApplyExpandedLayout(FExpanded expanded, VisualElement native)
+        {
+            native.style.flexGrow = expanded.Flex;
+        }
+
+        private static void ApplyDividerLayout(FDivider divider, VisualElement native)
+        {
+            if (divider.Axis == FDividerAxis.Horizontal)
+            {
+                native.style.height = divider.Thickness;
+                if (divider.Indent > 0f)
+                {
+                    native.style.marginLeft = divider.Indent;
+                    native.style.marginRight = divider.Indent;
+                }
+            }
+            else
+            {
+                native.style.width = divider.Thickness;
+                if (divider.Indent > 0f)
+                {
+                    native.style.marginTop = divider.Indent;
+                    native.style.marginBottom = divider.Indent;
+                }
+            }
+
+            if (divider.Color.HasValue)
+            {
+                var c = divider.Color.Value;
+                native.style.backgroundColor = new UnityEngine.Color(c.R, c.G, c.B, c.A);
+            }
+        }
+
+        private static void ApplyTooltipLayout(FTooltip tooltip, VisualElement native)
+        {
+            native.tooltip = tooltip.Message;
+        }
+
+        private static ScrollViewMode MapScrollMode(FScrollDirection direction)
+        {
+            return direction switch
+            {
+                FScrollDirection.Horizontal => ScrollViewMode.Horizontal,
+                FScrollDirection.Both => ScrollViewMode.VerticalAndHorizontal,
+                _ => ScrollViewMode.Vertical
+            };
         }
 
         private static Justify MapMainAxis(FMainAxisAlignment alignment)

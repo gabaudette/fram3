@@ -67,6 +67,13 @@ namespace UnityEngine.UIElements
         public Justify? justifyContent;
         public Align? alignItems;
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
+        public Position? position;
+    }
+
+    public enum Position
+    {
+        Relative,
+        Absolute
     }
 
     public enum FlexDirection
@@ -109,6 +116,7 @@ namespace UnityEngine.UIElements
         public IReadOnlyList<VisualElement> Children => _children;
         public VisualElement? Parent => _parent;
         public int childCount => _children.Count;
+        public string tooltip { get; set; } = string.Empty;
 
         public void Add(VisualElement child)
         {
@@ -293,6 +301,46 @@ namespace UnityEngine.UIElements
             var newValue = newIndex >= 0 && newIndex < choices.Count ? choices[newIndex] : string.Empty;
             SimulateEvent(new ChangeEvent<string>(prevValue, newValue));
         }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.ScrollView</c>.
+    /// </summary>
+    public class ScrollView : VisualElement
+    {
+        public ScrollViewMode mode { get; set; }
+
+        public ScrollView(ScrollViewMode mode = ScrollViewMode.Vertical)
+        {
+            this.mode = mode;
+        }
+    }
+
+    public enum ScrollViewMode
+    {
+        Vertical,
+        Horizontal,
+        VerticalAndHorizontal
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.ProgressBar</c>.
+    /// </summary>
+    public class ProgressBar : VisualElement
+    {
+        public float value { get; set; }
+        public float lowValue { get; set; }
+        public float highValue { get; set; }
+        public string? title { get; set; }
+    }
+
+    /// <summary>
+    /// Minimal stub for <c>UnityEngine.UIElements.Image</c>.
+    /// </summary>
+    public class Image : VisualElement
+    {
+        public object? sprite { get; set; }
+        public object? vectorImage { get; set; }
     }
 }
 

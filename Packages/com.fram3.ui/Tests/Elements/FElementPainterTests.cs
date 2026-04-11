@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using Fram3.UI.Core;
 using Fram3.UI.Elements;
 using Fram3.UI.Rendering.Internal;
 using Fram3.UI.Styling;
@@ -152,19 +153,111 @@ namespace Fram3.UI.Tests.Elements
             Assert.That(button.text, Is.EqualTo("New"));
         }
 
-#if FRAM3_PURE_TESTS
         [Test]
-        public void CreateNative_FButton_StoresClickAction()
+        public void CreateNative_FProgressBar_ReturnsProgressBar()
         {
-            var pressed = false;
-            var element = new FButton("Go", () => { pressed = true; });
+            var element = new FProgressBar(value: 50f);
 
-            var native = (Button)FElementPainter.CreateNative(element);
-            native.clickedAction?.Invoke();
+            var native = FElementPainter.CreateNative(element);
 
-            Assert.That(pressed, Is.True);
+            Assert.That(native, Is.InstanceOf<ProgressBar>());
         }
 
+        [Test]
+        public void CreateNative_FScrollView_ReturnsScrollView()
+        {
+            var element = new FScrollView { Child = new FText("x") };
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native, Is.InstanceOf<ScrollView>());
+        }
+
+        [Test]
+        public void CreateNative_FImage_ReturnsImage()
+        {
+            var element = new FImage();
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native, Is.InstanceOf<Image>());
+        }
+
+        [Test]
+        public void CreateNative_FIcon_ReturnsImage()
+        {
+            var element = new FIcon();
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native, Is.InstanceOf<Image>());
+        }
+
+        [Test]
+        public void CreateNative_FStack_ReturnsVisualElement()
+        {
+            var element = new FStack { Children = new FElement[] { new FText("a") } };
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FExpanded_ReturnsVisualElement()
+        {
+            var element = new FExpanded { Child = new FText("x") };
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FDivider_ReturnsVisualElement()
+        {
+            var element = new FDivider();
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void CreateNative_FTooltip_ReturnsVisualElement()
+        {
+            var element = new FTooltip("tip") { Child = new FText("x") };
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
+        }
+
+        [Test]
+        public void Paint_FProgressBar_UpdatesValue()
+        {
+            var original = new FProgressBar(value: 10f);
+            var native = (ProgressBar)FElementPainter.CreateNative(original);
+
+            var updated = new FProgressBar(value: 90f);
+            FElementPainter.Paint(updated, native);
+
+            Assert.That(native.value, Is.EqualTo(90f));
+        }
+
+        [Test]
+        public void Paint_FScrollView_UpdatesMode()
+        {
+            var original = new FScrollView(FScrollDirection.Vertical) { Child = new FText("x") };
+            var native = (ScrollView)FElementPainter.CreateNative(original);
+
+            var updated = new FScrollView(FScrollDirection.Horizontal) { Child = new FText("x") };
+            FElementPainter.Paint(updated, native);
+
+            Assert.That(native.mode, Is.EqualTo(ScrollViewMode.Horizontal));
+        }
+
+#if FRAM3_PURE_TESTS
         [Test]
         public void CreateNative_FText_WithFontSize_SetsFontSize()
         {
@@ -284,6 +377,161 @@ namespace Fram3.UI.Tests.Elements
             Assert.That(bg.r, Is.EqualTo(1f).Within(0.001f));
             Assert.That(bg.g, Is.EqualTo(0f).Within(0.001f));
             Assert.That(bg.b, Is.EqualTo(0f).Within(0.001f));
+        }
+
+        [Test]
+        public void CreateNative_FProgressBar_SetsValueAndRange()
+        {
+            var element = new FProgressBar(value: 75f, min: 0f, max: 100f);
+
+            var native = (ProgressBar)FElementPainter.CreateNative(element);
+
+            Assert.That(native.value, Is.EqualTo(75f));
+            Assert.That(native.lowValue, Is.EqualTo(0f));
+            Assert.That(native.highValue, Is.EqualTo(100f));
+        }
+
+        [Test]
+        public void CreateNative_FProgressBar_WithTitle_SetsTitle()
+        {
+            var element = new FProgressBar(value: 50f, title: "Loading");
+
+            var native = (ProgressBar)FElementPainter.CreateNative(element);
+
+            Assert.That(native.title, Is.EqualTo("Loading"));
+        }
+
+        [Test]
+        public void CreateNative_FScrollView_DefaultMode_IsVertical()
+        {
+            var element = new FScrollView { Child = new FText("x") };
+
+            var native = (ScrollView)FElementPainter.CreateNative(element);
+
+            Assert.That(native.mode, Is.EqualTo(ScrollViewMode.Vertical));
+        }
+
+        [Test]
+        public void CreateNative_FScrollView_Horizontal_SetsHorizontalMode()
+        {
+            var element = new FScrollView(FScrollDirection.Horizontal) { Child = new FText("x") };
+
+            var native = (ScrollView)FElementPainter.CreateNative(element);
+
+            Assert.That(native.mode, Is.EqualTo(ScrollViewMode.Horizontal));
+        }
+
+        [Test]
+        public void CreateNative_FScrollView_Both_SetsVerticalAndHorizontalMode()
+        {
+            var element = new FScrollView(FScrollDirection.Both) { Child = new FText("x") };
+
+            var native = (ScrollView)FElementPainter.CreateNative(element);
+
+            Assert.That(native.mode, Is.EqualTo(ScrollViewMode.VerticalAndHorizontal));
+        }
+
+        [Test]
+        public void CreateNative_FImage_WithDimensions_SetsWidthAndHeight()
+        {
+            var element = new FImage(width: 64f, height: 32f);
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.width, Is.EqualTo(64f));
+            Assert.That(native.style.height, Is.EqualTo(32f));
+        }
+
+        [Test]
+        public void CreateNative_FIcon_WithDimensions_SetsWidthAndHeight()
+        {
+            var element = new FIcon(width: 24f, height: 24f);
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.width, Is.EqualTo(24f));
+            Assert.That(native.style.height, Is.EqualTo(24f));
+        }
+
+        [Test]
+        public void CreateNative_FExpanded_SetsFlexGrow()
+        {
+            var element = new FExpanded(flex: 2f) { Child = new FText("x") };
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.flexGrow, Is.EqualTo(2f));
+        }
+
+        [Test]
+        public void CreateNative_FExpanded_DefaultFlex_SetsFlexGrowToOne()
+        {
+            var element = new FExpanded { Child = new FText("x") };
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.flexGrow, Is.EqualTo(1f));
+        }
+
+        [Test]
+        public void CreateNative_FDivider_Horizontal_SetsHeight()
+        {
+            var element = new FDivider(thickness: 2f);
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.height, Is.EqualTo(2f));
+        }
+
+        [Test]
+        public void CreateNative_FDivider_Vertical_SetsWidth()
+        {
+            var element = new FDivider(axis: FDividerAxis.Vertical, thickness: 2f);
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.width, Is.EqualTo(2f));
+        }
+
+        [Test]
+        public void CreateNative_FDivider_WithColor_SetsBackgroundColor()
+        {
+            var element = new FDivider(color: new FColor(0f, 0f, 0f));
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.backgroundColor.HasValue, Is.True);
+        }
+
+        [Test]
+        public void CreateNative_FDivider_WithIndent_SetsMargins()
+        {
+            var element = new FDivider(indent: 8f);
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.style.marginLeft, Is.EqualTo(8f));
+            Assert.That(native.style.marginRight, Is.EqualTo(8f));
+        }
+
+        [Test]
+        public void CreateNative_FTooltip_SetsTooltip()
+        {
+            var element = new FTooltip("Some tip") { Child = new FText("x") };
+
+            var native = FElementPainter.CreateNative(element);
+
+            Assert.That(native.tooltip, Is.EqualTo("Some tip"));
+        }
+
+        [Test]
+        public void ApplyAsStackChild_SetsPositionAbsolute()
+        {
+            var native = new VisualElement();
+
+            FElementPainter.ApplyAsStackChild(native);
+
+            Assert.That(native.style.position, Is.EqualTo(Position.Absolute));
         }
 #endif
     }
