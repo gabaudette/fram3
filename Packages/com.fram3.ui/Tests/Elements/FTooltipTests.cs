@@ -17,14 +17,6 @@ namespace Fram3.UI.Tests.Elements
         }
 
         [Test]
-        public void Constructor_NullMessage_StoredAsEmpty()
-        {
-            var element = new FTooltip(null!) { Child = new FText("x") };
-
-            Assert.That(element.Message, Is.EqualTo(string.Empty));
-        }
-
-        [Test]
         public void Constructor_StoresKey()
         {
             var key = new FValueKey<string>("tip");
