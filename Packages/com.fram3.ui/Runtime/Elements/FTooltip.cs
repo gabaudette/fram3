@@ -22,7 +22,7 @@ namespace Fram3.UI.Elements
         /// <param name="key">An optional key for reconciliation identity.</param>
         public FTooltip(string message, FKey? key = null) : base(key)
         {
-            Message = message ?? string.Empty;
+            Message = message;
         }
     }
 }
