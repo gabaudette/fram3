@@ -118,7 +118,7 @@ namespace Fram3.UI.Elements.Animation
                     padding: snapshot.Get<FEdgeInsets?>(KeyPadding)
                 )
                 {
-                    Child = Child,
+                    Child = Child
                 },
                 Curve
             );
@@ -146,7 +146,7 @@ namespace Fram3.UI.Elements.Animation
                     KeyPadding,
                     Padding,
                     InterpolateNullableEdgeInsets
-                ),
+                )
             };
 
         private static FBoxDecoration? InterpolateNullableDecoration(

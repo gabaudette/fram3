@@ -29,7 +29,7 @@ namespace Fram3.UI.Elements.Gesture
             FKey? key = null
         ) : base(key)
         {
-            Value = System.Math.Clamp(value, 0f, 1f);
+            Value = Math.Clamp(value, 0f, 1f);
             Child = child ?? throw new ArgumentNullException(nameof(child));
         }
     }

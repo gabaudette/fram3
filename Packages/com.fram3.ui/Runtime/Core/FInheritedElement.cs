@@ -2,9 +2,7 @@
 
 namespace Fram3.UI.Core
 {
-    /// <summary>
-    /// An element that carries data down the element tree without explicit prop-drilling.
-    /// Descendants retrieve the nearest ancestor of a specific inherited element type
+    // ReSharper disable once InvalidXmlDocComment
     /// via <see cref="FBuildContext.DependOnInherited{T}"/> or
     /// <see cref="FBuildContext.FindInherited{T}"/>.
     /// When the parent rebuilds and provides a new inherited element of the same type,
