@@ -25,12 +25,12 @@ jobs:
           /p:DocumentationFile=${{ github.workspace }}/Fram3.UI.xml
 
       - name: Build DocExtractor
-        run: dotnet build Packages/com.fram3.ui/tools/DocExtractor/DocExtractor.csproj
+        run: dotnet build tools/DocExtractor/DocExtractor.csproj
           --configuration Release
 
       - name: Run DocExtractor
         run: dotnet run
-          --project Packages/com.fram3.ui/tools/DocExtractor/DocExtractor.csproj
+          --project tools/DocExtractor/DocExtractor.csproj
           --configuration Release
           -- ${{ github.workspace }}/Fram3.UI.xml
              ${{ github.workspace }}/generated-api

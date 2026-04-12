@@ -35,7 +35,7 @@ ExportedObj/
 *.csproj
 !Packages/com.fram3.ui/Tests/Fram3.UI.Tests.csproj
 !Packages/com.fram3.ui/Runtime/Fram3.UI.Runtime.csproj
-!Packages/com.fram3.ui/tools/DocExtractor/DocExtractor.csproj
+!tools/DocExtractor/DocExtractor.csproj
 *.unityproj
 *.sln
 !Packages/com.fram3.ui/Fram3.UI.slnx
