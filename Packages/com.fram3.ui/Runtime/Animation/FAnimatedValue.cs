@@ -1,7 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using Fram3.UI.Elements;
+using Fram3.UI.Elements.Animation;
 
 namespace Fram3.UI.Animation
 {

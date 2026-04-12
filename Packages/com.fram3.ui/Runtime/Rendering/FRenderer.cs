@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Fram3.UI.Animation;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
-using Fram3.UI.Elements;
+using Fram3.UI.Elements.Layout;
 using Fram3.UI.Rendering.Internal;
 using UnityEngine.UIElements;
 

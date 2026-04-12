@@ -2,7 +2,7 @@
 #if !FRAM3_PURE_TESTS
 using System;
 using Fram3.UI.Animation;
-using Fram3.UI.Elements;
+using Fram3.UI.Elements.Content;
 using UnityEngine;
 using UnityEngine.UIElements;
 
