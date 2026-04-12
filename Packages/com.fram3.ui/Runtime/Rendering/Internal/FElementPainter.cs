@@ -749,6 +749,9 @@ namespace Fram3.UI.Rendering.Internal
                 case FOpacity opacity:
                     ApplyOpacityLayout(opacity, native);
                     break;
+                case FMargin margin:
+                    ApplyMarginLayout(margin, native);
+                    break;
             }
         }
 
@@ -774,6 +777,16 @@ namespace Fram3.UI.Rendering.Internal
             native.style.paddingRight = insets.Right;
             native.style.paddingBottom = insets.Bottom;
             native.style.paddingLeft = insets.Left;
+        }
+
+        private static void ApplyMarginLayout(FMargin margin, VisualElement native)
+        {
+            var insets = margin.Margin;
+
+            native.style.marginTop = insets.Top;
+            native.style.marginRight = insets.Right;
+            native.style.marginBottom = insets.Bottom;
+            native.style.marginLeft = insets.Left;
         }
 
         private static void ApplySizedBoxLayout(FSizedBox sizedBox, VisualElement native)
