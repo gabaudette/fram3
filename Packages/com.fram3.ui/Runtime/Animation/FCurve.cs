@@ -1,6 +1,6 @@
 #nullable enable
 using System;
-using Fram3.UI.Elements;
+using Fram3.UI.Elements.Animation;
 
 namespace Fram3.UI.Animation
 {

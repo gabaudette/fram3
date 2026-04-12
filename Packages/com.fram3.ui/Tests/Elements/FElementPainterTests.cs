@@ -1,7 +1,9 @@
 #nullable enable
 using System;
 using Fram3.UI.Core;
-using Fram3.UI.Elements;
+using Fram3.UI.Elements.Content;
+using Fram3.UI.Elements.Input;
+using Fram3.UI.Elements.Layout;
 using Fram3.UI.Rendering.Internal;
 using Fram3.UI.Styling;
 using NUnit.Framework;
