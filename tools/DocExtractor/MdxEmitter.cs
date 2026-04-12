@@ -28,6 +28,22 @@ namespace DocExtractor
                 var filePath = Path.Combine(outputDir, fileName);
                 File.WriteAllText(filePath, mdx, Encoding.UTF8);
             }
+
+            var metaJs = BuildMetaJs(typeEntries);
+            File.WriteAllText(Path.Combine(outputDir, "_meta.js"), metaJs, Encoding.UTF8);
+        }
+
+        private static string BuildMetaJs(IReadOnlyList<DocEntry> typeEntries)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("export default {");
+            foreach (var entry in typeEntries)
+            {
+                var name = SimpleTypeName(entry.TypeName);
+                sb.AppendLine($"  '{name}': '{name}',");
+            }
+            sb.AppendLine("}");
+            return sb.ToString();
         }
 
         private static string BuildMdx(DocEntry typeEntry, IReadOnlyList<DocEntry> members)
