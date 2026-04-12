@@ -155,7 +155,11 @@ namespace DocExtractor
 
         private static string EscapeMdx(string value)
         {
-            return value.Replace("<", "&lt;").Replace(">", "&gt;");
+            return value
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("{", "&#123;")
+                .Replace("}", "&#125;");
         }
     }
 }
