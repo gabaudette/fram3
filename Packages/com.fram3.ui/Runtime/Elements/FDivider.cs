@@ -61,6 +61,7 @@ namespace Fram3.UI.Elements
     {
         /// <summary>A horizontal line spanning the full available width.</summary>
         Horizontal,
+
         /// <summary>A vertical line spanning the full available height.</summary>
         Vertical
     }

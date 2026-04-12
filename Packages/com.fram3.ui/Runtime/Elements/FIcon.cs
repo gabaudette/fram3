@@ -7,7 +7,7 @@ namespace Fram3.UI.Elements
     /// Displays a vector icon asset. Maps to UIToolkit's native <c>Image</c> element
     /// with a <c>VectorImage</c> source.
     /// <para>
-    /// Supply either a pre-loaded <see cref="Source"/> (<c>UnityEngine.UIElements.VectorImage</c>)
+    /// Supply either a preloaded <see cref="Source"/> (<c>UnityEngine.UIElements.VectorImage</c>)
     /// or a project-relative asset path via <see cref="SvgPath"/>. When both are provided,
     /// <see cref="Source"/> takes precedence.
     /// </para>
@@ -42,7 +42,7 @@ namespace Fram3.UI.Elements
         /// Creates an <see cref="FIcon"/> element.
         /// </summary>
         /// <param name="source">
-        /// A pre-loaded <c>UnityEngine.UIElements.VectorImage</c>. Takes precedence over
+        /// A preloaded <c>UnityEngine.UIElements.VectorImage</c>. Takes precedence over
         /// <paramref name="svgPath"/> when both are provided.
         /// </param>
         /// <param name="svgPath">
