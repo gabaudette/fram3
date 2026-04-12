@@ -74,14 +74,12 @@ namespace Fram3.UI.Rendering.Internal
                 case FIcon icon:
                     return CreateIcon(icon);
                 default:
-                    if (element is IFListViewDescriptor listView)
+                    switch (element)
                     {
-                        return CreateListView(listView);
-                    }
-
-                    if (element is IFEnumFieldDescriptor enumFieldDesc)
-                    {
-                        return CreateEnumField(enumFieldDesc);
+                        case IFListViewDescriptor listView:
+                            return CreateListView(listView);
+                        case IFEnumFieldDescriptor enumFieldDesc:
+                            return CreateEnumField(enumFieldDesc);
                     }
 
                     var native = new VisualElement();
@@ -290,9 +288,11 @@ namespace Fram3.UI.Rendering.Internal
 
         private static RadioButtonGroup CreateRadioGroup(FRadioGroup radioGroup)
         {
-            var rbg = new RadioButtonGroup();
-            rbg.choices = new List<string>(radioGroup.Options);
-            rbg.value = ResolveRadioIndex(radioGroup);
+            var rbg = new RadioButtonGroup
+            {
+                choices = new List<string>(radioGroup.Options),
+                value = ResolveRadioIndex(radioGroup)
+            };
 
             if (radioGroup.OnChanged == null)
             {
@@ -314,14 +314,21 @@ namespace Fram3.UI.Rendering.Internal
 
         private static VisualElement CreateModal(FModal modal)
         {
-            var native = new VisualElement();
-            native.style.position = Position.Absolute;
-
-            if (modal.BarrierDismissible && modal.OnDismiss != null)
+            var native = new VisualElement
             {
-                var callback = modal.OnDismiss;
-                native.RegisterCallback<ClickEvent>(_ => callback());
+                style =
+                {
+                    position = Position.Absolute
+                }
+            };
+
+            if (!modal.BarrierDismissible || modal.OnDismiss == null)
+            {
+                return native;
             }
+
+            var callback = modal.OnDismiss;
+            native.RegisterCallback<ClickEvent>(_ => callback());
 
             return native;
         }
@@ -554,13 +561,15 @@ namespace Fram3.UI.Rendering.Internal
                 return;
             }
 
-            if (icon.SvgPath != null)
+            if (icon.SvgPath == null)
             {
-                var loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<VectorImage>(icon.SvgPath);
-                if (loaded != null)
-                {
-                    img.vectorImage = loaded;
-                }
+                return;
+            }
+
+            var loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<VectorImage>(icon.SvgPath);
+            if (loaded != null)
+            {
+                img.vectorImage = loaded;
             }
         }
 #endif
@@ -879,21 +888,23 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.borderBottomLeftRadius = radius.BottomLeft;
             }
 
-            if (decoration.Shadow != null)
+            if (decoration.Shadow == null)
             {
-#if !FRAM3_PURE_TESTS
-                var shadow = decoration.Shadow;
-                var shadowColor = new UnityEngine.Color(
-                    shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A
-                );
-                native.style.textShadow = new UnityEngine.UIElements.TextShadow
-                {
-                    color = shadowColor,
-                    offset = new UnityEngine.Vector2(shadow.OffsetX, shadow.OffsetY),
-                    blurRadius = shadow.BlurRadius
-                };
-#endif
+                return;
             }
+
+#if !FRAM3_PURE_TESTS
+            var shadow = decoration.Shadow;
+            var shadowColor = new UnityEngine.Color(
+                shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A
+            );
+            native.style.textShadow = new TextShadow
+            {
+                color = shadowColor,
+                offset = new UnityEngine.Vector2(shadow.OffsetX, shadow.OffsetY),
+                blurRadius = shadow.BlurRadius
+            };
+#endif
         }
 
         private static IntegerField CreateIntField(FIntField intField)
