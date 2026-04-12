@@ -37,7 +37,7 @@ namespace DocExtractor
 
             sb.AppendLine("---");
             sb.AppendLine($"title: {simpleName}");
-            sb.AppendLine($"description: \"{EscapeYaml(typeEntry.Summary)}\"");
+            sb.AppendLine($"description: \"{EscapeYaml(EscapeMdx(typeEntry.Summary))}\"");
             sb.AppendLine("---");
             sb.AppendLine();
             sb.AppendLine($"# {simpleName}");
@@ -45,7 +45,7 @@ namespace DocExtractor
 
             if (!string.IsNullOrWhiteSpace(typeEntry.Summary))
             {
-                sb.AppendLine(typeEntry.Summary);
+                sb.AppendLine(EscapeMdx(typeEntry.Summary));
                 sb.AppendLine();
             }
 
@@ -118,7 +118,7 @@ namespace DocExtractor
 
             if (!string.IsNullOrWhiteSpace(entry.Summary))
             {
-                sb.AppendLine(entry.Summary);
+                sb.AppendLine(EscapeMdx(entry.Summary));
                 sb.AppendLine();
             }
 
@@ -128,14 +128,14 @@ namespace DocExtractor
                 sb.AppendLine("| --- | --- |");
                 foreach (var param in entry.Params)
                 {
-                    sb.AppendLine($"| `{param.Name}` | {param.Description} |");
+                    sb.AppendLine($"| `{param.Name}` | {EscapeMdx(param.Description)} |");
                 }
                 sb.AppendLine();
             }
 
             if (!string.IsNullOrWhiteSpace(entry.Returns))
             {
-                sb.AppendLine($"**Returns:** {entry.Returns}");
+                sb.AppendLine($"**Returns:** {EscapeMdx(entry.Returns)}");
                 sb.AppendLine();
             }
         }
@@ -151,6 +151,11 @@ namespace DocExtractor
         private static string EscapeYaml(string value)
         {
             return value.Replace("\"", "\\\"");
+        }
+
+        private static string EscapeMdx(string value)
+        {
+            return value.Replace("<", "&lt;").Replace(">", "&gt;");
         }
     }
 }
