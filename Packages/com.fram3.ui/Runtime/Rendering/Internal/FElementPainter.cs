@@ -693,6 +693,13 @@ namespace Fram3.UI.Rendering.Internal
 
             var fontStyle = ResolveFontStyle(style.Bold, style.Italic);
             native.style.unityFontStyleAndWeight = fontStyle;
+
+#if !FRAM3_PURE_TESTS
+            if (style.LetterSpacing != 0f)
+            {
+                native.style.letterSpacing = style.LetterSpacing;
+            }
+#endif
         }
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)
@@ -850,16 +857,30 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.borderLeftColor = borderColor;
             }
 
-            if (!decoration.BorderRadius.HasValue)
+            if (decoration.BorderRadius.HasValue)
             {
-                return;
+                var radius = decoration.BorderRadius.Value;
+                native.style.borderTopLeftRadius = radius.TopLeft;
+                native.style.borderTopRightRadius = radius.TopRight;
+                native.style.borderBottomRightRadius = radius.BottomRight;
+                native.style.borderBottomLeftRadius = radius.BottomLeft;
             }
 
-            var radius = decoration.BorderRadius.Value;
-            native.style.borderTopLeftRadius = radius.TopLeft;
-            native.style.borderTopRightRadius = radius.TopRight;
-            native.style.borderBottomRightRadius = radius.BottomRight;
-            native.style.borderBottomLeftRadius = radius.BottomLeft;
+            if (decoration.Shadow != null)
+            {
+#if !FRAM3_PURE_TESTS
+                var shadow = decoration.Shadow;
+                var shadowColor = new UnityEngine.Color(
+                    shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A
+                );
+                native.style.textShadow = new UnityEngine.UIElements.TextShadow
+                {
+                    color = shadowColor,
+                    offset = new UnityEngine.Vector2(shadow.OffsetX, shadow.OffsetY),
+                    blurRadius = shadow.BlurRadius
+                };
+#endif
+            }
         }
 
         private static IntegerField CreateIntField(FIntField intField)
