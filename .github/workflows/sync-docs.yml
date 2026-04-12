@@ -1,0 +1,63 @@
+name: Sync Docs
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  sync:
+    name: Generate and sync API docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build with XML documentation
+        run: dotnet build Packages/com.fram3.ui/Tests/Fram3.UI.Tests.csproj
+          --configuration Release
+          /p:GenerateDocumentationFile=true
+          /p:DocumentationFile=${{ github.workspace }}/Fram3.UI.xml
+
+      - name: Build DocExtractor
+        run: dotnet build Packages/com.fram3.ui/tools/DocExtractor/DocExtractor.csproj
+          --configuration Release
+
+      - name: Run DocExtractor
+        run: dotnet run
+          --project Packages/com.fram3.ui/tools/DocExtractor/DocExtractor.csproj
+          --configuration Release
+          -- ${{ github.workspace }}/Fram3.UI.xml
+             ${{ github.workspace }}/generated-api
+             --namespace-prefix Fram3.UI
+
+      - name: Checkout docs repo
+        uses: actions/checkout@v4
+        with:
+          repository: gabaudette/fram3-docs
+          path: fram3-docs
+          token: ${{ secrets.DOCS_REPO_PAT }}
+
+      - name: Copy generated MDX into docs repo
+        run: |
+          rm -rf fram3-docs/content/api/*.mdx
+          cp generated-api/*.mdx fram3-docs/content/api/
+
+      - name: Open PR in docs repo
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.DOCS_REPO_PAT }}
+          path: fram3-docs
+          commit-message: "chore: sync API reference from fram3@${{ github.sha }}"
+          branch: "sync/api-${{ github.sha }}"
+          title: "chore: sync API reference"
+          body: |
+            Auto-generated from `gabaudette/fram3@${{ github.sha }}`.
+
+            This PR was opened by the `sync-docs` workflow. Review and merge when ready.
+          delete-branch: true
