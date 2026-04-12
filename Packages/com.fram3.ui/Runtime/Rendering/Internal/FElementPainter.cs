@@ -695,18 +695,9 @@ namespace Fram3.UI.Rendering.Internal
             native.style.unityFontStyleAndWeight = fontStyle;
 
 #if !FRAM3_PURE_TESTS
-            native.style.unityTextDecoration = style.Underline
-                ? TextDecoration.Underline
-                : TextDecoration.None;
-
             if (style.LetterSpacing != 0f)
             {
                 native.style.letterSpacing = style.LetterSpacing;
-            }
-
-            if (style.LineHeight.HasValue)
-            {
-                native.style.unityLineHeight = style.LineHeight.Value;
             }
 #endif
         }
