@@ -615,3 +615,243 @@ namespace UnityEngine
     }
 }
 #endif
+
+#if FRAM3_DOC_BUILD
+using System;
+
+namespace UnityEngine.UIElements
+{
+    public sealed class ChangeEvent<T>
+    {
+        public T newValue { get; }
+        public T previousValue { get; }
+
+        public ChangeEvent(T previousValue, T newValue)
+        {
+            this.previousValue = previousValue;
+            this.newValue = newValue;
+        }
+    }
+
+    public sealed class ClickEvent { }
+    public sealed class PointerEnterEvent { }
+    public sealed class PointerLeaveEvent { }
+    public delegate void EventCallback<TEventType>(TEventType evt);
+
+    public class VisualElement
+    {
+        public StyleSheet style { get; } = new StyleSheet();
+        public int childCount => 0;
+        public string tooltip { get; set; } = string.Empty;
+        public void Add(VisualElement child) { }
+        public void Clear() { }
+        public void Remove(VisualElement child) { }
+        public void RemoveFromHierarchy() { }
+        public void RegisterCallback<TEventType>(EventCallback<TEventType> callback) { }
+        public event Action<MeshGenerationContext> generateVisualContent = delegate { };
+        public Rect contentRect => default;
+        public void MarkDirtyRepaint() { }
+    }
+
+    public sealed class StyleSheet
+    {
+        public float? flexGrow;
+        public float? flexShrink;
+        public StyleLength width;
+        public StyleLength height;
+        public float? paddingTop;
+        public float? paddingRight;
+        public float? paddingBottom;
+        public float? paddingLeft;
+        public float? marginTop;
+        public float? marginRight;
+        public float? marginBottom;
+        public float? marginLeft;
+        public float? borderTopWidth;
+        public float? borderRightWidth;
+        public float? borderBottomWidth;
+        public float? borderLeftWidth;
+        public float? borderTopLeftRadius;
+        public float? borderTopRightRadius;
+        public float? borderBottomRightRadius;
+        public float? borderBottomLeftRadius;
+        public float? fontSize;
+        public UnityEngine.Color? color;
+        public UnityEngine.Color? backgroundColor;
+        public UnityEngine.Color? borderTopColor;
+        public UnityEngine.Color? borderRightColor;
+        public UnityEngine.Color? borderBottomColor;
+        public UnityEngine.Color? borderLeftColor;
+        public FlexDirection? flexDirection;
+        public Justify? justifyContent;
+        public Align? alignItems;
+        public Align? alignSelf;
+        public Overflow? overflow;
+        public Wrap? flexWrap;
+        public UnityEngine.FontStyle? unityFontStyleAndWeight;
+        public Position? position;
+        public float? opacity;
+    }
+
+    public struct StyleLength
+    {
+        public Length value;
+        public StyleLength(Length v) { value = v; }
+        public static implicit operator StyleLength(Length v) => new StyleLength(v);
+    }
+
+    public struct Length
+    {
+        public float value;
+        public LengthUnit unit;
+        public Length(float value, LengthUnit unit = LengthUnit.Pixel) { this.value = value; this.unit = unit; }
+        public static Length Percent(float v) => new Length(v, LengthUnit.Percent);
+    }
+
+    public enum LengthUnit { Pixel, Percent }
+
+    public enum Position { Relative, Absolute }
+    public enum FlexDirection { Column, Row, ColumnReverse, RowReverse }
+    public enum Justify { FlexStart, Center, FlexEnd, SpaceBetween, SpaceAround, SpaceEvenly }
+    public enum Align { Auto, FlexStart, Center, FlexEnd, Stretch }
+    public enum Wrap { NoWrap, Wrap, WrapReverse }
+    public enum Overflow { Visible, Hidden }
+    public enum ScrollViewMode { Vertical, Horizontal, VerticalAndHorizontal }
+    public enum SelectionType { None, Single, Multiple }
+    public enum LineCap { Butt, Round, Square }
+
+    public sealed class MeshGenerationContext
+    {
+        public Painter2D painter2D => new Painter2D();
+    }
+
+    public sealed class Painter2D
+    {
+        public UnityEngine.Color strokeColor { get; set; }
+        public float lineWidth { get; set; }
+        public LineCap lineCap { get; set; }
+        public void BeginPath() { }
+        public void Arc(UnityEngine.Vector2 center, float radius, float startAngle, float endAngle) { }
+        public void Stroke() { }
+    }
+
+    public sealed class UIDocument
+    {
+        public VisualElement rootVisualElement { get; } = new VisualElement();
+    }
+
+    public class Label : VisualElement { public string text { get; set; } = string.Empty; }
+    public class Button : VisualElement { public string text { get; set; } = string.Empty; }
+    public class TextField : VisualElement { public string value { get; set; } = string.Empty; }
+    public class Toggle : VisualElement { public bool value { get; set; } }
+    public class Slider : VisualElement { public float value { get; set; } }
+    public class DropdownField : VisualElement { }
+    public class ScrollView : VisualElement { }
+    public class IntegerField : VisualElement { public int value { get; set; } }
+    public class FloatField : VisualElement { public float value { get; set; } }
+    public class MinMaxSlider : VisualElement { }
+    public class EnumField : VisualElement { }
+    public class ProgressBar : VisualElement { }
+    public class Image : VisualElement { }
+    public class RadioButtonGroup : VisualElement { }
+    public class ListView : VisualElement { }
+}
+
+namespace UnityEngine
+{
+    public enum FontStyle { Normal, Bold, Italic, BoldAndItalic }
+
+    public struct Color
+    {
+        public float r, g, b, a;
+        public Color(float r, float g, float b, float a = 1f) { this.r = r; this.g = g; this.b = b; this.a = a; }
+        public static Color white => new Color(1, 1, 1, 1);
+    }
+
+    public struct Vector2
+    {
+        public float x, y;
+        public Vector2(float x, float y) { this.x = x; this.y = y; }
+    }
+
+    public struct Rect
+    {
+        public float width, height;
+    }
+
+    public static class Mathf
+    {
+        public static float Lerp(float a, float b, float t) => a + (b - a) * System.Math.Clamp(t, 0f, 1f);
+        public static float Clamp01(float v) => System.Math.Clamp(v, 0f, 1f);
+        public static float Clamp(float v, float min, float max) => System.Math.Clamp(v, min, max);
+    }
+
+    public static class Time
+    {
+        public static float deltaTime => 0.016f;
+    }
+
+    public static class PlayerPrefs
+    {
+        public static void SetString(string key, string value) { }
+        public static string GetString(string key) => string.Empty;
+        public static bool HasKey(string key) => false;
+        public static void Save() { }
+    }
+
+    public class MonoBehaviour
+    {
+        public T GetComponent<T>() where T : class => default!;
+        protected GameObject gameObject => new GameObject("stub");
+        protected static void Destroy(GameObject go) { }
+        protected System.Collections.IEnumerator StartCoroutine(System.Collections.IEnumerator routine) => routine;
+    }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public sealed class RequireComponentAttribute : Attribute
+    {
+        public RequireComponentAttribute(Type type) { }
+    }
+
+    public class GameObject
+    {
+        public GameObject(string name) { }
+        public T AddComponent<T>() where T : class => default!;
+        public void Destroy(GameObject go) { }
+    }
+
+    public class AsyncOperation
+    {
+        public bool isDone => true;
+        public float progress => 1f;
+    }
+}
+
+namespace UnityEngine.SceneManagement
+{
+    public enum LoadSceneMode { Single, Additive }
+
+    public static class SceneManager
+    {
+        public static UnityEngine.AsyncOperation? LoadSceneAsync(string sceneName, LoadSceneMode mode) => null;
+    }
+}
+
+namespace Fram3.UI.Navigation.Internal
+{
+    internal sealed class UnitySceneAdapter : ISceneAdapter
+    {
+        public Navigation.FSceneOperation LoadAsync(string sceneName) => new Navigation.FSceneOperation();
+    }
+}
+
+namespace Fram3.UI.Rendering.Internal
+{
+    internal static class FElementPainter
+    {
+        public static UnityEngine.UIElements.VisualElement CreateNative(Core.FElement element) => new UnityEngine.UIElements.VisualElement();
+        public static void Paint(Core.FElement element, UnityEngine.UIElements.VisualElement native) { }
+        public static void ApplyAsStackChild(UnityEngine.UIElements.VisualElement native) { }
+    }
+}
+#endif

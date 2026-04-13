@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Fram3.UI</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>9.0</LangVersion>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
+    <DefineConstants>$(DefineConstants);FRAM3_DOC_BUILD</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Runtime sources -->
+  <ItemGroup>
+    <Compile Include="../../Packages/com.fram3.ui/Runtime/**/*.cs"
+             Link="Runtime/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Exclude internal Unity-heavy implementation files that produce no public API docs -->
+  <ItemGroup>
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/FElementPainter.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/FSpinnerElement.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Navigation/Internal/UnitySceneAdapter.cs" />
+  </ItemGroup>
+
+  <!-- Unity type stubs for the doc build -->
+  <ItemGroup>
+    <Compile Include="../../Packages/com.fram3.ui/Tests/Mocks/UnityTypeStubs.cs"
+             Link="Mocks/UnityTypeStubs.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

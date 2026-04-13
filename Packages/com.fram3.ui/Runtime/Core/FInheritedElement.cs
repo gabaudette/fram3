@@ -2,8 +2,9 @@
 
 namespace Fram3.UI.Core
 {
-    // ReSharper disable once InvalidXmlDocComment
-    /// via <see cref="FBuildContext.DependOnInherited{T}"/> or
+    /// <summary>
+    /// An element that propagates data down the element tree, accessible to descendants
+    /// via <see cref="FBuildContext.GetInherited{T}"/> or
     /// <see cref="FBuildContext.FindInherited{T}"/>.
     /// When the parent rebuilds and provides a new inherited element of the same type,
     /// all descendants that declared a dependency via <c>DependOnInherited</c> are

@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Build with XML documentation
-        run: dotnet build Packages/com.fram3.ui/Tests/Fram3.UI.Tests.csproj
+        run: dotnet build tools/DocBuild/Fram3.UI.DocBuild.csproj
           --configuration Release
           /p:GenerateDocumentationFile=true
           /p:DocumentationFile=${{ github.workspace }}/Fram3.UI.xml
