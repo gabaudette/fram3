@@ -18,10 +18,18 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FAnimationBuilder",   "Drives a single animation controller and rebuilds its child on every frame tick, giving full programmatic control over the animated value.",    BuildAnimationBuilder),
-                new Story("FAnimatedContainer",  "A container whose size, decoration, and padding interpolate smoothly to new values whenever its properties change.",                            BuildAnimatedContainer),
-                new Story("FImplicitAnimation",  "Animates one or more named values toward their latest targets using a shared duration and curve, without manual controller management.",         BuildImplicitAnimation),
-                new Story("FCurves",             "A library of pre-built easing functions -- Linear, EaseIn, EaseOut, EaseInOut, ElasticOut, and BounceOut -- used to shape animation playback.", BuildCurves),
+                new Story("FAnimationBuilder",
+                    "Drives a single animation controller and rebuilds its child on every frame tick, giving full programmatic control over the animated value.",
+                    BuildAnimationBuilder),
+                new Story("FAnimatedContainer",
+                    "A container whose size, decoration, and padding interpolate smoothly to new values whenever its properties change.",
+                    BuildAnimatedContainer),
+                new Story("FImplicitAnimation",
+                    "Animates one or more named values toward their latest targets using a shared duration and curve, without manual controller management.",
+                    BuildImplicitAnimation),
+                new Story("FCurves",
+                    "A library of pre-built easing functions -- Linear, EaseIn, EaseOut, EaseInOut, ElasticOut, and BounceOut -- used to shape animation playback.",
+                    BuildCurves),
             };
         }
 
@@ -278,12 +286,18 @@ namespace Fram3.UI.Storybook.Stories
                                 {
                                     Children = new FElement[]
                                     {
-                                        CurveRow("Linear",    FCurves.Linear,    _running, () => SetState(() => _running = false)),
-                                        CurveRow("EaseIn",    FCurves.EaseIn,    _running, () => SetState(() => _running = false)),
-                                        CurveRow("EaseOut",   FCurves.EaseOut,   _running, () => SetState(() => _running = false)),
-                                        CurveRow("EaseInOut", FCurves.EaseInOut, _running, () => SetState(() => _running = false)),
-                                        CurveRow("ElasticOut",FCurves.ElasticOut,_running, () => SetState(() => _running = false)),
-                                        CurveRow("BounceOut", FCurves.BounceOut, _running, () => SetState(() => _running = false)),
+                                        CurveRow("Linear", FCurves.Linear, _running,
+                                            () => SetState(() => _running = false)),
+                                        CurveRow("EaseIn", FCurves.EaseIn, _running,
+                                            () => SetState(() => _running = false)),
+                                        CurveRow("EaseOut", FCurves.EaseOut, _running,
+                                            () => SetState(() => _running = false)),
+                                        CurveRow("EaseInOut", FCurves.EaseInOut, _running,
+                                            () => SetState(() => _running = false)),
+                                        CurveRow("ElasticOut", FCurves.ElasticOut, _running,
+                                            () => SetState(() => _running = false)),
+                                        CurveRow("BounceOut", FCurves.BounceOut, _running,
+                                            () => SetState(() => _running = false)),
                                     }
                                 }
                             },

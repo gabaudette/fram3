@@ -18,11 +18,21 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FProvider / FConsumer",         "Injects an arbitrary value into a subtree via FProvider and reads the nearest matching value back out via FConsumer.",          BuildProviderConsumer),
-                new Story("FValueListenableBuilder",        "Rebuilds its subtree whenever a FValueNotifier's value changes, enabling lightweight reactive state without a full cubit.",     BuildValueListenable),
-                new Story("FCubitBuilder",                  "Connects a FCubit to the widget tree and rebuilds automatically each time the cubit emits a new state.",                        BuildCubitBuilder),
-                new Story("FSelector",                      "Like FCubitBuilder but rebuilds only when a derived slice of state changes, minimising unnecessary rebuilds.",                  BuildSelector),
-                new Story("FStore",                         "A Redux-style global store: dispatches typed actions through a pure reducer function and exposes the resulting state.",         BuildStore),
+                new Story("FProvider / FConsumer",
+                    "Injects an arbitrary value into a subtree via FProvider and reads the nearest matching value back out via FConsumer.",
+                    BuildProviderConsumer),
+                new Story("FValueListenableBuilder",
+                    "Rebuilds its subtree whenever a FValueNotifier's value changes, enabling lightweight reactive state without a full cubit.",
+                    BuildValueListenable),
+                new Story("FCubitBuilder",
+                    "Connects a FCubit to the widget tree and rebuilds automatically each time the cubit emits a new state.",
+                    BuildCubitBuilder),
+                new Story("FSelector",
+                    "Like FCubitBuilder but rebuilds only when a derived slice of state changes, minimising unnecessary rebuilds.",
+                    BuildSelector),
+                new Story("FStore",
+                    "A Redux-style global store: dispatches typed actions through a pure reducer function and exposes the resulting state.",
+                    BuildStore),
             };
         }
 
@@ -116,20 +126,11 @@ namespace Fram3.UI.Storybook.Stories
                                 {
                                     Children = new FElement[]
                                     {
-                                        new FButton(label: "Increment", onPressed: () =>
-                                        {
-                                            _counter!.Value += 1;
-                                        }),
+                                        new FButton(label: "Increment", onPressed: () => { _counter!.Value += 1; }),
                                         FSizedBox.FromSize(width: 8f),
-                                        new FButton(label: "Decrement", onPressed: () =>
-                                        {
-                                            _counter!.Value -= 1;
-                                        }),
+                                        new FButton(label: "Decrement", onPressed: () => { _counter!.Value -= 1; }),
                                         FSizedBox.FromSize(width: 8f),
-                                        new FButton(label: "Reset", onPressed: () =>
-                                        {
-                                            _counter!.Value = 0;
-                                        }),
+                                        new FButton(label: "Reset", onPressed: () => { _counter!.Value = 0; }),
                                     }
                                 }
                             },
@@ -333,6 +334,7 @@ namespace Fram3.UI.Storybook.Stories
                     Child = new FText($"- {label}")
                 };
             }
+
             itemElements[state.Items.Count] = new FPadding(
                 FEdgeInsets.Symmetric(vertical: 6f, horizontal: 0f))
             {
@@ -362,7 +364,10 @@ namespace Fram3.UI.Storybook.Stories
 
         private sealed class CounterCubit : FCubit<int>
         {
-            public CounterCubit() : base(0) { }
+            public CounterCubit() : base(0)
+            {
+            }
+
             public void Increment() => Emit(State + 1);
             public void Decrement() => Emit(State - 1);
             public void Reset() => Emit(0);
@@ -380,6 +385,8 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        private sealed class MarkOneDoneAction : FAction { }
+        private sealed class MarkOneDoneAction : FAction
+        {
+        }
     }
 }

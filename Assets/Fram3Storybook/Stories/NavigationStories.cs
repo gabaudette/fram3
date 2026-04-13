@@ -21,7 +21,9 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FNavigator", "A stack-based router that maps string route keys to builder functions; supports Push, Pop, and replace operations via FNavigatorHandle.",  BuildNavigator),
+                new Story("FNavigator",
+                    "A stack-based router that maps string route keys to builder functions; supports Push, Pop, and replace operations via FNavigatorHandle.",
+                    BuildNavigator),
             };
         }
 
@@ -35,8 +37,8 @@ namespace Fram3.UI.Storybook.Stories
                 Child = new FNavigator(
                     routes: new Dictionary<string, System.Func<FBuildContext, FElement>>
                     {
-                        [RouteHome]     = BuildHomeRoute,
-                        [RouteDetail]   = BuildDetailRoute,
+                        [RouteHome] = BuildHomeRoute,
+                        [RouteDetail] = BuildDetailRoute,
                         [RouteSettings] = BuildSettingsRoute,
                     },
                     initialRoute: RouteHome

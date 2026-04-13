@@ -131,9 +131,10 @@ namespace Fram3.UI.Storybook
                             ),
                             new FExpanded
                             {
-                                Child = new FScrollView(FScrollDirection.Vertical)
+                                Child = new FScrollView()
                                 {
-                                    Child = new FPadding(FEdgeInsets.Symmetric(vertical: theme.Spacing, horizontal: theme.Spacing))
+                                    Child = new FPadding(FEdgeInsets.Symmetric(vertical: theme.Spacing,
+                                        horizontal: theme.Spacing))
                                     {
                                         Child = BuildChapterList(theme),
                                     }
@@ -240,7 +241,7 @@ namespace Fram3.UI.Storybook
             {
                 return new FExpanded
                 {
-                    Child = new FScrollView(FScrollDirection.Vertical)
+                    Child = new FScrollView()
                     {
                         Child = new FPadding(FEdgeInsets.All(theme.Spacing * 3f))
                         {
@@ -321,11 +322,11 @@ namespace Fram3.UI.Storybook
             {
                 return new Chapter[]
                 {
-                    new Chapter("Layout",     LayoutStories.All()),
-                    new Chapter("Content",    ContentStories.All()),
-                    new Chapter("Input",      InputStories.All()),
-                    new Chapter("State",      StateStories.All()),
-                    new Chapter("Animation",  AnimationStories.All()),
+                    new Chapter("Layout", LayoutStories.All()),
+                    new Chapter("Content", ContentStories.All()),
+                    new Chapter("Input", InputStories.All()),
+                    new Chapter("State", StateStories.All()),
+                    new Chapter("Animation", AnimationStories.All()),
                     new Chapter("Navigation", NavigationStories.All()),
                 };
             }

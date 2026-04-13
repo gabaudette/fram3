@@ -15,24 +15,47 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FColumn",     "Arranges children vertically in a single column, with configurable main-axis and cross-axis alignment.",                                              BuildColumn),
-                new Story("FRow",        "Arranges children horizontally in a single row, with configurable main-axis and cross-axis alignment.",                                               BuildRow),
-                new Story("FStack",      "Layers children on top of each other using absolute positioning, useful for overlapping elements.",                                                   BuildStack),
-                new Story("FWrap",       "Flows children left-to-right and wraps onto new lines when the available width is exhausted.",                                                        BuildWrap),
-                new Story("FPadding",    "Inserts empty space between a single child and its parent boundaries using per-side insets.",                                                         BuildPadding),
-                new Story("FMargin",     "Adds outer spacing around a single child, pushing surrounding siblings away.",                                                                        BuildMargin),
-                new Story("FSizedBox",   "Occupies a fixed width and/or height; can hold an optional child or act as a gap element between siblings.",                                          BuildSizedBox),
-                new Story("FCenter",     "Centers its child both horizontally and vertically within the available space.",                                                                      BuildCenter),
-                new Story("FExpanded",   "Fills all remaining space along the parent axis, optionally weighted by a flex factor.",                                                              BuildExpanded),
-                new Story("FContainer",  "A versatile single-child box that combines a background decoration, explicit sizing, and inner padding in one element.",                              BuildContainer),
-                new Story("FDivider",    "Renders a thin horizontal or vertical rule, useful as a visual separator between sections.",                                                          BuildDivider),
-                new Story("FScrollView", "Makes its child scrollable along one axis when the content exceeds the available viewport size.",                                                     BuildScrollView),
+                new Story("FColumn",
+                    "Arranges children vertically in a single column, with configurable main-axis and cross-axis alignment.",
+                    BuildColumn),
+                new Story("FRow",
+                    "Arranges children horizontally in a single row, with configurable main-axis and cross-axis alignment.",
+                    BuildRow),
+                new Story("FStack",
+                    "Layers children on top of each other using absolute positioning, useful for overlapping elements.",
+                    BuildStack),
+                new Story("FWrap",
+                    "Flows children left-to-right and wraps onto new lines when the available width is exhausted.",
+                    BuildWrap),
+                new Story("FPadding",
+                    "Inserts empty space between a single child and its parent boundaries using per-side insets.",
+                    BuildPadding),
+                new Story("FMargin", "Adds outer spacing around a single child, pushing surrounding siblings away.",
+                    BuildMargin),
+                new Story("FSizedBox",
+                    "Occupies a fixed width and/or height; can hold an optional child or act as a gap element between siblings.",
+                    BuildSizedBox),
+                new Story("FCenter", "Centers its child both horizontally and vertically within the available space.",
+                    BuildCenter),
+                new Story("FExpanded",
+                    "Fills all remaining space along the parent axis, optionally weighted by a flex factor.",
+                    BuildExpanded),
+                new Story("FContainer",
+                    "A versatile single-child box that combines a background decoration, explicit sizing, and inner padding in one element.",
+                    BuildContainer),
+                new Story("FDivider",
+                    "Renders a thin horizontal or vertical rule, useful as a visual separator between sections.",
+                    BuildDivider),
+                new Story("FScrollView",
+                    "Makes its child scrollable along one axis when the content exceeds the available viewport size.",
+                    BuildScrollView),
             };
         }
 
         private static FElement BuildColumn()
         {
-            return new FColumn(mainAxisAlignment: FMainAxisAlignment.Start, crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new FColumn(mainAxisAlignment: FMainAxisAlignment.Start,
+                crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -63,9 +86,9 @@ namespace Fram3.UI.Storybook.Stories
             {
                 Children = new FElement[]
                 {
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue),   width: 60f, height: 60f),
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Green),  width: 60f, height: 60f),
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Red),    width: 60f, height: 60f),
+                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue), width: 60f, height: 60f),
+                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Green), width: 60f, height: 60f),
+                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Red), width: 60f, height: 60f),
                 }
             };
         }
@@ -78,8 +101,9 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     Children = new FElement[]
                     {
-                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue),                width: 120f, height: 120f),
-                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.7f)), width:  80f, height:  80f),
+                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue), width: 120f, height: 120f),
+                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.7f)), width: 80f,
+                            height: 80f),
                         new FContainer(
                             decoration: new FBoxDecoration(
                                 Color: FColor.Black.WithAlpha(0.5f),
@@ -182,12 +206,14 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             Children = new FElement[]
                             {
-                                new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)), height: 20f)
+                                new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)),
+                                    height: 20f)
                                 {
                                     Child = new FText("A")
                                 },
                                 FSizedBox.FromSize(width: 200f, height: 80f),
-                                new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)), height: 20f)
+                                new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)),
+                                    height: 20f)
                                 {
                                     Child = new FText("B")
                                 },
@@ -314,7 +340,7 @@ namespace Fram3.UI.Storybook.Stories
 
             return new FContainer(height: 200f)
             {
-                Child = new FScrollView(FScrollDirection.Vertical)
+                Child = new FScrollView()
                 {
                     Child = new FColumn
                     {

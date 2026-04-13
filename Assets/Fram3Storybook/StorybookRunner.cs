@@ -72,9 +72,9 @@ namespace Fram3.UI.Storybook
         {
             var type = element.GetType();
             return type == typeof(VisualElement)
-                && element.style.width == StyleKeyword.Null
-                && element.style.height == StyleKeyword.Null
-                && element.style.flexGrow == StyleKeyword.Null;
+                   && element.style.width == StyleKeyword.Null
+                   && element.style.height == StyleKeyword.Null
+                   && element.style.flexGrow == StyleKeyword.Null;
         }
     }
 }
