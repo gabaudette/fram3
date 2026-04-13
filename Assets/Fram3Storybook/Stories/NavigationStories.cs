@@ -21,7 +21,7 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FNavigator", BuildNavigator),
+                new Story("FNavigator", "A stack-based router that maps string route keys to builder functions; supports Push, Pop, and replace operations via FNavigatorHandle.",  BuildNavigator),
             };
         }
 

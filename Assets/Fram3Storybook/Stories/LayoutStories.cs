@@ -15,18 +15,18 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FColumn",    BuildColumn),
-                new Story("FRow",       BuildRow),
-                new Story("FStack",     BuildStack),
-                new Story("FWrap",      BuildWrap),
-                new Story("FPadding",   BuildPadding),
-                new Story("FMargin",    BuildMargin),
-                new Story("FSizedBox",  BuildSizedBox),
-                new Story("FCenter",    BuildCenter),
-                new Story("FExpanded",  BuildExpanded),
-                new Story("FContainer", BuildContainer),
-                new Story("FDivider",   BuildDivider),
-                new Story("FScrollView", BuildScrollView),
+                new Story("FColumn",     "Arranges children vertically in a single column, with configurable main-axis and cross-axis alignment.",                                              BuildColumn),
+                new Story("FRow",        "Arranges children horizontally in a single row, with configurable main-axis and cross-axis alignment.",                                               BuildRow),
+                new Story("FStack",      "Layers children on top of each other using absolute positioning, useful for overlapping elements.",                                                   BuildStack),
+                new Story("FWrap",       "Flows children left-to-right and wraps onto new lines when the available width is exhausted.",                                                        BuildWrap),
+                new Story("FPadding",    "Inserts empty space between a single child and its parent boundaries using per-side insets.",                                                         BuildPadding),
+                new Story("FMargin",     "Adds outer spacing around a single child, pushing surrounding siblings away.",                                                                        BuildMargin),
+                new Story("FSizedBox",   "Occupies a fixed width and/or height; can hold an optional child or act as a gap element between siblings.",                                          BuildSizedBox),
+                new Story("FCenter",     "Centers its child both horizontally and vertically within the available space.",                                                                      BuildCenter),
+                new Story("FExpanded",   "Fills all remaining space along the parent axis, optionally weighted by a flex factor.",                                                              BuildExpanded),
+                new Story("FContainer",  "A versatile single-child box that combines a background decoration, explicit sizing, and inner padding in one element.",                              BuildContainer),
+                new Story("FDivider",    "Renders a thin horizontal or vertical rule, useful as a visual separator between sections.",                                                          BuildDivider),
+                new Story("FScrollView", "Makes its child scrollable along one axis when the content exceeds the available viewport size.",                                                     BuildScrollView),
             };
         }
 

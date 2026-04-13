@@ -16,17 +16,17 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FButton",       BuildButton),
-                new Story("FTextField",    BuildTextField),
-                new Story("FPasswordField", BuildPasswordField),
-                new Story("FCheckbox",     BuildCheckbox),
-                new Story("FToggle",       BuildToggle),
-                new Story("FSlider",       BuildSlider),
-                new Story("FMinMaxSlider", BuildMinMaxSlider),
-                new Story("FRadioGroup",   BuildRadioGroup),
-                new Story("FDropdown",     BuildDropdown),
-                new Story("FIntField",     BuildIntField),
-                new Story("FFloatField",   BuildFloatField),
+                new Story("FButton",        "A pressable button with a text label and an optional callback invoked on click.",                                                                        BuildButton),
+                new Story("FTextField",     "A single- or multi-line text input with optional placeholder, initial value, and read-only mode.",                                                       BuildTextField),
+                new Story("FPasswordField", "A text input that masks its characters; behaves identically to FTextField but with a hidden-text display.",                                              BuildPasswordField),
+                new Story("FCheckbox",      "A binary toggle rendered as a checkbox, with an optional text label placed beside it.",                                                                  BuildCheckbox),
+                new Story("FToggle",        "A binary toggle rendered as a switch, with an optional text label; functionally equivalent to FCheckbox with a different visual style.",                BuildToggle),
+                new Story("FSlider",        "A continuous value picker that slides between a minimum and maximum, with an optional label.",                                                           BuildSlider),
+                new Story("FMinMaxSlider",  "A dual-handle slider for selecting a numeric range; both the lower and upper bound are independently draggable.",                                        BuildMinMaxSlider),
+                new Story("FRadioGroup",    "A list of mutually exclusive options rendered as radio buttons; at most one option can be selected at a time.",                                          BuildRadioGroup),
+                new Story("FDropdown",      "A collapsed pick-list that expands to show all available string options; supports an optional label and a pre-selected index.",                          BuildDropdown),
+                new Story("FIntField",      "A numeric input constrained to integers, with an optional label and initial value.",                                                                     BuildIntField),
+                new Story("FFloatField",    "A numeric input that accepts floating-point values, with an optional label and initial value.",                                                          BuildFloatField),
             };
         }
 

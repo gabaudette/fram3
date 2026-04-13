@@ -18,11 +18,11 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FProvider / FConsumer",         BuildProviderConsumer),
-                new Story("FValueListenableBuilder",        BuildValueListenable),
-                new Story("FCubitBuilder",                  BuildCubitBuilder),
-                new Story("FSelector",                      BuildSelector),
-                new Story("FStore",                         BuildStore),
+                new Story("FProvider / FConsumer",         "Injects an arbitrary value into a subtree via FProvider and reads the nearest matching value back out via FConsumer.",          BuildProviderConsumer),
+                new Story("FValueListenableBuilder",        "Rebuilds its subtree whenever a FValueNotifier's value changes, enabling lightweight reactive state without a full cubit.",     BuildValueListenable),
+                new Story("FCubitBuilder",                  "Connects a FCubit to the widget tree and rebuilds automatically each time the cubit emits a new state.",                        BuildCubitBuilder),
+                new Story("FSelector",                      "Like FCubitBuilder but rebuilds only when a derived slice of state changes, minimising unnecessary rebuilds.",                  BuildSelector),
+                new Story("FStore",                         "A Redux-style global store: dispatches typed actions through a pure reducer function and exposes the resulting state.",         BuildStore),
             };
         }
 

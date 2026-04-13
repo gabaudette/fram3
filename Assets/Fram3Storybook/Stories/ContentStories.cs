@@ -15,13 +15,13 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FText",        BuildText),
-                new Story("FProgressBar", BuildProgressBar),
-                new Story("FSpinner",     BuildSpinner),
-                new Story("FTabView",     BuildTabView),
-                new Story("FListView",    BuildListView),
-                new Story("FTooltip",     BuildTooltip),
-                new Story("FSnackbar",    BuildSnackbar),
+                new Story("FText",        "Renders a string with optional font size, color, weight, style, and letter-spacing overrides.",                                        BuildText),
+                new Story("FProgressBar", "Shows a bounded progress value between a min and max, with an optional title label above the track.",                                  BuildProgressBar),
+                new Story("FSpinner",     "Displays an indeterminate loading indicator as a spinning ring, configurable in size, stroke width, color, and rotation speed.",      BuildSpinner),
+                new Story("FTabView",     "Renders a row of tab labels and swaps the visible content panel when a tab is selected.",                                              BuildTabView),
+                new Story("FListView",    "Renders a large, virtualized list of items with a fixed item height and optional single- or multi-select support.",                   BuildListView),
+                new Story("FTooltip",     "Attaches a plain-text tooltip to its child that appears on hover.",                                                                   BuildTooltip),
+                new Story("FSnackbar",    "Shows a transient message bar at the bottom of its parent with an optional action button and auto-dismiss duration.",                  BuildSnackbar),
             };
         }
 
