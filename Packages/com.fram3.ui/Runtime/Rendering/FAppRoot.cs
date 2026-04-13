@@ -19,7 +19,7 @@ namespace Fram3.UI.Rendering
     /// preserve the renderer lifecycle.
     /// </remarks>
     [RequireComponent(typeof(UIDocument))]
-    public abstract class FMonoBehaviour : MonoBehaviour
+    public abstract class FAppRoot : MonoBehaviour
     {
         private FRenderer? _renderer;
 
