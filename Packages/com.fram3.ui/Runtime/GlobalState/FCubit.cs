@@ -9,9 +9,9 @@ namespace Fram3.UI.GlobalState
     /// and notifies listeners whenever that state changes.
     /// Subclass <see cref="FCubit{TState}"/> and add methods that call
     /// <see cref="Emit"/> to transition to a new state.
-    /// Pair with <see cref="Fram3.UI.Elements.FCubitBuilder{TCubit,TState}"/>
+    /// Pair with <see cref="Fram3.UI.Elements.State.FCubitBuilder{TCubit,TState}"/>
     /// to rebuild UI subtrees in response to state changes, or expose via
-    /// <see cref="Fram3.UI.Elements.FProvider{T}"/> for tree-wide access.
+    /// <see cref="Fram3.UI.Elements.State.FProvider{T}"/> for tree-wide access.
     /// </summary>
     /// <typeparam name="TState">
     /// The type that represents the state of this cubit.

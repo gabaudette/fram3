@@ -6,9 +6,9 @@ namespace Fram3.UI.Animation
 {
     /// <summary>
     /// Provides linear interpolation functions for all Fram3 styling types.
-    /// Each method smoothly blends from <paramref name="a"/> to <paramref name="b"/>
-    /// at the normalized position <paramref name="t"/> in [0, 1].
-    /// Values of <paramref name="t"/> outside [0, 1] are valid and produce extrapolation.
+    /// Each method smoothly blends between a start and end value at a normalized
+    /// position <c>t</c> in [0, 1]. Values of <c>t</c> outside [0, 1] are valid
+    /// and produce extrapolation.
     /// </summary>
     public static class FLerp
     {
