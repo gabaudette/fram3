@@ -10,7 +10,7 @@ namespace Fram3.UI.Elements.Content
     /// <summary>
     /// A tabbed view that displays one tab content at a time, with a tab bar at the top.
     /// The tab bar is built from existing framework elements (<see cref="FRow"/>,
-    /// <see cref="FButton"/>, <see cref="FColumn"/>); no native UIToolkit tab widget is used.
+    /// <see cref="FButton"/>, <see cref="FColumn"/>); no native UIToolkit tab control is used.
     /// </summary>
     public sealed class FTabView : FStatefulElement
     {

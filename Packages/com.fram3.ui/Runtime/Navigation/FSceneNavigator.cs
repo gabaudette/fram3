@@ -10,7 +10,7 @@ namespace Fram3.UI.Navigation
     /// </summary>
     /// <remarks>
     /// <see cref="FSceneNavigator"/> is a global, stateless API. It does not require a
-    /// build context or a navigator widget in the element tree. Call it from anywhere --
+    /// build context or a navigator element in the element tree. Call it from anywhere --
     /// button callbacks, cubit methods, or game logic.
     /// </remarks>
     public static class FSceneNavigator

@@ -25,7 +25,7 @@ namespace Fram3.UI.Storybook.Stories
                     "Rebuilds its subtree whenever a FValueNotifier's value changes, enabling lightweight reactive state without a full cubit.",
                     BuildValueListenable),
                 new Story("FCubitBuilder",
-                    "Connects a FCubit to the widget tree and rebuilds automatically each time the cubit emits a new state.",
+                    "Connects a FCubit to the element tree and rebuilds automatically each time the cubit emits a new state.",
                     BuildCubitBuilder),
                 new Story("FSelector",
                     "Like FCubitBuilder but rebuilds only when a derived slice of state changes, minimising unnecessary rebuilds.",

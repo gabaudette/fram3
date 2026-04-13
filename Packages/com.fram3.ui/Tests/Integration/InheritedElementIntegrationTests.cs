@@ -16,7 +16,7 @@ namespace Fram3.UI.Tests.Integration
     /// Tests the inherited element notification mechanism end-to-end.
     /// </summary>
     [TestFixture]
-    internal sealed class InheritedWidgetIntegrationTests
+    internal sealed class InheritedElementIntegrationTests
     {
         private FRebuildScheduler _scheduler = null!;
         private FNodeExpander _expander = null!;
