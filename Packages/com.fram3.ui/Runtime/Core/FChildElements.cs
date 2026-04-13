@@ -28,6 +28,13 @@ namespace Fram3.UI.Core
         }
 
         /// <summary>
+        /// Returns true when <see cref="Child"/> was assigned during object initialization.
+        /// Subclasses that support optional children should check this before calling
+        /// <see cref="GetChildren"/> to avoid the null-child exception.
+        /// </summary>
+        protected bool HasChild => _child is not null;
+
+        /// <summary>
         /// Creates a new single-child element with an optional key.
         /// </summary>
         /// <param name="key">An optional key for reconciliation identity.</param>

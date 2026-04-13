@@ -87,7 +87,7 @@ namespace Fram3.UI.Storybook
 
                 return new FExpanded
                 {
-                    Child = new FRow
+                    Child = new FRow(crossAxisAlignment: FCrossAxisAlignment.Stretch)
                     {
                         Children = new FElement[]
                         {

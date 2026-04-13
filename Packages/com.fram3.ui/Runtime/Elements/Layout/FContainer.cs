@@ -1,4 +1,6 @@
 #nullable enable
+using System;
+using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Styling;
 
@@ -8,6 +10,7 @@ namespace Fram3.UI.Elements.Layout
     /// A general-purpose container element that combines decoration, sizing, and
     /// padding in a single node. Maps to a UIToolkit <c>VisualElement</c> with
     /// decoration, size constraints, and padding applied directly to its style.
+    /// When used without a child, it renders as a styled box with no content.
     /// </summary>
     public sealed class FContainer : FSingleChildElement
     {
@@ -53,6 +56,15 @@ namespace Fram3.UI.Elements.Layout
             Width = width;
             Height = height;
             Padding = padding;
+        }
+
+        /// <summary>
+        /// Returns the child element when one was set, or an empty list when used
+        /// as a styled box without content.
+        /// </summary>
+        public override IReadOnlyList<FElement> GetChildren()
+        {
+            return HasChild ? base.GetChildren() : Array.Empty<FElement>();
         }
     }
 }
