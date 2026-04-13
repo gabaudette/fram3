@@ -766,7 +766,31 @@ namespace Fram3.UI.Rendering.Internal
                 case FMargin margin:
                     ApplyMarginLayout(margin, native);
                     break;
+                case FStack:
+                    ApplyStackLayout(native);
+                    break;
+                case FGestureDetector:
+                    ApplyPassthroughLayout(native);
+                    break;
+                default:
+                    ApplyPassthroughLayout(native);
+                    break;
             }
+        }
+
+        private static void ApplyPassthroughLayout(VisualElement native)
+        {
+            native.style.flexGrow = 1f;
+            native.style.flexShrink = 1f;
+            native.style.alignSelf = Align.Stretch;
+            native.style.flexDirection = FlexDirection.Column;
+        }
+
+        private static void ApplyStackLayout(VisualElement native)
+        {
+            native.style.flexGrow = 1f;
+            native.style.flexShrink = 1f;
+            native.style.alignSelf = Align.Stretch;
         }
 
         private static void ApplyColumnLayout(FColumn column, VisualElement native)
