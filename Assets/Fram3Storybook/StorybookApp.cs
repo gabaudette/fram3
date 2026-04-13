@@ -84,17 +84,20 @@ namespace Fram3.UI.Storybook
             {
                 var theme = FThemeConsumer.Of(context);
 
-                return new FRow
+                return new FExpanded
                 {
-                    Children = new FElement[]
+                    Child = new FRow
                     {
-                        BuildSidebar(theme),
-                        new FDivider(
-                            axis: FDividerAxis.Vertical,
-                            thickness: 1f,
-                            color: theme.SecondaryTextColor.WithAlpha(0.3f)
-                        ),
-                        BuildContentArea(theme),
+                        Children = new FElement[]
+                        {
+                            BuildSidebar(theme),
+                            new FDivider(
+                                axis: FDividerAxis.Vertical,
+                                thickness: 1f,
+                                color: theme.SecondaryTextColor.WithAlpha(0.3f)
+                            ),
+                            BuildContentArea(theme),
+                        }
                     }
                 };
             }
