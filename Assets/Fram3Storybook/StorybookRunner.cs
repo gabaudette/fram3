@@ -18,8 +18,12 @@ namespace Fram3.UI.Storybook
         private void Start()
         {
             var document = GetComponent<UIDocument>();
+            var root = document.rootVisualElement;
+            root.style.width = Length.Percent(100f);
+            root.style.height = Length.Percent(100f);
+            root.style.flexDirection = FlexDirection.Column;
             _renderer = new FRenderer();
-            _renderer.Mount(StorybookApp.Create(), document.rootVisualElement);
+            _renderer.Mount(StorybookApp.Create(), root);
         }
 
         private void Update()
