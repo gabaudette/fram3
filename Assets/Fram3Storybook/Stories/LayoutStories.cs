@@ -36,9 +36,20 @@ namespace Fram3.UI.Storybook.Stories
             {
                 Children = new FElement[]
                 {
-                    new FText("First item"),
-                    new FText("Second item"),
-                    new FText("Third item"),
+                    new FContainer(
+                        decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.15f)),
+                        padding: FEdgeInsets.All(8f)
+                    ) { Child = new FText("First item") },
+                    FSizedBox.FromSize(height: 4f),
+                    new FContainer(
+                        decoration: new FBoxDecoration(Color: FColor.Green.WithAlpha(0.15f)),
+                        padding: FEdgeInsets.All(8f)
+                    ) { Child = new FText("Second item") },
+                    FSizedBox.FromSize(height: 4f),
+                    new FContainer(
+                        decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.15f)),
+                        padding: FEdgeInsets.All(8f)
+                    ) { Child = new FText("Third item") },
                 }
             };
         }
@@ -61,13 +72,16 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildStack()
         {
-            return new FStack
+            return new FContainer(width: 140f, height: 140f)
             {
-                Children = new FElement[]
+                Child = new FStack
                 {
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue),               width: 120f, height: 120f),
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.7f)), width:  80f, height:  80f),
-                    new FText("Stacked label"),
+                    Children = new FElement[]
+                    {
+                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue),                width: 120f, height: 120f),
+                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.7f)), width:  80f, height:  80f),
+                        new FText("Stacked label"),
+                    }
                 }
             };
         }
@@ -220,26 +234,29 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildExpanded()
         {
-            return new FRow
+            return new FContainer(height: 60f)
             {
-                Children = new FElement[]
+                Child = new FRow
                 {
-                    new FContainer(
-                        decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)),
-                        width: 80f
-                    )
+                    Children = new FElement[]
                     {
-                        Child = new FText("Fixed")
-                    },
-                    new FExpanded
-                    {
-                        Child = new FContainer(
-                            decoration: new FBoxDecoration(Color: FColor.Green.WithAlpha(0.3f))
+                        new FContainer(
+                            decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)),
+                            width: 80f
                         )
                         {
-                            Child = new FText("Expanded (fills remaining space)")
-                        }
-                    },
+                            Child = new FText("Fixed")
+                        },
+                        new FExpanded
+                        {
+                            Child = new FContainer(
+                                decoration: new FBoxDecoration(Color: FColor.Green.WithAlpha(0.3f))
+                            )
+                            {
+                                Child = new FText("Expanded (fills remaining space)")
+                            }
+                        },
+                    }
                 }
             };
         }

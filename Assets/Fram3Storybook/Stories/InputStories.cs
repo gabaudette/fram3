@@ -4,7 +4,6 @@ using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Elements.Layout;
-using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
@@ -37,16 +36,15 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Default button:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FButton(label: "Click me"),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Button with callback:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Button with callback:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FButton(label: "Save", onPressed: () => { }),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Button with no label:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Button with no label:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FButton(label: null),
                 }
             };
@@ -59,21 +57,19 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Empty field with placeholder:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FTextField(placeholder: "Enter text here..."),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Pre-filled field:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Pre-filled field:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FTextField(value: "Hello, Fram3!"),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Read-only field:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Read-only field:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FTextField(value: "Read-only value", readOnly: true),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Multiline field:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Multiline field:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FTextField(
                         value: "Line one\nLine two\nLine three",
                         multiline: true
@@ -89,11 +85,11 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Password field with placeholder:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FPasswordField(placeholder: "Enter password..."),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Pre-filled password field:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Pre-filled password field:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FPasswordField(value: "secret123"),
                 }
             };
@@ -106,16 +102,15 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Unchecked (default):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FCheckbox(),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Checked:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Checked:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FCheckbox(value: true),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("With label:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("With label:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FCheckbox(value: false, label: "Accept terms and conditions"),
                     new FCheckbox(value: true, label: "Subscribe to newsletter"),
                 }
@@ -129,16 +124,15 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Toggle off (default):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FToggle(),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Toggle on:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Toggle on:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FToggle(value: true),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Toggle with label:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Toggle with label:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FToggle(value: true, label: "Enable dark mode"),
                 }
             };
@@ -151,11 +145,11 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Default slider (0-1, value 0.5):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FSlider(value: 0.5f),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Slider with label and custom range:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Slider with label and custom range:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FSlider(value: 60f, min: 0f, max: 100f, label: "Volume"),
                 }
             };
@@ -168,11 +162,11 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Default min-max slider (0-1):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FMinMaxSlider(minValue: 0.2f, maxValue: 0.8f),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Min-max slider with label and custom range:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Min-max slider with label and custom range:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FMinMaxSlider(
                         minValue: 20f,
                         maxValue: 80f,
@@ -191,13 +185,13 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Radio group with no selection:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FRadioGroup(
                         options: new string[] { "Option A", "Option B", "Option C" }
                     ),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Radio group with pre-selected value:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Radio group with pre-selected value:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FRadioGroup(
                         options: new string[] { "Small", "Medium", "Large" },
                         selectedValue: "Medium"
@@ -213,13 +207,13 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Dropdown with no selection:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FDropdown(
                         options: new string[] { "Red", "Green", "Blue", "Yellow" }
                     ),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Dropdown with label and pre-selection:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Dropdown with label and pre-selection:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FDropdown(
                         options: new string[] { "USD", "EUR", "GBP", "JPY" },
                         selectedIndex: 1,
@@ -236,11 +230,11 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Integer field (default 0):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FIntField(),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Integer field with label and value:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Integer field with label and value:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FIntField(value: 42, label: "Count"),
                 }
             };
@@ -253,11 +247,11 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Float field (default 0):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FFloatField(),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Float field with label and value:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Float field with label and value:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FFloatField(value: 3.14f, label: "Pi"),
                 }
             };

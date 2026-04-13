@@ -55,16 +55,15 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("25% progress:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FProgressBar(value: 25f, title: "Loading..."),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("75% progress:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("75% progress:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FProgressBar(value: 75f),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Custom range (0-50), value 30:")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Custom range (0-50), value 30:"),
+                    FSizedBox.FromSize(height: 4f),
                     new FProgressBar(value: 30f, min: 0f, max: 50f),
                 }
             };
@@ -77,16 +76,15 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Default spinner (32px):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FSpinner(),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Large spinner (64px, 6px stroke, blue, 2s):")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Large spinner (64px, 6px stroke, blue, 2s):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FSpinner(size: 64f, strokeWidth: 6f, color: FColor.FromHex("#6200EE"), speed: 2f),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FText("Small fast spinner (20px, fast):")
-                    },
+                    FSizedBox.FromSize(height: 12f),
+                    new FText("Small fast spinner (20px, fast):"),
+                    FSizedBox.FromSize(height: 4f),
                     new FSpinner(size: 20f, strokeWidth: 3f, speed: 0.5f),
                 }
             };
@@ -122,18 +120,15 @@ namespace Fram3.UI.Storybook.Stories
                 "Fig", "Grape", "Honeydew", "Kiwi", "Lemon",
             };
 
-            return new FContainer(height: 260f)
-            {
-                Child = new FListView<string>(
-                    items: fruits,
-                    itemBuilder: fruit => new FPadding(FEdgeInsets.Symmetric(vertical: 4f, horizontal: 8f))
-                    {
-                        Child = new FText(fruit)
-                    },
-                    itemHeight: 36f,
-                    selectionMode: FListSelectionMode.Single
-                )
-            };
+            return new FListView<string>(
+                items: fruits,
+                itemBuilder: fruit => new FPadding(FEdgeInsets.Symmetric(vertical: 4f, horizontal: 8f))
+                {
+                    Child = new FText(fruit)
+                },
+                itemHeight: 36f,
+                selectionMode: FListSelectionMode.Single
+            );
         }
 
         private static FElement BuildTooltip()
@@ -143,21 +138,19 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("Hover over the box below to see the tooltip:"),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                    FSizedBox.FromSize(height: 8f),
+                    new FTooltip("This is the tooltip message!")
                     {
-                        Child = new FTooltip("This is the tooltip message!")
+                        Child = new FContainer(
+                            decoration: new FBoxDecoration(
+                                Color: FColor.FromHex("#6200EE").WithAlpha(0.15f),
+                                Border: new FBorder(FColor.FromHex("#6200EE"), 1f),
+                                BorderRadius: FBorderRadius.All(4f)
+                            ),
+                            padding: FEdgeInsets.All(12f)
+                        )
                         {
-                            Child = new FContainer(
-                                decoration: new FBoxDecoration(
-                                    Color: FColor.FromHex("#6200EE").WithAlpha(0.15f),
-                                    Border: new FBorder(FColor.FromHex("#6200EE"), 1f),
-                                    BorderRadius: FBorderRadius.All(4f)
-                                ),
-                                padding: FEdgeInsets.All(12f)
-                            )
-                            {
-                                Child = new FText("Hover me")
-                            }
+                            Child = new FText("Hover me")
                         }
                     },
                 }
@@ -171,21 +164,17 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new FElement[]
                 {
                     new FText("FSnackbar (visible when rendered):"),
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FSnackbar(
-                            message: "File saved successfully.",
-                            actionLabel: "Undo",
-                            duration: 8f
-                        )
-                    },
-                    new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                    {
-                        Child = new FSnackbar(
-                            message: "No action button variant.",
-                            duration: 8f
-                        )
-                    },
+                    FSizedBox.FromSize(height: 8f),
+                    new FSnackbar(
+                        message: "File saved successfully.",
+                        actionLabel: "Undo",
+                        duration: 8f
+                    ),
+                    FSizedBox.FromSize(height: 8f),
+                    new FSnackbar(
+                        message: "No action button variant.",
+                        duration: 8f
+                    ),
                 }
             };
         }

@@ -150,36 +150,11 @@ namespace Fram3.UI.Storybook
                     padding: FEdgeInsets.Symmetric(vertical: theme.Spacing * 2f, horizontal: theme.Spacing * 1.5f)
                 )
                 {
-                    Child = new FRow(crossAxisAlignment: FCrossAxisAlignment.Center)
-                    {
-                        Children = new FElement[]
-                        {
-                            new FContainer(
-                                decoration: new FBoxDecoration(
-                                    Color: theme.PrimaryColor,
-                                    BorderRadius: FBorderRadius.All(6f)
-                                ),
-                                width: 28f,
-                                height: 28f
-                            )
-                            {
-                                Child = new FCenter
-                                {
-                                    Child = new FText("F", new FTextStyle(
-                                        FontSize: 15f,
-                                        Bold: true,
-                                        Color: FColor.White
-                                    ))
-                                }
-                            },
-                            FSizedBox.FromSize(width: 10f),
-                            new FText("Fram3", new FTextStyle(
-                                FontSize: theme.FontSizeLarge,
-                                Bold: true,
-                                Color: theme.PrimaryColor
-                            )),
-                        }
-                    }
+                    Child = new FText("Fram3", new FTextStyle(
+                        FontSize: theme.FontSizeLarge,
+                        Bold: true,
+                        Color: theme.PrimaryColor
+                    ))
                 };
             }
 
