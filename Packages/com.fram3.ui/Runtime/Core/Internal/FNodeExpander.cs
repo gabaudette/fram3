@@ -49,6 +49,7 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal void Unmount(FNode node)
         {
+            node.MarkUnmounted();
             _adapter?.OnUnmounting(node);
             UnmountChildren(node);
             DisposeState(node);
@@ -125,7 +126,15 @@ namespace Fram3.UI.Core.Internal
 
         private IReadOnlyList<FElement> ResolveStatefulChildren(FNode node)
         {
-            var built = node.State!.Build(node.Context);
+            if (node.State == null)
+            {
+                throw new InvalidOperationException(
+                    "Cannot rebuild a stateful node whose state has been disposed. " +
+                    "The node may have been unmounted before its scheduled rebuild ran."
+                );
+            }
+
+            var built = node.State.Build(node.Context);
             return new[] { built };
         }
 

@@ -1,4 +1,6 @@
 #nullable enable
+using System;
+using System.Collections.Generic;
 using Fram3.UI.Core;
 
 namespace Fram3.UI.Elements.Layout
@@ -58,5 +60,14 @@ namespace Fram3.UI.Elements.Layout
         /// <param name="key">An optional key for reconciliation identity.</param>
         public static FSizedBox Expand(FKey? key = null)
             => new(null, null, true, key);
+
+        /// <summary>
+        /// Returns the child element when one was set, or an empty list when used
+        /// as a dimensioned spacer without a child.
+        /// </summary>
+        public override IReadOnlyList<FElement> GetChildren()
+        {
+            return HasChild ? base.GetChildren() : Array.Empty<FElement>();
+        }
     }
 }

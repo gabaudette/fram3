@@ -377,6 +377,7 @@ namespace Fram3.UI.Rendering.Internal
         private static Slider CreateSlider(FSlider slider)
         {
             var sld = new Slider(slider.Min, slider.Max) { value = slider.Value };
+            sld.style.alignSelf = Align.Stretch;
             if (slider.Label != null)
             {
                 sld.label = slider.Label;
@@ -593,6 +594,7 @@ namespace Fram3.UI.Rendering.Internal
                 makeItem = () => new VisualElement(),
                 bindItem = (item, index) =>
                 {
+                    item.Clear();
                     var childElement = listView.BuildItemAt(index);
                     var childNative = CreateNative(childElement);
                     item.Add(childNative);
@@ -764,7 +766,31 @@ namespace Fram3.UI.Rendering.Internal
                 case FMargin margin:
                     ApplyMarginLayout(margin, native);
                     break;
+                case FStack:
+                    ApplyStackLayout(native);
+                    break;
+                case FGestureDetector:
+                    ApplyPassthroughLayout(native);
+                    break;
+                default:
+                    ApplyPassthroughLayout(native);
+                    break;
             }
+        }
+
+        private static void ApplyPassthroughLayout(VisualElement native)
+        {
+            native.style.flexGrow = 1f;
+            native.style.flexShrink = 1f;
+            native.style.alignSelf = Align.Stretch;
+            native.style.flexDirection = FlexDirection.Column;
+        }
+
+        private static void ApplyStackLayout(VisualElement native)
+        {
+            native.style.flexGrow = 1f;
+            native.style.flexShrink = 1f;
+            native.style.alignSelf = Align.Stretch;
         }
 
         private static void ApplyColumnLayout(FColumn column, VisualElement native)
@@ -844,6 +870,10 @@ namespace Fram3.UI.Rendering.Internal
             if (container.Decoration != null)
             {
                 ApplyDecoration(container.Decoration, native);
+                if (container.Decoration.BorderRadius.HasValue)
+                {
+                    native.style.overflow = Overflow.Hidden;
+                }
             }
         }
 
@@ -974,6 +1004,7 @@ namespace Fram3.UI.Rendering.Internal
                 minMaxSlider.LowLimit,
                 minMaxSlider.HighLimit
             );
+            mms.style.alignSelf = Align.Stretch;
 
             if (minMaxSlider.Label != null)
             {
@@ -1075,6 +1106,9 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyTooltipLayout(FTooltip tooltip, VisualElement native)
         {
             native.tooltip = tooltip.Message;
+            native.style.flexDirection = FlexDirection.Column;
+            native.style.alignSelf = Align.Stretch;
+            native.style.alignItems = Align.Stretch;
         }
 
         private static void ApplyWrapLayout(VisualElement native)

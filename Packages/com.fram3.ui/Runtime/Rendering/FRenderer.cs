@@ -149,7 +149,26 @@ namespace Fram3.UI.Rendering
                 var native = CreateNativeElement(node);
                 var handle = new FRenderHandle(node, native);
                 _handles[node] = handle;
+                AttachChildrenToNative(node, native);
                 AttachToParent(node, native);
+            }
+
+            private void AttachChildrenToNative(FNode node, VisualElement native)
+            {
+                foreach (var child in node.Children)
+                {
+                    if (!_handles.TryGetValue(child, out var childHandle))
+                    {
+                        continue;
+                    }
+
+                    native.Add(childHandle.NativeElement);
+
+                    if (node.Element is FStack)
+                    {
+                        FElementPainter.ApplyAsStackChild(childHandle.NativeElement);
+                    }
+                }
             }
 
             public void OnUnmounting(FNode node)

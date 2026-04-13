@@ -1,0 +1,16 @@
+{
+  "name": "Fram3.UI.Storybook",
+  "rootNamespace": "Fram3.UI.Storybook",
+  "references": [
+    "Fram3.UI"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

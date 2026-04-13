@@ -61,15 +61,17 @@ namespace Fram3.UI.Core.Internal
             while (_dirtyNodes.Count > 0)
             {
                 var node = RemoveMin();
-                if (node != null && !node.IsDirty)
+                if (node == null)
                 {
                     continue;
                 }
 
-                if (node != null)
+                if (node.IsUnmounted || !node.IsDirty)
                 {
-                    expander.Rebuild(node);
+                    continue;
                 }
+
+                expander.Rebuild(node);
             }
         }
 
