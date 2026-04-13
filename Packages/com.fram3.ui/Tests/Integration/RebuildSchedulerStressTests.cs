@@ -127,6 +127,33 @@ namespace Fram3.UI.Tests.Integration
         }
 
         [Test]
+        public void Flush_UnmountedNodeWithPendingSetState_IsSkippedWithoutException()
+        {
+            // Arrange: parent wraps a child stateful node. The parent can swap the child out.
+            var childState = new SwappableChildState();
+            var childElement = new TestStatefulElement(() => childState, "child");
+
+            var parentState = new SwappingParentState(childElement);
+            var parentStateful = new TestStatefulElement(() => parentState);
+
+            TreeBuilder.Mount(parentStateful, _expander);
+
+            var childBuildsBefore = childState.BuildCount;
+
+            // Act: schedule child dirty, then unmount it by triggering a parent rebuild that
+            // replaces the child with a different element before the flush runs.
+            childState.MarkDirty();
+            parentState.SwapChildAndMarkDirty();
+
+            // Flush must not throw, even though the child node is unmounted but still queued.
+            Assert.DoesNotThrow(() => TreeBuilder.Flush(_scheduler, _expander));
+
+            // The stale (now-unmounted) child must not have been rebuilt.
+            Assert.That(childState.BuildCount - childBuildsBefore, Is.EqualTo(0),
+                "Unmounted child state should not be rebuilt after parent replaced the subtree");
+        }
+
+        [Test]
         public void Flush_ManyDirtyNodes_AllRebuilt()
         {
             const int count = 20;
@@ -258,6 +285,45 @@ namespace Fram3.UI.Tests.Integration
             {
                 BuildCount++;
                 return _child;
+            }
+        }
+        private sealed class SwappableChildState : FState
+        {
+            public int BuildCount { get; private set; }
+
+            public void MarkDirty()
+            {
+                SetState(null);
+            }
+
+            public override FElement Build(FBuildContext context)
+            {
+                BuildCount++;
+                return new TestLeafElement("child-leaf");
+            }
+        }
+
+        private sealed class SwappingParentState : FState
+        {
+            private readonly FElement _originalChild;
+            private bool _swapped;
+
+            public SwappingParentState(FElement originalChild)
+            {
+                _originalChild = originalChild;
+            }
+
+            public void SwapChildAndMarkDirty()
+            {
+                _swapped = true;
+                SetState(null);
+            }
+
+            public override FElement Build(FBuildContext context)
+            {
+                return _swapped
+                    ? new TestLeafElement("replacement")
+                    : _originalChild;
             }
         }
     }

@@ -43,6 +43,13 @@ namespace Fram3.UI.Core.Internal
 
         internal bool IsDirty { get; set; }
 
+        /// <summary>
+        /// True once this node has been unmounted. A node that is unmounted may still
+        /// be in the rebuild scheduler queue (scheduled before the parent rebuilt and
+        /// replaced this subtree). The scheduler skips unmounted nodes.
+        /// </summary>
+        internal bool IsUnmounted { get; private set; }
+
         internal FState? State { get; set; }
 
         internal void AddChild(FNode child)
@@ -69,6 +76,15 @@ namespace Fram3.UI.Core.Internal
         {
             IsDirty = true;
             _scheduler?.Schedule(this);
+        }
+
+        /// <summary>
+        /// Marks this node as unmounted so the rebuild scheduler can skip it if it
+        /// was queued before the parent rebuilt and replaced this subtree.
+        /// </summary>
+        internal void MarkUnmounted()
+        {
+            IsUnmounted = true;
         }
 
         /// <summary>
