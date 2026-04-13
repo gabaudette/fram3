@@ -4,6 +4,7 @@ using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Elements.Layout;
+using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
@@ -31,7 +32,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildButton()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -52,7 +53,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildTextField()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -80,7 +81,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildPasswordField()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -97,7 +98,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildCheckbox()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -119,7 +120,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildToggle()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -140,7 +141,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildSlider()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -157,7 +158,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildMinMaxSlider()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -180,7 +181,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildRadioGroup()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -202,7 +203,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildDropdown()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -225,7 +226,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildIntField()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -242,7 +243,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildFloatField()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {

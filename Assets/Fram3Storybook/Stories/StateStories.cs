@@ -150,47 +150,70 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildCubitBuilder()
         {
-            var cubit = new CounterCubit();
+            return new CubitBuilderStory();
+        }
 
-            return new FProvider<CounterCubit>(
-                cubit,
-                new FColumn
+        private sealed class CubitBuilderStory : FStatefulElement
+        {
+            public override FState CreateState() => new CubitBuilderStoryState();
+
+            private sealed class CubitBuilderStoryState : FState<CubitBuilderStory>
+            {
+                private CounterCubit? _cubit;
+
+                public override void InitState()
                 {
-                    Children = new FElement[]
-                    {
-                        new FText("FCubitBuilder rebuilds on CounterCubit state change:"),
-                        new FCubitBuilder<CounterCubit, int>(
-                            builder: (_, count) => new FContainer(
-                                decoration: new FBoxDecoration(
-                                    Color: FColor.Blue.WithAlpha(0.15f),
-                                    BorderRadius: FBorderRadius.All(4f)
-                                ),
-                                padding: FEdgeInsets.All(12f)
-                            )
-                            {
-                                Child = new FText($"Count: {count}", new FTextStyle(
-                                    FontSize: 20f,
-                                    Bold: true
-                                ))
-                            }
-                        ),
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                        {
-                            Child = new FRow
-                            {
-                                Children = new FElement[]
-                                {
-                                    new FButton(label: "+1", onPressed: () => cubit.Increment()),
-                                    FSizedBox.FromSize(width: 8f),
-                                    new FButton(label: "-1", onPressed: () => cubit.Decrement()),
-                                    FSizedBox.FromSize(width: 8f),
-                                    new FButton(label: "Reset", onPressed: () => cubit.Reset()),
-                                }
-                            }
-                        },
-                    }
+                    _cubit = new CounterCubit();
                 }
-            );
+
+                public override FElement Build(FBuildContext context)
+                {
+                    return new FProvider<CounterCubit>(
+                        _cubit!,
+                        new FColumn
+                        {
+                            Children = new FElement[]
+                            {
+                                new FText("FCubitBuilder rebuilds on CounterCubit state change:"),
+                                new FCubitBuilder<CounterCubit, int>(
+                                    builder: (_, count) => new FContainer(
+                                        decoration: new FBoxDecoration(
+                                            Color: FColor.Blue.WithAlpha(0.15f),
+                                            BorderRadius: FBorderRadius.All(4f)
+                                        ),
+                                        padding: FEdgeInsets.All(12f)
+                                    )
+                                    {
+                                        Child = new FText($"Count: {count}", new FTextStyle(
+                                            FontSize: 20f,
+                                            Bold: true
+                                        ))
+                                    }
+                                ),
+                                new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                                {
+                                    Child = new FRow
+                                    {
+                                        Children = new FElement[]
+                                        {
+                                            new FButton(label: "+1", onPressed: () => _cubit!.Increment()),
+                                            FSizedBox.FromSize(width: 8f),
+                                            new FButton(label: "-1", onPressed: () => _cubit!.Decrement()),
+                                            FSizedBox.FromSize(width: 8f),
+                                            new FButton(label: "Reset", onPressed: () => _cubit!.Reset()),
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    );
+                }
+
+                public override void Dispose()
+                {
+                    _cubit?.Dispose();
+                }
+            }
         }
 
         // ---------------------------------------------------------------------------
@@ -199,55 +222,78 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildSelector()
         {
-            var cubit = new CounterCubit();
+            return new SelectorStory();
+        }
 
-            return new FProvider<CounterCubit>(
-                cubit,
-                new FColumn
+        private sealed class SelectorStory : FStatefulElement
+        {
+            public override FState CreateState() => new SelectorStoryState();
+
+            private sealed class SelectorStoryState : FState<SelectorStory>
+            {
+                private CounterCubit? _cubit;
+
+                public override void InitState()
                 {
-                    Children = new FElement[]
-                    {
-                        new FText("FSelector rebuilds only when the selected slice changes:"),
-                        new FText("(This selector shows 'Even' or 'Odd' -- rebuilds only on parity change.)"),
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                        {
-                            Child = new FSelector<CounterCubit, int, bool>(
-                                selector: count => count % 2 == 0,
-                                builder: (_, isEven) => new FContainer(
-                                    decoration: new FBoxDecoration(
-                                        Color: isEven
-                                            ? FColor.Green.WithAlpha(0.2f)
-                                            : FColor.Red.WithAlpha(0.2f),
-                                        BorderRadius: FBorderRadius.All(4f)
-                                    ),
-                                    padding: FEdgeInsets.All(12f)
-                                )
-                                {
-                                    Child = new FText(
-                                        isEven ? "Even" : "Odd",
-                                        new FTextStyle(FontSize: 18f, Bold: true)
-                                    )
-                                }
-                            )
-                        },
-                        new FCubitBuilder<CounterCubit, int>(
-                            builder: (_, count) => new FText($"Raw count: {count}")
-                        ),
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
-                        {
-                            Child = new FRow
-                            {
-                                Children = new FElement[]
-                                {
-                                    new FButton(label: "+1", onPressed: () => cubit.Increment()),
-                                    FSizedBox.FromSize(width: 8f),
-                                    new FButton(label: "Reset", onPressed: () => cubit.Reset()),
-                                }
-                            }
-                        },
-                    }
+                    _cubit = new CounterCubit();
                 }
-            );
+
+                public override FElement Build(FBuildContext context)
+                {
+                    return new FProvider<CounterCubit>(
+                        _cubit!,
+                        new FColumn
+                        {
+                            Children = new FElement[]
+                            {
+                                new FText("FSelector rebuilds only when the selected slice changes:"),
+                                new FText("(This selector shows 'Even' or 'Odd' -- rebuilds only on parity change.)"),
+                                new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                                {
+                                    Child = new FSelector<CounterCubit, int, bool>(
+                                        selector: count => count % 2 == 0,
+                                        builder: (_, isEven) => new FContainer(
+                                            decoration: new FBoxDecoration(
+                                                Color: isEven
+                                                    ? FColor.Green.WithAlpha(0.2f)
+                                                    : FColor.Red.WithAlpha(0.2f),
+                                                BorderRadius: FBorderRadius.All(4f)
+                                            ),
+                                            padding: FEdgeInsets.All(12f)
+                                        )
+                                        {
+                                            Child = new FText(
+                                                isEven ? "Even" : "Odd",
+                                                new FTextStyle(FontSize: 18f, Bold: true)
+                                            )
+                                        }
+                                    )
+                                },
+                                new FCubitBuilder<CounterCubit, int>(
+                                    builder: (_, count) => new FText($"Raw count: {count}")
+                                ),
+                                new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                                {
+                                    Child = new FRow
+                                    {
+                                        Children = new FElement[]
+                                        {
+                                            new FButton(label: "+1", onPressed: () => _cubit!.Increment()),
+                                            FSizedBox.FromSize(width: 8f),
+                                            new FButton(label: "Reset", onPressed: () => _cubit!.Reset()),
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    );
+                }
+
+                public override void Dispose()
+                {
+                    _cubit?.Dispose();
+                }
+            }
         }
 
         // ---------------------------------------------------------------------------

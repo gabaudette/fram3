@@ -70,6 +70,11 @@ namespace Fram3.UI.Storybook.Stories
                                             controller.Forward();
                                         }
 
+                                        if (_running && controller.Status == FAnimationStatus.Completed)
+                                        {
+                                            SetState(() => _running = false);
+                                        }
+
                                         var value = controller.Value;
 
                                         return new FContainer(
@@ -273,12 +278,12 @@ namespace Fram3.UI.Storybook.Stories
                                 {
                                     Children = new FElement[]
                                     {
-                                        CurveRow("Linear",    FCurves.Linear,    _running),
-                                        CurveRow("EaseIn",    FCurves.EaseIn,    _running),
-                                        CurveRow("EaseOut",   FCurves.EaseOut,   _running),
-                                        CurveRow("EaseInOut", FCurves.EaseInOut, _running),
-                                        CurveRow("ElasticOut",FCurves.ElasticOut,_running),
-                                        CurveRow("BounceOut", FCurves.BounceOut, _running),
+                                        CurveRow("Linear",    FCurves.Linear,    _running, () => SetState(() => _running = false)),
+                                        CurveRow("EaseIn",    FCurves.EaseIn,    _running, () => SetState(() => _running = false)),
+                                        CurveRow("EaseOut",   FCurves.EaseOut,   _running, () => SetState(() => _running = false)),
+                                        CurveRow("EaseInOut", FCurves.EaseInOut, _running, () => SetState(() => _running = false)),
+                                        CurveRow("ElasticOut",FCurves.ElasticOut,_running, () => SetState(() => _running = false)),
+                                        CurveRow("BounceOut", FCurves.BounceOut, _running, () => SetState(() => _running = false)),
                                     }
                                 }
                             },
@@ -286,7 +291,7 @@ namespace Fram3.UI.Storybook.Stories
                     };
                 }
 
-                private static FElement CurveRow(string name, FCurve curve, bool running)
+                private static FElement CurveRow(string name, FCurve curve, bool running, System.Action onCompleted)
                 {
                     return new FPadding(FEdgeInsets.Symmetric(vertical: 3f, horizontal: 0f))
                     {
@@ -306,6 +311,11 @@ namespace Fram3.UI.Storybook.Stories
                                         if (running && controller.Status == FAnimationStatus.Idle)
                                         {
                                             controller.Forward();
+                                        }
+
+                                        if (running && controller.Status == FAnimationStatus.Completed)
+                                        {
+                                            onCompleted();
                                         }
 
                                         var value = controller.Value;

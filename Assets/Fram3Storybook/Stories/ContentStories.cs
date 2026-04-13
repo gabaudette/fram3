@@ -50,7 +50,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildProgressBar()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -71,7 +71,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildSpinner()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -133,7 +133,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildTooltip()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -159,7 +159,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildSnackbar()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {

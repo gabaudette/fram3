@@ -66,6 +66,8 @@ namespace UnityEngine.UIElements
         public FlexDirection? flexDirection;
         public Justify? justifyContent;
         public Align? alignItems;
+        public Align? alignSelf;
+        public Overflow? overflow;
         public Wrap? flexWrap;
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
         public Position? position;
@@ -112,6 +114,12 @@ namespace UnityEngine.UIElements
         WrapReverse
     }
 
+    public enum Overflow
+    {
+        Visible,
+        Hidden
+    }
+
     /// <summary>
     /// Minimal stub for <c>UnityEngine.UIElements.VisualElement</c> used in pure C# tests.
     /// </summary>
@@ -131,6 +139,15 @@ namespace UnityEngine.UIElements
         {
             child._parent = this;
             _children.Add(child);
+        }
+
+        public void Clear()
+        {
+            foreach (var child in _children)
+            {
+                child._parent = null;
+            }
+            _children.Clear();
         }
 
         public void Remove(VisualElement child)

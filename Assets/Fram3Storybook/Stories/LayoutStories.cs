@@ -32,7 +32,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildColumn()
         {
-            return new FColumn(mainAxisAlignment: FMainAxisAlignment.Start)
+            return new FColumn(mainAxisAlignment: FMainAxisAlignment.Start, crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -80,7 +80,16 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue),                width: 120f, height: 120f),
                         new FContainer(decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.7f)), width:  80f, height:  80f),
-                        new FText("Stacked label"),
+                        new FContainer(
+                            decoration: new FBoxDecoration(
+                                Color: FColor.Black.WithAlpha(0.5f),
+                                BorderRadius: FBorderRadius.All(2f)
+                            ),
+                            padding: FEdgeInsets.Symmetric(vertical: 2f, horizontal: 6f)
+                        )
+                        {
+                            Child = new FText("Stacked label", new FTextStyle(Color: FColor.White))
+                        },
                     }
                 }
             };
@@ -108,7 +117,7 @@ namespace Fram3.UI.Storybook.Stories
                 padding: FEdgeInsets.All(4f)
             )
             {
-                Child = new FText(label)
+                Child = new FText(label, new FTextStyle(Color: FColor.White))
             };
         }
 
@@ -149,7 +158,7 @@ namespace Fram3.UI.Storybook.Stories
                 Child = new FText("Block C")
             };
 
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -162,7 +171,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildSizedBox()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
@@ -280,7 +289,7 @@ namespace Fram3.UI.Storybook.Stories
 
         private static FElement BuildDivider()
         {
-            return new FColumn
+            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
             {
                 Children = new FElement[]
                 {
