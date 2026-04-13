@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
+using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Storybook.Stories;
@@ -171,22 +172,25 @@ namespace Fram3.UI.Storybook
             {
                 var bgColor = isSelected ? theme.PrimaryColor.WithAlpha(0.15f) : FColor.Transparent;
 
-                return new FPadding(FEdgeInsets.Symmetric(vertical: 2f, horizontal: 0f))
-                {
-                    Child = new FContainer(
-                        decoration: new FBoxDecoration(
-                            Color: bgColor,
-                            BorderRadius: FBorderRadius.All(theme.BorderRadius)
-                        ),
-                        padding: FEdgeInsets.Symmetric(vertical: 6f, horizontal: theme.Spacing)
-                    )
+                return new FGestureDetector(
+                    onTap: onTap,
+                    child: new FPadding(FEdgeInsets.Symmetric(vertical: 2f, horizontal: 0f))
                     {
-                        Child = new FText(name, new FTextStyle(
-                            FontSize: theme.FontSize,
-                            Color: isSelected ? theme.PrimaryColor : theme.PrimaryTextColor
-                        ))
+                        Child = new FContainer(
+                            decoration: new FBoxDecoration(
+                                Color: bgColor,
+                                BorderRadius: FBorderRadius.All(theme.BorderRadius)
+                            ),
+                            padding: FEdgeInsets.Symmetric(vertical: 6f, horizontal: theme.Spacing)
+                        )
+                        {
+                            Child = new FText(name, new FTextStyle(
+                                FontSize: theme.FontSize,
+                                Color: isSelected ? theme.PrimaryColor : theme.PrimaryTextColor
+                            ))
+                        }
                     }
-                };
+                );
             }
 
             private FElement BuildContentArea(FTheme theme)
