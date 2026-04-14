@@ -25,10 +25,10 @@ namespace Fram3.UI.Storybook
         public string Description { get; }
 
         /// <summary>Factory that returns the story's root element.</summary>
-        public Func<FElement> Build { get; }
+        public Func<Element> Build { get; }
 
         /// <summary>Creates a story entry.</summary>
-        public Story(string name, string description, Func<FElement> build)
+        public Story(string name, string description, Func<Element> build)
         {
             Name = name;
             Description = description;
@@ -60,21 +60,21 @@ namespace Fram3.UI.Storybook
     /// listing every chapter and story, and a content area on the right that
     /// renders the currently selected story live.
     /// </summary>
-    public sealed class StorybookApp : FStatefulElement
+    public sealed class StorybookApp : StatefulElement
     {
         /// <summary>Returns the root element of the storybook wrapped in a theme provider.</summary>
-        public static FElement Create()
+        public static Element Create()
         {
-            return new FThemeProvider(
-                FTheme.Default,
+            return new ThemeProvider(
+                Theme.Default,
                 new StorybookApp()
             );
         }
 
         /// <inheritdoc/>
-        public override FState CreateState() => new StorybookAppState();
+        public override State CreateState() => new StorybookAppState();
 
-        private sealed class StorybookAppState : FState<StorybookApp>
+        private sealed class StorybookAppState : State<StorybookApp>
         {
             private IReadOnlyList<Chapter>? _chapters;
             private int _selectedChapter;
@@ -87,23 +87,23 @@ namespace Fram3.UI.Storybook
                 _selectedStory = 0;
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
-                var theme = FThemeConsumer.Of(context);
+                var theme = ThemeConsumer.Of(context);
 
-                return new FExpanded
+                return new Expanded
                 {
-                    Child = new FContainer(
-                        decoration: new FBoxDecoration(Color: FColor.FromHex("#EBEBEB"))
+                    Child = new Container(
+                        decoration: new BoxDecoration(Color: FrameColor.FromHex("#EBEBEB"))
                     )
                     {
-                        Child = new FRow(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+                        Child = new Row(crossAxisAlignment: CrossAxisAlignment.Stretch)
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
                                 BuildSidebar(theme),
-                                new FDivider(
-                                    axis: FDividerAxis.Vertical,
+                                new Divider(
+                                    axis: DividerAxis.Vertical,
                                     thickness: 1f,
                                     color: theme.SecondaryTextColor.WithAlpha(0.2f)
                                 ),
@@ -114,26 +114,26 @@ namespace Fram3.UI.Storybook
                 };
             }
 
-            private FElement BuildSidebar(FTheme theme)
+            private Element BuildSidebar(Theme theme)
             {
-                return new FContainer(
-                    decoration: new FBoxDecoration(Color: FColor.White),
+                return new Container(
+                    decoration: new BoxDecoration(Color: FrameColor.White),
                     width: 240f
                 )
                 {
-                    Child = new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+                    Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
                             BuildSidebarHeader(theme),
-                            new FDivider(
+                            new Divider(
                                 color: theme.SecondaryTextColor.WithAlpha(0.15f)
                             ),
-                            new FExpanded
+                            new Expanded
                             {
-                                Child = new FScrollView()
+                                Child = new ScrollView()
                                 {
-                                    Child = new FPadding(FEdgeInsets.Symmetric(vertical: theme.Spacing,
+                                    Child = new Padding(EdgeInsets.Symmetric(vertical: theme.Spacing,
                                         horizontal: theme.Spacing))
                                     {
                                         Child = BuildChapterList(theme),
@@ -145,13 +145,13 @@ namespace Fram3.UI.Storybook
                 };
             }
 
-            private static FElement BuildSidebarHeader(FTheme theme)
+            private static Element BuildSidebarHeader(Theme theme)
             {
-                return new FContainer(
-                    padding: FEdgeInsets.Symmetric(vertical: theme.Spacing * 2f, horizontal: theme.Spacing * 1.5f)
+                return new Container(
+                    padding: EdgeInsets.Symmetric(vertical: theme.Spacing * 2f, horizontal: theme.Spacing * 1.5f)
                 )
                 {
-                    Child = new FText("Fram3", new FTextStyle(
+                    Child = new Text("Fram3", new TextStyle(
                         FontSize: theme.FontSizeLarge,
                         Bold: true,
                         Color: theme.PrimaryColor
@@ -159,9 +159,9 @@ namespace Fram3.UI.Storybook
                 };
             }
 
-            private FElement BuildChapterList(FTheme theme)
+            private Element BuildChapterList(Theme theme)
             {
-                var items = new List<FElement>();
+                var items = new List<Element>();
 
                 for (var ci = 0; ci < _chapters!.Count; ci++)
                 {
@@ -170,13 +170,13 @@ namespace Fram3.UI.Storybook
 
                     if (ci > 0)
                     {
-                        items.Add(FSizedBox.FromSize(height: theme.Spacing));
+                        items.Add(SizedBox.FromSize(height: theme.Spacing));
                     }
 
                     items.Add(
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 2f, horizontal: 4f))
+                        new Padding(EdgeInsets.Symmetric(vertical: 2f, horizontal: 4f))
                         {
-                            Child = new FText(chapter.Title.ToUpperInvariant(), new FTextStyle(
+                            Child = new Text(chapter.Title.ToUpperInvariant(), new TextStyle(
                                 FontSize: theme.FontSizeSmall,
                                 Color: theme.SecondaryTextColor,
                                 Bold: true,
@@ -202,33 +202,33 @@ namespace Fram3.UI.Storybook
                     }
                 }
 
-                return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+                return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = items.ToArray()
                 };
             }
 
-            private static FElement BuildSidebarItem(
+            private static Element BuildSidebarItem(
                 string name,
                 bool isSelected,
-                FTheme theme,
+                Theme theme,
                 Action onTap
             )
             {
-                var bgColor = isSelected ? theme.PrimaryColor.WithAlpha(0.12f) : FColor.Transparent;
+                var bgColor = isSelected ? theme.PrimaryColor.WithAlpha(0.12f) : FrameColor.Transparent;
                 var textColor = isSelected ? theme.PrimaryColor : theme.PrimaryTextColor;
 
-                return new FGestureDetector(
+                return new GestureDetector(
                     onTap: onTap,
-                    child: new FContainer(
-                        decoration: new FBoxDecoration(
+                    child: new Container(
+                        decoration: new BoxDecoration(
                             Color: bgColor,
-                            BorderRadius: FBorderRadius.All(theme.BorderRadius)
+                            BorderRadius: BorderRadius.All(theme.BorderRadius)
                         ),
-                        padding: FEdgeInsets.Symmetric(vertical: 7f, horizontal: theme.Spacing)
+                        padding: EdgeInsets.Symmetric(vertical: 7f, horizontal: theme.Spacing)
                     )
                     {
-                        Child = new FText(name, new FTextStyle(
+                        Child = new Text(name, new TextStyle(
                             FontSize: theme.FontSize,
                             Color: textColor,
                             Bold: isSelected
@@ -237,13 +237,13 @@ namespace Fram3.UI.Storybook
                 );
             }
 
-            private FElement BuildContentArea(FTheme theme)
+            private Element BuildContentArea(Theme theme)
             {
-                return new FExpanded
+                return new Expanded
                 {
-                    Child = new FScrollView()
+                    Child = new ScrollView()
                     {
-                        Child = new FPadding(FEdgeInsets.All(theme.Spacing * 3f))
+                        Child = new Padding(EdgeInsets.All(theme.Spacing * 3f))
                         {
                             Child = BuildSelectedStoryCard(theme),
                         }
@@ -251,65 +251,65 @@ namespace Fram3.UI.Storybook
                 };
             }
 
-            private FElement BuildSelectedStoryCard(FTheme theme)
+            private Element BuildSelectedStoryCard(Theme theme)
             {
                 if (_chapters == null || _chapters.Count == 0)
                 {
-                    return new FText("No stories registered.");
+                    return new Text("No stories registered.");
                 }
 
                 var chapter = _chapters[_selectedChapter];
                 if (chapter.Stories.Count == 0)
                 {
-                    return new FText("No stories in this chapter.");
+                    return new Text("No stories in this chapter.");
                 }
 
                 var story = chapter.Stories[_selectedStory];
 
-                return new FContainer(
-                    decoration: new FBoxDecoration(
-                        Color: FColor.White,
-                        BorderRadius: FBorderRadius.All(8f),
-                        Shadow: new FShadow(
-                            FColor.Black.WithAlpha(0.06f),
+                return new Container(
+                    decoration: new BoxDecoration(
+                        Color: FrameColor.White,
+                        BorderRadius: BorderRadius.All(8f),
+                        Shadow: new Shadow(
+                            FrameColor.Black.WithAlpha(0.06f),
                             OffsetX: 0f,
                             OffsetY: 2f,
                             BlurRadius: 8f
                         )
                     ),
-                    padding: FEdgeInsets.All(theme.Spacing * 3f)
+                    padding: EdgeInsets.All(theme.Spacing * 3f)
                 )
                 {
-                    Child = new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+                    Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
                             BuildStoryHeader(story, theme),
-                            new FDivider(
+                            new Divider(
                                 color: theme.SecondaryTextColor.WithAlpha(0.15f)
                             ),
-                            FSizedBox.FromSize(height: theme.Spacing * 2f),
+                            SizedBox.FromSize(height: theme.Spacing * 2f),
                             story.Build(),
                         }
                     }
                 };
             }
 
-            private static FElement BuildStoryHeader(Story story, FTheme theme)
+            private static Element BuildStoryHeader(Story story, Theme theme)
             {
-                return new FPadding(FEdgeInsets.OnlyBottom(theme.Spacing * 2f))
+                return new Padding(EdgeInsets.OnlyBottom(theme.Spacing * 2f))
                 {
-                    Child = new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+                    Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
-                            new FText(story.Name, new FTextStyle(
+                            new Text(story.Name, new TextStyle(
                                 FontSize: 26f,
                                 Bold: true,
                                 Color: theme.PrimaryTextColor
                             )),
-                            FSizedBox.FromSize(height: 6f),
-                            new FText(story.Description, new FTextStyle(
+                            SizedBox.FromSize(height: 6f),
+                            new Text(story.Description, new TextStyle(
                                 FontSize: theme.FontSize,
                                 Color: theme.SecondaryTextColor
                             )),

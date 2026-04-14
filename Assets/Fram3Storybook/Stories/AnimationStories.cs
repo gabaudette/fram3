@@ -18,35 +18,35 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FAnimationBuilder",
+                new Story("AnimationBuilder",
                     "Drives a single animation controller and rebuilds its child on every frame tick, giving full programmatic control over the animated value.",
                     BuildAnimationBuilder),
-                new Story("FAnimatedContainer",
+                new Story("AnimatedContainer",
                     "A container whose size, decoration, and padding interpolate smoothly to new values whenever its properties change.",
                     BuildAnimatedContainer),
-                new Story("FImplicitAnimation",
+                new Story("ImplicitAnimation",
                     "Animates one or more named values toward their latest targets using a shared duration and curve, without manual controller management.",
                     BuildImplicitAnimation),
-                new Story("FCurves",
+                new Story("Curves",
                     "A library of pre-built easing functions -- Linear, EaseIn, EaseOut, EaseInOut, ElasticOut, and BounceOut -- used to shape animation playback.",
                     BuildCurves),
             };
         }
 
         // ---------------------------------------------------------------------------
-        // FAnimationBuilder
+        // AnimationBuilder
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildAnimationBuilder()
+        private static Element BuildAnimationBuilder()
         {
             return new AnimationBuilderStory();
         }
 
-        private sealed class AnimationBuilderStory : FStatefulElement
+        private sealed class AnimationBuilderStory : StatefulElement
         {
-            public override FState CreateState() => new AnimationBuilderStoryState();
+            public override State CreateState() => new AnimationBuilderStoryState();
 
-            private sealed class AnimationBuilderStoryState : FState<AnimationBuilderStory>
+            private sealed class AnimationBuilderStoryState : State<AnimationBuilderStory>
             {
                 private bool _running;
 
@@ -55,49 +55,49 @@ namespace Fram3.UI.Storybook.Stories
                     _running = false;
                 }
 
-                public override FElement Build(FBuildContext context)
+                public override Element Build(BuildContext context)
                 {
-                    return new FColumn
+                    return new Column
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
-                            new FText("FAnimationBuilder: press Play to animate opacity 0->1."),
-                            new FButton(
+                            new Text("AnimationBuilder: press Play to animate opacity 0->1."),
+                            new Button(
                                 label: _running ? "Playing..." : "Play",
                                 onPressed: () => SetState(() => _running = true)
                             ),
-                            new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                            new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
-                                Child = new FAnimationBuilder(
+                                Child = new AnimationBuilder(
                                     duration: 1.5f,
-                                    curve: FCurves.EaseInOut,
+                                    curve: Curves.EaseInOut,
                                     builder: (_, controller) =>
                                     {
-                                        if (_running && controller.Status == FAnimationStatus.Idle)
+                                        if (_running && controller.Status == AnimationStatus.Idle)
                                         {
                                             controller.Forward();
                                         }
 
-                                        if (_running && controller.Status == FAnimationStatus.Completed)
+                                        if (_running && controller.Status == AnimationStatus.Completed)
                                         {
                                             SetState(() => _running = false);
                                         }
 
                                         var value = controller.Value;
 
-                                        return new FContainer(
-                                            decoration: new FBoxDecoration(
-                                                Color: FColor.FromHex("#6200EE").WithAlpha(value),
-                                                BorderRadius: FBorderRadius.All(8f)
+                                        return new Container(
+                                            decoration: new BoxDecoration(
+                                                Color: FrameColor.FromHex("#6200EE").WithAlpha(value),
+                                                BorderRadius: BorderRadius.All(8f)
                                             ),
                                             width: 200f,
                                             height: 60f,
-                                            padding: FEdgeInsets.All(8f)
+                                            padding: EdgeInsets.All(8f)
                                         )
                                         {
-                                            Child = new FText(
+                                            Child = new Text(
                                                 $"Opacity: {value:F2}",
-                                                new FTextStyle(Color: FColor.White)
+                                                new TextStyle(Color: FrameColor.White)
                                             )
                                         };
                                     }
@@ -110,19 +110,19 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         // ---------------------------------------------------------------------------
-        // FAnimatedContainer
+        // AnimatedContainer
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildAnimatedContainer()
+        private static Element BuildAnimatedContainer()
         {
             return new AnimatedContainerStory();
         }
 
-        private sealed class AnimatedContainerStory : FStatefulElement
+        private sealed class AnimatedContainerStory : StatefulElement
         {
-            public override FState CreateState() => new AnimatedContainerStoryState();
+            public override State CreateState() => new AnimatedContainerStoryState();
 
-            private sealed class AnimatedContainerStoryState : FState<AnimatedContainerStory>
+            private sealed class AnimatedContainerStoryState : State<AnimatedContainerStory>
             {
                 private bool _expanded;
 
@@ -131,35 +131,35 @@ namespace Fram3.UI.Storybook.Stories
                     _expanded = false;
                 }
 
-                public override FElement Build(FBuildContext context)
+                public override Element Build(BuildContext context)
                 {
-                    return new FColumn
+                    return new Column
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
-                            new FText("FAnimatedContainer: tap to toggle size and color."),
-                            new FButton(
+                            new Text("AnimatedContainer: tap to toggle size and color."),
+                            new Button(
                                 label: _expanded ? "Collapse" : "Expand",
                                 onPressed: () => SetState(() => _expanded = !_expanded)
                             ),
-                            new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                            new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
-                                Child = new FAnimatedContainer(
+                                Child = new AnimatedContainer(
                                     duration: 0.4f,
-                                    curve: FCurves.EaseInOut,
-                                    decoration: new FBoxDecoration(
+                                    curve: Curves.EaseInOut,
+                                    decoration: new BoxDecoration(
                                         Color: _expanded
-                                            ? FColor.FromHex("#03DAC6").WithAlpha(0.7f)
-                                            : FColor.FromHex("#6200EE").WithAlpha(0.4f),
-                                        BorderRadius: FBorderRadius.All(_expanded ? 16f : 4f)
+                                            ? FrameColor.FromHex("#03DAC6").WithAlpha(0.7f)
+                                            : FrameColor.FromHex("#6200EE").WithAlpha(0.4f),
+                                        BorderRadius: BorderRadius.All(_expanded ? 16f : 4f)
                                     ),
                                     width: _expanded ? 280f : 100f,
                                     height: _expanded ? 100f : 40f,
-                                    child: new FCenter
+                                    child: new Center
                                     {
-                                        Child = new FText(
+                                        Child = new Text(
                                             _expanded ? "Expanded" : "Small",
-                                            new FTextStyle(Color: FColor.White, Bold: true)
+                                            new TextStyle(Color: FrameColor.White, Bold: true)
                                         )
                                     }
                                 )
@@ -171,19 +171,19 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         // ---------------------------------------------------------------------------
-        // FImplicitAnimation
+        // ImplicitAnimation
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildImplicitAnimation()
+        private static Element BuildImplicitAnimation()
         {
             return new ImplicitAnimationStory();
         }
 
-        private sealed class ImplicitAnimationStory : FStatefulElement
+        private sealed class ImplicitAnimationStory : StatefulElement
         {
-            public override FState CreateState() => new ImplicitAnimationStoryState();
+            public override State CreateState() => new ImplicitAnimationStoryState();
 
-            private sealed class ImplicitAnimationStoryState : FState<ImplicitAnimationStory>
+            private sealed class ImplicitAnimationStoryState : State<ImplicitAnimationStory>
             {
                 private bool _toggled;
 
@@ -192,49 +192,49 @@ namespace Fram3.UI.Storybook.Stories
                     _toggled = false;
                 }
 
-                public override FElement Build(FBuildContext context)
+                public override Element Build(BuildContext context)
                 {
                     var targetWidth = _toggled ? 240f : 80f;
 
-                    return new FColumn
+                    return new Column
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
-                            new FText("FImplicitAnimation: animates width between 80 and 240."),
-                            new FButton(
+                            new Text("ImplicitAnimation: animates width between 80 and 240."),
+                            new Button(
                                 label: "Toggle width",
                                 onPressed: () => SetState(() => _toggled = !_toggled)
                             ),
-                            new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                            new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
-                                Child = new FImplicitAnimation(
+                                Child = new ImplicitAnimation(
                                     values: new IFAnimatedValue[]
                                     {
-                                        new FAnimatedValue<float>(
+                                        new AnimatedValue<float>(
                                             key: "width",
                                             target: targetWidth,
                                             lerp: (a, b, t) => a + (b - a) * t
                                         )
                                     },
                                     duration: 0.5f,
-                                    curve: FCurves.EaseOut,
+                                    curve: Curves.EaseOut,
                                     builder: (_, snapshot) =>
                                     {
                                         var w = snapshot.Get<float>("width");
-                                        return new FContainer(
-                                            decoration: new FBoxDecoration(
-                                                Color: FColor.FromHex("#018786").WithAlpha(0.6f),
-                                                BorderRadius: FBorderRadius.All(4f)
+                                        return new Container(
+                                            decoration: new BoxDecoration(
+                                                Color: FrameColor.FromHex("#018786").WithAlpha(0.6f),
+                                                BorderRadius: BorderRadius.All(4f)
                                             ),
                                             width: w,
                                             height: 40f
                                         )
                                         {
-                                            Child = new FCenter
+                                            Child = new Center
                                             {
-                                                Child = new FText(
+                                                Child = new Text(
                                                     $"{w:F0}px",
-                                                    new FTextStyle(Color: FColor.White)
+                                                    new TextStyle(Color: FrameColor.White)
                                                 )
                                             }
                                         };
@@ -248,19 +248,19 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         // ---------------------------------------------------------------------------
-        // FCurves
+        // Curves
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildCurves()
+        private static Element BuildCurves()
         {
             return new CurvesStory();
         }
 
-        private sealed class CurvesStory : FStatefulElement
+        private sealed class CurvesStory : StatefulElement
         {
-            public override FState CreateState() => new CurvesStoryState();
+            public override State CreateState() => new CurvesStoryState();
 
-            private sealed class CurvesStoryState : FState<CurvesStory>
+            private sealed class CurvesStoryState : State<CurvesStory>
             {
                 private bool _running;
 
@@ -269,34 +269,34 @@ namespace Fram3.UI.Storybook.Stories
                     _running = false;
                 }
 
-                public override FElement Build(FBuildContext context)
+                public override Element Build(BuildContext context)
                 {
-                    return new FColumn
+                    return new Column
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
-                            new FText("FCurves: six pre-built easing curves. Press Play to animate all."),
-                            new FButton(
+                            new Text("Curves: six pre-built easing curves. Press Play to animate all."),
+                            new Button(
                                 label: _running ? "Playing..." : "Play all",
                                 onPressed: () => SetState(() => _running = true)
                             ),
-                            new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                            new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
-                                Child = new FColumn
+                                Child = new Column
                                 {
-                                    Children = new FElement[]
+                                    Children = new Element[]
                                     {
-                                        CurveRow("Linear", FCurves.Linear, _running,
+                                        CurveRow("Linear", Curves.Linear, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("EaseIn", FCurves.EaseIn, _running,
+                                        CurveRow("EaseIn", Curves.EaseIn, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("EaseOut", FCurves.EaseOut, _running,
+                                        CurveRow("EaseOut", Curves.EaseOut, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("EaseInOut", FCurves.EaseInOut, _running,
+                                        CurveRow("EaseInOut", Curves.EaseInOut, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("ElasticOut", FCurves.ElasticOut, _running,
+                                        CurveRow("ElasticOut", Curves.ElasticOut, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("BounceOut", FCurves.BounceOut, _running,
+                                        CurveRow("BounceOut", Curves.BounceOut, _running,
                                             () => SetState(() => _running = false)),
                                     }
                                 }
@@ -305,47 +305,47 @@ namespace Fram3.UI.Storybook.Stories
                     };
                 }
 
-                private static FElement CurveRow(string name, FCurve curve, bool running, System.Action onCompleted)
+                private static Element CurveRow(string name, Curve curve, bool running, System.Action onCompleted)
                 {
-                    return new FPadding(FEdgeInsets.Symmetric(vertical: 3f, horizontal: 0f))
+                    return new Padding(EdgeInsets.Symmetric(vertical: 3f, horizontal: 0f))
                     {
-                        Child = new FRow
+                        Child = new Row
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FContainer(width: 90f)
+                                new Container(width: 90f)
                                 {
-                                    Child = new FText(name, new FTextStyle(FontSize: 11f))
+                                    Child = new Text(name, new TextStyle(FontSize: 11f))
                                 },
-                                new FAnimationBuilder(
+                                new AnimationBuilder(
                                     duration: 1.2f,
                                     curve: curve,
                                     builder: (_, controller) =>
                                     {
-                                        if (running && controller.Status == FAnimationStatus.Idle)
+                                        if (running && controller.Status == AnimationStatus.Idle)
                                         {
                                             controller.Forward();
                                         }
 
-                                        if (running && controller.Status == FAnimationStatus.Completed)
+                                        if (running && controller.Status == AnimationStatus.Completed)
                                         {
                                             onCompleted();
                                         }
 
                                         var value = controller.Value;
 
-                                        return new FContainer(
-                                            decoration: new FBoxDecoration(
-                                                Color: FColor.FromHex("#6200EE").WithAlpha(0.15f)
+                                        return new Container(
+                                            decoration: new BoxDecoration(
+                                                Color: FrameColor.FromHex("#6200EE").WithAlpha(0.15f)
                                             ),
                                             width: 200f,
                                             height: 20f
                                         )
                                         {
-                                            Child = new FContainer(
-                                                decoration: new FBoxDecoration(
-                                                    Color: FColor.FromHex("#6200EE"),
-                                                    BorderRadius: FBorderRadius.All(2f)
+                                            Child = new Container(
+                                                decoration: new BoxDecoration(
+                                                    Color: FrameColor.FromHex("#6200EE"),
+                                                    BorderRadius: BorderRadius.All(2f)
                                                 ),
                                                 width: 200f * System.Math.Max(0f, value),
                                                 height: 20f

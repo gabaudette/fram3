@@ -10,14 +10,14 @@ using NUnit.Framework;
 namespace Fram3.UI.Tests.Integration
 {
     /// <summary>
-    /// Verifies FCubitBuilder, FSelector, and FConsumer wired to a live element tree via
-    /// FProvider. Tests that state changes cause the correct subtrees to rebuild.
+    /// Verifies CubitBuilder, Selector, and Consumer wired to a live element tree via
+    /// Provider. Tests that state changes cause the correct subtrees to rebuild.
     /// </summary>
     [TestFixture]
     internal sealed class GlobalStateIntegrationTests
     {
-        private FRebuildScheduler _scheduler = null!;
-        private FNodeExpander _expander = null!;
+        private RebuildScheduler _scheduler = null!;
+        private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
@@ -31,13 +31,13 @@ namespace Fram3.UI.Tests.Integration
             var cubit = new CounterCubit(7);
             int? capturedState = null;
 
-            var builder = new FCubitBuilder<CounterCubit, int>((ctx, state) =>
+            var builder = new CubitBuilder<CounterCubit, int>((ctx, state) =>
             {
                 capturedState = state;
                 return new TestLeafElement(state.ToString());
             });
 
-            var root = new FProvider<CounterCubit>(cubit, builder);
+            var root = new Provider<CounterCubit>(cubit, builder);
             TreeBuilder.Mount(root, _expander);
 
             Assert.That(capturedState, Is.EqualTo(7));
@@ -50,13 +50,13 @@ namespace Fram3.UI.Tests.Integration
             var cubit = new CounterCubit(0);
             var buildCount = 0;
 
-            var builder = new FCubitBuilder<CounterCubit, int>((ctx, state) =>
+            var builder = new CubitBuilder<CounterCubit, int>((ctx, state) =>
             {
                 buildCount++;
                 return new TestLeafElement(state.ToString());
             });
 
-            var root = new FProvider<CounterCubit>(cubit, builder);
+            var root = new Provider<CounterCubit>(cubit, builder);
             TreeBuilder.Mount(root, _expander);
             Assert.That(buildCount, Is.EqualTo(1));
 
@@ -73,13 +73,13 @@ namespace Fram3.UI.Tests.Integration
             var cubit = new CounterCubit(0);
             var buildCount = 0;
 
-            var builder = new FCubitBuilder<CounterCubit, int>((ctx, state) =>
+            var builder = new CubitBuilder<CounterCubit, int>((ctx, state) =>
             {
                 buildCount++;
                 return new TestLeafElement(state.ToString());
             });
 
-            var root = new FProvider<CounterCubit>(cubit, builder);
+            var root = new Provider<CounterCubit>(cubit, builder);
             var rootNode = TreeBuilder.Mount(root, _expander);
             _expander.Unmount(rootNode);
 
@@ -98,7 +98,7 @@ namespace Fram3.UI.Tests.Integration
             var buildCount = 0;
 
             // Select only the parity (even/odd) of the counter
-            var selector = new FSelector<CounterCubit, int, bool>(
+            var selector = new Selector<CounterCubit, int, bool>(
                 state => state % 2 == 0,
                 (ctx, isEven) =>
                 {
@@ -107,7 +107,7 @@ namespace Fram3.UI.Tests.Integration
                 }
             );
 
-            var root = new FProvider<CounterCubit>(cubit, selector);
+            var root = new Provider<CounterCubit>(cubit, selector);
             TreeBuilder.Mount(root, _expander);
             Assert.That(buildCount, Is.EqualTo(1));
 
@@ -130,7 +130,7 @@ namespace Fram3.UI.Tests.Integration
             var cubit = new CounterCubit(0);
             var buildCount = 0;
 
-            var selector = new FSelector<CounterCubit, int, int>(
+            var selector = new Selector<CounterCubit, int, int>(
                 state => state,
                 (ctx, val) =>
                 {
@@ -139,7 +139,7 @@ namespace Fram3.UI.Tests.Integration
                 }
             );
 
-            var root = new FProvider<CounterCubit>(cubit, selector);
+            var root = new Provider<CounterCubit>(cubit, selector);
             var rootNode = TreeBuilder.Mount(root, _expander);
             _expander.Unmount(rootNode);
 
@@ -157,7 +157,7 @@ namespace Fram3.UI.Tests.Integration
             var host = new TestStatefulElement(() => providerState);
 
             var buildCount = 0;
-            var consumer = new FConsumer<string>((ctx, val) =>
+            var consumer = new Consumer<string>((ctx, val) =>
             {
                 buildCount++;
                 return new TestLeafElement(val);
@@ -176,7 +176,7 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void FConsumer_ExpandedOncePerHostRebuild_WhenValueUnchanged()
         {
-            // FConsumer is a stateless element in the provider's expansion path.
+            // Consumer is a stateless element in the provider's expansion path.
             // When the host rebuilds with the same value, UpdateShouldNotify returns false
             // (no extra dependent notification), but the consumer is still re-expanded
             // once via the normal tree-expansion cascade triggered by the host rebuild.
@@ -184,7 +184,7 @@ namespace Fram3.UI.Tests.Integration
             var host = new TestStatefulElement(() => providerState);
 
             var buildCount = 0;
-            var consumer = new FConsumer<string>((ctx, val) =>
+            var consumer = new Consumer<string>((ctx, val) =>
             {
                 buildCount++;
                 return new TestLeafElement(val);
@@ -202,32 +202,32 @@ namespace Fram3.UI.Tests.Integration
 
         // ---- Test cubit -----------------------------------------------------------------------
 
-        private sealed class CounterCubit : FCubit<int>
+        private sealed class CounterCubit : Cubit<int>
         {
             public CounterCubit(int initial) : base(initial) { }
             public void Increment() => Emit(State + 1);
             public void IncrementBy(int n) => Emit(State + n);
         }
 
-        // ---- Helper state for FConsumer tests -------------------------------------------------
+        // ---- Helper state for Consumer tests -------------------------------------------------
 
-        private sealed class SimpleProviderState<T> : FState
+        private sealed class SimpleProviderState<T> : State
         {
             private T _value;
-            private FElement? _consumer;
+            private Element? _consumer;
 
             public SimpleProviderState(T initial) { _value = initial; }
 
-            public void SetConsumer(FElement consumer) { _consumer = consumer; }
+            public void SetConsumer(Element consumer) { _consumer = consumer; }
 
             public void Transition(T newValue)
             {
                 SetState(() => _value = newValue);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
-                return new FProvider<T>(_value, _consumer!);
+                return new Provider<T>(_value, _consumer!);
             }
         }
     }

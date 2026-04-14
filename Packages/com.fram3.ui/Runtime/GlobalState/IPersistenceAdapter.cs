@@ -2,10 +2,10 @@
 namespace Fram3.UI.GlobalState
 {
     /// <summary>
-    /// Abstracts the persistence mechanism used by <see cref="FPersistentStore{TState}"/>.
+    /// Abstracts the persistence mechanism used by <see cref="PersistentStore{TState}"/>.
     /// Implement this interface to provide a custom storage back-end.
     /// A default PlayerPrefs implementation is provided by
-    /// <see cref="FPersistentStore{TState}"/> when running inside Unity.
+    /// <see cref="PersistentStore{TState}"/> when running inside Unity.
     /// </summary>
     /// <typeparam name="TState">The type of state value to persist.</typeparam>
     public interface IPersistenceAdapter<TState>

@@ -15,237 +15,237 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FColumn",
+                new Story("Column",
                     "Arranges children vertically in a single column, with configurable main-axis and cross-axis alignment.",
                     BuildColumn),
-                new Story("FRow",
+                new Story("Row",
                     "Arranges children horizontally in a single row, with configurable main-axis and cross-axis alignment.",
                     BuildRow),
-                new Story("FStack",
+                new Story("Stack",
                     "Layers children on top of each other using absolute positioning, useful for overlapping elements.",
                     BuildStack),
-                new Story("FWrap",
+                new Story("Wrap",
                     "Flows children left-to-right and wraps onto new lines when the available width is exhausted.",
                     BuildWrap),
-                new Story("FPadding",
+                new Story("Padding",
                     "Inserts empty space between a single child and its parent boundaries using per-side insets.",
                     BuildPadding),
-                new Story("FMargin", "Adds outer spacing around a single child, pushing surrounding siblings away.",
+                new Story("Margin", "Adds outer spacing around a single child, pushing surrounding siblings away.",
                     BuildMargin),
-                new Story("FSizedBox",
+                new Story("SizedBox",
                     "Occupies a fixed width and/or height; can hold an optional child or act as a gap element between siblings.",
                     BuildSizedBox),
-                new Story("FCenter", "Centers its child both horizontally and vertically within the available space.",
+                new Story("Center", "Centers its child both horizontally and vertically within the available space.",
                     BuildCenter),
-                new Story("FExpanded",
+                new Story("Expanded",
                     "Fills all remaining space along the parent axis, optionally weighted by a flex factor.",
                     BuildExpanded),
-                new Story("FContainer",
+                new Story("Container",
                     "A versatile single-child box that combines a background decoration, explicit sizing, and inner padding in one element.",
                     BuildContainer),
-                new Story("FDivider",
+                new Story("Divider",
                     "Renders a thin horizontal or vertical rule, useful as a visual separator between sections.",
                     BuildDivider),
-                new Story("FScrollView",
+                new Story("ScrollView",
                     "Makes its child scrollable along one axis when the content exceeds the available viewport size.",
                     BuildScrollView),
             };
         }
 
-        private static FElement BuildColumn()
+        private static Element BuildColumn()
         {
-            return new FColumn(mainAxisAlignment: FMainAxisAlignment.Start,
-                crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(mainAxisAlignment: MainAxisAlignment.Start,
+                crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FContainer(
-                        decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.15f)),
-                        padding: FEdgeInsets.All(8f)
-                    ) { Child = new FText("First item") },
-                    FSizedBox.FromSize(height: 4f),
-                    new FContainer(
-                        decoration: new FBoxDecoration(Color: FColor.Green.WithAlpha(0.15f)),
-                        padding: FEdgeInsets.All(8f)
-                    ) { Child = new FText("Second item") },
-                    FSizedBox.FromSize(height: 4f),
-                    new FContainer(
-                        decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.15f)),
-                        padding: FEdgeInsets.All(8f)
-                    ) { Child = new FText("Third item") },
+                    new Container(
+                        decoration: new BoxDecoration(Color: FrameColor.Blue.WithAlpha(0.15f)),
+                        padding: EdgeInsets.All(8f)
+                    ) { Child = new Text("First item") },
+                    SizedBox.FromSize(height: 4f),
+                    new Container(
+                        decoration: new BoxDecoration(Color: FrameColor.Green.WithAlpha(0.15f)),
+                        padding: EdgeInsets.All(8f)
+                    ) { Child = new Text("Second item") },
+                    SizedBox.FromSize(height: 4f),
+                    new Container(
+                        decoration: new BoxDecoration(Color: FrameColor.Red.WithAlpha(0.15f)),
+                        padding: EdgeInsets.All(8f)
+                    ) { Child = new Text("Third item") },
                 }
             };
         }
 
-        private static FElement BuildRow()
+        private static Element BuildRow()
         {
-            return new FRow(
-                mainAxisAlignment: FMainAxisAlignment.SpaceBetween,
-                crossAxisAlignment: FCrossAxisAlignment.Center
+            return new Row(
+                mainAxisAlignment: MainAxisAlignment.SpaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.Center
             )
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue), width: 60f, height: 60f),
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Green), width: 60f, height: 60f),
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.Red), width: 60f, height: 60f),
+                    new Container(decoration: new BoxDecoration(Color: FrameColor.Blue), width: 60f, height: 60f),
+                    new Container(decoration: new BoxDecoration(Color: FrameColor.Green), width: 60f, height: 60f),
+                    new Container(decoration: new BoxDecoration(Color: FrameColor.Red), width: 60f, height: 60f),
                 }
             };
         }
 
-        private static FElement BuildStack()
+        private static Element BuildStack()
         {
-            return new FContainer(width: 140f, height: 140f)
+            return new Container(width: 140f, height: 140f)
             {
-                Child = new FStack
+                Child = new Stack
                 {
-                    Children = new FElement[]
+                    Children = new Element[]
                     {
-                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue), width: 120f, height: 120f),
-                        new FContainer(decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.7f)), width: 80f,
+                        new Container(decoration: new BoxDecoration(Color: FrameColor.Blue), width: 120f, height: 120f),
+                        new Container(decoration: new BoxDecoration(Color: FrameColor.Red.WithAlpha(0.7f)), width: 80f,
                             height: 80f),
-                        new FContainer(
-                            decoration: new FBoxDecoration(
-                                Color: FColor.Black.WithAlpha(0.5f),
-                                BorderRadius: FBorderRadius.All(2f)
+                        new Container(
+                            decoration: new BoxDecoration(
+                                Color: FrameColor.Black.WithAlpha(0.5f),
+                                BorderRadius: BorderRadius.All(2f)
                             ),
-                            padding: FEdgeInsets.Symmetric(vertical: 2f, horizontal: 6f)
+                            padding: EdgeInsets.Symmetric(vertical: 2f, horizontal: 6f)
                         )
                         {
-                            Child = new FText("Stacked label", new FTextStyle(Color: FColor.White))
+                            Child = new Text("Stacked label", new TextStyle(Color: FrameColor.White))
                         },
                     }
                 }
             };
         }
 
-        private static FElement BuildWrap()
+        private static Element BuildWrap()
         {
-            return new FWrap
+            return new Wrap
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    WrapTag("Tag A", FColor.Blue),
-                    WrapTag("Tag B", FColor.Green),
-                    WrapTag("Tag C", FColor.Red),
-                    WrapTag("Tag D", FColor.Blue.WithAlpha(0.5f)),
+                    WrapTag("Tag A", FrameColor.Blue),
+                    WrapTag("Tag B", FrameColor.Green),
+                    WrapTag("Tag C", FrameColor.Red),
+                    WrapTag("Tag D", FrameColor.Blue.WithAlpha(0.5f)),
                 }
             };
         }
 
-        private static FElement WrapTag(string label, FColor color)
+        private static Element WrapTag(string label, FrameColor color)
         {
-            return new FContainer(
-                decoration: new FBoxDecoration(Color: color),
+            return new Container(
+                decoration: new BoxDecoration(Color: color),
                 width: 60f, height: 40f,
-                padding: FEdgeInsets.All(4f)
+                padding: EdgeInsets.All(4f)
             )
             {
-                Child = new FText(label, new FTextStyle(Color: FColor.White))
+                Child = new Text(label, new TextStyle(Color: FrameColor.White))
             };
         }
 
-        private static FElement BuildPadding()
+        private static Element BuildPadding()
         {
-            return new FContainer(decoration: new FBoxDecoration(Color: FColor.FromHex("#EEEEEE")))
+            return new Container(decoration: new BoxDecoration(Color: FrameColor.FromHex("#EEEEEE")))
             {
-                Child = new FPadding(FEdgeInsets.All(24f))
+                Child = new Padding(EdgeInsets.All(24f))
                 {
-                    Child = new FText("This text has 24px padding on all sides.")
+                    Child = new Text("This text has 24px padding on all sides.")
                 }
             };
         }
 
-        private static FElement BuildMargin()
+        private static Element BuildMargin()
         {
-            var blockA = new FContainer(
-                decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.2f)),
+            var blockA = new Container(
+                decoration: new BoxDecoration(Color: FrameColor.Blue.WithAlpha(0.2f)),
                 height: 40f
             )
             {
-                Child = new FText("Block A")
+                Child = new Text("Block A")
             };
 
-            var blockB = new FContainer(
-                decoration: new FBoxDecoration(Color: FColor.Green.WithAlpha(0.2f)),
+            var blockB = new Container(
+                decoration: new BoxDecoration(Color: FrameColor.Green.WithAlpha(0.2f)),
                 height: 40f
             )
             {
-                Child = new FText("Block B (16px vertical margin)")
+                Child = new Text("Block B (16px vertical margin)")
             };
 
-            var blockC = new FContainer(
-                decoration: new FBoxDecoration(Color: FColor.Red.WithAlpha(0.2f)),
+            var blockC = new Container(
+                decoration: new BoxDecoration(Color: FrameColor.Red.WithAlpha(0.2f)),
                 height: 40f
             )
             {
-                Child = new FText("Block C")
+                Child = new Text("Block C")
             };
 
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
                     blockA,
-                    new FMargin(FEdgeInsets.Symmetric(vertical: 16f, horizontal: 0f), blockB),
+                    new Margin(EdgeInsets.Symmetric(vertical: 16f, horizontal: 0f), blockB),
                     blockC,
                 }
             };
         }
 
-        private static FElement BuildSizedBox()
+        private static Element BuildSizedBox()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("FSizedBox as a 200x80 spacer (no child):"),
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.FromHex("#EEEEEE")))
+                    new Text("SizedBox as a 200x80 spacer (no child):"),
+                    new Container(decoration: new BoxDecoration(Color: FrameColor.FromHex("#EEEEEE")))
                     {
-                        Child = new FRow
+                        Child = new Row
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)),
+                                new Container(decoration: new BoxDecoration(Color: FrameColor.Blue.WithAlpha(0.3f)),
                                     height: 20f)
                                 {
-                                    Child = new FText("A")
+                                    Child = new Text("A")
                                 },
-                                FSizedBox.FromSize(width: 200f, height: 80f),
-                                new FContainer(decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)),
+                                SizedBox.FromSize(width: 200f, height: 80f),
+                                new Container(decoration: new BoxDecoration(Color: FrameColor.Blue.WithAlpha(0.3f)),
                                     height: 20f)
                                 {
-                                    Child = new FText("B")
+                                    Child = new Text("B")
                                 },
                             }
                         }
                     },
-                    new FText("FSizedBox.Square(60) as a vertical gap:"),
-                    new FContainer(decoration: new FBoxDecoration(Color: FColor.FromHex("#EEEEEE")))
+                    new Text("SizedBox.Square(60) as a vertical gap:"),
+                    new Container(decoration: new BoxDecoration(Color: FrameColor.FromHex("#EEEEEE")))
                     {
-                        Child = new FColumn
+                        Child = new Column
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FText("Above"),
-                                FSizedBox.Square(60f),
-                                new FText("Below"),
+                                new Text("Above"),
+                                SizedBox.Square(60f),
+                                new Text("Below"),
                             }
                         }
                     },
-                    new FText("FSizedBox.Expand() filling available width:"),
-                    new FContainer(
-                        decoration: new FBoxDecoration(Color: FColor.FromHex("#EEEEEE")),
+                    new Text("SizedBox.Expand() filling available width:"),
+                    new Container(
+                        decoration: new BoxDecoration(Color: FrameColor.FromHex("#EEEEEE")),
                         height: 40f
                     )
                     {
-                        Child = new FRow
+                        Child = new Row
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FText("Left"),
-                                FSizedBox.Expand(),
-                                new FText("Right"),
+                                new Text("Left"),
+                                SizedBox.Expand(),
+                                new Text("Right"),
                             }
                         }
                     },
@@ -253,42 +253,42 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildCenter()
+        private static Element BuildCenter()
         {
-            return new FContainer(
-                decoration: new FBoxDecoration(Color: FColor.FromHex("#F0F0F0")),
+            return new Container(
+                decoration: new BoxDecoration(Color: FrameColor.FromHex("#F0F0F0")),
                 width: 300f, height: 200f
             )
             {
-                Child = new FCenter
+                Child = new Center
                 {
-                    Child = new FText("Centered content")
+                    Child = new Text("Centered content")
                 }
             };
         }
 
-        private static FElement BuildExpanded()
+        private static Element BuildExpanded()
         {
-            return new FContainer(height: 60f)
+            return new Container(height: 60f)
             {
-                Child = new FRow
+                Child = new Row
                 {
-                    Children = new FElement[]
+                    Children = new Element[]
                     {
-                        new FContainer(
-                            decoration: new FBoxDecoration(Color: FColor.Blue.WithAlpha(0.3f)),
+                        new Container(
+                            decoration: new BoxDecoration(Color: FrameColor.Blue.WithAlpha(0.3f)),
                             width: 80f
                         )
                         {
-                            Child = new FText("Fixed")
+                            Child = new Text("Fixed")
                         },
-                        new FExpanded
+                        new Expanded
                         {
-                            Child = new FContainer(
-                                decoration: new FBoxDecoration(Color: FColor.Green.WithAlpha(0.3f))
+                            Child = new Container(
+                                decoration: new BoxDecoration(Color: FrameColor.Green.WithAlpha(0.3f))
                             )
                             {
-                                Child = new FText("Expanded (fills remaining space)")
+                                Child = new Text("Expanded (fills remaining space)")
                             }
                         },
                     }
@@ -296,53 +296,53 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildContainer()
+        private static Element BuildContainer()
         {
-            return new FContainer(
-                decoration: new FBoxDecoration(
-                    Color: FColor.FromHex("#6200EE").WithAlpha(0.1f),
-                    Border: new FBorder(FColor.FromHex("#6200EE"), 2f),
-                    BorderRadius: FBorderRadius.All(8f),
-                    Shadow: new FShadow(FColor.Black.WithAlpha(0.2f), OffsetX: 2f, OffsetY: 2f, BlurRadius: 8f)
+            return new Container(
+                decoration: new BoxDecoration(
+                    Color: FrameColor.FromHex("#6200EE").WithAlpha(0.1f),
+                    Border: new Border(FrameColor.FromHex("#6200EE"), 2f),
+                    BorderRadius: BorderRadius.All(8f),
+                    Shadow: new Shadow(FrameColor.Black.WithAlpha(0.2f), OffsetX: 2f, OffsetY: 2f, BlurRadius: 8f)
                 ),
-                padding: FEdgeInsets.All(16f),
+                padding: EdgeInsets.All(16f),
                 width: 280f
             )
             {
-                Child = new FText("FContainer with decoration, border, radius, and shadow.")
+                Child = new Text("Container with decoration, border, radius, and shadow.")
             };
         }
 
-        private static FElement BuildDivider()
+        private static Element BuildDivider()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Above horizontal divider"),
-                    new FDivider(color: FColor.FromHex("#BDBDBD")),
-                    new FText("Below horizontal divider"),
+                    new Text("Above horizontal divider"),
+                    new Divider(color: FrameColor.FromHex("#BDBDBD")),
+                    new Text("Below horizontal divider"),
                 }
             };
         }
 
-        private static FElement BuildScrollView()
+        private static Element BuildScrollView()
         {
-            var items = new FElement[20];
+            var items = new Element[20];
             for (var i = 0; i < 20; i++)
             {
                 var label = $"Scrollable item {i + 1}";
-                items[i] = new FPadding(FEdgeInsets.Symmetric(vertical: 4f, horizontal: 0f))
+                items[i] = new Padding(EdgeInsets.Symmetric(vertical: 4f, horizontal: 0f))
                 {
-                    Child = new FText(label)
+                    Child = new Text(label)
                 };
             }
 
-            return new FContainer(height: 200f)
+            return new Container(height: 200f)
             {
-                Child = new FScrollView()
+                Child = new ScrollView()
                 {
-                    Child = new FColumn
+                    Child = new Column
                     {
                         Children = items
                     }

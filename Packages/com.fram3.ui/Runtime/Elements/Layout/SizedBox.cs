@@ -1,0 +1,73 @@
+#nullable enable
+using System;
+using System.Collections.Generic;
+using Fram3.UI.Core;
+
+namespace Fram3.UI.Elements.Layout
+{
+    /// <summary>
+    /// A box with a fixed <see cref="Width"/> and/or <see cref="Height"/>.
+    /// When used with a child, it constrains the child to those dimensions.
+    /// When used without a child, it acts as a fixed-size empty space.
+    /// </summary>
+    public sealed class SizedBox : SingleChildElement
+    {
+        /// <summary>
+        /// The explicit width in logical pixels. Null means unconstrained on the horizontal axis.
+        /// </summary>
+        public float? Width { get; }
+
+        /// <summary>
+        /// The explicit height in logical pixels. Null means unconstrained on the vertical axis.
+        /// </summary>
+        public float? Height { get; }
+
+        /// <summary>
+        /// When true, the element grows to fill all available space on both axes
+        /// (equivalent to <c>flex-grow: 1</c>). <see cref="Width"/> and <see cref="Height"/>
+        /// are ignored when this is true.
+        /// </summary>
+        public bool IsExpand { get; }
+
+        private SizedBox(float? width, float? height, bool isExpand, Key? key) : base(key)
+        {
+            Width = width;
+            Height = height;
+            IsExpand = isExpand;
+        }
+
+        /// <summary>
+        /// Creates an <see cref="SizedBox"/> with explicit width and/or height.
+        /// </summary>
+        /// <param name="width">Width in logical pixels. Null means unconstrained.</param>
+        /// <param name="height">Height in logical pixels. Null means unconstrained.</param>
+        /// <param name="key">An optional key for reconciliation identity.</param>
+        public static SizedBox FromSize(float? width = null, float? height = null, Key? key = null)
+            => new(width, height, false, key);
+
+        /// <summary>
+        /// Creates a square <see cref="SizedBox"/> with equal width and height.
+        /// </summary>
+        /// <param name="size">The width and height in logical pixels.</param>
+        /// <param name="key">An optional key for reconciliation identity.</param>
+        public static SizedBox Square(float size, Key? key = null)
+            => new(size, size, false, key);
+
+        /// <summary>
+        /// Creates an <see cref="SizedBox"/> that grows to fill all available space
+        /// on both axes (equivalent to <c>flex-grow: 1</c>).
+        /// </summary>
+        /// <param name="key">An optional key for reconciliation identity.</param>
+        public static SizedBox Expand(Key? key = null)
+            => new(null, null, true, key);
+
+        /// <summary>
+        /// Returns the child element when one was set, or an empty list when used
+        /// as a dimensioned spacer without a child.
+        /// </summary>
+        public override IReadOnlyList<Element> GetChildren()
+        {
+            return HasChild ? base.GetChildren() : Array.Empty<Element>();
+        }
+    }
+}

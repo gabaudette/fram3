@@ -9,10 +9,10 @@ namespace Fram3.UI.Navigation.Internal
     {
         /// <summary>
         /// Begins loading the scene identified by <paramref name="sceneName"/> using
-        /// <c>LoadSceneMode.Single</c> and returns an <see cref="FSceneOperation"/>
+        /// <c>LoadSceneMode.Single</c> and returns an <see cref="SceneOperation"/>
         /// that tracks progress and completion.
         /// </summary>
         /// <param name="sceneName">The name of the scene to load.</param>
-        FSceneOperation LoadAsync(string sceneName);
+        SceneOperation LoadAsync(string sceneName);
     }
 }

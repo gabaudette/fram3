@@ -11,9 +11,9 @@ namespace Fram3.UI.Tests.Integration.Helpers
         public readonly struct AdapterEvent
         {
             public EventKind Kind { get; }
-            public FNode Node { get; }
+            public Node Node { get; }
 
-            public AdapterEvent(EventKind kind, FNode node)
+            public AdapterEvent(EventKind kind, Node node)
             {
                 Kind = kind;
                 Node = node;
@@ -24,17 +24,17 @@ namespace Fram3.UI.Tests.Integration.Helpers
 
         public IReadOnlyList<AdapterEvent> Events => _events;
 
-        public void OnMounted(FNode node)
+        public void OnMounted(Node node)
         {
             _events.Add(new AdapterEvent(EventKind.Mounted, node));
         }
 
-        public void OnUnmounting(FNode node)
+        public void OnUnmounting(Node node)
         {
             _events.Add(new AdapterEvent(EventKind.Unmounting, node));
         }
 
-        public void OnRebuilt(FNode node)
+        public void OnRebuilt(Node node)
         {
             _events.Add(new AdapterEvent(EventKind.Rebuilt, node));
         }

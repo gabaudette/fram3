@@ -21,21 +21,21 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FNavigator",
-                    "A stack-based router that maps string route keys to builder functions; supports Push, Pop, and replace operations via FNavigatorHandle.",
+                new Story("Navigator",
+                    "A stack-based router that maps string route keys to builder functions; supports Push, Pop, and replace operations via NavigatorHandle.",
                     BuildNavigator),
             };
         }
 
-        private static FElement BuildNavigator()
+        private static Element BuildNavigator()
         {
-            return new FContainer(
-                decoration: new FBoxDecoration(Color: FColor.FromHex("#FAFAFA")),
+            return new Container(
+                decoration: new BoxDecoration(Color: FrameColor.FromHex("#FAFAFA")),
                 height: 320f
             )
             {
-                Child = new FNavigator(
-                    routes: new Dictionary<string, System.Func<FBuildContext, FElement>>
+                Child = new Navigator(
+                    routes: new Dictionary<string, System.Func<BuildContext, Element>>
                     {
                         [RouteHome] = BuildHomeRoute,
                         [RouteDetail] = BuildDetailRoute,
@@ -46,31 +46,31 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildHomeRoute(FBuildContext context)
+        private static Element BuildHomeRoute(BuildContext context)
         {
-            var navigator = context.GetInherited<FNavigatorScope>().Navigator;
+            var navigator = context.GetInherited<NavigatorScope>().Navigator;
 
-            return new FPadding(FEdgeInsets.All(16f))
+            return new Padding(EdgeInsets.All(16f))
             {
-                Child = new FColumn
+                Child = new Column
                 {
-                    Children = new FElement[]
+                    Children = new Element[]
                     {
-                        new FText("Home Route", new FTextStyle(FontSize: 20f, Bold: true)),
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                        new Text("Home Route", new TextStyle(FontSize: 20f, Bold: true)),
+                        new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new FText("Push a route using the buttons below.")
+                            Child = new Text("Push a route using the buttons below.")
                         },
-                        new FRow
+                        new Row
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FButton(
+                                new Button(
                                     label: "Go to Detail",
                                     onPressed: () => navigator.Push(RouteDetail)
                                 ),
-                                FSizedBox.FromSize(width: 8f),
-                                new FButton(
+                                SizedBox.FromSize(width: 8f),
+                                new Button(
                                     label: "Go to Settings",
                                     onPressed: () => navigator.Push(RouteSettings)
                                 ),
@@ -81,26 +81,26 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildDetailRoute(FBuildContext context)
+        private static Element BuildDetailRoute(BuildContext context)
         {
-            var navigator = context.GetInherited<FNavigatorScope>().Navigator;
+            var navigator = context.GetInherited<NavigatorScope>().Navigator;
 
-            return new FPadding(FEdgeInsets.All(16f))
+            return new Padding(EdgeInsets.All(16f))
             {
-                Child = new FColumn
+                Child = new Column
                 {
-                    Children = new FElement[]
+                    Children = new Element[]
                     {
-                        new FText("Detail Route", new FTextStyle(FontSize: 20f, Bold: true)),
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                        new Text("Detail Route", new TextStyle(FontSize: 20f, Bold: true)),
+                        new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new FText("This is the detail page.")
+                            Child = new Text("This is the detail page.")
                         },
-                        new FRow
+                        new Row
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FButton(
+                                new Button(
                                     label: navigator.CanPop ? "Back" : "Back (disabled)",
                                     onPressed: () =>
                                     {
@@ -110,8 +110,8 @@ namespace Fram3.UI.Storybook.Stories
                                         }
                                     }
                                 ),
-                                FSizedBox.FromSize(width: 8f),
-                                new FButton(
+                                SizedBox.FromSize(width: 8f),
+                                new Button(
                                     label: "Go to Settings",
                                     onPressed: () => navigator.Push(RouteSettings)
                                 ),
@@ -122,22 +122,22 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildSettingsRoute(FBuildContext context)
+        private static Element BuildSettingsRoute(BuildContext context)
         {
-            var navigator = context.GetInherited<FNavigatorScope>().Navigator;
+            var navigator = context.GetInherited<NavigatorScope>().Navigator;
 
-            return new FPadding(FEdgeInsets.All(16f))
+            return new Padding(EdgeInsets.All(16f))
             {
-                Child = new FColumn
+                Child = new Column
                 {
-                    Children = new FElement[]
+                    Children = new Element[]
                     {
-                        new FText("Settings Route", new FTextStyle(FontSize: 20f, Bold: true)),
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                        new Text("Settings Route", new TextStyle(FontSize: 20f, Bold: true)),
+                        new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new FText("CanPop: " + navigator.CanPop)
+                            Child = new Text("CanPop: " + navigator.CanPop)
                         },
-                        new FButton(
+                        new Button(
                             label: navigator.CanPop ? "Back" : "Back (disabled)",
                             onPressed: () =>
                             {

@@ -9,8 +9,8 @@ namespace Fram3.UI.Storybook
     /// Attach this component to the same GameObject as a UIDocument that has a PanelSettings
     /// asset assigned.
     /// </summary>
-    public sealed class StorybookRunner : FAppRoot
+    public sealed class StorybookRunner : AppRoot
     {
-        protected override FElement CreateRoot() => StorybookApp.Create();
+        protected override Element CreateRoot() => StorybookApp.Create();
     }
 }
