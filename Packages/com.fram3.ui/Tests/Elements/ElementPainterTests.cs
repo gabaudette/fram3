@@ -11,6 +11,8 @@ using UnityEngine.UIElements;
 using Button = Fram3.UI.Elements.Input.Button;
 using ProgressBar = Fram3.UI.Elements.Content.ProgressBar;
 using ScrollView = Fram3.UI.Elements.Content.ScrollView;
+using Column = Fram3.UI.Elements.Layout.Column;
+using Row = Fram3.UI.Elements.Layout.Row;
 using UiButton = UnityEngine.UIElements.Button;
 using UiProgressBar = UnityEngine.UIElements.ProgressBar;
 using UiScrollView = UnityEngine.UIElements.ScrollView;
