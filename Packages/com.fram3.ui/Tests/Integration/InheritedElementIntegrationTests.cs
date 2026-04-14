@@ -12,14 +12,14 @@ using NUnit.Framework;
 namespace Fram3.UI.Tests.Integration
 {
     /// <summary>
-    /// Verifies FProvider, FThemeProvider, and FConsumer propagation through a live tree.
+    /// Verifies Provider, ThemeProvider, and Consumer propagation through a live tree.
     /// Tests the inherited element notification mechanism end-to-end.
     /// </summary>
     [TestFixture]
     internal sealed class InheritedElementIntegrationTests
     {
-        private FRebuildScheduler _scheduler = null!;
-        private FNodeExpander _expander = null!;
+        private RebuildScheduler _scheduler = null!;
+        private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
@@ -34,12 +34,12 @@ namespace Fram3.UI.Tests.Integration
 
             var consumer = new TestStatelessElement(ctx =>
             {
-                var provider = ctx.GetInherited<FProvider<string>>();
+                var provider = ctx.GetInherited<Provider<string>>();
                 capturedValue = provider.Value;
                 return new TestLeafElement("leaf");
             });
 
-            var root = new FProvider<string>("hello", consumer);
+            var root = new Provider<string>("hello", consumer);
             TreeBuilder.Mount(root, _expander);
 
             Assert.That(capturedValue, Is.EqualTo("hello"));
@@ -54,7 +54,7 @@ namespace Fram3.UI.Tests.Integration
             var rebuildCount = 0;
             var consumer = new TestStatelessElement(ctx =>
             {
-                ctx.GetInherited<FProvider<string>>();
+                ctx.GetInherited<Provider<string>>();
                 rebuildCount++;
                 return new TestLeafElement("leaf");
             });
@@ -82,7 +82,7 @@ namespace Fram3.UI.Tests.Integration
             var rebuildCount = 0;
             var consumer = new TestStatelessElement(ctx =>
             {
-                ctx.GetInherited<FProvider<string>>();
+                ctx.GetInherited<Provider<string>>();
                 rebuildCount++;
                 return new TestLeafElement("leaf");
             });
@@ -102,17 +102,17 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void FThemeProvider_DescendantReceivesTheme()
         {
-            FTheme? capturedTheme = null;
+            Theme? capturedTheme = null;
 
             var consumer = new TestStatelessElement(ctx =>
             {
-                var provider = ctx.GetInherited<FThemeProvider>();
+                var provider = ctx.GetInherited<ThemeProvider>();
                 capturedTheme = provider.Theme;
                 return new TestLeafElement("leaf");
             });
 
-            var theme = FTheme.Default;
-            var root = new FThemeProvider(theme, consumer);
+            var theme = Theme.Default;
+            var root = new ThemeProvider(theme, consumer);
             TreeBuilder.Mount(root, _expander);
 
             Assert.That(capturedTheme, Is.SameAs(theme));
@@ -121,13 +121,13 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void FThemeProvider_ThemeChange_TriggersDescendantRebuild()
         {
-            var themeState = new ThemeHostState(FTheme.Default);
+            var themeState = new ThemeHostState(Theme.Default);
             var host = new TestStatefulElement(() => themeState);
 
             var rebuildCount = 0;
             var consumer = new TestStatelessElement(ctx =>
             {
-                ctx.GetInherited<FThemeProvider>();
+                ctx.GetInherited<ThemeProvider>();
                 rebuildCount++;
                 return new TestLeafElement("leaf");
             });
@@ -136,7 +136,7 @@ namespace Fram3.UI.Tests.Integration
             TreeBuilder.Mount(host, _expander);
             Assert.That(rebuildCount, Is.EqualTo(1));
 
-            var newTheme = FTheme.Default with { FontSize = 99f };
+            var newTheme = Theme.Default with { FontSize = 99f };
             themeState.Transition(newTheme);
             TreeBuilder.Flush(_scheduler, _expander);
 
@@ -148,13 +148,13 @@ namespace Fram3.UI.Tests.Integration
         {
             string? capturedValue = null;
 
-            var consumer = new FConsumer<string>((ctx, val) =>
+            var consumer = new Consumer<string>((ctx, val) =>
             {
                 capturedValue = val;
                 return new TestLeafElement("leaf");
             });
 
-            var root = new FProvider<string>("consumed", consumer);
+            var root = new Provider<string>("consumed", consumer);
             TreeBuilder.Mount(root, _expander);
 
             Assert.That(capturedValue, Is.EqualTo("consumed"));
@@ -167,7 +167,7 @@ namespace Fram3.UI.Tests.Integration
             var host = new TestStatefulElement(() => providerState);
 
             var lastSeenValue = -1;
-            var consumer = new FConsumer<int>((ctx, val) =>
+            var consumer = new Consumer<int>((ctx, val) =>
             {
                 lastSeenValue = val;
                 return new TestLeafElement("leaf");
@@ -186,10 +186,10 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void FindInherited_ReturnsNull_WhenNoAncestorExists()
         {
-            FProvider<string>? found = null;
+            Provider<string>? found = null;
             var consumer = new TestStatelessElement(ctx =>
             {
-                found = ctx.FindInherited<FProvider<string>>();
+                found = ctx.FindInherited<Provider<string>>();
                 return new TestLeafElement("leaf");
             });
 
@@ -201,20 +201,20 @@ namespace Fram3.UI.Tests.Integration
         // ---- Helpers --------------------------------------------------------------------------
 
         /// <summary>
-        /// A state that hosts a FProvider wrapping a consumer element.
+        /// A state that hosts a Provider wrapping a consumer element.
         /// Call Transition to rebuild with a new provider value.
         /// </summary>
-        private sealed class ProviderHostState<T> : FState
+        private sealed class ProviderHostState<T> : State
         {
             private T _value;
-            private FElement? _consumer;
+            private Element? _consumer;
 
             public ProviderHostState(T initialValue)
             {
                 _value = initialValue;
             }
 
-            public void SetConsumer(FElement consumer)
+            public void SetConsumer(Element consumer)
             {
                 _consumer = consumer;
             }
@@ -224,35 +224,35 @@ namespace Fram3.UI.Tests.Integration
                 SetState(() => _value = newValue);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
-                return new FProvider<T>(_value, _consumer!);
+                return new Provider<T>(_value, _consumer!);
             }
         }
 
-        private sealed class ThemeHostState : FState
+        private sealed class ThemeHostState : State
         {
-            private FTheme _theme;
-            private FElement? _consumer;
+            private Theme _theme;
+            private Element? _consumer;
 
-            public ThemeHostState(FTheme theme)
+            public ThemeHostState(Theme theme)
             {
                 _theme = theme;
             }
 
-            public void SetConsumer(FElement consumer)
+            public void SetConsumer(Element consumer)
             {
                 _consumer = consumer;
             }
 
-            public void Transition(FTheme newTheme)
+            public void Transition(Theme newTheme)
             {
                 SetState(() => _theme = newTheme);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
-                return new FThemeProvider(_theme, _consumer!);
+                return new ThemeProvider(_theme, _consumer!);
             }
         }
     }

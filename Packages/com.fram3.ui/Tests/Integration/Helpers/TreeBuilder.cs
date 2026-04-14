@@ -11,22 +11,22 @@ namespace Fram3.UI.Tests.Integration.Helpers
     internal static class TreeBuilder
     {
         /// <summary>
-        /// Creates a fresh <see cref="FRebuildScheduler"/> and <see cref="FNodeExpander"/>
+        /// Creates a fresh <see cref="RebuildScheduler"/> and <see cref="NodeExpander"/>
         /// wired to the given adapter. Both objects are ready to use immediately.
         /// </summary>
-        internal static (FRebuildScheduler Scheduler, FNodeExpander Expander) MakePipeline(
+        internal static (RebuildScheduler Scheduler, NodeExpander Expander) MakePipeline(
             IRenderAdapter? adapter = null
         )
         {
-            var scheduler = new FRebuildScheduler();
-            var expander = new FNodeExpander(scheduler, adapter);
+            var scheduler = new RebuildScheduler();
+            var expander = new NodeExpander(scheduler, adapter);
             return (scheduler, expander);
         }
 
         /// <summary>
-        /// Mounts <paramref name="root"/> and returns the root <see cref="FNode"/>.
+        /// Mounts <paramref name="root"/> and returns the root <see cref="Node"/>.
         /// </summary>
-        internal static FNode Mount(FElement root, FNodeExpander expander)
+        internal static Node Mount(Element root, NodeExpander expander)
         {
             return expander.Mount(root, null);
         }
@@ -34,7 +34,7 @@ namespace Fram3.UI.Tests.Integration.Helpers
         /// <summary>
         /// Flushes all pending rebuilds through <paramref name="expander"/>.
         /// </summary>
-        internal static void Flush(FRebuildScheduler scheduler, FNodeExpander expander)
+        internal static void Flush(RebuildScheduler scheduler, NodeExpander expander)
         {
             scheduler.Flush(expander);
         }

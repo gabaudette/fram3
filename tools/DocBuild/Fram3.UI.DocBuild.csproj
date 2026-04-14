@@ -19,8 +19,8 @@
 
   <!-- Exclude internal Unity-heavy implementation files that produce no public API docs -->
   <ItemGroup>
-    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/FElementPainter.cs" />
-    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/FSpinnerElement.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/SpinnerElement.cs" />
     <Compile Remove="../../Packages/com.fram3.ui/Runtime/Navigation/Internal/UnitySceneAdapter.cs" />
   </ItemGroup>
 

@@ -9,14 +9,14 @@ using NUnit.Framework;
 namespace Fram3.UI.Tests.Integration
 {
     /// <summary>
-    /// Verifies that FState lifecycle hooks fire in the correct order and with correct
+    /// Verifies that State lifecycle hooks fire in the correct order and with correct
     /// arguments across mount, rebuild, and unmount phases of a real element tree.
     /// </summary>
     [TestFixture]
     internal sealed class StatefulLifecycleIntegrationTests
     {
-        private FRebuildScheduler _scheduler = null!;
-        private FNodeExpander _expander = null!;
+        private RebuildScheduler _scheduler = null!;
+        private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
@@ -116,7 +116,7 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void ChildOnMounted_FiresBeforeParentOnMounted_KnownOrdering()
         {
-            // Documents the known behavior: FNodeExpander.Mount calls ExpandChildren
+            // Documents the known behavior: NodeExpander.Mount calls ExpandChildren
             // before calling adapter.OnMounted, so children are fully mounted first.
             // This test captures that ordering as a contract.
             var adapter = new TrackingAdapter();
@@ -124,7 +124,7 @@ namespace Fram3.UI.Tests.Integration
 
             var root = new TestMultiChildElement
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
                     new TestLeafElement("child"),
                 }
@@ -163,7 +163,7 @@ namespace Fram3.UI.Tests.Integration
             public ParentConfig(string value) { Value = value; }
         }
 
-        private sealed class ParentRebuildState : FState
+        private sealed class ParentRebuildState : State
         {
             private readonly ParentConfig _config;
             private readonly TestState _childState;
@@ -179,7 +179,7 @@ namespace Fram3.UI.Tests.Integration
                 base.SetState(action);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 return new TestStatefulElement(() => _childState, _config.Value);
             }

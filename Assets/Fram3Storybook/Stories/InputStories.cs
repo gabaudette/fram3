@@ -16,83 +16,83 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FButton", "A pressable button with a text label and an optional callback invoked on click.",
+                new Story("Button", "A pressable button with a text label and an optional callback invoked on click.",
                     BuildButton),
-                new Story("FTextField",
+                new Story("TextField",
                     "A single- or multi-line text input with optional placeholder, initial value, and read-only mode.",
                     BuildTextField),
-                new Story("FPasswordField",
-                    "A text input that masks its characters; behaves identically to FTextField but with a hidden-text display.",
+                new Story("PasswordField",
+                    "A text input that masks its characters; behaves identically to TextField but with a hidden-text display.",
                     BuildPasswordField),
-                new Story("FCheckbox",
+                new Story("Checkbox",
                     "A binary toggle rendered as a checkbox, with an optional text label placed beside it.",
                     BuildCheckbox),
-                new Story("FToggle",
-                    "A binary toggle rendered as a switch, with an optional text label; functionally equivalent to FCheckbox with a different visual style.",
+                new Story("FrameToggle",
+                    "A binary toggle rendered as a switch, with an optional text label; functionally equivalent to Checkbox with a different visual style.",
                     BuildToggle),
-                new Story("FSlider",
+                new Story("FrameSlider",
                     "A continuous value picker that slides between a minimum and maximum, with an optional label.",
                     BuildSlider),
-                new Story("FMinMaxSlider",
+                new Story("MinMaxSlider",
                     "A dual-handle slider for selecting a numeric range; both the lower and upper bound are independently draggable.",
                     BuildMinMaxSlider),
-                new Story("FRadioGroup",
+                new Story("RadioGroup",
                     "A list of mutually exclusive options rendered as radio buttons; at most one option can be selected at a time.",
                     BuildRadioGroup),
-                new Story("FDropdown",
+                new Story("Dropdown",
                     "A collapsed pick-list that expands to show all available string options; supports an optional label and a pre-selected index.",
                     BuildDropdown),
-                new Story("FIntField",
+                new Story("IntField",
                     "A numeric input constrained to integers, with an optional label and initial value.",
                     BuildIntField),
-                new Story("FFloatField",
+                new Story("FloatField",
                     "A numeric input that accepts floating-point values, with an optional label and initial value.",
                     BuildFloatField),
             };
         }
 
-        private static FElement BuildButton()
+        private static Element BuildButton()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Default button:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FButton(label: "Click me"),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Button with callback:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FButton(label: "Save", onPressed: () => { }),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Button with no label:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FButton(label: null),
+                    new Text("Default button:"),
+                    SizedBox.FromSize(height: 4f),
+                    new Button(label: "Click me"),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Button with callback:"),
+                    SizedBox.FromSize(height: 4f),
+                    new Button(label: "Save", onPressed: () => { }),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Button with no label:"),
+                    SizedBox.FromSize(height: 4f),
+                    new Button(label: null),
                 }
             };
         }
 
-        private static FElement BuildTextField()
+        private static Element BuildTextField()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Empty field with placeholder:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FTextField(placeholder: "Enter text here..."),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Pre-filled field:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FTextField(value: "Hello, Fram3!"),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Read-only field:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FTextField(value: "Read-only value", readOnly: true),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Multiline field:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FTextField(
+                    new Text("Empty field with placeholder:"),
+                    SizedBox.FromSize(height: 4f),
+                    new TextField(placeholder: "Enter text here..."),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Pre-filled field:"),
+                    SizedBox.FromSize(height: 4f),
+                    new TextField(value: "Hello, Fram3!"),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Read-only field:"),
+                    SizedBox.FromSize(height: 4f),
+                    new TextField(value: "Read-only value", readOnly: true),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Multiline field:"),
+                    SizedBox.FromSize(height: 4f),
+                    new TextField(
                         value: "Line one\nLine two\nLine three",
                         multiline: true
                     ),
@@ -100,96 +100,96 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildPasswordField()
+        private static Element BuildPasswordField()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Password field with placeholder:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FPasswordField(placeholder: "Enter password..."),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Pre-filled password field:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FPasswordField(value: "secret123"),
+                    new Text("Password field with placeholder:"),
+                    SizedBox.FromSize(height: 4f),
+                    new PasswordField(placeholder: "Enter password..."),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Pre-filled password field:"),
+                    SizedBox.FromSize(height: 4f),
+                    new PasswordField(value: "secret123"),
                 }
             };
         }
 
-        private static FElement BuildCheckbox()
+        private static Element BuildCheckbox()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Unchecked (default):"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FCheckbox(),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Checked:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FCheckbox(value: true),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("With label:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FCheckbox(value: false, label: "Accept terms and conditions"),
-                    new FCheckbox(value: true, label: "Subscribe to newsletter"),
+                    new Text("Unchecked (default):"),
+                    SizedBox.FromSize(height: 4f),
+                    new Checkbox(),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Checked:"),
+                    SizedBox.FromSize(height: 4f),
+                    new Checkbox(value: true),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("With label:"),
+                    SizedBox.FromSize(height: 4f),
+                    new Checkbox(value: false, label: "Accept terms and conditions"),
+                    new Checkbox(value: true, label: "Subscribe to newsletter"),
                 }
             };
         }
 
-        private static FElement BuildToggle()
+        private static Element BuildToggle()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Toggle off (default):"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FToggle(),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Toggle on:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FToggle(value: true),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Toggle with label:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FToggle(value: true, label: "Enable dark mode"),
+                    new Text("Toggle off (default):"),
+                    SizedBox.FromSize(height: 4f),
+                    new FrameToggle(),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Toggle on:"),
+                    SizedBox.FromSize(height: 4f),
+                    new FrameToggle(value: true),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Toggle with label:"),
+                    SizedBox.FromSize(height: 4f),
+                    new FrameToggle(value: true, label: "Enable dark mode"),
                 }
             };
         }
 
-        private static FElement BuildSlider()
+        private static Element BuildSlider()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Default slider (0-1, value 0.5):"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FSlider(value: 0.5f),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Slider with label and custom range:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FSlider(value: 60f, min: 0f, max: 100f, label: "Volume"),
+                    new Text("Default slider (0-1, value 0.5):"),
+                    SizedBox.FromSize(height: 4f),
+                    new FrameSlider(value: 0.5f),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Slider with label and custom range:"),
+                    SizedBox.FromSize(height: 4f),
+                    new FrameSlider(value: 60f, min: 0f, max: 100f, label: "Volume"),
                 }
             };
         }
 
-        private static FElement BuildMinMaxSlider()
+        private static Element BuildMinMaxSlider()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Default min-max slider (0-1):"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FMinMaxSlider(minValue: 0.2f, maxValue: 0.8f),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Min-max slider with label and custom range:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FMinMaxSlider(
+                    new Text("Default min-max slider (0-1):"),
+                    SizedBox.FromSize(height: 4f),
+                    new MinMaxSlider(minValue: 0.2f, maxValue: 0.8f),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Min-max slider with label and custom range:"),
+                    SizedBox.FromSize(height: 4f),
+                    new MinMaxSlider(
                         minValue: 20f,
                         maxValue: 80f,
                         lowLimit: 0f,
@@ -200,21 +200,21 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildRadioGroup()
+        private static Element BuildRadioGroup()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Radio group with no selection:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FRadioGroup(
+                    new Text("Radio group with no selection:"),
+                    SizedBox.FromSize(height: 4f),
+                    new RadioGroup(
                         options: new string[] { "Option A", "Option B", "Option C" }
                     ),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Radio group with pre-selected value:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FRadioGroup(
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Radio group with pre-selected value:"),
+                    SizedBox.FromSize(height: 4f),
+                    new RadioGroup(
                         options: new string[] { "Small", "Medium", "Large" },
                         selectedValue: "Medium"
                     ),
@@ -222,21 +222,21 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildDropdown()
+        private static Element BuildDropdown()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Dropdown with no selection:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FDropdown(
+                    new Text("Dropdown with no selection:"),
+                    SizedBox.FromSize(height: 4f),
+                    new Dropdown(
                         options: new string[] { "Red", "Green", "Blue", "Yellow" }
                     ),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Dropdown with label and pre-selection:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FDropdown(
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Dropdown with label and pre-selection:"),
+                    SizedBox.FromSize(height: 4f),
+                    new Dropdown(
                         options: new string[] { "USD", "EUR", "GBP", "JPY" },
                         selectedIndex: 1,
                         label: "Currency"
@@ -245,36 +245,36 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        private static FElement BuildIntField()
+        private static Element BuildIntField()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Integer field (default 0):"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FIntField(),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Integer field with label and value:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FIntField(value: 42, label: "Count"),
+                    new Text("Integer field (default 0):"),
+                    SizedBox.FromSize(height: 4f),
+                    new IntField(),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Integer field with label and value:"),
+                    SizedBox.FromSize(height: 4f),
+                    new IntField(value: 42, label: "Count"),
                 }
             };
         }
 
-        private static FElement BuildFloatField()
+        private static Element BuildFloatField()
         {
-            return new FColumn(crossAxisAlignment: FCrossAxisAlignment.Stretch)
+            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
-                    new FText("Float field (default 0):"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FFloatField(),
-                    FSizedBox.FromSize(height: 12f),
-                    new FText("Float field with label and value:"),
-                    FSizedBox.FromSize(height: 4f),
-                    new FFloatField(value: 3.14f, label: "Pi"),
+                    new Text("Float field (default 0):"),
+                    SizedBox.FromSize(height: 4f),
+                    new FloatField(),
+                    SizedBox.FromSize(height: 12f),
+                    new Text("Float field with label and value:"),
+                    SizedBox.FromSize(height: 4f),
+                    new FloatField(value: 3.14f, label: "Pi"),
                 }
             };
         }

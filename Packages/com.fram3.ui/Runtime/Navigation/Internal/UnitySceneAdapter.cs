@@ -8,9 +8,9 @@ namespace Fram3.UI.Navigation.Internal
 {
     internal sealed class UnitySceneAdapter : ISceneAdapter
     {
-        public FSceneOperation LoadAsync(string sceneName)
+        public SceneOperation LoadAsync(string sceneName)
         {
-            var operation = new FSceneOperation();
+            var operation = new SceneOperation();
             var driver = new GameObject("Fram3.SceneLoadDriver").AddComponent<SceneLoadDriver>();
             driver.Run(SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single)!, operation);
             return operation;
@@ -18,12 +18,12 @@ namespace Fram3.UI.Navigation.Internal
 
         private sealed class SceneLoadDriver : MonoBehaviour
         {
-            internal void Run(AsyncOperation asyncOperation, FSceneOperation operation)
+            internal void Run(AsyncOperation asyncOperation, SceneOperation operation)
             {
                 StartCoroutine(Track(asyncOperation, operation));
             }
 
-            private IEnumerator Track(AsyncOperation asyncOperation, FSceneOperation operation)
+            private IEnumerator Track(AsyncOperation asyncOperation, SceneOperation operation)
             {
                 while (!asyncOperation.isDone)
                 {

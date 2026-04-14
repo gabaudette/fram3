@@ -11,36 +11,36 @@ using NUnit.Framework;
 namespace Fram3.UI.Tests.Integration
 {
     /// <summary>
-    /// Verifies that FAnimationController drives rebuilds through a real element tree when
-    /// ticked via FAnimationSystem. Also validates the frozen-callback limitation as a
+    /// Verifies that AnimationController drives rebuilds through a real element tree when
+    /// ticked via AnimationSystem. Also validates the frozen-callback limitation as a
     /// documented contract.
     /// </summary>
     [TestFixture]
     internal sealed class AnimationIntegrationTests
     {
-        private FRebuildScheduler _scheduler = null!;
-        private FNodeExpander _expander = null!;
+        private RebuildScheduler _scheduler = null!;
+        private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
         {
-            FAnimationSystem.Reset();
+            AnimationSystem.Reset();
             (_scheduler, _expander) = TreeBuilder.MakePipeline();
         }
 
         [TearDown]
         public void TearDown()
         {
-            FAnimationSystem.Reset();
+            AnimationSystem.Reset();
         }
 
         [Test]
         public void AnimationController_RegistersWithSystem_OnConstruction()
         {
-            var controller = new FAnimationController(1f);
+            var controller = new AnimationController(1f);
             try
             {
-                Assert.That(FAnimationSystem.RegisteredCount, Is.EqualTo(1));
+                Assert.That(AnimationSystem.RegisteredCount, Is.EqualTo(1));
             }
             finally
             {
@@ -51,19 +51,19 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void AnimationController_Dispose_DeregistersFromSystem()
         {
-            var controller = new FAnimationController(1f);
+            var controller = new AnimationController(1f);
             controller.Dispose();
-            Assert.That(FAnimationSystem.RegisteredCount, Is.EqualTo(0));
+            Assert.That(AnimationSystem.RegisteredCount, Is.EqualTo(0));
         }
 
         [Test]
         public void AnimationController_Forward_TickAdvancesValue()
         {
-            var controller = new FAnimationController(1f);
+            var controller = new AnimationController(1f);
             try
             {
                 controller.Forward();
-                FAnimationSystem.Tick(0.5f);
+                AnimationSystem.Tick(0.5f);
                 Assert.That(controller.Value, Is.EqualTo(0.5f).Within(0.001f));
             }
             finally
@@ -75,12 +75,12 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void AnimationController_CompletesTick_StatusBecomesCompleted()
         {
-            var controller = new FAnimationController(1f);
+            var controller = new AnimationController(1f);
             try
             {
                 controller.Forward();
-                FAnimationSystem.Tick(1f);
-                Assert.That(controller.Status, Is.EqualTo(FAnimationStatus.Completed));
+                AnimationSystem.Tick(1f);
+                Assert.That(controller.Status, Is.EqualTo(AnimationStatus.Completed));
             }
             finally
             {
@@ -96,7 +96,7 @@ namespace Fram3.UI.Tests.Integration
             TreeBuilder.Mount(stateful, _expander);
 
             animState.StartForward();
-            FAnimationSystem.Tick(0.1f);
+            AnimationSystem.Tick(0.1f);
             // Listener fired -- node is now dirty
             Assert.That(_scheduler.HasDirtyNodes, Is.True);
 
@@ -112,23 +112,23 @@ namespace Fram3.UI.Tests.Integration
             var stateful = new TestStatefulElement(() => animState);
             var rootNode = TreeBuilder.Mount(stateful, _expander);
 
-            Assert.That(FAnimationSystem.RegisteredCount, Is.EqualTo(1));
+            Assert.That(AnimationSystem.RegisteredCount, Is.EqualTo(1));
 
             _expander.Unmount(rootNode);
 
-            Assert.That(FAnimationSystem.RegisteredCount, Is.EqualTo(0));
+            Assert.That(AnimationSystem.RegisteredCount, Is.EqualTo(0));
         }
 
         [Test]
         public void AnimationController_Reverse_TickDecreasesValue()
         {
-            var controller = new FAnimationController(1f);
+            var controller = new AnimationController(1f);
             try
             {
                 controller.Forward();
-                FAnimationSystem.Tick(1f); // reach end
+                AnimationSystem.Tick(1f); // reach end
                 controller.Reverse();
-                FAnimationSystem.Tick(0.3f);
+                AnimationSystem.Tick(0.3f);
                 Assert.That(controller.Value, Is.EqualTo(0.7f).Within(0.001f));
             }
             finally
@@ -141,13 +141,13 @@ namespace Fram3.UI.Tests.Integration
         public void AnimationController_ListenerReceivesUpdatedValue_OnEachTick()
         {
             var values = new List<float>();
-            var controller = new FAnimationController(1f);
+            var controller = new AnimationController(1f);
             try
             {
                 controller.AddListener(v => values.Add(v));
                 controller.Forward();
-                FAnimationSystem.Tick(0.25f);
-                FAnimationSystem.Tick(0.25f);
+                AnimationSystem.Tick(0.25f);
+                AnimationSystem.Tick(0.25f);
                 Assert.That(values.Count, Is.EqualTo(2));
                 Assert.That(values[0], Is.EqualTo(0.25f).Within(0.001f));
                 Assert.That(values[1], Is.EqualTo(0.50f).Within(0.001f));
@@ -160,14 +160,14 @@ namespace Fram3.UI.Tests.Integration
 
         // ---- Helpers --------------------------------------------------------------------------
 
-        private sealed class AnimationDrivenState : FState
+        private sealed class AnimationDrivenState : State
         {
-            private FAnimationController? _controller;
+            private AnimationController? _controller;
             public int BuildCount { get; private set; }
 
             public override void InitState()
             {
-                _controller = new FAnimationController(1f);
+                _controller = new AnimationController(1f);
                 _controller.AddListener(_ => SetState(null));
             }
 
@@ -182,7 +182,7 @@ namespace Fram3.UI.Tests.Integration
                 _controller = null;
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 BuildCount++;
                 return new TestLeafElement("animated");

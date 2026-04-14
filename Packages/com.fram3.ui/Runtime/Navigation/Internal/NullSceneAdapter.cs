@@ -4,9 +4,9 @@ namespace Fram3.UI.Navigation.Internal
 {
     internal sealed class NullSceneAdapter : ISceneAdapter
     {
-        public FSceneOperation LoadAsync(string sceneName)
+        public SceneOperation LoadAsync(string sceneName)
         {
-            var operation = new FSceneOperation();
+            var operation = new SceneOperation();
             operation.Complete();
             return operation;
         }

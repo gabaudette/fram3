@@ -10,14 +10,14 @@ using NUnit.Framework;
 namespace Fram3.UI.Tests.Integration
 {
     /// <summary>
-    /// Verifies FNavigator push/pop behavior inside a live element tree. Tests that the
-    /// FNavigatorScope inherited element propagates correctly to descendants after navigation.
+    /// Verifies Navigator push/pop behavior inside a live element tree. Tests that the
+    /// NavigatorScope inherited element propagates correctly to descendants after navigation.
     /// </summary>
     [TestFixture]
     internal sealed class NavigationIntegrationTests
     {
-        private FRebuildScheduler _scheduler = null!;
-        private FNodeExpander _expander = null!;
+        private RebuildScheduler _scheduler = null!;
+        private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
@@ -30,7 +30,7 @@ namespace Fram3.UI.Tests.Integration
         {
             var builtRoutes = new List<string>();
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = _ =>
                 {
@@ -39,7 +39,7 @@ namespace Fram3.UI.Tests.Integration
                 }
             };
 
-            var navigator = new FNavigator(routes, "home");
+            var navigator = new Navigator(routes, "home");
             TreeBuilder.Mount(navigator, _expander);
 
             Assert.That(builtRoutes, Contains.Item("home"));
@@ -48,18 +48,18 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void Navigator_CanPop_FalseOnInitialRoute()
         {
-            FNavigatorHandle? handle = null;
+            NavigatorHandle? handle = null;
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = ctx =>
                 {
-                    handle = ctx.GetInherited<FNavigatorScope>().Navigator;
+                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
                     return new TestLeafElement("home");
                 }
             };
 
-            var navigator = new FNavigator(routes, "home");
+            var navigator = new Navigator(routes, "home");
             TreeBuilder.Mount(navigator, _expander);
 
             Assert.That(handle, Is.Not.Null);
@@ -71,7 +71,7 @@ namespace Fram3.UI.Tests.Integration
         {
             var renderedPages = new List<string>();
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = _ =>
                 {
@@ -85,12 +85,12 @@ namespace Fram3.UI.Tests.Integration
                 }
             };
 
-            FNavigatorHandle? handle = null;
-            var navigatorWithHandle = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            NavigatorHandle? handle = null;
+            var navigatorWithHandle = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = ctx =>
                 {
-                    handle = ctx.GetInherited<FNavigatorScope>().Navigator;
+                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
                     renderedPages.Add("home");
                     return new TestLeafElement("home");
                 },
@@ -101,7 +101,7 @@ namespace Fram3.UI.Tests.Integration
                 }
             };
 
-            var navigator = new FNavigator(navigatorWithHandle, "home");
+            var navigator = new Navigator(navigatorWithHandle, "home");
             TreeBuilder.Mount(navigator, _expander);
             renderedPages.Clear();
 
@@ -114,19 +114,19 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void Navigator_Push_CanPop_BecomesTrue()
         {
-            FNavigatorHandle? handle = null;
+            NavigatorHandle? handle = null;
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = ctx =>
                 {
-                    handle = ctx.GetInherited<FNavigatorScope>().Navigator;
+                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
                     return new TestLeafElement("home");
                 },
                 ["detail"] = _ => new TestLeafElement("detail")
             };
 
-            var navigator = new FNavigator(routes, "home");
+            var navigator = new Navigator(routes, "home");
             TreeBuilder.Mount(navigator, _expander);
 
             handle!.Push("detail");
@@ -139,13 +139,13 @@ namespace Fram3.UI.Tests.Integration
         public void Navigator_Pop_ReturnsToPreviousRoute()
         {
             var renderedPages = new List<string>();
-            FNavigatorHandle? handle = null;
+            NavigatorHandle? handle = null;
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = ctx =>
                 {
-                    handle = ctx.GetInherited<FNavigatorScope>().Navigator;
+                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
                     renderedPages.Add("home");
                     return new TestLeafElement("home");
                 },
@@ -156,7 +156,7 @@ namespace Fram3.UI.Tests.Integration
                 }
             };
 
-            var navigator = new FNavigator(routes, "home");
+            var navigator = new Navigator(routes, "home");
             TreeBuilder.Mount(navigator, _expander);
 
             handle!.Push("detail");
@@ -172,18 +172,18 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void Navigator_PopOnInitialRoute_NoOp()
         {
-            FNavigatorHandle? handle = null;
+            NavigatorHandle? handle = null;
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = ctx =>
                 {
-                    handle = ctx.GetInherited<FNavigatorScope>().Navigator;
+                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
                     return new TestLeafElement("home");
                 }
             };
 
-            var navigator = new FNavigator(routes, "home");
+            var navigator = new Navigator(routes, "home");
             TreeBuilder.Mount(navigator, _expander);
 
             handle!.Pop(); // should be a no-op; no exception expected
@@ -195,18 +195,18 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void Navigator_UnknownRoute_ThrowsArgumentException()
         {
-            FNavigatorHandle? handle = null;
+            NavigatorHandle? handle = null;
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = ctx =>
                 {
-                    handle = ctx.GetInherited<FNavigatorScope>().Navigator;
+                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
                     return new TestLeafElement("home");
                 }
             };
 
-            var navigator = new FNavigator(routes, "home");
+            var navigator = new Navigator(routes, "home");
             TreeBuilder.Mount(navigator, _expander);
 
             Assert.Throws<System.ArgumentException>(() => handle!.Push("does-not-exist"));
@@ -215,18 +215,18 @@ namespace Fram3.UI.Tests.Integration
         [Test]
         public void Navigator_ScopeDescendant_CanReadHandle_ViaGetInherited()
         {
-            FNavigatorHandle? handleFromDescendant = null;
+            NavigatorHandle? handleFromDescendant = null;
 
-            var routes = new Dictionary<string, System.Func<FBuildContext, FElement>>
+            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
             {
                 ["home"] = _ => new TestStatelessElement(ctx =>
                 {
-                    handleFromDescendant = ctx.GetInherited<FNavigatorScope>().Navigator;
+                    handleFromDescendant = ctx.GetInherited<NavigatorScope>().Navigator;
                     return new TestLeafElement("nested");
                 })
             };
 
-            var navigator = new FNavigator(routes, "home");
+            var navigator = new Navigator(routes, "home");
             TreeBuilder.Mount(navigator, _expander);
 
             Assert.That(handleFromDescendant, Is.Not.Null);

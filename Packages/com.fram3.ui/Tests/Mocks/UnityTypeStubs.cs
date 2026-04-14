@@ -32,7 +32,7 @@ namespace UnityEngine.UIElements
     public delegate void EventCallback<TEventType>(TEventType evt);
 
     /// <summary>
-    /// Minimal stub for style properties set by <c>FElementPainter</c> in pure C# tests.
+    /// Minimal stub for style properties set by <c>ElementPainter</c> in pure C# tests.
     /// </summary>
     public sealed class StyleSheet
     {
@@ -841,16 +841,19 @@ namespace Fram3.UI.Navigation.Internal
 {
     internal sealed class UnitySceneAdapter : ISceneAdapter
     {
-        public Navigation.FSceneOperation LoadAsync(string sceneName) => new Navigation.FSceneOperation();
+        public Navigation.SceneOperation LoadAsync(string sceneName) => new Navigation.SceneOperation();
     }
 }
 
 namespace Fram3.UI.Rendering.Internal
 {
-    internal static class FElementPainter
+    internal static class ElementPainter
     {
-        public static UnityEngine.UIElements.VisualElement CreateNative(Core.FElement element) => new UnityEngine.UIElements.VisualElement();
-        public static void Paint(Core.FElement element, UnityEngine.UIElements.VisualElement native) { }
+        public static UnityEngine.UIElements.VisualElement CreateNative(Core.Element element)
+            => new UnityEngine.UIElements.VisualElement();
+
+        public static void Paint(Core.Element element, UnityEngine.UIElements.VisualElement native) { }
+
         public static void ApplyAsStackChild(UnityEngine.UIElements.VisualElement native) { }
     }
 }

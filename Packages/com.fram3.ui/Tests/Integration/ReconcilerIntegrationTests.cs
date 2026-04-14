@@ -13,8 +13,8 @@ namespace Fram3.UI.Tests.Integration
     internal sealed class ReconcilerIntegrationTests
     {
         private TrackingAdapter _adapter = null!;
-        private FRebuildScheduler _scheduler = null!;
-        private FNodeExpander _expander = null!;
+        private RebuildScheduler _scheduler = null!;
+        private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
@@ -38,7 +38,7 @@ namespace Fram3.UI.Tests.Integration
         {
             var root = new TestMultiChildElement
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
                     new TestLeafElement("a"),
                     new TestLeafElement("b"),
@@ -57,7 +57,7 @@ namespace Fram3.UI.Tests.Integration
         {
             var root = new TestMultiChildElement
             {
-                Children = new FElement[]
+                Children = new Element[]
                 {
                     new TestLeafElement("a"),
                     new TestLeafElement("b"),
@@ -160,7 +160,7 @@ namespace Fram3.UI.Tests.Integration
             }
         }
 
-        private sealed class MutableChildListState : FState
+        private sealed class MutableChildListState : State
         {
             private readonly MutableChildList _data;
 
@@ -179,9 +179,9 @@ namespace Fram3.UI.Tests.Integration
                 base.SetState(action);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
-                var children = new FElement[_data.Count];
+                var children = new Element[_data.Count];
                 for (var i = 0; i < _data.Count; i++)
                 {
                     children[i] = new TestLeafElement(i.ToString());
@@ -202,7 +202,7 @@ namespace Fram3.UI.Tests.Integration
             }
         }
 
-        private sealed class ChildTypeToggleState : FState
+        private sealed class ChildTypeToggleState : State
         {
             private readonly ChildTypeToggle _toggle;
 
@@ -221,7 +221,7 @@ namespace Fram3.UI.Tests.Integration
                 base.SetState(action);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 if (_toggle.UseLeaf)
                 {
@@ -243,7 +243,7 @@ namespace Fram3.UI.Tests.Integration
             }
         }
 
-        private sealed class KeyedOrderState : FState
+        private sealed class KeyedOrderState : State
         {
             private readonly KeyedOrderToggle _toggle;
 
@@ -262,23 +262,23 @@ namespace Fram3.UI.Tests.Integration
                 base.SetState(action);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
-                FElement[] children;
+                Element[] children;
                 if (_toggle.Reversed)
                 {
-                    children = new FElement[]
+                    children = new Element[]
                     {
-                        new TestLeafElement("b", new FValueKey<string>("b")),
-                        new TestLeafElement("a", new FValueKey<string>("a")),
+                        new TestLeafElement("b", new ValueKey<string>("b")),
+                        new TestLeafElement("a", new ValueKey<string>("a")),
                     };
                 }
                 else
                 {
-                    children = new FElement[]
+                    children = new Element[]
                     {
-                        new TestLeafElement("a", new FValueKey<string>("a")),
-                        new TestLeafElement("b", new FValueKey<string>("b")),
+                        new TestLeafElement("a", new ValueKey<string>("a")),
+                        new TestLeafElement("b", new ValueKey<string>("b")),
                     };
                 }
 

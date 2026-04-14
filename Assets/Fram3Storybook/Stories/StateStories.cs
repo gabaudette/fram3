@@ -18,57 +18,57 @@ namespace Fram3.UI.Storybook.Stories
         {
             return new Story[]
             {
-                new Story("FProvider / FConsumer",
-                    "Injects an arbitrary value into a subtree via FProvider and reads the nearest matching value back out via FConsumer.",
+                new Story("Provider / Consumer",
+                    "Injects an arbitrary value into a subtree via Provider and reads the nearest matching value back out via Consumer.",
                     BuildProviderConsumer),
-                new Story("FValueListenableBuilder",
-                    "Rebuilds its subtree whenever a FValueNotifier's value changes, enabling lightweight reactive state without a full cubit.",
+                new Story("ValueListenableBuilder",
+                    "Rebuilds its subtree whenever a ValueNotifier's value changes, enabling lightweight reactive state without a full cubit.",
                     BuildValueListenable),
-                new Story("FCubitBuilder",
-                    "Connects a FCubit to the element tree and rebuilds automatically each time the cubit emits a new state.",
+                new Story("CubitBuilder",
+                    "Connects a Cubit to the element tree and rebuilds automatically each time the cubit emits a new state.",
                     BuildCubitBuilder),
-                new Story("FSelector",
-                    "Like FCubitBuilder but rebuilds only when a derived slice of state changes, minimising unnecessary rebuilds.",
+                new Story("Selector",
+                    "Like CubitBuilder but rebuilds only when a derived slice of state changes, minimising unnecessary rebuilds.",
                     BuildSelector),
-                new Story("FStore",
+                new Story("Store",
                     "A Redux-style global store: dispatches typed actions through a pure reducer function and exposes the resulting state.",
                     BuildStore),
             };
         }
 
         // ---------------------------------------------------------------------------
-        // FProvider / FConsumer
+        // Provider / Consumer
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildProviderConsumer()
+        private static Element BuildProviderConsumer()
         {
-            return new FProvider<string>(
-                "Hello from FProvider!",
-                new FColumn
+            return new Provider<string>(
+                "Hello from Provider!",
+                new Column
                 {
-                    Children = new FElement[]
+                    Children = new Element[]
                     {
-                        new FText("FConsumer reads the nearest FProvider<string>:"),
-                        new FConsumer<string>((_, value) => new FContainer(
-                            decoration: new FBoxDecoration(
-                                Color: FColor.FromHex("#6200EE").WithAlpha(0.1f),
-                                BorderRadius: FBorderRadius.All(4f)
+                        new Text("Consumer reads the nearest Provider<string>:"),
+                        new Consumer<string>((_, value) => new Container(
+                            decoration: new BoxDecoration(
+                                Color: FrameColor.FromHex("#6200EE").WithAlpha(0.1f),
+                                BorderRadius: BorderRadius.All(4f)
                             ),
-                            padding: FEdgeInsets.All(12f)
+                            padding: EdgeInsets.All(12f)
                         )
                         {
-                            Child = new FText(value, new FTextStyle(
-                                Color: FColor.FromHex("#6200EE"),
+                            Child = new Text(value, new TextStyle(
+                                Color: FrameColor.FromHex("#6200EE"),
                                 Bold: true
                             ))
                         }),
-                        new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                        new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new FText("Nested FProvider<int> overrides for its subtree:")
+                            Child = new Text("Nested Provider<int> overrides for its subtree:")
                         },
-                        new FProvider<int>(
+                        new Provider<int>(
                             42,
-                            new FConsumer<int>((_, n) => new FText($"Consumed int: {n}"))
+                            new Consumer<int>((_, n) => new Text($"Consumed int: {n}"))
                         ),
                     }
                 }
@@ -76,61 +76,61 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         // ---------------------------------------------------------------------------
-        // FValueListenableBuilder
+        // ValueListenableBuilder
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildValueListenable()
+        private static Element BuildValueListenable()
         {
             return new ValueListenableStory();
         }
 
-        private sealed class ValueListenableStory : FStatefulElement
+        private sealed class ValueListenableStory : StatefulElement
         {
-            public override FState CreateState() => new ValueListenableStoryState();
+            public override State CreateState() => new ValueListenableStoryState();
 
-            private sealed class ValueListenableStoryState : FState<ValueListenableStory>
+            private sealed class ValueListenableStoryState : State<ValueListenableStory>
             {
-                private FValueNotifier<int>? _counter;
+                private ValueNotifier<int>? _counter;
 
                 public override void InitState()
                 {
-                    _counter = new FValueNotifier<int>(0);
+                    _counter = new ValueNotifier<int>(0);
                 }
 
-                public override FElement Build(FBuildContext context)
+                public override Element Build(BuildContext context)
                 {
-                    return new FColumn
+                    return new Column
                     {
-                        Children = new FElement[]
+                        Children = new Element[]
                         {
-                            new FText("FValueListenableBuilder rebuilds on notifier change:"),
-                            new FValueListenableBuilder<int>(
+                            new Text("ValueListenableBuilder rebuilds on notifier change:"),
+                            new ValueListenableBuilder<int>(
                                 notifier: _counter!,
-                                builder: (_, count) => new FContainer(
-                                    decoration: new FBoxDecoration(
-                                        Color: FColor.Green.WithAlpha(0.15f),
-                                        BorderRadius: FBorderRadius.All(4f)
+                                builder: (_, count) => new Container(
+                                    decoration: new BoxDecoration(
+                                        Color: FrameColor.Green.WithAlpha(0.15f),
+                                        BorderRadius: BorderRadius.All(4f)
                                     ),
-                                    padding: FEdgeInsets.All(12f)
+                                    padding: EdgeInsets.All(12f)
                                 )
                                 {
-                                    Child = new FText($"Count: {count}", new FTextStyle(
+                                    Child = new Text($"Count: {count}", new TextStyle(
                                         FontSize: 20f,
                                         Bold: true
                                     ))
                                 }
                             ),
-                            new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                            new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
-                                Child = new FRow
+                                Child = new Row
                                 {
-                                    Children = new FElement[]
+                                    Children = new Element[]
                                     {
-                                        new FButton(label: "Increment", onPressed: () => { _counter!.Value += 1; }),
-                                        FSizedBox.FromSize(width: 8f),
-                                        new FButton(label: "Decrement", onPressed: () => { _counter!.Value -= 1; }),
-                                        FSizedBox.FromSize(width: 8f),
-                                        new FButton(label: "Reset", onPressed: () => { _counter!.Value = 0; }),
+                                        new Button(label: "Increment", onPressed: () => { _counter!.Value += 1; }),
+                                        SizedBox.FromSize(width: 8f),
+                                        new Button(label: "Decrement", onPressed: () => { _counter!.Value -= 1; }),
+                                        SizedBox.FromSize(width: 8f),
+                                        new Button(label: "Reset", onPressed: () => { _counter!.Value = 0; }),
                                     }
                                 }
                             },
@@ -146,19 +146,19 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         // ---------------------------------------------------------------------------
-        // FCubitBuilder
+        // CubitBuilder
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildCubitBuilder()
+        private static Element BuildCubitBuilder()
         {
             return new CubitBuilderStory();
         }
 
-        private sealed class CubitBuilderStory : FStatefulElement
+        private sealed class CubitBuilderStory : StatefulElement
         {
-            public override FState CreateState() => new CubitBuilderStoryState();
+            public override State CreateState() => new CubitBuilderStoryState();
 
-            private sealed class CubitBuilderStoryState : FState<CubitBuilderStory>
+            private sealed class CubitBuilderStoryState : State<CubitBuilderStory>
             {
                 private CounterCubit? _cubit;
 
@@ -167,41 +167,41 @@ namespace Fram3.UI.Storybook.Stories
                     _cubit = new CounterCubit();
                 }
 
-                public override FElement Build(FBuildContext context)
+                public override Element Build(BuildContext context)
                 {
-                    return new FProvider<CounterCubit>(
+                    return new Provider<CounterCubit>(
                         _cubit!,
-                        new FColumn
+                        new Column
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FText("FCubitBuilder rebuilds on CounterCubit state change:"),
-                                new FCubitBuilder<CounterCubit, int>(
-                                    builder: (_, count) => new FContainer(
-                                        decoration: new FBoxDecoration(
-                                            Color: FColor.Blue.WithAlpha(0.15f),
-                                            BorderRadius: FBorderRadius.All(4f)
+                                new Text("CubitBuilder rebuilds on CounterCubit state change:"),
+                                new CubitBuilder<CounterCubit, int>(
+                                    builder: (_, count) => new Container(
+                                        decoration: new BoxDecoration(
+                                            Color: FrameColor.Blue.WithAlpha(0.15f),
+                                            BorderRadius: BorderRadius.All(4f)
                                         ),
-                                        padding: FEdgeInsets.All(12f)
+                                        padding: EdgeInsets.All(12f)
                                     )
                                     {
-                                        Child = new FText($"Count: {count}", new FTextStyle(
+                                        Child = new Text($"Count: {count}", new TextStyle(
                                             FontSize: 20f,
                                             Bold: true
                                         ))
                                     }
                                 ),
-                                new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                                new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                                 {
-                                    Child = new FRow
+                                    Child = new Row
                                     {
-                                        Children = new FElement[]
+                                        Children = new Element[]
                                         {
-                                            new FButton(label: "+1", onPressed: () => _cubit!.Increment()),
-                                            FSizedBox.FromSize(width: 8f),
-                                            new FButton(label: "-1", onPressed: () => _cubit!.Decrement()),
-                                            FSizedBox.FromSize(width: 8f),
-                                            new FButton(label: "Reset", onPressed: () => _cubit!.Reset()),
+                                            new Button(label: "+1", onPressed: () => _cubit!.Increment()),
+                                            SizedBox.FromSize(width: 8f),
+                                            new Button(label: "-1", onPressed: () => _cubit!.Decrement()),
+                                            SizedBox.FromSize(width: 8f),
+                                            new Button(label: "Reset", onPressed: () => _cubit!.Reset()),
                                         }
                                     }
                                 },
@@ -218,19 +218,19 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         // ---------------------------------------------------------------------------
-        // FSelector
+        // Selector
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildSelector()
+        private static Element BuildSelector()
         {
             return new SelectorStory();
         }
 
-        private sealed class SelectorStory : FStatefulElement
+        private sealed class SelectorStory : StatefulElement
         {
-            public override FState CreateState() => new SelectorStoryState();
+            public override State CreateState() => new SelectorStoryState();
 
-            private sealed class SelectorStoryState : FState<SelectorStory>
+            private sealed class SelectorStoryState : State<SelectorStory>
             {
                 private CounterCubit? _cubit;
 
@@ -239,49 +239,49 @@ namespace Fram3.UI.Storybook.Stories
                     _cubit = new CounterCubit();
                 }
 
-                public override FElement Build(FBuildContext context)
+                public override Element Build(BuildContext context)
                 {
-                    return new FProvider<CounterCubit>(
+                    return new Provider<CounterCubit>(
                         _cubit!,
-                        new FColumn
+                        new Column
                         {
-                            Children = new FElement[]
+                            Children = new Element[]
                             {
-                                new FText("FSelector rebuilds only when the selected slice changes:"),
-                                new FText("(This selector shows 'Even' or 'Odd' -- rebuilds only on parity change.)"),
-                                new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                                new Text("Selector rebuilds only when the selected slice changes:"),
+                                new Text("(This selector shows 'Even' or 'Odd' -- rebuilds only on parity change.)"),
+                                new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                                 {
-                                    Child = new FSelector<CounterCubit, int, bool>(
+                                    Child = new Selector<CounterCubit, int, bool>(
                                         selector: count => count % 2 == 0,
-                                        builder: (_, isEven) => new FContainer(
-                                            decoration: new FBoxDecoration(
+                                        builder: (_, isEven) => new Container(
+                                            decoration: new BoxDecoration(
                                                 Color: isEven
-                                                    ? FColor.Green.WithAlpha(0.2f)
-                                                    : FColor.Red.WithAlpha(0.2f),
-                                                BorderRadius: FBorderRadius.All(4f)
+                                                    ? FrameColor.Green.WithAlpha(0.2f)
+                                                    : FrameColor.Red.WithAlpha(0.2f),
+                                                BorderRadius: BorderRadius.All(4f)
                                             ),
-                                            padding: FEdgeInsets.All(12f)
+                                            padding: EdgeInsets.All(12f)
                                         )
                                         {
-                                            Child = new FText(
+                                            Child = new Text(
                                                 isEven ? "Even" : "Odd",
-                                                new FTextStyle(FontSize: 18f, Bold: true)
+                                                new TextStyle(FontSize: 18f, Bold: true)
                                             )
                                         }
                                     )
                                 },
-                                new FCubitBuilder<CounterCubit, int>(
-                                    builder: (_, count) => new FText($"Raw count: {count}")
+                                new CubitBuilder<CounterCubit, int>(
+                                    builder: (_, count) => new Text($"Raw count: {count}")
                                 ),
-                                new FPadding(FEdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
+                                new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                                 {
-                                    Child = new FRow
+                                    Child = new Row
                                     {
-                                        Children = new FElement[]
+                                        Children = new Element[]
                                         {
-                                            new FButton(label: "+1", onPressed: () => _cubit!.Increment()),
-                                            FSizedBox.FromSize(width: 8f),
-                                            new FButton(label: "Reset", onPressed: () => _cubit!.Reset()),
+                                            new Button(label: "+1", onPressed: () => _cubit!.Increment()),
+                                            SizedBox.FromSize(width: 8f),
+                                            new Button(label: "Reset", onPressed: () => _cubit!.Reset()),
                                         }
                                     }
                                 },
@@ -298,24 +298,24 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         // ---------------------------------------------------------------------------
-        // FStore
+        // Store
         // ---------------------------------------------------------------------------
 
-        private static FElement BuildStore()
+        private static Element BuildStore()
         {
-            var store = new FStore<TodoState>(
+            var store = new Store<TodoState>(
                 new TodoState(items: new string[] { "Buy groceries", "Write tests" }, doneCount: 0),
                 TodoReducer
             );
 
-            return new FProvider<FStore<TodoState>>(
+            return new Provider<Store<TodoState>>(
                 store,
-                new FColumn
+                new Column
                 {
-                    Children = new FElement[]
+                    Children = new Element[]
                     {
-                        new FText("FStore (Redux-style) -- TodoState:"),
-                        new FCubitBuilder<FStore<TodoState>, TodoState>(
+                        new Text("Store (Redux-style) -- TodoState:"),
+                        new CubitBuilder<Store<TodoState>, TodoState>(
                             builder: (_, state) => BuildTodoView(state, store)
                         ),
                     }
@@ -323,32 +323,32 @@ namespace Fram3.UI.Storybook.Stories
             );
         }
 
-        private static FElement BuildTodoView(TodoState state, FStore<TodoState> store)
+        private static Element BuildTodoView(TodoState state, Store<TodoState> store)
         {
-            var itemElements = new FElement[state.Items.Count + 2];
+            var itemElements = new Element[state.Items.Count + 2];
             for (var i = 0; i < state.Items.Count; i++)
             {
                 var label = state.Items[i];
-                itemElements[i] = new FPadding(FEdgeInsets.Symmetric(vertical: 2f, horizontal: 0f))
+                itemElements[i] = new Padding(EdgeInsets.Symmetric(vertical: 2f, horizontal: 0f))
                 {
-                    Child = new FText($"- {label}")
+                    Child = new Text($"- {label}")
                 };
             }
 
-            itemElements[state.Items.Count] = new FPadding(
-                FEdgeInsets.Symmetric(vertical: 6f, horizontal: 0f))
+            itemElements[state.Items.Count] = new Padding(
+                EdgeInsets.Symmetric(vertical: 6f, horizontal: 0f))
             {
-                Child = new FText($"Done count: {state.DoneCount}")
+                Child = new Text($"Done count: {state.DoneCount}")
             };
-            itemElements[state.Items.Count + 1] = new FButton(
+            itemElements[state.Items.Count + 1] = new Button(
                 label: "Mark one done",
                 onPressed: () => store.Dispatch(new MarkOneDoneAction())
             );
 
-            return new FColumn { Children = itemElements };
+            return new Column { Children = itemElements };
         }
 
-        private static TodoState TodoReducer(TodoState state, FAction action)
+        private static TodoState TodoReducer(TodoState state, FrameAction action)
         {
             if (action is MarkOneDoneAction)
             {
@@ -362,7 +362,7 @@ namespace Fram3.UI.Storybook.Stories
         // Supporting types
         // ---------------------------------------------------------------------------
 
-        private sealed class CounterCubit : FCubit<int>
+        private sealed class CounterCubit : Cubit<int>
         {
             public CounterCubit() : base(0)
             {
@@ -385,7 +385,7 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        private sealed class MarkOneDoneAction : FAction
+        private sealed class MarkOneDoneAction : FrameAction
         {
         }
     }

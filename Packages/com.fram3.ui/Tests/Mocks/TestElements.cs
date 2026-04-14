@@ -4,11 +4,11 @@ using Fram3.UI.Core;
 
 namespace Fram3.UI.Tests.Mocks
 {
-    internal sealed class TestLeafElement : FLeafElement
+    internal sealed class TestLeafElement : LeafElement
     {
         public string Label { get; }
 
-        public TestLeafElement(string label, FKey? key = null) : base(key)
+        public TestLeafElement(string label, Key? key = null) : base(key)
         {
             Label = label;
         }
@@ -18,73 +18,73 @@ namespace Fram3.UI.Tests.Mocks
     /// A leaf element used in render bridge tests. Named distinctly from
     /// <see cref="TestLeafElement"/> to keep rendering tests self-contained.
     /// </summary>
-    internal sealed class TestRenderLeaf : FLeafElement
+    internal sealed class TestRenderLeaf : LeafElement
     {
         public string Label { get; }
 
-        public TestRenderLeaf(string label, FKey? key = null) : base(key)
+        public TestRenderLeaf(string label, Key? key = null) : base(key)
         {
             Label = label;
         }
     }
 
-    internal sealed class TestSingleChildElement : FSingleChildElement
+    internal sealed class TestSingleChildElement : SingleChildElement
     {
-        public TestSingleChildElement(FKey? key = null) : base(key)
+        public TestSingleChildElement(Key? key = null) : base(key)
         {
         }
     }
 
-    internal sealed class TestMultiChildElement : FMultiChildElement
+    internal sealed class TestMultiChildElement : MultiChildElement
     {
-        public TestMultiChildElement(FKey? key = null) : base(key)
+        public TestMultiChildElement(Key? key = null) : base(key)
         {
         }
     }
 
-    internal sealed class TestStatelessElement : FStatelessElement
+    internal sealed class TestStatelessElement : StatelessElement
     {
-        private readonly Func<FBuildContext, FElement> _builder;
+        private readonly Func<BuildContext, Element> _builder;
 
-        public TestStatelessElement(Func<FBuildContext, FElement> builder, FKey? key = null) : base(key)
+        public TestStatelessElement(Func<BuildContext, Element> builder, Key? key = null) : base(key)
         {
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
         }
 
-        public override FElement Build(FBuildContext context)
+        public override Element Build(BuildContext context)
         {
             return _builder(context);
         }
     }
 
-    internal sealed class TestStatefulElement : FStatefulElement
+    internal sealed class TestStatefulElement : StatefulElement
     {
-        private readonly Func<FState> _stateFactory;
+        private readonly Func<State> _stateFactory;
 
         public string Config { get; }
 
-        public TestStatefulElement(Func<FState> stateFactory, string config = "", FKey? key = null) : base(key)
+        public TestStatefulElement(Func<State> stateFactory, string config = "", Key? key = null) : base(key)
         {
             _stateFactory = stateFactory ?? throw new ArgumentNullException(nameof(stateFactory));
             Config = config;
         }
 
-        public override FState CreateState()
+        public override State CreateState()
         {
             return _stateFactory();
         }
     }
 
-    internal sealed class TestState : FState<TestStatefulElement>
+    internal sealed class TestState : State<TestStatefulElement>
     {
         public bool InitStateCalled { get; private set; }
         public bool DisposeCalled { get; private set; }
-        public FStatefulElement? LastOldElement { get; private set; }
+        public StatefulElement? LastOldElement { get; private set; }
         public int BuildCount { get; private set; }
 
-        private readonly Func<FBuildContext, FElement> _builder;
+        private readonly Func<BuildContext, Element> _builder;
 
-        public TestState(Func<FBuildContext, FElement> builder)
+        public TestState(Func<BuildContext, Element> builder)
         {
             _builder = builder ?? throw new ArgumentNullException(nameof(builder));
         }
@@ -94,13 +94,13 @@ namespace Fram3.UI.Tests.Mocks
             InitStateCalled = true;
         }
 
-        public override FElement Build(FBuildContext context)
+        public override Element Build(BuildContext context)
         {
             BuildCount++;
             return _builder(context);
         }
 
-        public override void DidUpdateElement(FStatefulElement oldElement)
+        public override void DidUpdateElement(StatefulElement oldElement)
         {
             LastOldElement = oldElement;
         }

@@ -9,15 +9,15 @@ using NUnit.Framework;
 namespace Fram3.UI.Tests.Integration
 {
     /// <summary>
-    /// Stress-tests the FRebuildScheduler inside a real tree. Validates depth-ordered
+    /// Stress-tests the RebuildScheduler inside a real tree. Validates depth-ordered
     /// processing, coalescing of duplicate dirty marks, and re-entrant scheduling
     /// (a rebuild that marks another node dirty within the same flush).
     /// </summary>
     [TestFixture]
     internal sealed class RebuildSchedulerStressTests
     {
-        private FRebuildScheduler _scheduler = null!;
-        private FNodeExpander _expander = null!;
+        private RebuildScheduler _scheduler = null!;
+        private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
@@ -100,7 +100,7 @@ namespace Fram3.UI.Tests.Integration
         public void Flush_AncestorDirtied_DescendantRebuildSkipped()
         {
             // When parent and child are both dirty, rebuilding parent re-expands the child
-            // via FTreePatcher, clearing the child's dirty flag. The scheduler should skip
+            // via TreePatcher, clearing the child's dirty flag. The scheduler should skip
             // the now-clean child entry.
             var childState = new CountingState();
             var childStateful = new TestStatefulElement(() => childState, "child");
@@ -160,7 +160,7 @@ namespace Fram3.UI.Tests.Integration
             var states = new CountingState[count];
 
             // Build a flat tree: one parent with many stateful children
-            var children = new FElement[count];
+            var children = new Element[count];
             for (var i = 0; i < count; i++)
             {
                 var idx = i;
@@ -188,11 +188,11 @@ namespace Fram3.UI.Tests.Integration
 
         // ---- Helpers --------------------------------------------------------------------------
 
-        private sealed class OrderRecordingState : FState
+        private sealed class OrderRecordingState : State
         {
             private readonly int _depth;
             private readonly List<int> _order;
-            private FElement _child = null!;
+            private Element _child = null!;
 
             public OrderRecordingState(int depth, List<int> order)
             {
@@ -200,21 +200,21 @@ namespace Fram3.UI.Tests.Integration
                 _order = order;
             }
 
-            public void SetChild(FElement child) { _child = child; }
+            public void SetChild(Element child) { _child = child; }
 
             public void ScheduleRebuild()
             {
                 SetState(null);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 _order.Add(_depth);
-                return _child ?? (FElement)new TestLeafElement($"leaf-{_depth}");
+                return _child ?? (Element)new TestLeafElement($"leaf-{_depth}");
             }
         }
 
-        private sealed class CountingState : FState
+        private sealed class CountingState : State
         {
             public int BuildCount { get; private set; }
 
@@ -223,22 +223,22 @@ namespace Fram3.UI.Tests.Integration
                 SetState(null);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 BuildCount++;
                 return new TestLeafElement("leaf");
             }
         }
 
-        private sealed class ReentrantParentState : FState
+        private sealed class ReentrantParentState : State
         {
             private readonly CountingState _childState;
-            private readonly FElement _childElement;
+            private readonly Element _childElement;
             private bool _initialBuildDone;
 
             public int BuildCount { get; private set; }
 
-            public ReentrantParentState(CountingState childState, FElement childElement)
+            public ReentrantParentState(CountingState childState, Element childElement)
             {
                 _childState = childState;
                 _childElement = childElement;
@@ -249,7 +249,7 @@ namespace Fram3.UI.Tests.Integration
                 SetState(null);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 BuildCount++;
                 if (_initialBuildDone)
@@ -265,13 +265,13 @@ namespace Fram3.UI.Tests.Integration
             }
         }
 
-        private sealed class StaticChildState : FState
+        private sealed class StaticChildState : State
         {
-            private readonly FElement _child;
+            private readonly Element _child;
 
             public int BuildCount { get; private set; }
 
-            public StaticChildState(FElement child)
+            public StaticChildState(Element child)
             {
                 _child = child;
             }
@@ -281,13 +281,13 @@ namespace Fram3.UI.Tests.Integration
                 SetState(null);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 BuildCount++;
                 return _child;
             }
         }
-        private sealed class SwappableChildState : FState
+        private sealed class SwappableChildState : State
         {
             public int BuildCount { get; private set; }
 
@@ -296,19 +296,19 @@ namespace Fram3.UI.Tests.Integration
                 SetState(null);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 BuildCount++;
                 return new TestLeafElement("child-leaf");
             }
         }
 
-        private sealed class SwappingParentState : FState
+        private sealed class SwappingParentState : State
         {
-            private readonly FElement _originalChild;
+            private readonly Element _originalChild;
             private bool _swapped;
 
-            public SwappingParentState(FElement originalChild)
+            public SwappingParentState(Element originalChild)
             {
                 _originalChild = originalChild;
             }
@@ -319,7 +319,7 @@ namespace Fram3.UI.Tests.Integration
                 SetState(null);
             }
 
-            public override FElement Build(FBuildContext context)
+            public override Element Build(BuildContext context)
             {
                 return _swapped
                     ? new TestLeafElement("replacement")
