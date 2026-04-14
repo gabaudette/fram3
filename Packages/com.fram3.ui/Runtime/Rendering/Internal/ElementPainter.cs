@@ -14,6 +14,8 @@ using UiProgressBar = UnityEngine.UIElements.ProgressBar;
 using UiFloatField = UnityEngine.UIElements.FloatField;
 using UiMinMaxSlider = UnityEngine.UIElements.MinMaxSlider;
 using UiWrap = UnityEngine.UIElements.Wrap;
+using Column = Fram3.UI.Elements.Layout.Column;
+using Row = Fram3.UI.Elements.Layout.Row;
 
 namespace Fram3.UI.Rendering.Internal
 {
