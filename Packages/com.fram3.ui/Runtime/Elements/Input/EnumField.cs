@@ -8,7 +8,7 @@ namespace Fram3.UI.Elements.Input
     /// Non-generic view of an <see cref="EnumField{T}"/> used by the painter to create
     /// and update the native <c>EnumField</c> without knowing the concrete enum type.
     /// </summary>
-    internal interface IFEnumFieldDescriptor
+    internal interface IEnumFieldDescriptor
     {
         Enum ValueAsEnum { get; }
         string? Label { get; }
@@ -21,7 +21,7 @@ namespace Fram3.UI.Elements.Input
     /// Maps to UIToolkit's <c>EnumField</c>.
     /// </summary>
     /// <typeparam name="T">The enum type. Must be a value type and a <see cref="System.Enum"/>.</typeparam>
-    public sealed class EnumField<T> : LeafElement, IFEnumFieldDescriptor where T : struct, Enum
+    public sealed class EnumField<T> : LeafElement, IEnumFieldDescriptor where T : struct, Enum
     {
         /// <summary>The currently selected enum value.</summary>
         public T Value { get; }
@@ -57,10 +57,10 @@ namespace Fram3.UI.Elements.Input
             Label = label;
         }
 
-        Enum IFEnumFieldDescriptor.ValueAsEnum => Value;
-        bool IFEnumFieldDescriptor.HasOnChanged => OnChanged != null;
+        Enum IEnumFieldDescriptor.ValueAsEnum => Value;
+        bool IEnumFieldDescriptor.HasOnChanged => OnChanged != null;
 
-        void IFEnumFieldDescriptor.InvokeOnChanged(Enum newValue)
+        void IEnumFieldDescriptor.InvokeOnChanged(Enum newValue)
         {
             if (newValue is T typed)
             {

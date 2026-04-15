@@ -22,9 +22,9 @@ namespace Fram3.UI.Elements.Animation
     public sealed class ImplicitAnimation : StatefulElement
     {
         /// <summary>
-        /// The list of animated values. Each entry must have a unique <see cref="IFAnimatedValue.Key"/>.
+        /// The list of animated values. Each entry must have a unique <see cref="IAnimatedValue.Key"/>.
         /// </summary>
-        public IReadOnlyList<IFAnimatedValue> Values { get; }
+        public IReadOnlyList<IAnimatedValue> Values { get; }
 
         /// <summary>
         /// Duration of one full tween in seconds. Must be greater than zero.
@@ -63,7 +63,7 @@ namespace Fram3.UI.Elements.Animation
         /// Thrown when <paramref name="duration"/> is less than or equal to zero.
         /// </exception>
         public ImplicitAnimation(
-            IReadOnlyList<IFAnimatedValue> values,
+            IReadOnlyList<IAnimatedValue> values,
             float duration,
             Func<BuildContext, ImplicitAnimationSnapshot, Element> builder,
             Curve? curve = null,
@@ -90,7 +90,7 @@ namespace Fram3.UI.Elements.Animation
         {
             private AnimationController? _controller;
             private Action<float>? _listener;
-            private IReadOnlyList<IFAnimatedValue>? _previousValues;
+            private IReadOnlyList<IAnimatedValue>? _previousValues;
             private float _animationProgress;
 
             public override void InitState()
@@ -146,8 +146,8 @@ namespace Fram3.UI.Elements.Animation
             }
 
             private static ImplicitAnimationSnapshot BuildSnapshot(
-                IReadOnlyList<IFAnimatedValue> previousValues,
-                IReadOnlyList<IFAnimatedValue> targetValues,
+                IReadOnlyList<IAnimatedValue> previousValues,
+                IReadOnlyList<IAnimatedValue> targetValues,
                 float t
             )
             {
@@ -162,12 +162,12 @@ namespace Fram3.UI.Elements.Animation
                 return new ImplicitAnimationSnapshot(dict);
             }
 
-            private static IReadOnlyList<IFAnimatedValue> SnapshotToValues(
+            private static IReadOnlyList<IAnimatedValue> SnapshotToValues(
                 ImplicitAnimationSnapshot snapshot,
-                IReadOnlyList<IFAnimatedValue> template
+                IReadOnlyList<IAnimatedValue> template
             )
             {
-                var frozen = new IFAnimatedValue[template.Count];
+                var frozen = new IAnimatedValue[template.Count];
                 for (var i = 0; i < template.Count; i++)
                 {
                     var key = template[i].Key;
@@ -179,8 +179,8 @@ namespace Fram3.UI.Elements.Animation
             }
 
             private static bool AnyValueChanged(
-                IReadOnlyList<IFAnimatedValue> previous,
-                IReadOnlyList<IFAnimatedValue> current
+                IReadOnlyList<IAnimatedValue> previous,
+                IReadOnlyList<IAnimatedValue> current
             )
             {
                 foreach (var animatedValue in current)
@@ -195,7 +195,7 @@ namespace Fram3.UI.Elements.Animation
                 return false;
             }
 
-            private static IFAnimatedValue? FindByKey(IReadOnlyList<IFAnimatedValue> list, string key)
+            private static IAnimatedValue? FindByKey(IReadOnlyList<IAnimatedValue> list, string key)
             {
                 foreach (var animatedValue in list)
                 {

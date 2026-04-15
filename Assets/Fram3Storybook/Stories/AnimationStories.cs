@@ -208,7 +208,7 @@ namespace Fram3.UI.Storybook.Stories
                             new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
                                 Child = new ImplicitAnimation(
-                                    values: new IFAnimatedValue[]
+                                    values: new IAnimatedValue[]
                                     {
                                         new AnimatedValue<float>(
                                             key: "width",

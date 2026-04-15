@@ -71,7 +71,7 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateFloatField(floatField);
                 case Fram3.UI.Elements.Input.MinMaxSlider minMaxSlider:
                     return CreateMinMaxSlider(minMaxSlider);
-                case IFEnumFieldDescriptor enumField:
+                case IEnumFieldDescriptor enumField:
                     return CreateEnumField(enumField);
                 case FrameSlider slider:
                     return CreateSlider(slider);
@@ -88,9 +88,9 @@ namespace Fram3.UI.Rendering.Internal
                 default:
                     switch (element)
                     {
-                        case IFListViewDescriptor listView:
+                        case IListViewDescriptor listView:
                             return CreateListView(listView);
-                        case IFEnumFieldDescriptor enumFieldDesc:
+                        case IEnumFieldDescriptor enumFieldDesc:
                             return CreateEnumField(enumFieldDesc);
                     }
 
@@ -180,13 +180,13 @@ namespace Fram3.UI.Rendering.Internal
                     PaintIcon(icon, iconImg);
                     break;
                 default:
-                    if (element is IFListViewDescriptor listView && native is ListView lv)
+                    if (element is IListViewDescriptor listView && native is ListView lv)
                     {
                         PaintListView(listView, lv);
                         break;
                     }
 
-                    if (element is IFEnumFieldDescriptor enumFieldDesc && native is EnumField ef)
+                    if (element is IEnumFieldDescriptor enumFieldDesc && native is EnumField ef)
                     {
                         PaintEnumField(enumFieldDesc, ef);
                         break;
@@ -195,6 +195,38 @@ namespace Fram3.UI.Rendering.Internal
                     ApplyLayout(element, native);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Recursively builds a native <see cref="VisualElement"/> subtree for the given
+        /// element and all of its descendants, then attaches the root of that subtree to
+        /// <paramref name="parent"/>. Used by <see cref="CreateListView"/> to populate
+        /// each list item without a node tree.
+        /// </summary>
+        /// <param name="element">The element to create a native subtree for.</param>
+        /// <param name="parent">The native element to attach the new subtree to.</param>
+        private static void BuildNativeTree(Element element, VisualElement parent)
+        {
+            var native = CreateNative(element);
+            Paint(element, native);
+
+            var children = element.GetChildren();
+            var isStack = element is Stack;
+
+            foreach (var child in children)
+            {
+                BuildNativeTree(child, native);
+            }
+
+            if (isStack)
+            {
+                foreach (var childNative in native.Children())
+                {
+                    ApplyAsStackChild(childNative);
+                }
+            }
+
+            parent.Add(native);
         }
 
         private static Label CreateLabel(Text text)
@@ -594,21 +626,32 @@ namespace Fram3.UI.Rendering.Internal
         }
 #endif
 
-        private static ListView CreateListView(IFListViewDescriptor listView)
+        private static ListView CreateListView(IListViewDescriptor listView)
         {
             var lv = new ListView
             {
                 fixedItemHeight = listView.ItemHeight,
                 selectionType = MapSelectionType(listView.SelectionMode),
-                makeItem = () => new VisualElement(),
+                makeItem = () =>
+                {
+                    var container = new VisualElement();
+                    container.style.flexGrow = 1f;
+                    container.style.alignSelf = Align.Stretch;
+                    return container;
+                },
                 bindItem = (item, index) =>
                 {
                     item.Clear();
                     var childElement = listView.BuildItemAt(index);
-                    var childNative = CreateNative(childElement);
-                    item.Add(childNative);
+                    BuildNativeTree(childElement, item);
                 }
             };
+#if !FRAM3_PURE_TESTS
+            lv.itemsSource = BuildIndexList(listView.ItemCount);
+#endif
+
+            lv.style.flexGrow = 1f;
+            lv.style.flexShrink = 1f;
 
             // ReSharper disable once InvertIf
             if (listView.OnSelectionChangedUntyped != null)
@@ -629,10 +672,25 @@ namespace Fram3.UI.Rendering.Internal
             return lv;
         }
 
-        private static void PaintListView(IFListViewDescriptor listView, ListView lv)
+        private static void PaintListView(IListViewDescriptor listView, ListView lv)
         {
             lv.fixedItemHeight = listView.ItemHeight;
             lv.selectionType = MapSelectionType(listView.SelectionMode);
+#if !FRAM3_PURE_TESTS
+            lv.itemsSource = BuildIndexList(listView.ItemCount);
+            lv.RefreshItems();
+#endif
+        }
+
+        private static List<int> BuildIndexList(int count)
+        {
+            var list = new List<int>(count);
+            for (var i = 0; i < count; i++)
+            {
+                list.Add(i);
+            }
+
+            return list;
         }
 
         private static SelectionType MapSelectionType(ListSelectionMode mode)
@@ -1043,7 +1101,7 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static EnumField CreateEnumField(IFEnumFieldDescriptor enumField)
+        private static EnumField CreateEnumField(IEnumFieldDescriptor enumField)
         {
             var ef = new EnumField(enumField.ValueAsEnum);
             if (enumField.Label != null)
@@ -1068,7 +1126,7 @@ namespace Fram3.UI.Rendering.Internal
             return ef;
         }
 
-        private static void PaintEnumField(IFEnumFieldDescriptor enumField, EnumField ef)
+        private static void PaintEnumField(IEnumFieldDescriptor enumField, EnumField ef)
         {
             ef.value = enumField.ValueAsEnum;
             if (enumField.Label != null)

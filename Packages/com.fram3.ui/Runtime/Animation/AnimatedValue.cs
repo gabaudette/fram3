@@ -10,7 +10,7 @@ namespace Fram3.UI.Animation
     /// Used by <see cref="ImplicitAnimationSnapshot"/> internally to store and interpolate
     /// heterogeneous animated values without knowing their concrete types.
     /// </summary>
-    public interface IFAnimatedValue
+    public interface IAnimatedValue
     {
         /// <summary>
         /// The key that identifies this value within an <see cref="ImplicitAnimation"/>.
@@ -21,22 +21,22 @@ namespace Fram3.UI.Animation
         /// Returns true when the target value differs from <paramref name="other"/>'s target.
         /// Used by <see cref="ImplicitAnimation"/> to detect whether any property changed.
         /// </summary>
-        bool HasChangedFrom(IFAnimatedValue other);
+        bool HasChangedFrom(IAnimatedValue other);
 
         /// <summary>
         /// Creates an interpolated snapshot entry for this value, starting from
         /// <paramref name="previous"/> and ending at the current target, at position
         /// <paramref name="t"/>.
         /// </summary>
-        object Interpolate(IFAnimatedValue previous, float t);
+        object Interpolate(IAnimatedValue previous, float t);
 
         /// <summary>
-        /// Returns a new <see cref="IFAnimatedValue"/> of the same type and key,
+        /// Returns a new <see cref="IAnimatedValue"/> of the same type and key,
         /// but with its target replaced by <paramref name="frozenTarget"/>.
         /// Used internally to capture the mid-tween snapshot as a new baseline
         /// when a property changes while already animating.
         /// </summary>
-        IFAnimatedValue WithTarget(object frozenTarget);
+        IAnimatedValue WithTarget(object frozenTarget);
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ namespace Fram3.UI.Animation
     /// <see cref="ImplicitAnimationSnapshot.Get{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of value to animate.</typeparam>
-    public sealed class AnimatedValue<T> : IFAnimatedValue
+    public sealed class AnimatedValue<T> : IAnimatedValue
     {
         private readonly Func<T, T, float, T> _lerp;
 
@@ -84,7 +84,7 @@ namespace Fram3.UI.Animation
         }
 
         /// <inheritdoc/>
-        public bool HasChangedFrom(IFAnimatedValue other)
+        public bool HasChangedFrom(IAnimatedValue other)
         {
             if (other is not AnimatedValue<T> typed)
             {
@@ -95,14 +95,14 @@ namespace Fram3.UI.Animation
         }
 
         /// <inheritdoc/>
-        public object Interpolate(IFAnimatedValue previous, float t)
+        public object Interpolate(IAnimatedValue previous, float t)
         {
             var from = previous is AnimatedValue<T> typed ? typed.Target : Target;
             return _lerp(from, Target, t)!;
         }
 
         /// <inheritdoc/>
-        public IFAnimatedValue WithTarget(object frozenTarget) =>
+        public IAnimatedValue WithTarget(object frozenTarget) =>
             new AnimatedValue<T>(Key, (T)frozenTarget, _lerp);
     }
 }

@@ -9,7 +9,7 @@ namespace Fram3.UI.Elements.Content
     /// Non-generic view of an <see cref="ListView{T}"/> used by the painter to access
     /// item data and builder logic without knowing the concrete item type.
     /// </summary>
-    internal interface IFListViewDescriptor
+    internal interface IListViewDescriptor
     {
         int ItemCount { get; }
         float ItemHeight { get; }
@@ -25,7 +25,7 @@ namespace Fram3.UI.Elements.Content
     /// <c>makeItem</c> and <c>bindItem</c>.
     /// </summary>
     /// <typeparam name="T">The type of data item displayed in each row.</typeparam>
-    public sealed class ListView<T> : LeafElement, IFListViewDescriptor
+    public sealed class ListView<T> : LeafElement, IListViewDescriptor
     {
         /// <summary>The ordered list of data items to display.</summary>
         public IReadOnlyList<T> Items { get; }
@@ -78,11 +78,11 @@ namespace Fram3.UI.Elements.Content
             OnSelectionChanged = onSelectionChanged;
         }
 
-        int IFListViewDescriptor.ItemCount => Items.Count;
+        int IListViewDescriptor.ItemCount => Items.Count;
 
-        Element IFListViewDescriptor.BuildItemAt(int index) => ItemBuilder(Items[index]);
+        Element IListViewDescriptor.BuildItemAt(int index) => ItemBuilder(Items[index]);
 
-        Action<IReadOnlyList<object?>>? IFListViewDescriptor.OnSelectionChangedUntyped =>
+        Action<IReadOnlyList<object?>>? IListViewDescriptor.OnSelectionChangedUntyped =>
             OnSelectionChanged == null
                 ? null
                 : items =>

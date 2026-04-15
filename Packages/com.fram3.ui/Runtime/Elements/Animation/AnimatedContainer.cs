@@ -124,8 +124,8 @@ namespace Fram3.UI.Elements.Animation
             );
         }
 
-        private IReadOnlyList<IFAnimatedValue> BuildValues() =>
-            new IFAnimatedValue[]
+        private IReadOnlyList<IAnimatedValue> BuildValues() =>
+            new IAnimatedValue[]
             {
                 new AnimatedValue<BoxDecoration?>(
                     KeyDecoration,
