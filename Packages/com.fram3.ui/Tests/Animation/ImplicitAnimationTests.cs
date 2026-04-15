@@ -29,8 +29,8 @@ namespace Fram3.UI.Tests.Animation
             AnimationSystem.Reset();
         }
 
-        private static IReadOnlyList<IFAnimatedValue> FloatValues(float value) =>
-            new IFAnimatedValue[]
+        private static IReadOnlyList<IAnimatedValue> FloatValues(float value) =>
+            new IAnimatedValue[]
             {
                 new AnimatedValue<float>("x", value, Lerp.Float),
             };

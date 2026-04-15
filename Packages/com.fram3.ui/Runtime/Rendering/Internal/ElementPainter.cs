@@ -71,7 +71,7 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateFloatField(floatField);
                 case Fram3.UI.Elements.Input.MinMaxSlider minMaxSlider:
                     return CreateMinMaxSlider(minMaxSlider);
-                case IFEnumFieldDescriptor enumField:
+                case IEnumFieldDescriptor enumField:
                     return CreateEnumField(enumField);
                 case FrameSlider slider:
                     return CreateSlider(slider);
@@ -88,9 +88,9 @@ namespace Fram3.UI.Rendering.Internal
                 default:
                     switch (element)
                     {
-                        case IFListViewDescriptor listView:
+                        case IListViewDescriptor listView:
                             return CreateListView(listView);
-                        case IFEnumFieldDescriptor enumFieldDesc:
+                        case IEnumFieldDescriptor enumFieldDesc:
                             return CreateEnumField(enumFieldDesc);
                     }
 
@@ -180,13 +180,13 @@ namespace Fram3.UI.Rendering.Internal
                     PaintIcon(icon, iconImg);
                     break;
                 default:
-                    if (element is IFListViewDescriptor listView && native is ListView lv)
+                    if (element is IListViewDescriptor listView && native is ListView lv)
                     {
                         PaintListView(listView, lv);
                         break;
                     }
 
-                    if (element is IFEnumFieldDescriptor enumFieldDesc && native is EnumField ef)
+                    if (element is IEnumFieldDescriptor enumFieldDesc && native is EnumField ef)
                     {
                         PaintEnumField(enumFieldDesc, ef);
                         break;
@@ -594,7 +594,7 @@ namespace Fram3.UI.Rendering.Internal
         }
 #endif
 
-        private static ListView CreateListView(IFListViewDescriptor listView)
+        private static ListView CreateListView(IListViewDescriptor listView)
         {
             var lv = new ListView
             {
@@ -629,7 +629,7 @@ namespace Fram3.UI.Rendering.Internal
             return lv;
         }
 
-        private static void PaintListView(IFListViewDescriptor listView, ListView lv)
+        private static void PaintListView(IListViewDescriptor listView, ListView lv)
         {
             lv.fixedItemHeight = listView.ItemHeight;
             lv.selectionType = MapSelectionType(listView.SelectionMode);
@@ -1043,7 +1043,7 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static EnumField CreateEnumField(IFEnumFieldDescriptor enumField)
+        private static EnumField CreateEnumField(IEnumFieldDescriptor enumField)
         {
             var ef = new EnumField(enumField.ValueAsEnum);
             if (enumField.Label != null)
@@ -1068,7 +1068,7 @@ namespace Fram3.UI.Rendering.Internal
             return ef;
         }
 
-        private static void PaintEnumField(IFEnumFieldDescriptor enumField, EnumField ef)
+        private static void PaintEnumField(IEnumFieldDescriptor enumField, EnumField ef)
         {
             ef.value = enumField.ValueAsEnum;
             if (enumField.Label != null)
