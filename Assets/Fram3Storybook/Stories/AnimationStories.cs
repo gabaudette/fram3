@@ -49,6 +49,7 @@ namespace Fram3.UI.Storybook.Stories
             private sealed class AnimationBuilderStoryState : State<AnimationBuilderStory>
             {
                 private bool _running;
+                private AnimationController? _controller;
 
                 public override void InitState()
                 {
@@ -64,7 +65,11 @@ namespace Fram3.UI.Storybook.Stories
                             new Text("AnimationBuilder: press Play to animate opacity 0->1."),
                             new Button(
                                 label: _running ? "Playing..." : "Play",
-                                onPressed: () => SetState(() => _running = true)
+                                onPressed: () => SetState(() =>
+                                {
+                                    _controller?.Reset();
+                                    _running = true;
+                                })
                             ),
                             new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
@@ -73,9 +78,10 @@ namespace Fram3.UI.Storybook.Stories
                                     curve: Curves.EaseInOut,
                                     builder: (_, controller) =>
                                     {
-                                        if (_running && controller.Status != AnimationStatus.Forward)
+                                        _controller = controller;
+
+                                        if (_running && controller.Status == AnimationStatus.Idle)
                                         {
-                                            controller.Reset();
                                             controller.Forward();
                                         }
 
@@ -264,6 +270,7 @@ namespace Fram3.UI.Storybook.Stories
             private sealed class CurvesStoryState : State<CurvesStory>
             {
                 private bool _running;
+                private readonly AnimationController?[] _controllers = new AnimationController?[6];
 
                 public override void InitState()
                 {
@@ -279,7 +286,14 @@ namespace Fram3.UI.Storybook.Stories
                             new Text("Curves: six pre-built easing curves. Press Play to animate all."),
                             new Button(
                                 label: _running ? "Playing..." : "Play all",
-                                onPressed: () => SetState(() => _running = true)
+                                onPressed: () => SetState(() =>
+                                {
+                                    foreach (var c in _controllers)
+                                    {
+                                        c?.Reset();
+                                    }
+                                    _running = true;
+                                })
                             ),
                             new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                             {
@@ -287,17 +301,17 @@ namespace Fram3.UI.Storybook.Stories
                                 {
                                     Children = new Element[]
                                     {
-                                        CurveRow("Linear", Curves.Linear, _running,
+                                        CurveRow("Linear", Curves.Linear, 0, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("EaseIn", Curves.EaseIn, _running,
+                                        CurveRow("EaseIn", Curves.EaseIn, 1, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("EaseOut", Curves.EaseOut, _running,
+                                        CurveRow("EaseOut", Curves.EaseOut, 2, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("EaseInOut", Curves.EaseInOut, _running,
+                                        CurveRow("EaseInOut", Curves.EaseInOut, 3, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("ElasticOut", Curves.ElasticOut, _running,
+                                        CurveRow("ElasticOut", Curves.ElasticOut, 4, _running,
                                             () => SetState(() => _running = false)),
-                                        CurveRow("BounceOut", Curves.BounceOut, _running,
+                                        CurveRow("BounceOut", Curves.BounceOut, 5, _running,
                                             () => SetState(() => _running = false)),
                                     }
                                 }
@@ -306,7 +320,7 @@ namespace Fram3.UI.Storybook.Stories
                     };
                 }
 
-                private static Element CurveRow(string name, Curve curve, bool running, System.Action onCompleted)
+                private Element CurveRow(string name, Curve curve, int index, bool running, System.Action onCompleted)
                 {
                     return new Padding(EdgeInsets.Symmetric(vertical: 3f, horizontal: 0f))
                     {
@@ -323,9 +337,10 @@ namespace Fram3.UI.Storybook.Stories
                                     curve: curve,
                                     builder: (_, controller) =>
                                     {
-                                        if (running && controller.Status != AnimationStatus.Forward)
+                                        _controllers[index] = controller;
+
+                                        if (running && controller.Status == AnimationStatus.Idle)
                                         {
-                                            controller.Reset();
                                             controller.Forward();
                                         }
 
