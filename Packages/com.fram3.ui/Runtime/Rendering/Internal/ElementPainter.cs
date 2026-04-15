@@ -220,7 +220,7 @@ namespace Fram3.UI.Rendering.Internal
 
             if (isStack)
             {
-                foreach (var childNative in native.Children())
+                foreach (var childNative in native.Children)
                 {
                     ApplyAsStackChild(childNative);
                 }
@@ -632,7 +632,6 @@ namespace Fram3.UI.Rendering.Internal
             {
                 fixedItemHeight = listView.ItemHeight,
                 selectionType = MapSelectionType(listView.SelectionMode),
-                itemsSource = BuildIndexList(listView.ItemCount),
                 makeItem = () =>
                 {
                     var container = new VisualElement();
@@ -647,6 +646,9 @@ namespace Fram3.UI.Rendering.Internal
                     BuildNativeTree(childElement, item);
                 }
             };
+#if !FRAM3_PURE_TESTS
+            lv.itemsSource = BuildIndexList(listView.ItemCount);
+#endif
 
             lv.style.flexGrow = 1f;
             lv.style.flexShrink = 1f;
@@ -674,8 +676,10 @@ namespace Fram3.UI.Rendering.Internal
         {
             lv.fixedItemHeight = listView.ItemHeight;
             lv.selectionType = MapSelectionType(listView.SelectionMode);
+#if !FRAM3_PURE_TESTS
             lv.itemsSource = BuildIndexList(listView.ItemCount);
             lv.RefreshItems();
+#endif
         }
 
         private static List<int> BuildIndexList(int count)
