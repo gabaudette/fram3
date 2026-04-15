@@ -600,6 +600,7 @@ namespace Fram3.UI.Rendering.Internal
             {
                 fixedItemHeight = listView.ItemHeight,
                 selectionType = MapSelectionType(listView.SelectionMode),
+                itemsSource = BuildIndexList(listView.ItemCount),
                 makeItem = () => new VisualElement(),
                 bindItem = (item, index) =>
                 {
@@ -609,6 +610,9 @@ namespace Fram3.UI.Rendering.Internal
                     item.Add(childNative);
                 }
             };
+
+            lv.style.flexGrow = 1f;
+            lv.style.flexShrink = 1f;
 
             // ReSharper disable once InvertIf
             if (listView.OnSelectionChangedUntyped != null)
@@ -633,6 +637,19 @@ namespace Fram3.UI.Rendering.Internal
         {
             lv.fixedItemHeight = listView.ItemHeight;
             lv.selectionType = MapSelectionType(listView.SelectionMode);
+            lv.itemsSource = BuildIndexList(listView.ItemCount);
+            lv.RefreshItems();
+        }
+
+        private static List<int> BuildIndexList(int count)
+        {
+            var list = new List<int>(count);
+            for (var i = 0; i < count; i++)
+            {
+                list.Add(i);
+            }
+
+            return list;
         }
 
         private static SelectionType MapSelectionType(ListSelectionMode mode)
