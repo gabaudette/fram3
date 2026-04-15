@@ -197,6 +197,38 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
+        /// <summary>
+        /// Recursively builds a native <see cref="VisualElement"/> subtree for the given
+        /// element and all of its descendants, then attaches the root of that subtree to
+        /// <paramref name="parent"/>. Used by <see cref="CreateListView"/> to populate
+        /// each list item without a node tree.
+        /// </summary>
+        /// <param name="element">The element to create a native subtree for.</param>
+        /// <param name="parent">The native element to attach the new subtree to.</param>
+        private static void BuildNativeTree(Element element, VisualElement parent)
+        {
+            var native = CreateNative(element);
+            Paint(element, native);
+
+            var children = element.GetChildren();
+            var isStack = element is Stack;
+
+            foreach (var child in children)
+            {
+                BuildNativeTree(child, native);
+            }
+
+            if (isStack)
+            {
+                foreach (var childNative in native.Children())
+                {
+                    ApplyAsStackChild(childNative);
+                }
+            }
+
+            parent.Add(native);
+        }
+
         private static Label CreateLabel(Text text)
         {
             var label = new Label(text.Content);
@@ -612,9 +644,7 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     item.Clear();
                     var childElement = listView.BuildItemAt(index);
-                    var childNative = CreateNative(childElement);
-                    Paint(childElement, childNative);
-                    item.Add(childNative);
+                    BuildNativeTree(childElement, item);
                 }
             };
 
