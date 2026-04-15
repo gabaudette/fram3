@@ -73,14 +73,14 @@ namespace Fram3.UI.Storybook.Stories
                                     curve: Curves.EaseInOut,
                                     builder: (_, controller) =>
                                     {
-                                        if (_running && controller.Status == AnimationStatus.Idle)
+                                        if (_running && controller.Status != AnimationStatus.Forward)
                                         {
+                                            controller.Reset();
                                             controller.Forward();
                                         }
 
                                         if (_running && controller.Status == AnimationStatus.Completed)
                                         {
-                                            controller.Reset();
                                             SetState(() => _running = false);
                                         }
 
@@ -323,14 +323,14 @@ namespace Fram3.UI.Storybook.Stories
                                     curve: curve,
                                     builder: (_, controller) =>
                                     {
-                                        if (running && controller.Status == AnimationStatus.Idle)
+                                        if (running && controller.Status != AnimationStatus.Forward)
                                         {
+                                            controller.Reset();
                                             controller.Forward();
                                         }
 
                                         if (running && controller.Status == AnimationStatus.Completed)
                                         {
-                                            controller.Reset();
                                             onCompleted();
                                         }
 
