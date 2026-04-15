@@ -220,7 +220,7 @@ namespace Fram3.UI.Rendering.Internal
 
             if (isStack)
             {
-                foreach (var childNative in native.Children)
+                foreach (var childNative in native.Children())
                 {
                     ApplyAsStackChild(childNative);
                 }

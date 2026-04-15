@@ -130,7 +130,10 @@ namespace UnityEngine.UIElements
         private readonly Dictionary<Type, List<object>> _callbacks = new Dictionary<Type, List<object>>();
 
         public StyleSheet style { get; } = new StyleSheet();
-        public IReadOnlyList<VisualElement> Children => _children;
+        /// <summary>
+        /// Returns the children of this element, matching the Unity UIToolkit API shape.
+        /// </summary>
+        public IReadOnlyList<VisualElement> Children() => _children;
         public VisualElement? Parent => _parent;
         public int childCount => _children.Count;
         public string tooltip { get; set; } = string.Empty;
