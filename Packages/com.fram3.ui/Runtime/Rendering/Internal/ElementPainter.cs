@@ -601,12 +601,19 @@ namespace Fram3.UI.Rendering.Internal
                 fixedItemHeight = listView.ItemHeight,
                 selectionType = MapSelectionType(listView.SelectionMode),
                 itemsSource = BuildIndexList(listView.ItemCount),
-                makeItem = () => new VisualElement(),
+                makeItem = () =>
+                {
+                    var container = new VisualElement();
+                    container.style.flexGrow = 1f;
+                    container.style.alignSelf = Align.Stretch;
+                    return container;
+                },
                 bindItem = (item, index) =>
                 {
                     item.Clear();
                     var childElement = listView.BuildItemAt(index);
                     var childNative = CreateNative(childElement);
+                    Paint(childElement, childNative);
                     item.Add(childNative);
                 }
             };
