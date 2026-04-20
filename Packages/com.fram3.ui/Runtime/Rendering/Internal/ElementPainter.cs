@@ -742,7 +742,7 @@ namespace Fram3.UI.Rendering.Internal
         private static UiScrollView CreateScrollView(Fram3.UI.Elements.Content.ScrollView scrollView)
         {
             var sv = new UiScrollView(MapScrollMode(scrollView.ScrollDirection));
-            sv.RegisterCallback<AttachToPanelEvent>(_ => ApplyScrollbarTheme(sv));
+            sv.RegisterCallback<AttachToPanelEvent>(_ => sv.schedule.Execute(() => ApplyScrollbarTheme(sv)));
             return sv;
         }
 
@@ -781,6 +781,10 @@ namespace Fram3.UI.Rendering.Internal
                 scrollerSlider.style.marginBottom = 0f;
                 scrollerSlider.style.paddingTop = 0f;
                 scrollerSlider.style.paddingBottom = 0f;
+                scrollerSlider.style.borderTopColor = DarkInputBorder;
+                scrollerSlider.style.borderRightColor = DarkInputBorder;
+                scrollerSlider.style.borderBottomColor = DarkInputBorder;
+                scrollerSlider.style.borderLeftColor = DarkInputBorder;
             }
 
             foreach (var baseSlider in container.Query<VisualElement>(className: "unity-base-slider").ToList())
@@ -1018,7 +1022,7 @@ namespace Fram3.UI.Rendering.Internal
             lv.style.flexGrow = 1f;
             lv.style.flexShrink = 1f;
 
-            lv.RegisterCallback<AttachToPanelEvent>(_ => ApplyScrollbarTheme(lv));
+            lv.RegisterCallback<AttachToPanelEvent>(_ => lv.schedule.Execute(() => ApplyScrollbarTheme(lv)));
             if (listView.OnSelectionChangedUntyped != null)
             {
                 var callback = listView.OnSelectionChangedUntyped;
