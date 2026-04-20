@@ -809,12 +809,6 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
             {
                 tracker.style.backgroundColor = DarkTrack;
-                tracker.style.borderTopLeftRadius = 4f;
-                tracker.style.borderTopRightRadius = 4f;
-                tracker.style.borderBottomLeftRadius = 4f;
-                tracker.style.borderBottomRightRadius = 4f;
-                tracker.style.marginTop = 2f;
-                tracker.style.marginBottom = 2f;
             }
 
             foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
