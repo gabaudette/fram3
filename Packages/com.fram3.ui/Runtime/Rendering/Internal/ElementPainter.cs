@@ -761,10 +761,14 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var scroller in container.Query<VisualElement>(className: "unity-scroller").ToList())
             {
                 scroller.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                scroller.style.borderLeftWidth = 0f;
-                scroller.style.borderRightWidth = 0f;
-                scroller.style.borderTopWidth = 0f;
-                scroller.style.borderBottomWidth = 0f;
+                scroller.style.borderTopColor = DarkInputBorder;
+                scroller.style.borderRightColor = DarkInputBorder;
+                scroller.style.borderBottomColor = DarkInputBorder;
+                scroller.style.borderLeftColor = DarkInputBorder;
+                scroller.style.borderTopWidth = 1f;
+                scroller.style.borderRightWidth = 1f;
+                scroller.style.borderBottomWidth = 1f;
+                scroller.style.borderLeftWidth = 1f;
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
                 scroller.style.overflow = Overflow.Visible;
@@ -796,18 +800,10 @@ namespace Fram3.UI.Rendering.Internal
                 sliderInput.style.paddingTop = 0f;
                 sliderInput.style.paddingBottom = 0f;
                 sliderInput.style.backgroundColor = DarkTrack;
-                sliderInput.style.borderTopLeftRadius = 4f;
-                sliderInput.style.borderTopRightRadius = 4f;
-                sliderInput.style.borderBottomLeftRadius = 4f;
-                sliderInput.style.borderBottomRightRadius = 4f;
-                sliderInput.style.borderTopColor = DarkInputBorder;
-                sliderInput.style.borderRightColor = DarkInputBorder;
-                sliderInput.style.borderBottomColor = DarkInputBorder;
-                sliderInput.style.borderLeftColor = DarkInputBorder;
-                sliderInput.style.borderTopWidth = 1f;
-                sliderInput.style.borderRightWidth = 1f;
-                sliderInput.style.borderBottomWidth = 1f;
-                sliderInput.style.borderLeftWidth = 1f;
+                sliderInput.style.borderTopWidth = 0f;
+                sliderInput.style.borderRightWidth = 0f;
+                sliderInput.style.borderBottomWidth = 0f;
+                sliderInput.style.borderLeftWidth = 0f;
             }
 
             foreach (var dragContainer in container.Query<VisualElement>(className: "unity-base-slider__drag-container").ToList())
