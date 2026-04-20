@@ -615,18 +615,14 @@ namespace Fram3.UI.Rendering.Internal
 
                 dd.RegisterCallback<PointerDownEvent>(_ =>
                 {
-                    if (dd.panel == null)
+                    dd.schedule.Execute(() =>
                     {
-                        return;
-                    }
+                        if (dd.panel == null)
+                        {
+                            return;
+                        }
 
-                    var visualTree = dd.panel.visualTree;
-
-                    void OnGeometryChanged(GeometryChangedEvent _)
-                    {
-                        visualTree.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-
-                        var popup = visualTree.Q<VisualElement>(className: "unity-base-dropdown");
+                        var popup = dd.panel.visualTree.Q<VisualElement>(className: "unity-base-dropdown");
                         if (popup == null)
                         {
                             return;
@@ -671,9 +667,7 @@ namespace Fram3.UI.Rendering.Internal
                             item.style.color = DarkInputText;
                             item.style.backgroundColor = DarkInputBg;
                         }
-                    }
-
-                    visualTree.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+                    }).ExecuteLater(1);
                 });
             });
 
@@ -944,8 +938,15 @@ namespace Fram3.UI.Rendering.Internal
         }
 #endif
 
+        private sealed class ListViewDescriptorHolder
+        {
+            public IListViewDescriptor? Descriptor;
+        }
+
         private static ListView CreateListView(IListViewDescriptor listView)
         {
+            var holder = new ListViewDescriptorHolder { Descriptor = listView };
+
             var lv = new ListView
             {
                 fixedItemHeight = listView.ItemHeight,
@@ -960,10 +961,11 @@ namespace Fram3.UI.Rendering.Internal
                 bindItem = (item, index) =>
                 {
                     item.Clear();
-                    var childElement = listView.BuildItemAt(index);
+                    var childElement = holder.Descriptor!.BuildItemAt(index);
                     BuildNativeTree(childElement, item);
                 }
             };
+            lv.userData = holder;
 #if !FRAM3_PURE_TESTS
             lv.itemsSource = BuildIndexList(listView.ItemCount);
 #endif
@@ -994,13 +996,11 @@ namespace Fram3.UI.Rendering.Internal
         {
             lv.fixedItemHeight = listView.ItemHeight;
             lv.selectionType = MapSelectionType(listView.SelectionMode);
-#if !FRAM3_PURE_TESTS
-            lv.bindItem = (item, index) =>
+            if (lv.userData is ListViewDescriptorHolder holder)
             {
-                item.Clear();
-                var childElement = listView.BuildItemAt(index);
-                BuildNativeTree(childElement, item);
-            };
+                holder.Descriptor = listView;
+            }
+#if !FRAM3_PURE_TESTS
             lv.itemsSource = BuildIndexList(listView.ItemCount);
 #endif
         }
