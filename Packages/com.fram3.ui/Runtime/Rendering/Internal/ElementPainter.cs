@@ -773,21 +773,37 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var scrollerSlider in container.Query<VisualElement>(className: "unity-scroller__slider").ToList())
             {
                 scrollerSlider.style.overflow = Overflow.Visible;
+                scrollerSlider.style.marginTop = 0f;
+                scrollerSlider.style.marginBottom = 0f;
+                scrollerSlider.style.paddingTop = 0f;
+                scrollerSlider.style.paddingBottom = 0f;
             }
 
             foreach (var baseSlider in container.Query<VisualElement>(className: "unity-base-slider").ToList())
             {
                 baseSlider.style.overflow = Overflow.Visible;
+                baseSlider.style.marginTop = 0f;
+                baseSlider.style.marginBottom = 0f;
+                baseSlider.style.paddingTop = 0f;
+                baseSlider.style.paddingBottom = 0f;
             }
 
             foreach (var sliderInput in container.Query<VisualElement>(className: "unity-slider__input").ToList())
             {
                 sliderInput.style.overflow = Overflow.Visible;
+                sliderInput.style.marginTop = 0f;
+                sliderInput.style.marginBottom = 0f;
+                sliderInput.style.paddingTop = 0f;
+                sliderInput.style.paddingBottom = 0f;
             }
 
             foreach (var dragContainer in container.Query<VisualElement>(className: "unity-base-slider__drag-container").ToList())
             {
                 dragContainer.style.overflow = Overflow.Visible;
+                dragContainer.style.marginTop = 0f;
+                dragContainer.style.marginBottom = 0f;
+                dragContainer.style.paddingTop = 0f;
+                dragContainer.style.paddingBottom = 0f;
             }
 
             foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
@@ -797,6 +813,8 @@ namespace Fram3.UI.Rendering.Internal
                 tracker.style.borderTopRightRadius = 4f;
                 tracker.style.borderBottomLeftRadius = 4f;
                 tracker.style.borderBottomRightRadius = 4f;
+                tracker.style.marginTop = 2f;
+                tracker.style.marginBottom = 2f;
             }
 
             foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
