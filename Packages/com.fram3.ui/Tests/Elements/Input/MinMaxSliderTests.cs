@@ -3,6 +3,7 @@ using System;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Rendering.Internal;
+using Fram3.UI.Styling;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 using MinMaxSlider = Fram3.UI.Elements.Input.MinMaxSlider;
@@ -106,7 +107,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new MinMaxSlider();
 
-            var native = ElementPainter.CreateNative(element);
+            var native = ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native, Is.InstanceOf<UiMinMaxSlider>());
         }
@@ -116,7 +117,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new MinMaxSlider(minValue: 0.1f, maxValue: 0.9f);
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
         }
 
         [Test]
@@ -124,18 +125,18 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new MinMaxSlider(onChanged: (_, _) => { });
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
         }
 
         [Test]
         public void Paint_FMinMaxSlider_DoesNotThrow()
         {
             var original = new MinMaxSlider(minValue: 0f, maxValue: 1f);
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new MinMaxSlider(minValue: 0.2f, maxValue: 0.8f);
 
-            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native));
+            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, Theme.Default));
         }
 
 #if FRAM3_PURE_TESTS
@@ -144,7 +145,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new MinMaxSlider(minValue: 0.25f, maxValue: 0.75f);
 
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.minValue, Is.EqualTo(0.25f).Within(0.0001f));
             Assert.That(native.maxValue, Is.EqualTo(0.75f).Within(0.0001f));
@@ -155,7 +156,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new MinMaxSlider(lowLimit: -5f, highLimit: 5f);
 
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.lowLimit, Is.EqualTo(-5f).Within(0.0001f));
             Assert.That(native.highLimit, Is.EqualTo(5f).Within(0.0001f));
@@ -166,7 +167,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new MinMaxSlider(label: "Threshold");
 
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.label, Is.EqualTo("Threshold"));
         }
@@ -176,7 +177,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new MinMaxSlider();
 
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.label, Is.Null);
         }
@@ -187,7 +188,7 @@ namespace Fram3.UI.Tests.Elements.Input
             float receivedMin = -1f;
             float receivedMax = -1f;
             var element = new MinMaxSlider(onChanged: (mn, mx) => { receivedMin = mn; receivedMax = mx; });
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(element, Theme.Default);
 
             native.SimulateValueChanged(0.3f, 0.7f);
 
@@ -199,10 +200,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FMinMaxSlider_UpdatesMinAndMaxValues()
         {
             var original = new MinMaxSlider(minValue: 0f, maxValue: 1f);
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new MinMaxSlider(minValue: 0.4f, maxValue: 0.6f);
-            ElementPainter.Paint(updated, native);
+            ElementPainter.Paint(updated, native, Theme.Default);
 
             Assert.That(native.minValue, Is.EqualTo(0.4f).Within(0.0001f));
             Assert.That(native.maxValue, Is.EqualTo(0.6f).Within(0.0001f));
@@ -212,10 +213,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FMinMaxSlider_UpdatesLimits()
         {
             var original = new MinMaxSlider(lowLimit: 0f, highLimit: 1f);
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new MinMaxSlider(lowLimit: -100f, highLimit: 100f);
-            ElementPainter.Paint(updated, native);
+            ElementPainter.Paint(updated, native, Theme.Default);
 
             Assert.That(native.lowLimit, Is.EqualTo(-100f).Within(0.0001f));
             Assert.That(native.highLimit, Is.EqualTo(100f).Within(0.0001f));
@@ -225,10 +226,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FMinMaxSlider_UpdatesLabel()
         {
             var original = new MinMaxSlider(label: "old");
-            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original);
+            var native = (UiMinMaxSlider)ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new MinMaxSlider(label: "new");
-            ElementPainter.Paint(updated, native);
+            ElementPainter.Paint(updated, native, Theme.Default);
 
             Assert.That(native.label, Is.EqualTo("new"));
         }

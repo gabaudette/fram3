@@ -3,6 +3,7 @@ using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Rendering.Internal;
+using Fram3.UI.Styling;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 using UiWrap = UnityEngine.UIElements.Wrap;
@@ -52,7 +53,7 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Wrap();
 
-            var native = ElementPainter.CreateNative(element);
+            var native = ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
         }
@@ -62,16 +63,16 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Wrap();
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
         }
 
         [Test]
         public void Paint_FWrap_DoesNotThrow()
         {
             var original = new Wrap();
-            var native = ElementPainter.CreateNative(original);
+            var native = ElementPainter.CreateNative(original, Theme.Default);
 
-            Assert.DoesNotThrow(() => ElementPainter.Paint(new Wrap(), native));
+            Assert.DoesNotThrow(() => ElementPainter.Paint(new Wrap(), native, Theme.Default));
         }
 
 #if FRAM3_PURE_TESTS
@@ -80,7 +81,7 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Wrap();
 
-            var native = ElementPainter.CreateNative(element);
+            var native = ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.style.flexDirection, Is.EqualTo(FlexDirection.Row));
         }
@@ -90,7 +91,7 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Wrap();
 
-            var native = ElementPainter.CreateNative(element);
+            var native = ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.style.flexWrap, Is.EqualTo(UiWrap.Wrap));
         }

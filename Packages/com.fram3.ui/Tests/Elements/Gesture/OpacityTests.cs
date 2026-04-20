@@ -4,6 +4,7 @@ using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Rendering.Internal;
+using Fram3.UI.Styling;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 
@@ -83,7 +84,7 @@ namespace Fram3.UI.Tests.Elements.Gesture
         {
             var element = new Opacity(value: 0.5f, child: new Text("x"));
 
-            var native = ElementPainter.CreateNative(element);
+            var native = ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
         }
@@ -93,18 +94,18 @@ namespace Fram3.UI.Tests.Elements.Gesture
         {
             var element = new Opacity(value: 0.7f, child: new Text("x"));
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
         }
 
         [Test]
         public void Paint_FOpacity_DoesNotThrow()
         {
             var original = new Opacity(value: 0.5f, child: new Text("x"));
-            var native = ElementPainter.CreateNative(original);
+            var native = ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new Opacity(value: 0.9f, child: new Text("x"));
 
-            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native));
+            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, Theme.Default));
         }
 
 #if FRAM3_PURE_TESTS
@@ -113,7 +114,7 @@ namespace Fram3.UI.Tests.Elements.Gesture
         {
             var element = new Opacity(value: 0.4f, child: new Text("x"));
 
-            var native = ElementPainter.CreateNative(element);
+            var native = ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.style.opacity, Is.EqualTo(0.4f).Within(0.0001f));
         }
@@ -122,10 +123,10 @@ namespace Fram3.UI.Tests.Elements.Gesture
         public void Paint_FOpacity_UpdatesOpacityStyle()
         {
             var original = new Opacity(value: 0.2f, child: new Text("x"));
-            var native = ElementPainter.CreateNative(original);
+            var native = ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new Opacity(value: 0.8f, child: new Text("x"));
-            ElementPainter.Paint(updated, native);
+            ElementPainter.Paint(updated, native, Theme.Default);
 
             Assert.That(native.style.opacity, Is.EqualTo(0.8f).Within(0.0001f));
         }
