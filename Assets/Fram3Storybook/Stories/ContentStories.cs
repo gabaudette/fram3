@@ -798,7 +798,7 @@ namespace Fram3.UI.Storybook.Stories
                             new Button(
                                 label: "Prev",
                                 onPressed: currentPage > 0
-                                    ? () => SetState(() => _page = _page - 1)
+                                    ? () => SetState(() => _page = currentPage - 1)
                                     : null
                             ),
                             SizedBox.FromSize(width: theme.Spacing * 2f),
@@ -810,7 +810,7 @@ namespace Fram3.UI.Storybook.Stories
                             new Button(
                                 label: "Next",
                                 onPressed: currentPage < totalPages - 1
-                                    ? () => SetState(() => _page = _page + 1)
+                                    ? () => SetState(() => _page = currentPage + 1)
                                     : null
                             ),
                         }

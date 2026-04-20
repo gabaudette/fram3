@@ -304,13 +304,7 @@ namespace Fram3.UI.Storybook
                     decoration: new BoxDecoration(
                         Color: theme.SurfaceColor,
                         BorderRadius: BorderRadius.All(12f),
-                        Border: new Border(FrameColor.FromHex("#1E2235"), 1f),
-                        Shadow: new Shadow(
-                            FrameColor.Black.WithAlpha(0.4f),
-                            OffsetX: 0f,
-                            OffsetY: 4f,
-                            BlurRadius: 24f
-                        )
+                        Border: new Border(FrameColor.FromHex("#1E2235"), 1f)
                     )
                 )
                 {

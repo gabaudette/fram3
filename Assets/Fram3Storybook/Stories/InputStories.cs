@@ -284,7 +284,7 @@ namespace Fram3.UI.Storybook.Stories
                             SizedBox.FromSize(height: 4f),
                             new FrameToggle(value: true, label: "Toggle on"),
                             SizedBox.FromSize(height: 4f),
-                            new FrameToggle(value: true, label: "Enable dark mode"),
+                            new FrameToggle(value: true, label: "Sound effects"),
                         }
                     };
                 }

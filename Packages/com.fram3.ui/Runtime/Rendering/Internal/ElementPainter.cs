@@ -431,6 +431,11 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     label.style.color = DarkInputText;
                 }
+
+                foreach (var input in rbg.Query<VisualElement>(className: "unity-radio-button__input").ToList())
+                {
+                    input.style.marginRight = 6f;
+                }
             });
 
             if (radioGroup.OnChanged == null)
@@ -593,6 +598,35 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textEl.style.color = DarkInputText;
                 }
+
+                dd.RegisterCallback<PointerDownEvent>(_ =>
+                {
+                    dd.schedule.Execute(() =>
+                    {
+                        if (dd.panel == null)
+                        {
+                            return;
+                        }
+
+                        var popup = dd.panel.visualTree.Q<VisualElement>(className: "unity-base-dropdown");
+                        if (popup == null)
+                        {
+                            return;
+                        }
+
+                        popup.style.backgroundColor = DarkInputBg;
+                        popup.style.borderTopColor = DarkInputBorder;
+                        popup.style.borderRightColor = DarkInputBorder;
+                        popup.style.borderBottomColor = DarkInputBorder;
+                        popup.style.borderLeftColor = DarkInputBorder;
+
+                        foreach (var item in popup.Query<VisualElement>(className: "unity-base-dropdown__item").ToList())
+                        {
+                            item.style.color = DarkInputText;
+                            item.style.backgroundColor = DarkInputBg;
+                        }
+                    }).ExecuteLater(50);
+                });
             });
 
             if (dropdown.OnChanged == null)
@@ -663,14 +697,49 @@ namespace Fram3.UI.Rendering.Internal
 
             sv.RegisterCallback<AttachToPanelEvent>(_ =>
             {
+                foreach (var btn in sv.Query<VisualElement>(className: "unity-scroller__low-button").ToList())
+                {
+                    btn.style.display = DisplayStyle.None;
+                }
+
+                foreach (var btn in sv.Query<VisualElement>(className: "unity-scroller__high-button").ToList())
+                {
+                    btn.style.display = DisplayStyle.None;
+                }
+
+                foreach (var scroller in sv.Query<VisualElement>(className: "unity-scroller").ToList())
+                {
+                    scroller.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                    scroller.style.borderLeftWidth = 0f;
+                    scroller.style.borderRightWidth = 0f;
+                    scroller.style.borderTopWidth = 0f;
+                    scroller.style.borderBottomWidth = 0f;
+                }
+
                 foreach (var tracker in sv.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
                 {
                     tracker.style.backgroundColor = DarkTrack;
+                    tracker.style.borderTopLeftRadius = 4f;
+                    tracker.style.borderTopRightRadius = 4f;
+                    tracker.style.borderBottomLeftRadius = 4f;
+                    tracker.style.borderBottomRightRadius = 4f;
                 }
 
                 foreach (var dragger in sv.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
                 {
                     dragger.style.backgroundColor = DarkAccent;
+                    dragger.style.borderTopLeftRadius = 4f;
+                    dragger.style.borderTopRightRadius = 4f;
+                    dragger.style.borderBottomLeftRadius = 4f;
+                    dragger.style.borderBottomRightRadius = 4f;
+                    dragger.style.borderTopColor = DarkAccent;
+                    dragger.style.borderRightColor = DarkAccent;
+                    dragger.style.borderBottomColor = DarkAccent;
+                    dragger.style.borderLeftColor = DarkAccent;
+                    dragger.style.borderTopWidth = 0f;
+                    dragger.style.borderRightWidth = 0f;
+                    dragger.style.borderBottomWidth = 0f;
+                    dragger.style.borderLeftWidth = 0f;
                 }
             });
 
@@ -1192,6 +1261,9 @@ namespace Fram3.UI.Rendering.Internal
 
             if (decoration.Shadow == null)
             {
+#if !FRAM3_PURE_TESTS
+                native.style.textShadow = StyleKeyword.None;
+#endif
                 return;
             }
 
@@ -1338,19 +1410,29 @@ namespace Fram3.UI.Rendering.Internal
                     label.style.color = DarkInputText;
                 }
 
-                var tracker = mms.Q<VisualElement>(className: "unity-base-slider__tracker");
+                var tracker = mms.Q<VisualElement>(className: "unity-min-max-slider__tracker");
                 if (tracker != null)
                 {
                     tracker.style.backgroundColor = DarkTrack;
                 }
 
-                var fill = mms.Q<VisualElement>(className: "unity-base-slider__fill");
+                var fill = mms.Q<VisualElement>(className: "unity-min-max-slider__range-drag-container");
                 if (fill != null)
                 {
                     fill.style.backgroundColor = DarkAccent;
+                    fill.style.opacity = 0.4f;
                 }
 
-                foreach (var dragger in mms.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
+                foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-low").ToList())
+                {
+                    dragger.style.backgroundColor = DarkAccent;
+                    dragger.style.borderTopColor = DarkAccent;
+                    dragger.style.borderRightColor = DarkAccent;
+                    dragger.style.borderBottomColor = DarkAccent;
+                    dragger.style.borderLeftColor = DarkAccent;
+                }
+
+                foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-high").ToList())
                 {
                     dragger.style.backgroundColor = DarkAccent;
                     dragger.style.borderTopColor = DarkAccent;
