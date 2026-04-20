@@ -61,6 +61,7 @@ namespace Fram3.UI.Storybook.Stories
         {
             public override Fram3.UI.Core.State CreateState() => new ColumnStoryState();
 
+
             private sealed class ColumnStoryState : Fram3.UI.Core.State<ColumnStory>
             {
                 public override Element Build(BuildContext context)
@@ -70,7 +71,7 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            StoryHelpers.Section("Basic", StoryHelpers.HalfWidth(BuildBasic(theme)), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
                             StoryHelpers.Section("Game Example", StoryHelpers.HalfWidth(BuildGame(theme)), theme),
                         }
@@ -185,7 +186,7 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            StoryHelpers.Section("Basic", StoryHelpers.HalfWidth(BuildBasic(theme)), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
                             StoryHelpers.Section("Game Example", StoryHelpers.HalfWidth(BuildGame(theme)), theme),
                         }
@@ -610,7 +611,7 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            StoryHelpers.Section("Basic", StoryHelpers.HalfWidth(BuildBasic(theme)), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
                             StoryHelpers.Section("Game Example", StoryHelpers.HalfWidth(BuildGame(theme)), theme),
                         }

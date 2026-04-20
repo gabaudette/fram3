@@ -570,6 +570,31 @@ namespace Fram3.UI.Rendering.Internal
                 dd.label = dropdown.Label;
             }
 
+            dd.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = dd.Q<VisualElement>(className: "unity-base-field__label");
+                if (label != null)
+                {
+                    label.style.color = DarkInputText;
+                }
+
+                var input = dd.Q<VisualElement>(className: "unity-base-popup-field__input");
+                if (input != null)
+                {
+                    input.style.backgroundColor = DarkInputBg;
+                    input.style.borderTopColor = DarkInputBorder;
+                    input.style.borderRightColor = DarkInputBorder;
+                    input.style.borderBottomColor = DarkInputBorder;
+                    input.style.borderLeftColor = DarkInputBorder;
+                }
+
+                var textEl = dd.Q<VisualElement>(className: "unity-text-element");
+                if (textEl != null)
+                {
+                    textEl.style.color = DarkInputText;
+                }
+            });
+
             if (dropdown.OnChanged == null)
             {
                 return dd;
@@ -638,12 +663,12 @@ namespace Fram3.UI.Rendering.Internal
 
             sv.RegisterCallback<AttachToPanelEvent>(_ =>
             {
-                foreach (var scroller in sv.Query<VisualElement>(className: "unity-scroller").ToList())
+                foreach (var tracker in sv.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
                 {
-                    scroller.style.backgroundColor = DarkTrack;
+                    tracker.style.backgroundColor = DarkTrack;
                 }
 
-                foreach (var dragger in sv.Query<VisualElement>(className: "unity-slider__dragger").ToList())
+                foreach (var dragger in sv.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
                 {
                     dragger.style.backgroundColor = DarkAccent;
                 }
@@ -839,6 +864,12 @@ namespace Fram3.UI.Rendering.Internal
             lv.selectionType = MapSelectionType(listView.SelectionMode);
 #if !FRAM3_PURE_TESTS
             lv.itemsSource = BuildIndexList(listView.ItemCount);
+            lv.bindItem = (item, index) =>
+            {
+                item.Clear();
+                var childElement = listView.BuildItemAt(index);
+                BuildNativeTree(childElement, item);
+            };
             lv.RefreshItems();
 #endif
         }
@@ -1117,6 +1148,8 @@ namespace Fram3.UI.Rendering.Internal
         {
             native.style.alignItems = Align.Center;
             native.style.justifyContent = Justify.Center;
+            native.style.flexGrow = 1f;
+            native.style.alignSelf = Align.Stretch;
         }
 
         private static void ApplyDecoration(BoxDecoration decoration, VisualElement native)
@@ -1184,6 +1217,31 @@ namespace Fram3.UI.Rendering.Internal
                 intf.label = intField.Label;
             }
 
+            intf.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = intf.Q<VisualElement>(className: "unity-base-field__label");
+                if (label != null)
+                {
+                    label.style.color = DarkInputText;
+                }
+
+                var input = intf.Q<VisualElement>(className: "unity-base-text-field__input");
+                if (input != null)
+                {
+                    input.style.backgroundColor = DarkInputBg;
+                    input.style.borderTopColor = DarkInputBorder;
+                    input.style.borderRightColor = DarkInputBorder;
+                    input.style.borderBottomColor = DarkInputBorder;
+                    input.style.borderLeftColor = DarkInputBorder;
+                }
+
+                var textEl = intf.Q<VisualElement>(className: "unity-text-element");
+                if (textEl != null)
+                {
+                    textEl.style.color = DarkInputText;
+                }
+            });
+
             if (intField.OnChanged == null)
             {
                 return intf;
@@ -1211,6 +1269,31 @@ namespace Fram3.UI.Rendering.Internal
             {
                 ff.label = floatField.Label;
             }
+
+            ff.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = ff.Q<VisualElement>(className: "unity-base-field__label");
+                if (label != null)
+                {
+                    label.style.color = DarkInputText;
+                }
+
+                var input = ff.Q<VisualElement>(className: "unity-base-text-field__input");
+                if (input != null)
+                {
+                    input.style.backgroundColor = DarkInputBg;
+                    input.style.borderTopColor = DarkInputBorder;
+                    input.style.borderRightColor = DarkInputBorder;
+                    input.style.borderBottomColor = DarkInputBorder;
+                    input.style.borderLeftColor = DarkInputBorder;
+                }
+
+                var textEl = ff.Q<VisualElement>(className: "unity-text-element");
+                if (textEl != null)
+                {
+                    textEl.style.color = DarkInputText;
+                }
+            });
 
             if (floatField.OnChanged == null)
             {

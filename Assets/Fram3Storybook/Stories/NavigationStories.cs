@@ -30,7 +30,7 @@ namespace Fram3.UI.Storybook.Stories
         private static Element BuildNavigator()
         {
             return new Container(
-                decoration: new BoxDecoration(Color: FrameColor.FromHex("#FAFAFA")),
+                decoration: new BoxDecoration(Color: FrameColor.FromHex("#0C0E1A")),
                 height: 320f
             )
             {
@@ -56,10 +56,10 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     Children = new Element[]
                     {
-                        new Text("Home Route", new TextStyle(FontSize: 20f, Bold: true)),
+                        new Text("Home Route", new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0"))),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new Text("Push a route using the buttons below.")
+                            Child = new Text("Push a route using the buttons below.", new TextStyle(Color: FrameColor.FromHex("#E2E8F0")))
                         },
                         new Row
                         {
@@ -91,10 +91,10 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     Children = new Element[]
                     {
-                        new Text("Detail Route", new TextStyle(FontSize: 20f, Bold: true)),
+                        new Text("Detail Route", new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0"))),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new Text("This is the detail page.")
+                            Child = new Text("This is the detail page.", new TextStyle(Color: FrameColor.FromHex("#E2E8F0")))
                         },
                         new Row
                         {
@@ -132,10 +132,10 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     Children = new Element[]
                     {
-                        new Text("Settings Route", new TextStyle(FontSize: 20f, Bold: true)),
+                        new Text("Settings Route", new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0"))),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new Text("CanPop: " + navigator.CanPop)
+                            Child = new Text("CanPop: " + navigator.CanPop, new TextStyle(Color: FrameColor.FromHex("#E2E8F0")))
                         },
                         new Button(
                             label: navigator.CanPop ? "Back" : "Back (disabled)",

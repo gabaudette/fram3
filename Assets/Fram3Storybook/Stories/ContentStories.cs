@@ -244,7 +244,7 @@ namespace Fram3.UI.Storybook.Stories
                                         )
                                     )
                                 },
-                                new Expanded(flex: empty),
+                                new Expanded(flex: empty) { Child = new Container(height: 12f) },
                             }
                         }
                     };
@@ -789,7 +789,7 @@ namespace Fram3.UI.Storybook.Stories
                 private Element BuildPagination(int currentPage, int totalPages, Theme theme)
                 {
                     return new Row(
-                        mainAxisAlignment: MainAxisAlignment.Center,
+                        mainAxisAlignment: MainAxisAlignment.End,
                         crossAxisAlignment: CrossAxisAlignment.Center
                     )
                     {
