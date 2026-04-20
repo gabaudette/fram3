@@ -43,6 +43,11 @@ namespace Fram3.UI.Elements.Input
         {
             private bool _hovered;
 
+            public override void DidUpdateElement(StatefulElement oldElement)
+            {
+                SetState(null);
+            }
+
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);

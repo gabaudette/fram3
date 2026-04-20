@@ -614,11 +614,25 @@ namespace Fram3.UI.Rendering.Internal
                             return;
                         }
 
-                        popup.style.backgroundColor = DarkInputBg;
-                        popup.style.borderTopColor = DarkInputBorder;
-                        popup.style.borderRightColor = DarkInputBorder;
-                        popup.style.borderBottomColor = DarkInputBorder;
-                        popup.style.borderLeftColor = DarkInputBorder;
+                        popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+
+                        var inner = popup.Q<VisualElement>(className: "unity-base-dropdown__container-outer")
+                                    ?? popup.Q<VisualElement>(className: "unity-base-dropdown__container-inner")
+                                    ?? popup;
+
+                        inner.style.backgroundColor = DarkInputBg;
+                        inner.style.borderTopColor = DarkInputBorder;
+                        inner.style.borderRightColor = DarkInputBorder;
+                        inner.style.borderBottomColor = DarkInputBorder;
+                        inner.style.borderLeftColor = DarkInputBorder;
+                        inner.style.borderTopWidth = 1f;
+                        inner.style.borderRightWidth = 1f;
+                        inner.style.borderBottomWidth = 1f;
+                        inner.style.borderLeftWidth = 1f;
+                        inner.style.borderTopLeftRadius = 4f;
+                        inner.style.borderTopRightRadius = 4f;
+                        inner.style.borderBottomLeftRadius = 4f;
+                        inner.style.borderBottomRightRadius = 4f;
 
                         foreach (var item in popup.Query<VisualElement>(className: "unity-base-dropdown__item").ToList())
                         {
@@ -694,56 +708,64 @@ namespace Fram3.UI.Rendering.Internal
         private static UiScrollView CreateScrollView(Fram3.UI.Elements.Content.ScrollView scrollView)
         {
             var sv = new UiScrollView(MapScrollMode(scrollView.ScrollDirection));
-
-            sv.RegisterCallback<AttachToPanelEvent>(_ =>
-            {
-                foreach (var btn in sv.Query<VisualElement>(className: "unity-scroller__low-button").ToList())
-                {
-                    btn.style.display = DisplayStyle.None;
-                }
-
-                foreach (var btn in sv.Query<VisualElement>(className: "unity-scroller__high-button").ToList())
-                {
-                    btn.style.display = DisplayStyle.None;
-                }
-
-                foreach (var scroller in sv.Query<VisualElement>(className: "unity-scroller").ToList())
-                {
-                    scroller.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                    scroller.style.borderLeftWidth = 0f;
-                    scroller.style.borderRightWidth = 0f;
-                    scroller.style.borderTopWidth = 0f;
-                    scroller.style.borderBottomWidth = 0f;
-                }
-
-                foreach (var tracker in sv.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
-                {
-                    tracker.style.backgroundColor = DarkTrack;
-                    tracker.style.borderTopLeftRadius = 4f;
-                    tracker.style.borderTopRightRadius = 4f;
-                    tracker.style.borderBottomLeftRadius = 4f;
-                    tracker.style.borderBottomRightRadius = 4f;
-                }
-
-                foreach (var dragger in sv.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
-                {
-                    dragger.style.backgroundColor = DarkAccent;
-                    dragger.style.borderTopLeftRadius = 4f;
-                    dragger.style.borderTopRightRadius = 4f;
-                    dragger.style.borderBottomLeftRadius = 4f;
-                    dragger.style.borderBottomRightRadius = 4f;
-                    dragger.style.borderTopColor = DarkAccent;
-                    dragger.style.borderRightColor = DarkAccent;
-                    dragger.style.borderBottomColor = DarkAccent;
-                    dragger.style.borderLeftColor = DarkAccent;
-                    dragger.style.borderTopWidth = 0f;
-                    dragger.style.borderRightWidth = 0f;
-                    dragger.style.borderBottomWidth = 0f;
-                    dragger.style.borderLeftWidth = 0f;
-                }
-            });
-
+            sv.RegisterCallback<AttachToPanelEvent>(_ => ApplyScrollbarTheme(sv));
             return sv;
+        }
+
+        private static void ApplyScrollbarTheme(VisualElement container)
+        {
+            foreach (var btn in container.Query<VisualElement>(className: "unity-scroller__low-button").ToList())
+            {
+                btn.style.display = DisplayStyle.None;
+            }
+
+            foreach (var btn in container.Query<VisualElement>(className: "unity-scroller__high-button").ToList())
+            {
+                btn.style.display = DisplayStyle.None;
+            }
+
+            foreach (var scroller in container.Query<VisualElement>(className: "unity-scroller").ToList())
+            {
+                scroller.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                scroller.style.borderLeftWidth = 0f;
+                scroller.style.borderRightWidth = 0f;
+                scroller.style.borderTopWidth = 0f;
+                scroller.style.borderBottomWidth = 0f;
+                scroller.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var sliderInput in container.Query<VisualElement>(className: "unity-base-slider__input").ToList())
+            {
+                sliderInput.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
+            {
+                tracker.style.backgroundColor = DarkTrack;
+                tracker.style.borderTopLeftRadius = 4f;
+                tracker.style.borderTopRightRadius = 4f;
+                tracker.style.borderBottomLeftRadius = 4f;
+                tracker.style.borderBottomRightRadius = 4f;
+                tracker.style.marginTop = 2f;
+                tracker.style.marginBottom = 2f;
+            }
+
+            foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
+            {
+                dragger.style.backgroundColor = DarkAccent;
+                dragger.style.borderTopLeftRadius = 4f;
+                dragger.style.borderTopRightRadius = 4f;
+                dragger.style.borderBottomLeftRadius = 4f;
+                dragger.style.borderBottomRightRadius = 4f;
+                dragger.style.borderTopColor = DarkAccent;
+                dragger.style.borderRightColor = DarkAccent;
+                dragger.style.borderBottomColor = DarkAccent;
+                dragger.style.borderLeftColor = DarkAccent;
+                dragger.style.borderTopWidth = 0f;
+                dragger.style.borderRightWidth = 0f;
+                dragger.style.borderBottomWidth = 0f;
+                dragger.style.borderLeftWidth = 0f;
+            }
         }
 
         private static void PaintScrollView(Fram3.UI.Elements.Content.ScrollView scrollView, UiScrollView sv)
@@ -908,7 +930,7 @@ namespace Fram3.UI.Rendering.Internal
             lv.style.flexGrow = 1f;
             lv.style.flexShrink = 1f;
 
-            // ReSharper disable once InvertIf
+            lv.RegisterCallback<AttachToPanelEvent>(_ => ApplyScrollbarTheme(lv));
             if (listView.OnSelectionChangedUntyped != null)
             {
                 var callback = listView.OnSelectionChangedUntyped;
@@ -1314,6 +1336,14 @@ namespace Fram3.UI.Rendering.Internal
                 }
             });
 
+            intf.RegisterCallback<KeyDownEvent>(evt =>
+            {
+                if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: false))
+                {
+                    evt.StopImmediatePropagation();
+                }
+            }, TrickleDown.TrickleDown);
+
             if (intField.OnChanged == null)
             {
                 return intf;
@@ -1366,6 +1396,14 @@ namespace Fram3.UI.Rendering.Internal
                     textEl.style.color = DarkInputText;
                 }
             });
+
+            ff.RegisterCallback<KeyDownEvent>(evt =>
+            {
+                if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: true))
+                {
+                    evt.StopImmediatePropagation();
+                }
+            }, TrickleDown.TrickleDown);
 
             if (floatField.OnChanged == null)
             {
@@ -1536,10 +1574,98 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyTooltipLayout(Tooltip tooltip, VisualElement native)
         {
-            native.tooltip = tooltip.Message;
             native.style.flexDirection = FlexDirection.Column;
             native.style.alignSelf = Align.Stretch;
             native.style.alignItems = Align.Stretch;
+
+            var message = tooltip.Message;
+            Label? tip = null;
+
+            native.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                native.RegisterCallback<PointerEnterEvent>(_ =>
+                {
+                    if (native.panel == null || tip != null)
+                    {
+                        return;
+                    }
+
+                    tip = new Label(message);
+                    tip.pickingMode = PickingMode.Ignore;
+                    tip.style.position = Position.Absolute;
+                    tip.style.backgroundColor = new UnityEngine.Color(0.06f, 0.06f, 0.10f, 0.96f);
+                    tip.style.color = new UnityEngine.Color(0.886f, 0.910f, 0.941f, 1f);
+                    tip.style.paddingTop = 5f;
+                    tip.style.paddingBottom = 5f;
+                    tip.style.paddingLeft = 10f;
+                    tip.style.paddingRight = 10f;
+                    tip.style.borderTopLeftRadius = 4f;
+                    tip.style.borderTopRightRadius = 4f;
+                    tip.style.borderBottomLeftRadius = 4f;
+                    tip.style.borderBottomRightRadius = 4f;
+                    tip.style.fontSize = 12f;
+                    tip.style.maxWidth = 240f;
+                    tip.style.whiteSpace = WhiteSpace.Normal;
+                    tip.style.borderTopColor = new UnityEngine.Color(0.12f, 0.14f, 0.21f, 1f);
+                    tip.style.borderRightColor = new UnityEngine.Color(0.12f, 0.14f, 0.21f, 1f);
+                    tip.style.borderBottomColor = new UnityEngine.Color(0.12f, 0.14f, 0.21f, 1f);
+                    tip.style.borderLeftColor = new UnityEngine.Color(0.12f, 0.14f, 0.21f, 1f);
+                    tip.style.borderTopWidth = 1f;
+                    tip.style.borderRightWidth = 1f;
+                    tip.style.borderBottomWidth = 1f;
+                    tip.style.borderLeftWidth = 1f;
+                    native.panel.visualTree.Add(tip);
+                });
+
+                native.RegisterCallback<PointerLeaveEvent>(_ =>
+                {
+                    tip?.RemoveFromHierarchy();
+                    tip = null;
+                });
+
+                native.RegisterCallback<PointerMoveEvent>(evt =>
+                {
+                    if (tip == null)
+                    {
+                        return;
+                    }
+
+                    tip.style.left = evt.position.x + 14f;
+                    tip.style.top = evt.position.y + 18f;
+                });
+            });
+        }
+
+        private static bool IsAllowedNumericKey(char character, UnityEngine.KeyCode keyCode, bool ctrlOrCmd, bool allowDecimal)
+        {
+            if (ctrlOrCmd)
+            {
+                return true;
+            }
+
+            if (char.IsDigit(character) || character == '-')
+            {
+                return true;
+            }
+
+            if (allowDecimal && (character == '.' || character == ','))
+            {
+                return true;
+            }
+
+            return keyCode switch
+            {
+                UnityEngine.KeyCode.Backspace => true,
+                UnityEngine.KeyCode.Delete => true,
+                UnityEngine.KeyCode.LeftArrow => true,
+                UnityEngine.KeyCode.RightArrow => true,
+                UnityEngine.KeyCode.Home => true,
+                UnityEngine.KeyCode.End => true,
+                UnityEngine.KeyCode.Return => true,
+                UnityEngine.KeyCode.KeypadEnter => true,
+                UnityEngine.KeyCode.Tab => true,
+                _ => false
+            };
         }
 
         private static void ApplyWrapLayout(VisualElement native)
