@@ -748,6 +748,18 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyScrollbarTheme(VisualElement container)
         {
+            var scrollers = container.Query<VisualElement>(className: "unity-scroller").ToList();
+            UnityEngine.Debug.Log($"[Fram3] ApplyScrollbarTheme: container={container.GetType().Name} scrollers={scrollers.Count}");
+            foreach (var s in scrollers)
+            {
+                var classes = string.Join(", ", s.GetClasses());
+                UnityEngine.Debug.Log($"[Fram3] scroller classes: {classes}");
+                foreach (var child in s.Query<VisualElement>().ToList())
+                {
+                    var cc = string.Join(", ", child.GetClasses());
+                    UnityEngine.Debug.Log($"[Fram3]   child: {cc} border-color={child.resolvedStyle.borderTopColor}");
+                }
+            }
             foreach (var btn in container.Query<VisualElement>(className: "unity-scroller__low-button").ToList())
             {
                 btn.style.display = DisplayStyle.None;
