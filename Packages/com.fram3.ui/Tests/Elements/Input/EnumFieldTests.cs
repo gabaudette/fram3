@@ -3,6 +3,7 @@ using System;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Rendering.Internal;
+using Fram3.UI.Styling;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 
@@ -93,7 +94,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new EnumField<TestDirection>();
 
-            var native = ElementPainter.CreateNative(element);
+            var native = ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native, Is.InstanceOf<EnumField>());
         }
@@ -103,7 +104,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new EnumField<TestDirection>(value: TestDirection.Up);
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
         }
 
         [Test]
@@ -111,18 +112,18 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new EnumField<TestDirection>(value: TestDirection.Up, onChanged: _ => { });
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
         }
 
         [Test]
         public void Paint_FEnumField_DoesNotThrow()
         {
             var original = new EnumField<TestDirection>(value: TestDirection.Left);
-            var native = (EnumField)ElementPainter.CreateNative(original);
+            var native = (EnumField)ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new EnumField<TestDirection>(value: TestDirection.Right);
 
-            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native));
+            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, Theme.Default));
         }
 
 #if FRAM3_PURE_TESTS
@@ -131,7 +132,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new EnumField<TestDirection>(value: TestDirection.Down);
 
-            var native = (EnumField)ElementPainter.CreateNative(element);
+            var native = (EnumField)ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.value, Is.EqualTo(TestDirection.Down));
         }
@@ -141,7 +142,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new EnumField<TestDirection>(label: "Facing");
 
-            var native = (EnumField)ElementPainter.CreateNative(element);
+            var native = (EnumField)ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.label, Is.EqualTo("Facing"));
         }
@@ -151,7 +152,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new EnumField<TestDirection>();
 
-            var native = (EnumField)ElementPainter.CreateNative(element);
+            var native = (EnumField)ElementPainter.CreateNative(element, Theme.Default);
 
             Assert.That(native.label, Is.Null);
         }
@@ -161,7 +162,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             TestDirection? received = null;
             var element = new EnumField<TestDirection>(onChanged: v => received = v);
-            var native = (EnumField)ElementPainter.CreateNative(element);
+            var native = (EnumField)ElementPainter.CreateNative(element, Theme.Default);
 
             native.SimulateValueChanged(TestDirection.Up);
 
@@ -173,7 +174,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var invoked = false;
             var element = new EnumField<TestDirection>(onChanged: _ => invoked = true);
-            var native = (EnumField)ElementPainter.CreateNative(element);
+            var native = (EnumField)ElementPainter.CreateNative(element, Theme.Default);
 
             native.SimulateValueChanged(null);
 
@@ -184,10 +185,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FEnumField_UpdatesValue()
         {
             var original = new EnumField<TestDirection>(value: TestDirection.Left);
-            var native = (EnumField)ElementPainter.CreateNative(original);
+            var native = (EnumField)ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new EnumField<TestDirection>(value: TestDirection.Right);
-            ElementPainter.Paint(updated, native);
+            ElementPainter.Paint(updated, native, Theme.Default);
 
             Assert.That(native.value, Is.EqualTo(TestDirection.Right));
         }
@@ -196,10 +197,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FEnumField_UpdatesLabel()
         {
             var original = new EnumField<TestDirection>(label: "old");
-            var native = (EnumField)ElementPainter.CreateNative(original);
+            var native = (EnumField)ElementPainter.CreateNative(original, Theme.Default);
 
             var updated = new EnumField<TestDirection>(label: "new");
-            ElementPainter.Paint(updated, native);
+            ElementPainter.Paint(updated, native, Theme.Default);
 
             Assert.That(native.label, Is.EqualTo("new"));
         }
