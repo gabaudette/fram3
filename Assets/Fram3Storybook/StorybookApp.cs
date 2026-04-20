@@ -73,6 +73,8 @@ namespace Fram3.UI.Storybook
             PrimaryTextColor = FrameColor.FromHex("#E2E8F0"),
             SecondaryTextColor = FrameColor.FromHex("#6B7691"),
             DisabledTextColor = FrameColor.FromHex("#2E3347"),
+            InputBorderColor = FrameColor.FromHex("#1F2436"),
+            TrackColor = FrameColor.FromHex("#1A1F30"),
             FontSize = 14f,
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,

@@ -36,6 +36,12 @@ namespace Fram3.UI.Styling
         /// <summary>Text color applied to disabled controls and placeholder text.</summary>
         public FrameColor DisabledTextColor { get; init; }
 
+        /// <summary>Border color for input fields, dropdowns, scrollbars, and other widget outlines.</summary>
+        public FrameColor InputBorderColor { get; init; }
+
+        /// <summary>Background color for slider tracks and scrollbar track areas.</summary>
+        public FrameColor TrackColor { get; init; }
+
         /// <summary>Base font size in pixels used for body text.</summary>
         public float FontSize { get; init; }
 
@@ -66,6 +72,8 @@ namespace Fram3.UI.Styling
             PrimaryTextColor = FrameColor.FromHex("#212121"),
             SecondaryTextColor = FrameColor.FromHex("#757575"),
             DisabledTextColor = FrameColor.FromHex("#BDBDBD"),
+            InputBorderColor = FrameColor.FromHex("#E0E0E0"),
+            TrackColor = FrameColor.FromHex("#EEEEEE"),
             FontSize = 14f,
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
