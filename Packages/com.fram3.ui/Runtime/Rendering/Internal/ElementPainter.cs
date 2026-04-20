@@ -742,7 +742,7 @@ namespace Fram3.UI.Rendering.Internal
         private static UiScrollView CreateScrollView(Fram3.UI.Elements.Content.ScrollView scrollView)
         {
             var sv = new UiScrollView(MapScrollMode(scrollView.ScrollDirection));
-            sv.RegisterCallback<AttachToPanelEvent>(_ => sv.schedule.Execute(() => ApplyScrollbarTheme(sv)));
+            sv.RegisterCallback<AttachToPanelEvent>(_ => sv.schedule.Execute(() => ApplyScrollbarTheme(sv)).ExecuteLater(1));
             return sv;
         }
 
@@ -1022,7 +1022,7 @@ namespace Fram3.UI.Rendering.Internal
             lv.style.flexGrow = 1f;
             lv.style.flexShrink = 1f;
 
-            lv.RegisterCallback<AttachToPanelEvent>(_ => lv.schedule.Execute(() => ApplyScrollbarTheme(lv)));
+            lv.RegisterCallback<AttachToPanelEvent>(_ => lv.schedule.Execute(() => ApplyScrollbarTheme(lv)).ExecuteLater(1));
             if (listView.OnSelectionChangedUntyped != null)
             {
                 var callback = listView.OnSelectionChangedUntyped;
