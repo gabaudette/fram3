@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
@@ -191,6 +192,13 @@ namespace Fram3.UI.Rendering.Internal
                     {
                         PaintEnumField(enumFieldDesc, ef);
                         break;
+                    }
+
+                    if (element is GestureDetector updatedGesture && native.userData is GestureCallbackHolder holder)
+                    {
+                        holder.OnTap = updatedGesture.OnTap;
+                        holder.OnPointerEnter = updatedGesture.OnPointerEnter;
+                        holder.OnPointerExit = updatedGesture.OnPointerExit;
                     }
 
                     ApplyLayout(element, native);
@@ -432,9 +440,15 @@ namespace Fram3.UI.Rendering.Internal
                     label.style.color = DarkInputText;
                 }
 
+                foreach (var itemLabel in rbg.Query<VisualElement>(className: "unity-radio-button__label").ToList())
+                {
+                    itemLabel.style.color = DarkInputText;
+                    itemLabel.style.marginLeft = 6f;
+                }
+
                 foreach (var input in rbg.Query<VisualElement>(className: "unity-radio-button__input").ToList())
                 {
-                    input.style.marginRight = 6f;
+                    input.style.marginRight = 0f;
                 }
             });
 
@@ -615,10 +629,15 @@ namespace Fram3.UI.Rendering.Internal
                         }
 
                         popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                        popup.style.borderTopWidth = 0f;
+                        popup.style.borderRightWidth = 0f;
+                        popup.style.borderBottomWidth = 0f;
+                        popup.style.borderLeftWidth = 0f;
 
-                        var inner = popup.Q<VisualElement>(className: "unity-base-dropdown__container-outer")
-                                    ?? popup.Q<VisualElement>(className: "unity-base-dropdown__container-inner")
-                                    ?? popup;
+                        var containerOuter = popup.Q<VisualElement>(className: "unity-base-dropdown__container-outer");
+                        var containerInner = popup.Q<VisualElement>(className: "unity-base-dropdown__container-inner");
+
+                        var inner = containerOuter ?? containerInner ?? popup;
 
                         inner.style.backgroundColor = DarkInputBg;
                         inner.style.borderTopColor = DarkInputBorder;
@@ -633,6 +652,15 @@ namespace Fram3.UI.Rendering.Internal
                         inner.style.borderTopRightRadius = 4f;
                         inner.style.borderBottomLeftRadius = 4f;
                         inner.style.borderBottomRightRadius = 4f;
+
+                        if (containerOuter != null && containerInner != null)
+                        {
+                            containerInner.style.backgroundColor = DarkInputBg;
+                            containerInner.style.borderTopWidth = 0f;
+                            containerInner.style.borderRightWidth = 0f;
+                            containerInner.style.borderBottomWidth = 0f;
+                            containerInner.style.borderLeftWidth = 0f;
+                        }
 
                         foreach (var item in popup.Query<VisualElement>(className: "unity-base-dropdown__item").ToList())
                         {
@@ -999,6 +1027,13 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
+        private sealed class GestureCallbackHolder
+        {
+            public Action? OnTap;
+            public Action? OnPointerEnter;
+            public Action? OnPointerExit;
+        }
+
         private static void RegisterGestureCallbacks(Element element, VisualElement native)
         {
             if (element is not GestureDetector gesture)
@@ -1006,24 +1041,17 @@ namespace Fram3.UI.Rendering.Internal
                 return;
             }
 
-            if (gesture.OnTap != null)
+            var holder = new GestureCallbackHolder
             {
-                var callback = gesture.OnTap;
-                native.RegisterCallback<ClickEvent>(_ => callback());
-            }
+                OnTap = gesture.OnTap,
+                OnPointerEnter = gesture.OnPointerEnter,
+                OnPointerExit = gesture.OnPointerExit
+            };
+            native.userData = holder;
 
-            if (gesture.OnPointerEnter != null)
-            {
-                var callback = gesture.OnPointerEnter;
-                native.RegisterCallback<PointerEnterEvent>(_ => callback());
-            }
-
-            // ReSharper disable once InvertIf
-            if (gesture.OnPointerExit != null)
-            {
-                var callback = gesture.OnPointerExit;
-                native.RegisterCallback<PointerLeaveEvent>(_ => callback());
-            }
+            native.RegisterCallback<ClickEvent>(_ => holder.OnTap?.Invoke());
+            native.RegisterCallback<PointerEnterEvent>(_ => holder.OnPointerEnter?.Invoke());
+            native.RegisterCallback<PointerLeaveEvent>(_ => holder.OnPointerExit?.Invoke());
         }
 
         private static void PaintText(Text text, Label label)
@@ -1454,11 +1482,15 @@ namespace Fram3.UI.Rendering.Internal
                     tracker.style.backgroundColor = DarkTrack;
                 }
 
-                var fill = mms.Q<VisualElement>(className: "unity-min-max-slider__range-drag-container");
+                var fill = mms.Q<VisualElement>(className: "unity-min-max-slider__dragger");
                 if (fill != null)
                 {
                     fill.style.backgroundColor = DarkAccent;
                     fill.style.opacity = 0.4f;
+                    fill.style.borderTopLeftRadius = 3f;
+                    fill.style.borderTopRightRadius = 3f;
+                    fill.style.borderBottomLeftRadius = 3f;
+                    fill.style.borderBottomRightRadius = 3f;
                 }
 
                 foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-low").ToList())
@@ -1468,6 +1500,10 @@ namespace Fram3.UI.Rendering.Internal
                     dragger.style.borderRightColor = DarkAccent;
                     dragger.style.borderBottomColor = DarkAccent;
                     dragger.style.borderLeftColor = DarkAccent;
+                    dragger.style.borderTopLeftRadius = 4f;
+                    dragger.style.borderTopRightRadius = 4f;
+                    dragger.style.borderBottomLeftRadius = 4f;
+                    dragger.style.borderBottomRightRadius = 4f;
                 }
 
                 foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-high").ToList())
@@ -1477,6 +1513,10 @@ namespace Fram3.UI.Rendering.Internal
                     dragger.style.borderRightColor = DarkAccent;
                     dragger.style.borderBottomColor = DarkAccent;
                     dragger.style.borderLeftColor = DarkAccent;
+                    dragger.style.borderTopLeftRadius = 4f;
+                    dragger.style.borderTopRightRadius = 4f;
+                    dragger.style.borderBottomLeftRadius = 4f;
+                    dragger.style.borderBottomRightRadius = 4f;
                 }
             });
 
@@ -1583,7 +1623,7 @@ namespace Fram3.UI.Rendering.Internal
 
             native.RegisterCallback<AttachToPanelEvent>(_ =>
             {
-                native.RegisterCallback<PointerEnterEvent>(_ =>
+                native.RegisterCallback<PointerEnterEvent>(evt =>
                 {
                     if (native.panel == null || tip != null)
                     {
@@ -1614,6 +1654,8 @@ namespace Fram3.UI.Rendering.Internal
                     tip.style.borderRightWidth = 1f;
                     tip.style.borderBottomWidth = 1f;
                     tip.style.borderLeftWidth = 1f;
+                    tip.style.left = evt.position.x + 14f;
+                    tip.style.top = evt.position.y + 18f;
                     native.panel.visualTree.Add(tip);
                 });
 
