@@ -670,8 +670,7 @@ namespace Fram3.UI.Rendering.Internal
                             var checkmark = item.Q<VisualElement>(className: "unity-base-dropdown__item-checkmark");
                             if (checkmark != null)
                             {
-                                checkmark.style.color = DarkInputText;
-                                checkmark.style.unityBackgroundImageTintColor = DarkInputText;
+                                checkmark.style.display = DisplayStyle.None;
                             }
                         }
                     }).ExecuteLater(1);
@@ -768,27 +767,11 @@ namespace Fram3.UI.Rendering.Internal
                 scroller.style.borderBottomWidth = 0f;
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
-                scroller.style.overflow = Overflow.Visible;
-            }
-
-            foreach (var scrollerWrapper in container.Query<VisualElement>(className: "unity-scroll-view__vertical-scroller").ToList())
-            {
-                scrollerWrapper.style.overflow = Overflow.Visible;
-            }
-
-            foreach (var scrollerWrapper in container.Query<VisualElement>(className: "unity-scroll-view__horizontal-scroller").ToList())
-            {
-                scrollerWrapper.style.overflow = Overflow.Visible;
             }
 
             foreach (var sliderInput in container.Query<VisualElement>(className: "unity-base-slider__input").ToList())
             {
                 sliderInput.style.overflow = Overflow.Visible;
-            }
-
-            foreach (var slider in container.Query<VisualElement>(className: "unity-base-slider").ToList())
-            {
-                slider.style.overflow = Overflow.Visible;
             }
 
             foreach (var draggerContainer in container.Query<VisualElement>(className: "unity-base-slider__dragger-container").ToList())
@@ -803,8 +786,6 @@ namespace Fram3.UI.Rendering.Internal
                 tracker.style.borderTopRightRadius = 4f;
                 tracker.style.borderBottomLeftRadius = 4f;
                 tracker.style.borderBottomRightRadius = 4f;
-                tracker.style.marginTop = 2f;
-                tracker.style.marginBottom = 2f;
             }
 
             foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
@@ -978,26 +959,15 @@ namespace Fram3.UI.Rendering.Internal
                     var container = new VisualElement();
                     container.style.flexGrow = 1f;
                     container.style.alignSelf = Align.Stretch;
-                    var itemStyled = false;
-                    container.RegisterCallback<AttachToPanelEvent>(_ =>
-                    {
-                        if (itemStyled || container.parent == null)
-                        {
-                            return;
-                        }
-
-                        itemStyled = true;
-                        var listItem = container.parent;
-                        listItem.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                        listItem.RegisterCallback<PointerEnterEvent>(_ =>
-                            listItem.style.backgroundColor = new UnityEngine.Color(1f, 1f, 1f, 0.05f));
-                        listItem.RegisterCallback<PointerLeaveEvent>(_ =>
-                            listItem.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f));
-                    });
                     return container;
                 },
                 bindItem = (item, index) =>
                 {
+                    if (item.parent != null)
+                    {
+                        item.parent.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                    }
+
                     item.Clear();
                     var childElement = holder.Descriptor!.BuildItemAt(index);
                     BuildNativeTree(childElement, item);
