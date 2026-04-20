@@ -667,10 +667,10 @@ namespace Fram3.UI.Rendering.Internal
                             item.style.color = DarkInputText;
                             item.style.backgroundColor = DarkInputBg;
 
-                            var checkmark = item.Q<VisualElement>(className: "unity-base-dropdown__item-checkmark");
+                            var checkmark = item.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
                             if (checkmark != null)
                             {
-                                checkmark.style.display = DisplayStyle.None;
+                                checkmark.style.visibility = Visibility.Hidden;
                             }
                         }
                     }).ExecuteLater(1);
@@ -767,16 +767,27 @@ namespace Fram3.UI.Rendering.Internal
                 scroller.style.borderBottomWidth = 0f;
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
+                scroller.style.overflow = Overflow.Visible;
             }
 
-            foreach (var sliderInput in container.Query<VisualElement>(className: "unity-base-slider__input").ToList())
+            foreach (var scrollerSlider in container.Query<VisualElement>(className: "unity-scroller__slider").ToList())
+            {
+                scrollerSlider.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var baseSlider in container.Query<VisualElement>(className: "unity-base-slider").ToList())
+            {
+                baseSlider.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var sliderInput in container.Query<VisualElement>(className: "unity-slider__input").ToList())
             {
                 sliderInput.style.overflow = Overflow.Visible;
             }
 
-            foreach (var draggerContainer in container.Query<VisualElement>(className: "unity-base-slider__dragger-container").ToList())
+            foreach (var dragContainer in container.Query<VisualElement>(className: "unity-base-slider__drag-container").ToList())
             {
-                draggerContainer.style.overflow = Overflow.Visible;
+                dragContainer.style.overflow = Overflow.Visible;
             }
 
             foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
@@ -963,9 +974,14 @@ namespace Fram3.UI.Rendering.Internal
                 },
                 bindItem = (item, index) =>
                 {
-                    if (item.parent != null)
+                    item.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                    if (item.userData == null)
                     {
-                        item.parent.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                        item.userData = new object();
+                        item.RegisterCallback<PointerEnterEvent>(_ =>
+                            item.style.backgroundColor = DarkTrack);
+                        item.RegisterCallback<PointerLeaveEvent>(_ =>
+                            item.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f));
                     }
 
                     item.Clear();
