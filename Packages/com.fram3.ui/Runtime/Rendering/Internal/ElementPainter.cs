@@ -666,6 +666,12 @@ namespace Fram3.UI.Rendering.Internal
                         {
                             item.style.color = DarkInputText;
                             item.style.backgroundColor = DarkInputBg;
+
+                            var checkmark = item.Q<VisualElement>(className: "unity-base-dropdown__item-checkmark");
+                            if (checkmark != null)
+                            {
+                                checkmark.style.color = DarkInputText;
+                            }
                         }
                     }).ExecuteLater(1);
                 });
@@ -767,6 +773,11 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var sliderInput in container.Query<VisualElement>(className: "unity-base-slider__input").ToList())
             {
                 sliderInput.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var slider in container.Query<VisualElement>(className: "unity-base-slider").ToList())
+            {
+                slider.style.overflow = Overflow.Visible;
             }
 
             foreach (var draggerContainer in container.Query<VisualElement>(className: "unity-base-slider__dragger-container").ToList())
