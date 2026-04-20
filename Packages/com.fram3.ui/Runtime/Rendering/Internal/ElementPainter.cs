@@ -5,9 +5,9 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Elements.Layout;
+using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
 using UnityEngine.UIElements;
-using UiButton = UnityEngine.UIElements.Button;
 using UiTextField = UnityEngine.UIElements.TextField;
 using UiScrollView = UnityEngine.UIElements.ScrollView;
 using UiProgressBar = UnityEngine.UIElements.ProgressBar;
@@ -51,8 +51,6 @@ namespace Fram3.UI.Rendering.Internal
             {
                 case Text text:
                     return CreateLabel(text);
-                case Fram3.UI.Elements.Input.Button button:
-                    return CreateButton(button);
                 case PasswordField passwordField:
                     return CreatePasswordField(passwordField);
                 case Fram3.UI.Elements.Input.TextField textField:
@@ -130,9 +128,6 @@ namespace Fram3.UI.Rendering.Internal
             {
                 case Text text when native is Label label:
                     PaintText(text, label);
-                    break;
-                case Fram3.UI.Elements.Input.Button button when native is UiButton btn:
-                    PaintButton(button, btn);
                     break;
                 case PasswordField passwordField when native is UiTextField ptf:
                     PaintPasswordField(passwordField, ptf);
@@ -234,12 +229,6 @@ namespace Fram3.UI.Rendering.Internal
             var label = new Label(text.Content);
             PaintText(text, label);
             return label;
-        }
-
-        private static UiButton CreateButton(Fram3.UI.Elements.Input.Button button)
-        {
-            var btn = new UiButton(button.OnPressed) { text = button.Label };
-            return btn;
         }
 
         private static UiTextField CreatePasswordField(PasswordField passwordField)
@@ -754,11 +743,6 @@ namespace Fram3.UI.Rendering.Internal
             ApplyTextStyle(text.Style, label);
         }
 
-        private static void PaintButton(Fram3.UI.Elements.Input.Button button, UiButton btn)
-        {
-            btn.text = button.Label;
-        }
-
         private static void ApplyTextStyle(TextStyle style, VisualElement native)
         {
             if (style.FontSize.HasValue)
@@ -839,6 +823,9 @@ namespace Fram3.UI.Rendering.Internal
                 case GestureDetector:
                     ApplyPassthroughLayout(native);
                     break;
+                case ThemeProvider themeProvider:
+                    ApplyThemeProviderLayout(themeProvider, native);
+                    break;
                 default:
                     ApplyPassthroughLayout(native);
                     break;
@@ -847,6 +834,16 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyPassthroughLayout(VisualElement native)
         {
+            native.style.flexGrow = 1f;
+            native.style.flexShrink = 1f;
+            native.style.alignSelf = Align.Stretch;
+            native.style.flexDirection = FlexDirection.Column;
+        }
+
+        private static void ApplyThemeProviderLayout(ThemeProvider provider, VisualElement native)
+        {
+            var c = provider.Theme.PrimaryTextColor;
+            native.style.color = new UnityEngine.Color(c.R, c.G, c.B, c.A);
             native.style.flexGrow = 1f;
             native.style.flexShrink = 1f;
             native.style.alignSelf = Align.Stretch;

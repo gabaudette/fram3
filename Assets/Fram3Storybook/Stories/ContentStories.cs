@@ -19,152 +19,552 @@ namespace Fram3.UI.Storybook.Stories
             {
                 new Story("Text",
                     "Renders a string with optional font size, color, weight, style, and letter-spacing overrides.",
-                    BuildText),
+                    () => new TextStory()),
                 new Story("ProgressBar",
                     "Shows a bounded progress value between a min and max, with an optional title label above the track.",
-                    BuildProgressBar),
+                    () => new ProgressBarStory()),
                 new Story("Spinner",
                     "Displays an indeterminate loading indicator as a spinning ring, configurable in size, stroke width, color, and rotation speed.",
-                    BuildSpinner),
+                    () => new SpinnerStory()),
                 new Story("TabView",
                     "Renders a row of tab labels and swaps the visible content panel when a tab is selected.",
-                    BuildTabView),
+                    () => new TabViewStory()),
                 new Story("ListView",
                     "Virtualized list with search, class filter, and pagination over a roster of game characters.",
                     BuildListView),
                 new Story("Tooltip", "Attaches a plain-text tooltip to its child that appears on hover.",
-                    BuildTooltip),
+                    () => new TooltipStory()),
                 new Story("Snackbar",
                     "Shows a transient message bar triggered by a button, with and without an action label.",
-                    BuildSnackbar),
+                    () => new SnackbarStory()),
             };
         }
 
-        private static Element BuildText()
+        private static Element BuildListView() => new RosterListViewElement();
+
+        // ---------------------------------------------------------------------------
+        // Text
+        // ---------------------------------------------------------------------------
+
+        private sealed class TextStory : StatefulElement
         {
-            return new Column
+            public override Fram3.UI.Core.State CreateState() => new TextStoryState();
+
+            private sealed class TextStoryState : Fram3.UI.Core.State<TextStory>
             {
-                Children = new Element[]
+                public override Element Build(BuildContext context)
                 {
-                    new Text("Default text"),
-                    new Text("Large bold text", new TextStyle(FontSize: 24f, Bold: true)),
-                    new Text("Colored italic text", new TextStyle(
-                        FontSize: 16f,
-                        Color: FrameColor.FromHex("#6200EE"),
-                        Italic: true
-                    )),
-                    new Text("Underlined text", new TextStyle(Underline: true)),
-                    new Text("Small with letter spacing", new TextStyle(
-                        FontSize: 11f,
-                        LetterSpacing: 2f,
-                        Color: FrameColor.FromHex("#757575")
-                    )),
-                }
-            };
-        }
-
-        private static Element BuildProgressBar()
-        {
-            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
-            {
-                Children = new Element[]
-                {
-                    new Text("25% progress:"),
-                    SizedBox.FromSize(height: 4f),
-                    new ProgressBar(value: 25f, title: "Loading..."),
-                    SizedBox.FromSize(height: 12f),
-                    new Text("75% progress:"),
-                    SizedBox.FromSize(height: 4f),
-                    new ProgressBar(value: 75f),
-                    SizedBox.FromSize(height: 12f),
-                    new Text("Custom range (0-50), value 30:"),
-                    SizedBox.FromSize(height: 4f),
-                    new ProgressBar(value: 30f, min: 0f, max: 50f),
-                }
-            };
-        }
-
-        private static Element BuildSpinner()
-        {
-            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
-            {
-                Children = new Element[]
-                {
-                    new Text("Default spinner (32px):"),
-                    SizedBox.FromSize(height: 4f),
-                    new Spinner(),
-                    SizedBox.FromSize(height: 12f),
-                    new Text("Large spinner (64px, 6px stroke, blue, 2s):"),
-                    SizedBox.FromSize(height: 4f),
-                    new Spinner(size: 64f, strokeWidth: 6f, color: FrameColor.FromHex("#6200EE"), speed: 2f),
-                    SizedBox.FromSize(height: 12f),
-                    new Text("Small fast spinner (20px, fast):"),
-                    SizedBox.FromSize(height: 4f),
-                    new Spinner(size: 20f, strokeWidth: 3f, speed: 0.5f),
-                }
-            };
-        }
-
-        private static Element BuildTabView()
-        {
-            return new TabView(
-                tabs: new Tab[]
-                {
-                    new Tab("Alpha", new Padding(EdgeInsets.All(16f))
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
-                        Child = new Text("Content for tab Alpha.")
-                    }),
-                    new Tab("Beta", new Padding(EdgeInsets.All(16f))
-                    {
-                        Child = new Text("Content for tab Beta.")
-                    }),
-                    new Tab("Gamma", new Padding(EdgeInsets.All(16f))
-                    {
-                        Child = new Text("Content for tab Gamma.")
-                    }),
-                },
-                initialIndex: 0
-            );
-        }
-
-        private static Element BuildListView()
-        {
-            return new RosterListViewElement();
-        }
-
-        private static Element BuildTooltip()
-        {
-            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
-            {
-                Children = new Element[]
-                {
-                    new Text("Hover over the box below to see the tooltip:"),
-                    SizedBox.FromSize(height: 8f),
-                    new Tooltip("This is the tooltip message!")
-                    {
-                        Child = new Container(
-                            decoration: new BoxDecoration(
-                                Color: FrameColor.FromHex("#6200EE").WithAlpha(0.15f),
-                                Border: new Border(FrameColor.FromHex("#6200EE"), 1f),
-                                BorderRadius: BorderRadius.All(4f)
-                            ),
-                            padding: EdgeInsets.All(12f)
-                        )
+                        Children = new Element[]
                         {
-                            Child = new Text("Hover me")
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
                         }
-                    },
+                    };
                 }
-            };
-        }
 
-        private static Element BuildSnackbar()
-        {
-            return new SnackbarDemoElement();
+                private static Element BuildBasic(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("Default text", new TextStyle(Color: theme.PrimaryTextColor)),
+                            new Text("Large bold text", new TextStyle(FontSize: 24f, Bold: true, Color: theme.PrimaryTextColor)),
+                            new Text("Accent italic text", new TextStyle(
+                                FontSize: 16f,
+                                Color: theme.PrimaryColor,
+                                Italic: true
+                            )),
+                            new Text("Small with letter spacing", new TextStyle(
+                                FontSize: 11f,
+                                LetterSpacing: 2f,
+                                Color: theme.SecondaryTextColor
+                            )),
+                        }
+                    };
+                }
+
+                private static Element BuildGame(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("KILL FEED", new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Bold: true,
+                                Color: theme.SecondaryColor,
+                                LetterSpacing: 1.5f
+                            )),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            KillFeedEntry("Drex Ironfoot", "eliminated", "a Goblin Scout", FrameColor.FromHex("#FF6B6B"), theme),
+                            KillFeedEntry("Lyria Moonwhisper", "cast", "Arcane Surge", FrameColor.FromHex("#7B61FF"), theme),
+                            KillFeedEntry("Seraphine Vale", "healed", "Aric for 142 HP", FrameColor.FromHex("#00D4AA"), theme),
+                            KillFeedEntry("Vex Nightfall", "looted", "Shadowblade", FrameColor.FromHex("#FFD700"), theme),
+                        }
+                    };
+                }
+
+                private static Element KillFeedEntry(string actor, string verb, string target, FrameColor actorColor, Theme theme)
+                {
+                    return new Padding(EdgeInsets.Symmetric(vertical: 2f, horizontal: 0f))
+                    {
+                        Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                        {
+                            Children = new Element[]
+                            {
+                                new Text(actor, new TextStyle(FontSize: theme.FontSizeSmall, Bold: true, Color: actorColor)),
+                                new Text($" {verb} ", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                                new Text(target, new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.PrimaryTextColor)),
+                            }
+                        }
+                    };
+                }
+            }
         }
 
         // ---------------------------------------------------------------------------
-        // ListView story
+        // ProgressBar
+        // ---------------------------------------------------------------------------
+
+        private sealed class ProgressBarStory : StatefulElement
+        {
+            public override Fram3.UI.Core.State CreateState() => new ProgressBarStoryState();
+
+            private sealed class ProgressBarStoryState : Fram3.UI.Core.State<ProgressBarStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildBasic(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("25% progress:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: 4f),
+                            new ProgressBar(value: 25f, title: "Loading..."),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Text("75% progress:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: 4f),
+                            new ProgressBar(value: 75f),
+                        }
+                    };
+                }
+
+                private static Element BuildGame(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("HERO STATS", new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Bold: true,
+                                Color: theme.SecondaryColor,
+                                LetterSpacing: 1.5f
+                            )),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            GameStatBar("HP", 87, 100, FrameColor.FromHex("#FF6B6B"), theme),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            GameStatBar("MP", 42, 80, FrameColor.FromHex("#7B61FF"), theme),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            GameStatBar("XP", 1240, 2000, FrameColor.FromHex("#FFD700"), theme),
+                        }
+                    };
+                }
+
+                private static Element GameStatBar(string label, int value, int max, FrameColor color, Theme theme)
+                {
+                    return new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    {
+                        Children = new Element[]
+                        {
+                            new Container(width: 28f)
+                            {
+                                Child = new Text(label, new TextStyle(
+                                    FontSize: theme.FontSizeSmall,
+                                    Bold: true,
+                                    Color: color
+                                ))
+                            },
+                            SizedBox.FromSize(width: theme.Spacing),
+                            new Expanded
+                            {
+                                Child = new ProgressBar(value: (float)value, min: 0f, max: (float)max)
+                            },
+                            SizedBox.FromSize(width: theme.Spacing),
+                            new Text($"{value}/{max}", new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: theme.SecondaryTextColor
+                            )),
+                        }
+                    };
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        // Spinner
+        // ---------------------------------------------------------------------------
+
+        private sealed class SpinnerStory : StatefulElement
+        {
+            public override Fram3.UI.Core.State CreateState() => new SpinnerStoryState();
+
+            private sealed class SpinnerStoryState : Fram3.UI.Core.State<SpinnerStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildBasic(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("Default spinner (32px):", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: 4f),
+                            new Spinner(),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Text("Large spinner (64px, primary color):", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: 4f),
+                            new Spinner(size: 64f, strokeWidth: 6f, color: theme.PrimaryColor, speed: 2f),
+                        }
+                    };
+                }
+
+                private static Element BuildGame(Theme theme)
+                {
+                    return new Container(
+                        decoration: new BoxDecoration(
+                            Color: theme.SurfaceColor,
+                            BorderRadius: BorderRadius.All(theme.BorderRadius)
+                        ),
+                        padding: EdgeInsets.All(theme.Spacing * 3f)
+                    )
+                    {
+                        Child = new Column(crossAxisAlignment: CrossAxisAlignment.Center)
+                        {
+                            Children = new Element[]
+                            {
+                                new Spinner(size: 48f, strokeWidth: 4f, color: theme.SecondaryColor),
+                                SizedBox.FromSize(height: theme.Spacing * 2f),
+                                new Text("Connecting to server...", new TextStyle(
+                                    FontSize: theme.FontSize,
+                                    Bold: true,
+                                    Color: theme.PrimaryTextColor
+                                )),
+                                new Text("Please wait", new TextStyle(
+                                    FontSize: theme.FontSizeSmall,
+                                    Color: theme.SecondaryTextColor
+                                )),
+                            }
+                        }
+                    };
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        // TabView
+        // ---------------------------------------------------------------------------
+
+        private sealed class TabViewStory : StatefulElement
+        {
+            public override Fram3.UI.Core.State CreateState() => new TabViewStoryState();
+
+            private sealed class TabViewStoryState : Fram3.UI.Core.State<TabViewStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildBasic(Theme theme)
+                {
+                    return new TabView(
+                        tabs: new Tab[]
+                        {
+                            new Tab("Alpha", new Padding(EdgeInsets.All(16f))
+                            {
+                                Child = new Text("Content for tab Alpha.", new TextStyle(Color: theme.PrimaryTextColor))
+                            }),
+                            new Tab("Beta", new Padding(EdgeInsets.All(16f))
+                            {
+                                Child = new Text("Content for tab Beta.", new TextStyle(Color: theme.PrimaryTextColor))
+                            }),
+                            new Tab("Gamma", new Padding(EdgeInsets.All(16f))
+                            {
+                                Child = new Text("Content for tab Gamma.", new TextStyle(Color: theme.PrimaryTextColor))
+                            }),
+                        },
+                        initialIndex: 0
+                    );
+                }
+
+                private static Element BuildGame(Theme theme)
+                {
+                    return new TabView(
+                        tabs: new Tab[]
+                        {
+                            new Tab("Character", new Padding(EdgeInsets.All(theme.Spacing))
+                            {
+                                Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                                {
+                                    Children = new Element[]
+                                    {
+                                        new Text("Aric Stormblade", new TextStyle(Bold: true, FontSize: theme.FontSizeLarge, Color: theme.PrimaryTextColor)),
+                                        new Text("Warrior - Level 42", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                                    }
+                                }
+                            }),
+                            new Tab("Inventory", new Padding(EdgeInsets.All(theme.Spacing))
+                            {
+                                Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                                {
+                                    Children = new Element[]
+                                    {
+                                        new Text("Shadowblade x1", new TextStyle(Color: theme.PrimaryTextColor)),
+                                        new Text("Health Potion x5", new TextStyle(Color: theme.PrimaryTextColor)),
+                                        new Text("Gold x1,240", new TextStyle(Color: FrameColor.FromHex("#FFD700"), Bold: true)),
+                                    }
+                                }
+                            }),
+                            new Tab("Skills", new Padding(EdgeInsets.All(theme.Spacing))
+                            {
+                                Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                                {
+                                    Children = new Element[]
+                                    {
+                                        new Text("Cleave - Lv 3", new TextStyle(Color: theme.PrimaryTextColor)),
+                                        new Text("Battlecry - Lv 2", new TextStyle(Color: theme.PrimaryTextColor)),
+                                        new Text("Shield Bash - Lv 5", new TextStyle(Color: theme.PrimaryTextColor)),
+                                    }
+                                }
+                            }),
+                        },
+                        initialIndex: 0
+                    );
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        // Tooltip
+        // ---------------------------------------------------------------------------
+
+        private sealed class TooltipStory : StatefulElement
+        {
+            public override Fram3.UI.Core.State CreateState() => new TooltipStoryState();
+
+            private sealed class TooltipStoryState : Fram3.UI.Core.State<TooltipStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildBasic(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("Hover over the box below:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Tooltip("This is the tooltip message!")
+                            {
+                                Child = new Container(
+                                    decoration: new BoxDecoration(
+                                        Color: theme.PrimaryColor.WithAlpha(0.15f),
+                                        Border: new Border(theme.PrimaryColor, 1f),
+                                        BorderRadius: BorderRadius.All(theme.BorderRadius)
+                                    ),
+                                    padding: EdgeInsets.All(12f)
+                                )
+                                {
+                                    Child = new Text("Hover me", new TextStyle(Color: theme.PrimaryTextColor))
+                                }
+                            },
+                        }
+                    };
+                }
+
+                private static Element BuildGame(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("Hover over an ability icon:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                            {
+                                Children = new Element[]
+                                {
+                                    AbilityIcon("C", "Cleave", "Deals 150% weapon damage to all enemies in front.", FrameColor.FromHex("#FF6B6B"), theme),
+                                    SizedBox.FromSize(width: theme.Spacing),
+                                    AbilityIcon("B", "Battlecry", "Increases party ATK by 20% for 10 seconds.", FrameColor.FromHex("#FFD700"), theme),
+                                    SizedBox.FromSize(width: theme.Spacing),
+                                    AbilityIcon("S", "Shield Bash", "Stuns target for 2 seconds. 12s cooldown.", FrameColor.FromHex("#7B61FF"), theme),
+                                }
+                            },
+                        }
+                    };
+                }
+
+                private static Element AbilityIcon(string key, string name, string desc, FrameColor color, Theme theme)
+                {
+                    return new Tooltip($"{name}: {desc}")
+                    {
+                        Child = new Container(
+                            width: 52f, height: 52f,
+                            decoration: new BoxDecoration(
+                                Color: color.WithAlpha(0.2f),
+                                Border: new Border(color, 2f),
+                                BorderRadius: BorderRadius.All(8f)
+                            )
+                        )
+                        {
+                            Child = new Center
+                            {
+                                Child = new Text(key, new TextStyle(
+                                    Bold: true,
+                                    FontSize: theme.FontSizeLarge,
+                                    Color: color
+                                ))
+                            }
+                        }
+                    };
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        // Snackbar
+        // ---------------------------------------------------------------------------
+
+        private sealed class SnackbarStory : StatefulElement
+        {
+            public override Fram3.UI.Core.State CreateState() => new SnackbarStoryState();
+
+            private sealed class SnackbarStoryState : Fram3.UI.Core.State<SnackbarStory>
+            {
+                private bool _showSimple;
+                private bool _showLoot;
+
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private Element BuildBasic(Theme theme)
+                {
+                    var children = new List<Element>
+                    {
+                        new Button(
+                            label: _showSimple ? "Dismiss" : "Show Snackbar",
+                            onPressed: () => SetState(() => _showSimple = !_showSimple)
+                        ),
+                    };
+
+                    if (_showSimple)
+                    {
+                        children.Add(SizedBox.FromSize(height: theme.Spacing));
+                        children.Add(new Snackbar(message: "File saved successfully."));
+                    }
+
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = children.ToArray()
+                    };
+                }
+
+                private Element BuildGame(Theme theme)
+                {
+                    var children = new List<Element>
+                    {
+                        new Button(
+                            label: _showLoot ? "Dismiss" : "Pick Up Item",
+                            onPressed: () => SetState(() => _showLoot = !_showLoot)
+                        ),
+                    };
+
+                    if (_showLoot)
+                    {
+                        children.Add(SizedBox.FromSize(height: theme.Spacing));
+                        children.Add(new Snackbar(
+                            message: "You picked up: Shadowblade (Epic)",
+                            actionLabel: "Equip",
+                            onAction: () => SetState(() => _showLoot = false)
+                        ));
+                    }
+
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = children.ToArray()
+                    };
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------------
+        // ListView story (unchanged - already game-themed)
         // ---------------------------------------------------------------------------
 
         private sealed class Character
@@ -377,71 +777,6 @@ namespace Fram3.UI.Storybook.Stories
                                     : null
                             ),
                         }
-                    };
-                }
-            }
-        }
-
-        // ---------------------------------------------------------------------------
-        // Snackbar story
-        // ---------------------------------------------------------------------------
-
-        private sealed class SnackbarDemoElement : StatefulElement
-        {
-            public override Fram3.UI.Core.State CreateState() => new SnackbarDemoState();
-
-            private sealed class SnackbarDemoState : Fram3.UI.Core.State<SnackbarDemoElement>
-            {
-                private bool _showSimple = false;
-                private bool _showWithAction = false;
-
-                public override Element Build(BuildContext context)
-                {
-                    var theme = ThemeConsumer.Of(context);
-
-                    var children = new List<Element>
-                    {
-                        new Text("Simple snackbar (no action button):", new TextStyle(
-                            Color: theme.SecondaryTextColor,
-                            FontSize: theme.FontSizeSmall
-                        )),
-                        SizedBox.FromSize(height: theme.Spacing),
-                        new Button(
-                            label: _showSimple ? "Dismiss" : "Show Snackbar",
-                            onPressed: () => SetState(() => _showSimple = !_showSimple)
-                        ),
-                    };
-
-                    if (_showSimple)
-                    {
-                        children.Add(SizedBox.FromSize(height: theme.Spacing));
-                        children.Add(new Snackbar(message: "File saved successfully."));
-                    }
-
-                    children.Add(SizedBox.FromSize(height: theme.Spacing * 3f));
-                    children.Add(new Text("Snackbar with action button:", new TextStyle(
-                        Color: theme.SecondaryTextColor,
-                        FontSize: theme.FontSizeSmall
-                    )));
-                    children.Add(SizedBox.FromSize(height: theme.Spacing));
-                    children.Add(new Button(
-                        label: _showWithAction ? "Dismiss" : "Show Snackbar with Action",
-                        onPressed: () => SetState(() => _showWithAction = !_showWithAction)
-                    ));
-
-                    if (_showWithAction)
-                    {
-                        children.Add(SizedBox.FromSize(height: theme.Spacing));
-                        children.Add(new Snackbar(
-                            message: "Changes discarded.",
-                            actionLabel: "Undo",
-                            onAction: () => SetState(() => _showWithAction = false)
-                        ));
-                    }
-
-                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
-                    {
-                        Children = children.ToArray()
                     };
                 }
             }
