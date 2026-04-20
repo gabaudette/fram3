@@ -615,14 +615,18 @@ namespace Fram3.UI.Rendering.Internal
 
                 dd.RegisterCallback<PointerDownEvent>(_ =>
                 {
-                    dd.schedule.Execute(() =>
+                    if (dd.panel == null)
                     {
-                        if (dd.panel == null)
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        var popup = dd.panel.visualTree.Q<VisualElement>(className: "unity-base-dropdown");
+                    var visualTree = dd.panel.visualTree;
+
+                    void OnGeometryChanged(GeometryChangedEvent _)
+                    {
+                        visualTree.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+
+                        var popup = visualTree.Q<VisualElement>(className: "unity-base-dropdown");
                         if (popup == null)
                         {
                             return;
@@ -667,7 +671,9 @@ namespace Fram3.UI.Rendering.Internal
                             item.style.color = DarkInputText;
                             item.style.backgroundColor = DarkInputBg;
                         }
-                    }).ExecuteLater(50);
+                    }
+
+                    visualTree.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
                 });
             });
 
@@ -759,12 +765,19 @@ namespace Fram3.UI.Rendering.Internal
                 scroller.style.borderRightWidth = 0f;
                 scroller.style.borderTopWidth = 0f;
                 scroller.style.borderBottomWidth = 0f;
+                scroller.style.paddingTop = 0f;
+                scroller.style.paddingBottom = 0f;
                 scroller.style.overflow = Overflow.Visible;
             }
 
             foreach (var sliderInput in container.Query<VisualElement>(className: "unity-base-slider__input").ToList())
             {
                 sliderInput.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var draggerContainer in container.Query<VisualElement>(className: "unity-base-slider__dragger-container").ToList())
+            {
+                draggerContainer.style.overflow = Overflow.Visible;
             }
 
             foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
@@ -982,14 +995,13 @@ namespace Fram3.UI.Rendering.Internal
             lv.fixedItemHeight = listView.ItemHeight;
             lv.selectionType = MapSelectionType(listView.SelectionMode);
 #if !FRAM3_PURE_TESTS
-            lv.itemsSource = BuildIndexList(listView.ItemCount);
             lv.bindItem = (item, index) =>
             {
                 item.Clear();
                 var childElement = listView.BuildItemAt(index);
                 BuildNativeTree(childElement, item);
             };
-            lv.RefreshItems();
+            lv.itemsSource = BuildIndexList(listView.ItemCount);
 #endif
         }
 
