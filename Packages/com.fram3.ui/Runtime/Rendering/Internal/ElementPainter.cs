@@ -25,6 +25,12 @@ namespace Fram3.UI.Rendering.Internal
     /// </summary>
     internal static class ElementPainter
     {
+        private static readonly UnityEngine.Color DarkInputBg = new UnityEngine.Color(0.07f, 0.07f, 0.14f, 1f);
+        private static readonly UnityEngine.Color DarkInputBorder = new UnityEngine.Color(0.12f, 0.14f, 0.21f, 1f);
+        private static readonly UnityEngine.Color DarkInputText = new UnityEngine.Color(0.886f, 0.910f, 0.941f, 1f);
+        private static readonly UnityEngine.Color DarkAccent = new UnityEngine.Color(0.482f, 0.380f, 1f, 1f);
+        private static readonly UnityEngine.Color DarkTrack = new UnityEngine.Color(0.10f, 0.12f, 0.19f, 1f);
+        private static readonly UnityEngine.Color DarkSecondaryText = new UnityEngine.Color(0.420f, 0.463f, 0.569f, 1f);
         /// <summary>
         /// Creates the appropriate native <see cref="VisualElement"/> for the given element
         /// and applies all initial style properties to it.
@@ -245,6 +251,26 @@ namespace Fram3.UI.Rendering.Internal
                 tf.textEdition.placeholder = passwordField.Placeholder;
             }
 
+            tf.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var input = tf.Q<VisualElement>(className: "unity-base-text-field__input");
+                if (input != null)
+                {
+                    input.style.backgroundColor = DarkInputBg;
+                    input.style.borderTopColor = DarkInputBorder;
+                    input.style.borderRightColor = DarkInputBorder;
+                    input.style.borderBottomColor = DarkInputBorder;
+                    input.style.borderLeftColor = DarkInputBorder;
+                    input.style.color = DarkInputText;
+                }
+
+                var textEl = tf.Q<VisualElement>(className: "unity-text-element");
+                if (textEl != null)
+                {
+                    textEl.style.color = DarkInputText;
+                }
+            });
+
             if (passwordField.OnChanged == null)
             {
                 return tf;
@@ -270,6 +296,26 @@ namespace Fram3.UI.Rendering.Internal
                 tf.textEdition.placeholder = textField.Placeholder;
             }
 
+            tf.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var input = tf.Q<VisualElement>(className: "unity-base-text-field__input");
+                if (input != null)
+                {
+                    input.style.backgroundColor = DarkInputBg;
+                    input.style.borderTopColor = DarkInputBorder;
+                    input.style.borderRightColor = DarkInputBorder;
+                    input.style.borderBottomColor = DarkInputBorder;
+                    input.style.borderLeftColor = DarkInputBorder;
+                    input.style.color = DarkInputText;
+                }
+
+                var textEl = tf.Q<VisualElement>(className: "unity-text-element");
+                if (textEl != null)
+                {
+                    textEl.style.color = DarkInputText;
+                }
+            });
+
             if (textField.OnChanged == null)
             {
                 return tf;
@@ -288,6 +334,25 @@ namespace Fram3.UI.Rendering.Internal
             {
                 tgl.label = toggle.Label;
             }
+
+            tgl.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = tgl.Q<VisualElement>(className: "unity-base-field__label");
+                if (label != null)
+                {
+                    label.style.color = DarkInputText;
+                }
+
+                var checkmark = tgl.Q<VisualElement>(className: "unity-toggle__checkmark");
+                if (checkmark != null)
+                {
+                    checkmark.style.backgroundColor = DarkInputBg;
+                    checkmark.style.borderTopColor = DarkAccent;
+                    checkmark.style.borderRightColor = DarkAccent;
+                    checkmark.style.borderBottomColor = DarkAccent;
+                    checkmark.style.borderLeftColor = DarkAccent;
+                }
+            });
 
             if (toggle.OnChanged == null)
             {
@@ -308,6 +373,25 @@ namespace Fram3.UI.Rendering.Internal
                 tgl.label = checkbox.Label;
             }
 
+            tgl.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = tgl.Q<VisualElement>(className: "unity-base-field__label");
+                if (label != null)
+                {
+                    label.style.color = DarkInputText;
+                }
+
+                var checkmark = tgl.Q<VisualElement>(className: "unity-toggle__checkmark");
+                if (checkmark != null)
+                {
+                    checkmark.style.backgroundColor = DarkInputBg;
+                    checkmark.style.borderTopColor = DarkAccent;
+                    checkmark.style.borderRightColor = DarkAccent;
+                    checkmark.style.borderBottomColor = DarkAccent;
+                    checkmark.style.borderLeftColor = DarkAccent;
+                }
+            });
+
             if (checkbox.OnChanged == null)
             {
                 return tgl;
@@ -326,6 +410,28 @@ namespace Fram3.UI.Rendering.Internal
                 choices = new List<string>(radioGroup.Options),
                 value = ResolveRadioIndex(radioGroup)
             };
+
+            rbg.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                foreach (var checkmark in rbg.Query<VisualElement>(className: "unity-radio-button__checkmark").ToList())
+                {
+                    checkmark.style.backgroundColor = DarkAccent;
+                }
+
+                foreach (var checkmarkBg in rbg.Query<VisualElement>(className: "unity-radio-button__checkmark-background").ToList())
+                {
+                    checkmarkBg.style.borderTopColor = DarkAccent;
+                    checkmarkBg.style.borderRightColor = DarkAccent;
+                    checkmarkBg.style.borderBottomColor = DarkAccent;
+                    checkmarkBg.style.borderLeftColor = DarkAccent;
+                    checkmarkBg.style.backgroundColor = DarkInputBg;
+                }
+
+                foreach (var label in rbg.Query<VisualElement>(className: "unity-base-field__label").ToList())
+                {
+                    label.style.color = DarkInputText;
+                }
+            });
 
             if (radioGroup.OnChanged == null)
             {
@@ -413,6 +519,37 @@ namespace Fram3.UI.Rendering.Internal
                 sld.label = slider.Label;
             }
 
+            sld.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = sld.Q<VisualElement>(className: "unity-base-field__label");
+                if (label != null)
+                {
+                    label.style.color = DarkInputText;
+                }
+
+                var tracker = sld.Q<VisualElement>(className: "unity-base-slider__tracker");
+                if (tracker != null)
+                {
+                    tracker.style.backgroundColor = DarkTrack;
+                }
+
+                var fill = sld.Q<VisualElement>(className: "unity-base-slider__fill");
+                if (fill != null)
+                {
+                    fill.style.backgroundColor = DarkAccent;
+                }
+
+                var dragger = sld.Q<VisualElement>(className: "unity-base-slider__dragger");
+                if (dragger != null)
+                {
+                    dragger.style.backgroundColor = DarkAccent;
+                    dragger.style.borderTopColor = DarkAccent;
+                    dragger.style.borderRightColor = DarkAccent;
+                    dragger.style.borderBottomColor = DarkAccent;
+                    dragger.style.borderLeftColor = DarkAccent;
+                }
+            });
+
             if (slider.OnChanged == null)
             {
                 return sld;
@@ -498,6 +635,20 @@ namespace Fram3.UI.Rendering.Internal
         private static UiScrollView CreateScrollView(Fram3.UI.Elements.Content.ScrollView scrollView)
         {
             var sv = new UiScrollView(MapScrollMode(scrollView.ScrollDirection));
+
+            sv.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                foreach (var scroller in sv.Query<VisualElement>(className: "unity-scroller").ToList())
+                {
+                    scroller.style.backgroundColor = DarkTrack;
+                }
+
+                foreach (var dragger in sv.Query<VisualElement>(className: "unity-slider__dragger").ToList())
+                {
+                    dragger.style.backgroundColor = DarkAccent;
+                }
+            });
+
             return sv;
         }
 
@@ -519,6 +670,27 @@ namespace Fram3.UI.Rendering.Internal
             {
                 pb.title = progressBar.Title;
             }
+
+            pb.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var bg = pb.Q<VisualElement>(className: "unity-progress-bar__background");
+                if (bg != null)
+                {
+                    bg.style.backgroundColor = DarkTrack;
+                }
+
+                var progress = pb.Q<VisualElement>(className: "unity-progress-bar__progress");
+                if (progress != null)
+                {
+                    progress.style.backgroundColor = DarkAccent;
+                }
+
+                var title = pb.Q<VisualElement>(className: "unity-progress-bar__title");
+                if (title != null)
+                {
+                    title.style.color = DarkInputText;
+                }
+            });
 
             return pb;
         }
@@ -1074,6 +1246,36 @@ namespace Fram3.UI.Rendering.Internal
             {
                 mms.label = minMaxSlider.Label;
             }
+
+            mms.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = mms.Q<VisualElement>(className: "unity-base-field__label");
+                if (label != null)
+                {
+                    label.style.color = DarkInputText;
+                }
+
+                var tracker = mms.Q<VisualElement>(className: "unity-base-slider__tracker");
+                if (tracker != null)
+                {
+                    tracker.style.backgroundColor = DarkTrack;
+                }
+
+                var fill = mms.Q<VisualElement>(className: "unity-base-slider__fill");
+                if (fill != null)
+                {
+                    fill.style.backgroundColor = DarkAccent;
+                }
+
+                foreach (var dragger in mms.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
+                {
+                    dragger.style.backgroundColor = DarkAccent;
+                    dragger.style.borderTopColor = DarkAccent;
+                    dragger.style.borderRightColor = DarkAccent;
+                    dragger.style.borderBottomColor = DarkAccent;
+                    dragger.style.borderLeftColor = DarkAccent;
+                }
+            });
 
             if (minMaxSlider.OnChanged == null)
             {

@@ -366,19 +366,19 @@ namespace Fram3.UI.Storybook
                             ),
                             SizedBox.FromSize(width: theme.Spacing),
                             new Text(chapter.Title.ToUpperInvariant(), new TextStyle(
-                                FontSize: 10f,
+                                FontSize: 12f,
                                 Color: theme.PrimaryColor,
                                 LetterSpacing: 1.5f,
                                 Bold: true
                             )),
                             SizedBox.FromSize(width: 6f),
                             new Text("/", new TextStyle(
-                                FontSize: 10f,
+                                FontSize: 12f,
                                 Color: theme.SecondaryTextColor
                             )),
                             SizedBox.FromSize(width: 6f),
                             new Text(story.Name, new TextStyle(
-                                FontSize: 10f,
+                                FontSize: 12f,
                                 Color: theme.SecondaryTextColor,
                                 LetterSpacing: 0.5f
                             )),
@@ -403,7 +403,7 @@ namespace Fram3.UI.Storybook
                             SizedBox.FromSize(height: 6f),
                             new Text(story.Description, new TextStyle(
                                 FontSize: theme.FontSize,
-                                Color: theme.SecondaryTextColor
+                                Color: FrameColor.FromHex("#94A3B8")
                             )),
                         }
                     }

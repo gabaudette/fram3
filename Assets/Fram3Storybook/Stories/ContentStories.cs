@@ -159,11 +159,11 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             new Text("25% progress:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
                             SizedBox.FromSize(height: 4f),
-                            new ProgressBar(value: 25f, title: "Loading..."),
+                            ThemedBar(25f, 100f, theme.PrimaryColor, theme),
                             SizedBox.FromSize(height: theme.Spacing),
                             new Text("75% progress:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
                             SizedBox.FromSize(height: 4f),
-                            new ProgressBar(value: 75f),
+                            ThemedBar(75f, 100f, theme.PrimaryColor, theme),
                         }
                     };
                 }
@@ -207,13 +207,45 @@ namespace Fram3.UI.Storybook.Stories
                             SizedBox.FromSize(width: theme.Spacing),
                             new Expanded
                             {
-                                Child = new ProgressBar(value: (float)value, min: 0f, max: (float)max)
+                                Child = ThemedBar((float)value, (float)max, color, theme)
                             },
                             SizedBox.FromSize(width: theme.Spacing),
                             new Text($"{value}/{max}", new TextStyle(
                                 FontSize: theme.FontSizeSmall,
                                 Color: theme.SecondaryTextColor
                             )),
+                        }
+                    };
+                }
+
+                private static Element ThemedBar(float value, float max, FrameColor fillColor, Theme theme)
+                {
+                    var fill = max > 0f ? System.Math.Min(value / max, 1f) : 0f;
+                    var empty = System.Math.Max(1f - fill, 0f);
+                    return new Container(
+                        height: 12f,
+                        decoration: new BoxDecoration(
+                            Color: fillColor.WithAlpha(0.2f),
+                            BorderRadius: BorderRadius.All(6f)
+                        )
+                    )
+                    {
+                        Child = new Row(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                        {
+                            Children = new Element[]
+                            {
+                                new Expanded(flex: fill)
+                                {
+                                    Child = new Container(
+                                        height: 12f,
+                                        decoration: new BoxDecoration(
+                                            Color: fillColor,
+                                            BorderRadius: BorderRadius.All(6f)
+                                        )
+                                    )
+                                },
+                                new Expanded(flex: empty),
+                            }
                         }
                     };
                 }
@@ -649,7 +681,7 @@ namespace Fram3.UI.Storybook.Stories
                                 Child = new ListView<Character>(
                                     items: pageItems,
                                     itemBuilder: c => BuildCharacterRow(c, theme),
-                                    itemHeight: 52f,
+                                    itemHeight: 56f,
                                     selectionMode: ListSelectionMode.Single
                                 )
                             },
@@ -712,68 +744,73 @@ namespace Fram3.UI.Storybook.Stories
 
                 private static Element BuildCharacterRow(Character c, Theme theme)
                 {
-                    return new Container(
-                        padding: EdgeInsets.Symmetric(vertical: 8f, horizontal: 12f),
-                        decoration: new BoxDecoration(
-                            Border: new Border(theme.SecondaryTextColor.WithAlpha(0.1f), 1f),
-                            BorderRadius: BorderRadius.All(6f)
+                    return new Margin(new EdgeInsets(0f, 0f, 4f, 0f),
+                        new Container(
+                            padding: EdgeInsets.Symmetric(vertical: 8f, horizontal: 12f),
+                            decoration: new BoxDecoration(
+                                Border: new Border(theme.SecondaryTextColor.WithAlpha(0.1f), 1f),
+                                BorderRadius: BorderRadius.All(6f)
+                            )
                         )
-                    )
-                    {
-                        Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
                         {
-                            Children = new Element[]
+                            Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
                             {
-                                new Expanded
+                                Children = new Element[]
                                 {
-                                    Child = new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                                    new Expanded
                                     {
-                                        Children = new Element[]
+                                        Child = new Column(crossAxisAlignment: CrossAxisAlignment.Start)
                                         {
-                                            new Text(c.Name, new TextStyle(
-                                                Bold: true,
-                                                FontSize: theme.FontSize,
-                                                Color: theme.PrimaryTextColor
-                                            )),
-                                            new Text(c.Class, new TextStyle(
-                                                FontSize: theme.FontSizeSmall,
-                                                Color: theme.SecondaryTextColor
-                                            )),
+                                            Children = new Element[]
+                                            {
+                                                new Text(c.Name, new TextStyle(
+                                                    Bold: true,
+                                                    FontSize: theme.FontSize,
+                                                    Color: theme.PrimaryTextColor
+                                                )),
+                                                new Text(c.Class, new TextStyle(
+                                                    FontSize: theme.FontSizeSmall,
+                                                    Color: theme.SecondaryTextColor
+                                                )),
+                                            }
                                         }
-                                    }
-                                },
-                                new Text($"Lv {c.Level}", new TextStyle(
-                                    FontSize: theme.FontSize,
-                                    Bold: true,
-                                    Color: theme.SecondaryColor
-                                )),
+                                    },
+                                    new Text($"Lv {c.Level}", new TextStyle(
+                                        FontSize: theme.FontSize,
+                                        Bold: true,
+                                        Color: theme.SecondaryColor
+                                    )),
+                                }
                             }
                         }
-                    };
+                    );
                 }
 
                 private Element BuildPagination(int currentPage, int totalPages, Theme theme)
                 {
-                    return new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    return new Row(
+                        mainAxisAlignment: MainAxisAlignment.Center,
+                        crossAxisAlignment: CrossAxisAlignment.Center
+                    )
                     {
                         Children = new Element[]
                         {
                             new Button(
                                 label: "Prev",
                                 onPressed: currentPage > 0
-                                    ? () => SetState(() => _page = currentPage - 1)
+                                    ? () => SetState(() => _page = _page - 1)
                                     : null
                             ),
-                            SizedBox.FromSize(width: theme.Spacing),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
                             new Text($"Page {currentPage + 1} / {totalPages}", new TextStyle(
                                 FontSize: theme.FontSize,
                                 Color: theme.SecondaryTextColor
                             )),
-                            SizedBox.FromSize(width: theme.Spacing),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
                             new Button(
                                 label: "Next",
                                 onPressed: currentPage < totalPages - 1
-                                    ? () => SetState(() => _page = currentPage + 1)
+                                    ? () => SetState(() => _page = _page + 1)
                                     : null
                             ),
                         }

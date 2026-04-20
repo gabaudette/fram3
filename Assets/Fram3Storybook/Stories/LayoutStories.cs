@@ -72,7 +72,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", StoryHelpers.HalfWidth(BuildGame(theme)), theme),
                         }
                     };
                 }
@@ -187,7 +187,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", StoryHelpers.HalfWidth(BuildGame(theme)), theme),
                         }
                     };
                 }
@@ -345,7 +345,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             new Text("Minimap overlay", new TextStyle(
                                 FontSize: theme.FontSizeSmall,
-                                Color: theme.SecondaryTextColor
+                                Color: theme.PrimaryTextColor
                             )),
                             SizedBox.FromSize(height: theme.Spacing),
                             new Container(
@@ -367,28 +367,34 @@ namespace Fram3.UI.Storybook.Stories
                                             ),
                                             width: 160f, height: 160f
                                         ),
-                                        new Container(
-                                            width: 10f, height: 10f,
-                                            decoration: new BoxDecoration(Color: pingColor, BorderRadius: BorderRadius.All(5f))
-                                        ),
-                                        new Container(
-                                            width: 8f, height: 8f,
-                                            decoration: new BoxDecoration(Color: playerColor, BorderRadius: BorderRadius.All(4f))
-                                        ),
-                                        new Container(
-                                            padding: EdgeInsets.Symmetric(horizontal: 4f, vertical: 2f),
-                                            decoration: new BoxDecoration(
-                                                Color: FrameColor.Black.WithAlpha(0.7f),
-                                                BorderRadius: BorderRadius.All(3f)
+                                        new Margin(new EdgeInsets(30f, 0f, 0f, 100f),
+                                            new Container(
+                                                width: 10f, height: 10f,
+                                                decoration: new BoxDecoration(Color: pingColor, BorderRadius: BorderRadius.All(5f))
                                             )
-                                        )
-                                        {
-                                            Child = new Text("YOU", new TextStyle(
-                                                FontSize: 9f,
-                                                Bold: true,
-                                                Color: playerColor
-                                            ))
-                                        },
+                                        ),
+                                        new Margin(new EdgeInsets(80f, 0f, 0f, 60f),
+                                            new Container(
+                                                width: 8f, height: 8f,
+                                                decoration: new BoxDecoration(Color: playerColor, BorderRadius: BorderRadius.All(4f))
+                                            )
+                                        ),
+                                        new Margin(new EdgeInsets(75f, 0f, 0f, 55f),
+                                            new Container(
+                                                padding: EdgeInsets.Symmetric(horizontal: 4f, vertical: 2f),
+                                                decoration: new BoxDecoration(
+                                                    Color: FrameColor.Black.WithAlpha(0.7f),
+                                                    BorderRadius: BorderRadius.All(3f)
+                                                )
+                                            )
+                                            {
+                                                Child = new Text("YOU", new TextStyle(
+                                                    FontSize: 9f,
+                                                    Bold: true,
+                                                    Color: playerColor
+                                                ))
+                                            }
+                                        ),
                                     }
                                 }
                             },
@@ -442,7 +448,7 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         ("Warrior", FrameColor.FromHex("#FF6B6B")),
                         ("Mage", FrameColor.FromHex("#7B61FF")),
-                        ("Rogue", FrameColor.FromHex("#2E3347").WithAlpha(0f)),
+                        ("Rogue", FrameColor.FromHex("#94A3B8")),
                         ("Healer", FrameColor.FromHex("#00D4AA")),
                         ("Ranger", FrameColor.FromHex("#FFB347")),
                         ("Paladin", FrameColor.FromHex("#FFD700")),
@@ -558,12 +564,14 @@ namespace Fram3.UI.Storybook.Stories
                                         )
                                     )
                                     {
-                                        Child = new Center
-                                        {
-                                            Child = new Text("G", new TextStyle(
-                                                Bold: true, Color: FrameColor.FromHex("#FFD700")
-                                            ))
-                                        }
+                                            Child = new Center
+                                            {
+                                                Child = new Text("G", new TextStyle(
+                                                    Bold: true,
+                                                    FontSize: theme.FontSize,
+                                                    Color: FrameColor.FromHex("#FFD700")
+                                                ))
+                                            }
                                     },
                                     SizedBox.FromSize(width: theme.Spacing),
                                     new Column(crossAxisAlignment: CrossAxisAlignment.Start)
@@ -604,7 +612,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", StoryHelpers.HalfWidth(BuildGame(theme)), theme),
                         }
                     };
                 }
@@ -692,7 +700,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", StoryHelpers.HalfWidth(BuildGame(theme)), theme),
                         }
                     };
                 }
@@ -703,29 +711,50 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            new Text("200x40 fixed spacer between A and B:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
-                            new Container(decoration: new BoxDecoration(Color: theme.SurfaceColor))
+                            new Text("Fixed gap (width: 48px) between two boxes:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: 6f),
+                            new Row(crossAxisAlignment: CrossAxisAlignment.Center)
                             {
-                                Child = new Row
+                                Children = new Element[]
                                 {
-                                    Children = new Element[]
-                                    {
-                                        new Container(decoration: new BoxDecoration(Color: theme.PrimaryColor.WithAlpha(0.3f)), height: 20f)
-                                        { Child = new Text("A", new TextStyle(Color: theme.PrimaryTextColor)) },
-                                        SizedBox.FromSize(width: 200f, height: 40f),
-                                        new Container(decoration: new BoxDecoration(Color: theme.PrimaryColor.WithAlpha(0.3f)), height: 20f)
-                                        { Child = new Text("B", new TextStyle(Color: theme.PrimaryTextColor)) },
-                                    }
+                                    new Container(
+                                        width: 60f, height: 32f,
+                                        decoration: new BoxDecoration(Color: theme.PrimaryColor.WithAlpha(0.3f), BorderRadius: BorderRadius.All(4f))
+                                    ) { Child = new Center { Child = new Text("A", new TextStyle(Color: theme.PrimaryTextColor)) } },
+                                    SizedBox.FromSize(width: 48f),
+                                    new Container(
+                                        width: 60f, height: 32f,
+                                        decoration: new BoxDecoration(Color: theme.SecondaryColor.WithAlpha(0.3f), BorderRadius: BorderRadius.All(4f))
+                                    ) { Child = new Center { Child = new Text("B", new TextStyle(Color: theme.PrimaryTextColor)) } },
                                 }
                             },
                             SizedBox.FromSize(height: theme.Spacing * 2f),
-                            new Text("SizedBox.Expand() fills remaining space:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            new Text("Square spacer (32x32) between two boxes:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: 6f),
+                            new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                            {
+                                Children = new Element[]
+                                {
+                                    new Container(
+                                        width: 60f, height: 32f,
+                                        decoration: new BoxDecoration(Color: theme.PrimaryColor.WithAlpha(0.3f), BorderRadius: BorderRadius.All(4f))
+                                    ) { Child = new Center { Child = new Text("C", new TextStyle(Color: theme.PrimaryTextColor)) } },
+                                    SizedBox.Square(32f),
+                                    new Container(
+                                        width: 60f, height: 32f,
+                                        decoration: new BoxDecoration(Color: theme.SecondaryColor.WithAlpha(0.3f), BorderRadius: BorderRadius.All(4f))
+                                    ) { Child = new Center { Child = new Text("D", new TextStyle(Color: theme.PrimaryTextColor)) } },
+                                }
+                            },
+                            SizedBox.FromSize(height: theme.Spacing * 2f),
+                            new Text("SizedBox.Expand() pushes content to opposite ends:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            SizedBox.FromSize(height: 6f),
                             new Container(
-                                decoration: new BoxDecoration(Color: theme.SurfaceColor),
-                                height: 40f
+                                height: 40f,
+                                decoration: new BoxDecoration(Color: theme.SurfaceColor, BorderRadius: BorderRadius.All(4f))
                             )
                             {
-                                Child = new Row
+                                Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
                                 {
                                     Children = new Element[]
                                     {
@@ -1005,8 +1034,7 @@ namespace Fram3.UI.Storybook.Stories
                             BorderRadius: BorderRadius.All(theme.BorderRadius),
                             Shadow: new Shadow(FrameColor.Black.WithAlpha(0.2f), OffsetX: 2f, OffsetY: 2f, BlurRadius: 8f)
                         ),
-                        padding: EdgeInsets.All(16f),
-                        width: 280f
+                        padding: EdgeInsets.All(16f)
                     )
                     {
                         Child = new Text("Container with decoration, border, radius, and shadow.",
