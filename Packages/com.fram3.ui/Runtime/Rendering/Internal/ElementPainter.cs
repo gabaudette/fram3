@@ -671,6 +671,7 @@ namespace Fram3.UI.Rendering.Internal
                             if (checkmark != null)
                             {
                                 checkmark.style.color = DarkInputText;
+                                checkmark.style.unityBackgroundImageTintColor = DarkInputText;
                             }
                         }
                     }).ExecuteLater(1);
@@ -768,6 +769,16 @@ namespace Fram3.UI.Rendering.Internal
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
                 scroller.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var scrollerWrapper in container.Query<VisualElement>(className: "unity-scroll-view__vertical-scroller").ToList())
+            {
+                scrollerWrapper.style.overflow = Overflow.Visible;
+            }
+
+            foreach (var scrollerWrapper in container.Query<VisualElement>(className: "unity-scroll-view__horizontal-scroller").ToList())
+            {
+                scrollerWrapper.style.overflow = Overflow.Visible;
             }
 
             foreach (var sliderInput in container.Query<VisualElement>(className: "unity-base-slider__input").ToList())
@@ -967,6 +978,22 @@ namespace Fram3.UI.Rendering.Internal
                     var container = new VisualElement();
                     container.style.flexGrow = 1f;
                     container.style.alignSelf = Align.Stretch;
+                    var itemStyled = false;
+                    container.RegisterCallback<AttachToPanelEvent>(_ =>
+                    {
+                        if (itemStyled || container.parent == null)
+                        {
+                            return;
+                        }
+
+                        itemStyled = true;
+                        var listItem = container.parent;
+                        listItem.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                        listItem.RegisterCallback<PointerEnterEvent>(_ =>
+                            listItem.style.backgroundColor = new UnityEngine.Color(1f, 1f, 1f, 0.05f));
+                        listItem.RegisterCallback<PointerLeaveEvent>(_ =>
+                            listItem.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f));
+                    });
                     return container;
                 },
                 bindItem = (item, index) =>
