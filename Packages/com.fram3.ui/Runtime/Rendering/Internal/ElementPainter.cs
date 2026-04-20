@@ -795,6 +795,19 @@ namespace Fram3.UI.Rendering.Internal
                 sliderInput.style.marginBottom = 0f;
                 sliderInput.style.paddingTop = 0f;
                 sliderInput.style.paddingBottom = 0f;
+                sliderInput.style.backgroundColor = DarkTrack;
+                sliderInput.style.borderTopLeftRadius = 4f;
+                sliderInput.style.borderTopRightRadius = 4f;
+                sliderInput.style.borderBottomLeftRadius = 4f;
+                sliderInput.style.borderBottomRightRadius = 4f;
+                sliderInput.style.borderTopColor = DarkInputBorder;
+                sliderInput.style.borderRightColor = DarkInputBorder;
+                sliderInput.style.borderBottomColor = DarkInputBorder;
+                sliderInput.style.borderLeftColor = DarkInputBorder;
+                sliderInput.style.borderTopWidth = 1f;
+                sliderInput.style.borderRightWidth = 1f;
+                sliderInput.style.borderBottomWidth = 1f;
+                sliderInput.style.borderLeftWidth = 1f;
             }
 
             foreach (var dragContainer in container.Query<VisualElement>(className: "unity-base-slider__drag-container").ToList())
@@ -808,11 +821,7 @@ namespace Fram3.UI.Rendering.Internal
 
             foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
             {
-                tracker.style.backgroundColor = DarkTrack;
-                tracker.style.top = 0f;
-                tracker.style.bottom = 0f;
-                tracker.style.left = 0f;
-                tracker.style.right = 0f;
+                tracker.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
             }
 
             foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
