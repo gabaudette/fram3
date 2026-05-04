@@ -5,6 +5,7 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Rendering.Internal;
 using Fram3.UI.Styling;
+using StylingTheme = Fram3.UI.Styling.Theme;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 
@@ -78,7 +79,7 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Margin(EdgeInsets.All(8f), new Text("x"));
 
-            var native = ElementPainter.CreateNative(element, Theme.Default);
+            var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.GetType(), Is.EqualTo(typeof(VisualElement)));
         }
@@ -88,17 +89,17 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Margin(EdgeInsets.All(8f), new Text("x"));
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
         [Test]
         public void Paint_DoesNotThrow()
         {
             var original = new Margin(EdgeInsets.All(8f), new Text("x"));
-            var native = ElementPainter.CreateNative(original, Theme.Default);
+            var native = ElementPainter.CreateNative(original, StylingTheme.Default);
             var updated = new Margin(EdgeInsets.All(16f), new Text("x"));
 
-            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, StylingTheme.Default));
         }
 
 #if FRAM3_PURE_TESTS
@@ -108,7 +109,7 @@ namespace Fram3.UI.Tests.Elements.Layout
             var insets = new EdgeInsets(top: 4f, right: 8f, bottom: 12f, left: 16f);
             var element = new Margin(insets, new Text("x"));
 
-            var native = ElementPainter.CreateNative(element, Theme.Default);
+            var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.style.marginTop, Is.EqualTo(4f).Within(0.0001f));
             Assert.That(native.style.marginRight, Is.EqualTo(8f).Within(0.0001f));
@@ -120,10 +121,10 @@ namespace Fram3.UI.Tests.Elements.Layout
         public void Paint_UpdatesMarginEdges()
         {
             var original = new Margin(EdgeInsets.All(2f), new Text("x"));
-            var native = ElementPainter.CreateNative(original, Theme.Default);
+            var native = ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new Margin(new EdgeInsets(top: 10f, right: 20f, bottom: 30f, left: 40f), new Text("x"));
-            ElementPainter.Paint(updated, native, Theme.Default);
+            ElementPainter.Paint(updated, native, StylingTheme.Default);
 
             Assert.That(native.style.marginTop, Is.EqualTo(10f).Within(0.0001f));
             Assert.That(native.style.marginRight, Is.EqualTo(20f).Within(0.0001f));
@@ -136,7 +137,7 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Margin(EdgeInsets.Symmetric(vertical: 6f, horizontal: 12f), new Text("x"));
 
-            var native = ElementPainter.CreateNative(element, Theme.Default);
+            var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.style.marginTop, Is.EqualTo(6f).Within(0.0001f));
             Assert.That(native.style.marginBottom, Is.EqualTo(6f).Within(0.0001f));

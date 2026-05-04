@@ -23,11 +23,36 @@ namespace UnityEngine.UIElements
     /// <summary>Stub for UIToolkit ClickEvent.</summary>
     public sealed class ClickEvent { }
 
+    /// <summary>Stub for UIToolkit AttachToPanelEvent.</summary>
+    public sealed class AttachToPanelEvent { }
+
+    /// <summary>Stub for UIToolkit PointerDownEvent.</summary>
+    public sealed class PointerDownEvent { }
+
+    /// <summary>Stub for UIToolkit PointerMoveEvent.</summary>
+    public sealed class PointerMoveEvent
+    {
+        public UnityEngine.Vector2 position { get; set; }
+    }
+
     /// <summary>Stub for UIToolkit PointerEnterEvent.</summary>
-    public sealed class PointerEnterEvent { }
+    public sealed class PointerEnterEvent
+    {
+        public UnityEngine.Vector2 position { get; set; }
+    }
 
     /// <summary>Stub for UIToolkit PointerLeaveEvent.</summary>
     public sealed class PointerLeaveEvent { }
+
+    /// <summary>Stub for UIToolkit KeyDownEvent.</summary>
+    public sealed class KeyDownEvent
+    {
+        public char character { get; set; }
+        public UnityEngine.KeyCode keyCode { get; set; }
+        public bool ctrlKey { get; set; }
+        public bool commandKey { get; set; }
+        public void StopImmediatePropagation() { }
+    }
 
     public delegate void EventCallback<TEventType>(TEventType evt);
 
@@ -72,12 +97,49 @@ namespace UnityEngine.UIElements
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
         public Position? position;
         public float? opacity;
+        public DisplayStyle? display;
+        public float? maxWidth;
+        public WhiteSpace? whiteSpace;
+        public float? left;
+        public float? top;
+        public Visibility? visibility;
     }
 
     public enum Position
     {
         Relative,
         Absolute
+    }
+
+    public enum DisplayStyle
+    {
+        Flex,
+        None
+    }
+
+    public enum PickingMode
+    {
+        Position,
+        Ignore,
+        None
+    }
+
+    public enum WhiteSpace
+    {
+        Normal,
+        NoWrap
+    }
+
+    public enum TrickleDown
+    {
+        NoTrickleDown,
+        TrickleDown
+    }
+
+    public enum Visibility
+    {
+        Visible,
+        Hidden
     }
 
     public enum FlexDirection
@@ -137,6 +199,14 @@ namespace UnityEngine.UIElements
         public VisualElement? Parent => _parent;
         public int childCount => _children.Count;
         public string tooltip { get; set; } = string.Empty;
+        public object? userData { get; set; }
+        public IVisualElementScheduler schedule { get; } = new VisualElementScheduler();
+        public IPanel? panel { get; set; }
+
+        public T? Q<T>(string? name = null, string? className = null) where T : VisualElement => null;
+
+        public UQueryBuilder<T> Query<T>(string? name = null, string? className = null) where T : VisualElement
+            => new UQueryBuilder<T>();
 
         public void Add(VisualElement child)
         {
@@ -177,6 +247,11 @@ namespace UnityEngine.UIElements
             _callbacks[key].Add(callback);
         }
 
+        public void RegisterCallback<TEventType>(EventCallback<TEventType> callback, TrickleDown useTrickleDown)
+        {
+            RegisterCallback(callback);
+        }
+
         /// <summary>
         /// Test helper: fires all registered callbacks for the given event type.
         /// </summary>
@@ -201,6 +276,7 @@ namespace UnityEngine.UIElements
     public class Label : VisualElement
     {
         public string text { get; set; }
+        public PickingMode pickingMode { get; set; }
 
         public Label(string text = "")
         {
@@ -528,6 +604,36 @@ namespace UnityEngine.UIElements
         {
             _selectionChanged?.Invoke(items);
         }
+    }
+
+    public sealed class UQueryBuilder<T> where T : VisualElement
+    {
+        public List<T> ToList() => new List<T>();
+    }
+
+    public interface IScheduledItem
+    {
+        void ExecuteLater(long delayMs);
+    }
+
+    public interface IVisualElementScheduler
+    {
+        IScheduledItem Execute(Action task);
+    }
+
+    public interface IPanel
+    {
+        VisualElement visualTree { get; }
+    }
+
+    internal sealed class VisualElementScheduler : IVisualElementScheduler
+    {
+        private sealed class NopItem : IScheduledItem
+        {
+            public void ExecuteLater(long delayMs) { }
+        }
+
+        public IScheduledItem Execute(Action task) => new NopItem();
     }
 }
 

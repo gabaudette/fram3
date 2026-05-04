@@ -3,7 +3,7 @@ using System;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Rendering.Internal;
-using Fram3.UI.Styling;
+using StylingTheme = Fram3.UI.Styling.Theme;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 
@@ -92,7 +92,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new IntField();
 
-            var native = ElementPainter.CreateNative(element, Theme.Default);
+            var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native, Is.InstanceOf<IntegerField>());
         }
@@ -102,7 +102,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new IntField(value: 5);
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
         [Test]
@@ -110,18 +110,18 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new IntField(value: 5, onChanged: _ => { });
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
         [Test]
         public void Paint_FIntField_DoesNotThrow()
         {
             var original = new IntField(value: 1);
-            var native = (IntegerField)ElementPainter.CreateNative(original, Theme.Default);
+            var native = (IntegerField)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new IntField(value: 2);
 
-            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, StylingTheme.Default));
         }
 
 #if FRAM3_PURE_TESTS
@@ -130,7 +130,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new IntField(value: 99);
 
-            var native = (IntegerField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (IntegerField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.value, Is.EqualTo(99));
         }
@@ -140,7 +140,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new IntField(label: "Amount");
 
-            var native = (IntegerField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (IntegerField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.label, Is.EqualTo("Amount"));
         }
@@ -150,7 +150,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new IntField();
 
-            var native = (IntegerField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (IntegerField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.label, Is.Null);
         }
@@ -160,7 +160,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             int? received = null;
             var element = new IntField(onChanged: v => received = v);
-            var native = (IntegerField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (IntegerField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             native.SimulateValueChanged(7);
 
@@ -171,10 +171,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FIntField_UpdatesValue()
         {
             var original = new IntField(value: 1);
-            var native = (IntegerField)ElementPainter.CreateNative(original, Theme.Default);
+            var native = (IntegerField)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new IntField(value: 10);
-            ElementPainter.Paint(updated, native, Theme.Default);
+            ElementPainter.Paint(updated, native, StylingTheme.Default);
 
             Assert.That(native.value, Is.EqualTo(10));
         }
@@ -183,10 +183,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FIntField_UpdatesLabel()
         {
             var original = new IntField(label: "old");
-            var native = (IntegerField)ElementPainter.CreateNative(original, Theme.Default);
+            var native = (IntegerField)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new IntField(label: "new");
-            ElementPainter.Paint(updated, native, Theme.Default);
+            ElementPainter.Paint(updated, native, StylingTheme.Default);
 
             Assert.That(native.label, Is.EqualTo("new"));
         }

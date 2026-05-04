@@ -3,7 +3,7 @@ using System;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Rendering.Internal;
-using Fram3.UI.Styling;
+using StylingTheme = Fram3.UI.Styling.Theme;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 using FloatField = Fram3.UI.Elements.Input.FloatField;
@@ -94,7 +94,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new FloatField();
 
-            var native = ElementPainter.CreateNative(element, Theme.Default);
+            var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native, Is.InstanceOf<UiFloatField>());
         }
@@ -104,7 +104,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new FloatField(value: 1.5f);
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
         [Test]
@@ -112,18 +112,18 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new FloatField(value: 1.5f, onChanged: _ => { });
 
-            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
         [Test]
         public void Paint_FFloatField_DoesNotThrow()
         {
             var original = new FloatField(value: 1f);
-            var native = (UiFloatField)ElementPainter.CreateNative(original, Theme.Default);
+            var native = (UiFloatField)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new FloatField(value: 2f);
 
-            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, Theme.Default));
+            Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, StylingTheme.Default));
         }
 
 #if FRAM3_PURE_TESTS
@@ -132,7 +132,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new FloatField(value: 0.5f);
 
-            var native = (UiFloatField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (UiFloatField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.value, Is.EqualTo(0.5f).Within(0.0001f));
         }
@@ -142,7 +142,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new FloatField(label: "Speed");
 
-            var native = (UiFloatField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (UiFloatField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.label, Is.EqualTo("Speed"));
         }
@@ -152,7 +152,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             var element = new FloatField();
 
-            var native = (UiFloatField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (UiFloatField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.label, Is.Null);
         }
@@ -162,7 +162,7 @@ namespace Fram3.UI.Tests.Elements.Input
         {
             float? received = null;
             var element = new FloatField(onChanged: v => received = v);
-            var native = (UiFloatField)ElementPainter.CreateNative(element, Theme.Default);
+            var native = (UiFloatField)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             native.SimulateValueChanged(2.5f);
 
@@ -173,10 +173,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FFloatField_UpdatesValue()
         {
             var original = new FloatField(value: 1f);
-            var native = (UiFloatField)ElementPainter.CreateNative(original, Theme.Default);
+            var native = (UiFloatField)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new FloatField(value: 9.9f);
-            ElementPainter.Paint(updated, native, Theme.Default);
+            ElementPainter.Paint(updated, native, StylingTheme.Default);
 
             Assert.That(native.value, Is.EqualTo(9.9f).Within(0.0001f));
         }
@@ -185,10 +185,10 @@ namespace Fram3.UI.Tests.Elements.Input
         public void Paint_FFloatField_UpdatesLabel()
         {
             var original = new FloatField(label: "old");
-            var native = (UiFloatField)ElementPainter.CreateNative(original, Theme.Default);
+            var native = (UiFloatField)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new FloatField(label: "new");
-            ElementPainter.Paint(updated, native, Theme.Default);
+            ElementPainter.Paint(updated, native, StylingTheme.Default);
 
             Assert.That(native.label, Is.EqualTo("new"));
         }
