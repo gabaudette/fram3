@@ -616,6 +616,25 @@ namespace UnityEngine
             return Math.Clamp(value, min, max);
         }
     }
+
+    public enum KeyCode
+    {
+        None = 0,
+        Backspace = 8,
+        Delete = 127,
+        Tab = 9,
+        Return = 13,
+        KeypadEnter = 271,
+        LeftArrow = 276,
+        RightArrow = 275,
+        Home = 278,
+        End = 279,
+        A = 97,
+        C = 99,
+        V = 118,
+        X = 120,
+        Z = 122
+    }
 }
 #endif
 
@@ -852,10 +871,10 @@ namespace Fram3.UI.Rendering.Internal
 {
     internal static class ElementPainter
     {
-        public static UnityEngine.UIElements.VisualElement CreateNative(Core.Element element)
+        public static UnityEngine.UIElements.VisualElement CreateNative(Core.Element element, Styling.Theme theme)
             => new UnityEngine.UIElements.VisualElement();
 
-        public static void Paint(Core.Element element, UnityEngine.UIElements.VisualElement native) { }
+        public static void Paint(Core.Element element, UnityEngine.UIElements.VisualElement native, Styling.Theme theme) { }
 
         public static void ApplyAsStackChild(UnityEngine.UIElements.VisualElement native) { }
     }
