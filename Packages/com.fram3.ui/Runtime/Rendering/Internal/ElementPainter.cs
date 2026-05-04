@@ -14,6 +14,7 @@ using UiScrollView = UnityEngine.UIElements.ScrollView;
 using UiProgressBar = UnityEngine.UIElements.ProgressBar;
 using UiFloatField = UnityEngine.UIElements.FloatField;
 using UiMinMaxSlider = UnityEngine.UIElements.MinMaxSlider;
+using UiButton = UnityEngine.UIElements.Button;
 using UiWrap = UnityEngine.UIElements.Wrap;
 using Column = Fram3.UI.Elements.Layout.Column;
 using Row = Fram3.UI.Elements.Layout.Row;
@@ -53,6 +54,8 @@ namespace Fram3.UI.Rendering.Internal
             {
                 case Text text:
                     return CreateLabel(text);
+                case Fram3.UI.Elements.Input.Button button:
+                    return CreateButton(button);
                 case PasswordField passwordField:
                     return CreatePasswordField(passwordField, theme);
                 case Fram3.UI.Elements.Input.TextField textField:
@@ -130,6 +133,9 @@ namespace Fram3.UI.Rendering.Internal
             {
                 case Text text when native is Label label:
                     PaintText(text, label);
+                    break;
+                case Fram3.UI.Elements.Input.Button button when native is UiButton btn:
+                    PaintButton(button, btn);
                     break;
                 case PasswordField passwordField when native is UiTextField ptf:
                     PaintPasswordField(passwordField, ptf);
@@ -239,6 +245,17 @@ namespace Fram3.UI.Rendering.Internal
             var label = new Label(text.Content);
             PaintText(text, label);
             return label;
+        }
+
+        private static UiButton CreateButton(Fram3.UI.Elements.Input.Button button)
+        {
+            var btn = new UiButton(button.OnPressed) { text = button.Label };
+            return btn;
+        }
+
+        private static void PaintButton(Fram3.UI.Elements.Input.Button button, UiButton btn)
+        {
+            btn.text = button.Label;
         }
 
         private static UiTextField CreatePasswordField(PasswordField passwordField, Theme theme)
@@ -1679,6 +1696,7 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyTooltipLayout(Tooltip tooltip, VisualElement native, Theme theme)
         {
+            native.tooltip = tooltip.Message;
             native.style.flexDirection = FlexDirection.Column;
             native.style.alignSelf = Align.Stretch;
             native.style.alignItems = Align.Stretch;
