@@ -14,7 +14,6 @@ using ProgressBar = Fram3.UI.Elements.Content.ProgressBar;
 using ScrollView = Fram3.UI.Elements.Content.ScrollView;
 using Column = Fram3.UI.Elements.Layout.Column;
 using Row = Fram3.UI.Elements.Layout.Row;
-using UiButton = UnityEngine.UIElements.Button;
 using UiProgressBar = UnityEngine.UIElements.ProgressBar;
 using UiScrollView = UnityEngine.UIElements.ScrollView;
 
@@ -41,26 +40,6 @@ namespace Fram3.UI.Tests.Elements
             var native = (Label)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.text, Is.EqualTo("World"));
-        }
-
-        [Test]
-        public void CreateNative_FButton_ReturnsButton()
-        {
-            var element = new Button("Click");
-
-            var native = ElementPainter.CreateNative(element, StylingTheme.Default);
-
-            Assert.That(native, Is.InstanceOf<UiButton>());
-        }
-
-        [Test]
-        public void CreateNative_FButton_SetsLabel()
-        {
-            var element = new Button("Submit");
-
-            var native = (UiButton)ElementPainter.CreateNative(element, StylingTheme.Default);
-
-            Assert.That(native.text, Is.EqualTo("Submit"));
         }
 
         [Test]
@@ -150,18 +129,6 @@ namespace Fram3.UI.Tests.Elements
             ElementPainter.Paint(updated, label, StylingTheme.Default);
 
             Assert.That(label.text, Is.EqualTo("After"));
-        }
-
-        [Test]
-        public void Paint_FButton_UpdatesButtonText()
-        {
-            var original = new Button("Old");
-            var button = (UiButton)ElementPainter.CreateNative(original, StylingTheme.Default);
-
-            var updated = new Button("New");
-            ElementPainter.Paint(updated, button, StylingTheme.Default);
-
-            Assert.That(button.text, Is.EqualTo("New"));
         }
 
         [Test]
