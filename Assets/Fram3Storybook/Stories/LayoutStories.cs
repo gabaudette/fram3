@@ -1442,7 +1442,6 @@ namespace Fram3.UI.Storybook.Stories
                                             BorderRadius: BorderRadius.All(theme.BorderRadius),
                                             Border: new Border(rarityColor, 1.5f)
                                         ),
-                                        height: 90f,
                                         padding: EdgeInsets.All(theme.Spacing))
                                     {
                                         Child = new Column(crossAxisAlignment: CrossAxisAlignment.Center)
