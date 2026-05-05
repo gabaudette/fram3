@@ -9,20 +9,23 @@ using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
-    /// <summary>Stories for the Theming chapter.</summary>
     public static class ThemeStories
     {
-        /// <summary>Returns all theming stories.</summary>
         public static IReadOnlyList<Story> All()
         {
             return new Story[]
             {
-                new Story("Color Palette",
+                new Story(
+                    "Color Palette",
                     "Displays all color tokens from the active theme as labeled swatches.",
-                    BuildColorPalette),
-                new Story("Theme Switcher",
-                    "Wraps content in a ThemeProvider and toggles between the dark storybook theme and a light variant to show live theme propagation.",
-                    BuildThemeSwitcher),
+                    BuildColorPalette
+                ),
+                new Story(
+                    "Theme Switcher",
+                    "Wraps content in a ThemeProvider and toggles between the dark storybook theme" +
+                    " and a light variant to show live theme propagation.",
+                    BuildThemeSwitcher
+                )
             };
         }
 
@@ -38,9 +41,9 @@ namespace Fram3.UI.Storybook.Stories
 
         private sealed class ColorPaletteElement : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new ColorPaletteState();
+            public override State CreateState() => new ColorPaletteState();
 
-            private sealed class ColorPaletteState : Fram3.UI.Core.State<ColorPaletteElement>
+            private sealed class ColorPaletteState : State<ColorPaletteElement>
             {
                 public override Element Build(BuildContext context)
                 {
@@ -56,7 +59,7 @@ namespace Fram3.UI.Storybook.Stories
                         ("ErrorColor", theme.ErrorColor),
                         ("PrimaryTextColor", theme.PrimaryTextColor),
                         ("SecondaryTextColor", theme.SecondaryTextColor),
-                        ("DisabledTextColor", theme.DisabledTextColor),
+                        ("DisabledTextColor", theme.DisabledTextColor)
                     };
 
                     var rows = new List<Element>();
@@ -108,7 +111,7 @@ namespace Fram3.UI.Storybook.Stories
                                     new Text(ColorHex(color), new TextStyle(
                                         FontSize: theme.FontSizeSmall,
                                         Color: theme.SecondaryTextColor
-                                    )),
+                                    ))
                                 }
                             }
                         }
@@ -119,9 +122,9 @@ namespace Fram3.UI.Storybook.Stories
 
         private sealed class ThemeSwitcherElement : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new ThemeSwitcherState();
+            public override State CreateState() => new ThemeSwitcherState();
 
-            private sealed class ThemeSwitcherState : Fram3.UI.Core.State<ThemeSwitcherElement>
+            private sealed class ThemeSwitcherState : State<ThemeSwitcherElement>
             {
                 private bool _useDark = true;
 
@@ -140,7 +143,7 @@ namespace Fram3.UI.Storybook.Stories
                     FontSizeSmall = 12f,
                     FontSizeLarge = 20f,
                     BorderRadius = 10f,
-                    Spacing = 8f,
+                    Spacing = 8f
                 };
 
                 private static readonly Theme LightTheme = new Theme
@@ -158,7 +161,7 @@ namespace Fram3.UI.Storybook.Stories
                     FontSizeSmall = 12f,
                     FontSizeLarge = 20f,
                     BorderRadius = 4f,
-                    Spacing = 8f,
+                    Spacing = 8f
                 };
 
                 public override Element Build(BuildContext context)
@@ -178,8 +181,8 @@ namespace Fram3.UI.Storybook.Stories
 
         private sealed class PreviewPanel : StatefulElement
         {
-            public bool UseDark { get; }
-            public System.Action OnToggle { get; }
+            private bool UseDark { get; }
+            private System.Action OnToggle { get; }
 
             public PreviewPanel(bool useDark, System.Action onToggle)
             {
@@ -187,9 +190,9 @@ namespace Fram3.UI.Storybook.Stories
                 OnToggle = onToggle;
             }
 
-            public override Fram3.UI.Core.State CreateState() => new PreviewPanelState();
+            public override State CreateState() => new PreviewPanelState();
 
-            private sealed class PreviewPanelState : Fram3.UI.Core.State<PreviewPanel>
+            private sealed class PreviewPanelState : State<PreviewPanel>
             {
                 public override Element Build(BuildContext context)
                 {
@@ -236,7 +239,7 @@ namespace Fram3.UI.Storybook.Stories
                                                 FontSize: theme.FontSize
                                             )),
                                             SizedBox.FromSize(height: theme.Spacing),
-                                            new Button(label: "Primary Action"),
+                                            new Button(label: "Primary Action")
                                         }
                                     }
                                 }

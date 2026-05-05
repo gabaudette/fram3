@@ -11,23 +11,14 @@ using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook
 {
-    /// <summary>
-    /// A story entry: a display name, a short description, and a factory that builds the story content element.
-    /// </summary>
     public sealed class Story
     {
-        /// <summary>The display name shown in the sidebar and as the content-area heading.</summary>
         public string Name { get; }
 
-        /// <summary>
-        /// A one-sentence description of the element shown above the live demo.
-        /// </summary>
         public string Description { get; }
 
-        /// <summary>Factory that returns the story's root element.</summary>
         public Func<Element> Build { get; }
 
-        /// <summary>Creates a story entry.</summary>
         public Story(string name, string description, Func<Element> build)
         {
             Name = name;
@@ -36,18 +27,12 @@ namespace Fram3.UI.Storybook
         }
     }
 
-    /// <summary>
-    /// A chapter groups related stories under a heading.
-    /// </summary>
     public sealed class Chapter
     {
-        /// <summary>The chapter heading shown in the sidebar.</summary>
         public string Title { get; }
 
-        /// <summary>The stories belonging to this chapter.</summary>
         public IReadOnlyList<Story> Stories { get; }
 
-        /// <summary>Creates a chapter.</summary>
         public Chapter(string title, IReadOnlyList<Story> stories)
         {
             Title = title;
@@ -55,11 +40,6 @@ namespace Fram3.UI.Storybook
         }
     }
 
-    /// <summary>
-    /// The root stateful element of the storybook. Renders a sidebar on the left
-    /// listing every chapter and story, and a content area on the right that
-    /// renders the currently selected story live.
-    /// </summary>
     public sealed class StorybookApp : StatefulElement
     {
         private static readonly Theme StorybookTheme = new Theme
@@ -82,7 +62,6 @@ namespace Fram3.UI.Storybook
             Spacing = 8f
         };
 
-        /// <summary>Returns the root element of the storybook wrapped in a theme provider.</summary>
         public static Element Create()
         {
             return new ThemeProvider(
@@ -92,9 +71,9 @@ namespace Fram3.UI.Storybook
         }
 
         /// <inheritdoc/>
-        public override Fram3.UI.Core.State CreateState() => new StorybookAppState();
+        public override State CreateState() => new StorybookAppState();
 
-        private sealed class StorybookAppState : Fram3.UI.Core.State<StorybookApp>
+        private sealed class StorybookAppState : State<StorybookApp>
         {
             private IReadOnlyList<Chapter>? _chapters;
             private int _selectedChapter;
@@ -122,7 +101,7 @@ namespace Fram3.UI.Storybook
                             Children = new Element[]
                             {
                                 BuildSidebar(theme),
-                                BuildContentArea(theme),
+                                BuildContentArea(theme)
                             }
                         }
                     }
@@ -146,14 +125,19 @@ namespace Fram3.UI.Storybook
                             BuildSidebarHeader(theme),
                             new Expanded
                             {
-                                Child = new ScrollView()
+                                Child = new ScrollView
                                 {
-                                    Child = new Padding(EdgeInsets.Symmetric(vertical: theme.Spacing, horizontal: theme.Spacing))
+                                    Child = new Padding(
+                                        EdgeInsets.Symmetric(
+                                            vertical: theme.Spacing,
+                                            horizontal: theme.Spacing
+                                        )
+                                    )
                                     {
-                                        Child = BuildChapterList(theme),
+                                        Child = BuildChapterList(theme)
                                     }
                                 }
-                            },
+                            }
                         }
                     }
                 };
@@ -183,7 +167,7 @@ namespace Fram3.UI.Storybook
                                 FontSize: 10f,
                                 Color: theme.SecondaryColor,
                                 LetterSpacing: 2f
-                            )),
+                            ))
                         }
                     }
                 };
@@ -248,7 +232,9 @@ namespace Fram3.UI.Storybook
                 var bgColor = isSelected
                     ? theme.PrimaryColor.WithAlpha(0.15f)
                     : FrameColor.Transparent;
+
                 var textColor = isSelected ? theme.PrimaryColor : theme.PrimaryTextColor;
+
                 var accentBar = isSelected
                     ? new Border(theme.PrimaryColor, 3f)
                     : new Border(FrameColor.Transparent, 3f);
@@ -277,11 +263,11 @@ namespace Fram3.UI.Storybook
             {
                 return new Expanded
                 {
-                    Child = new ScrollView()
+                    Child = new ScrollView
                     {
                         Child = new Padding(EdgeInsets.All(theme.Spacing * 3f))
                         {
-                            Child = BuildSelectedStoryCard(theme),
+                            Child = BuildSelectedStoryCard(theme)
                         }
                     }
                 };
@@ -329,7 +315,7 @@ namespace Fram3.UI.Storybook
                                             padding: EdgeInsets.Symmetric(vertical: 0f, horizontal: 0f)
                                         ),
                                         SizedBox.FromSize(height: theme.Spacing * 2f),
-                                        story.Build(),
+                                        story.Build()
                                     }
                                 }
                             }
@@ -377,7 +363,7 @@ namespace Fram3.UI.Storybook
                                 FontSize: 14f,
                                 Color: theme.SecondaryTextColor,
                                 LetterSpacing: 0.5f
-                            )),
+                            ))
                         }
                     }
                 };
@@ -400,7 +386,7 @@ namespace Fram3.UI.Storybook
                             new Text(story.Description, new TextStyle(
                                 FontSize: theme.FontSize,
                                 Color: FrameColor.FromHex("#94A3B8")
-                            )),
+                            ))
                         }
                     }
                 };
@@ -416,7 +402,7 @@ namespace Fram3.UI.Storybook
                     new Chapter("Input", InputStories.All()),
                     new Chapter("State", StateStories.All()),
                     new Chapter("Animation", AnimationStories.All()),
-                    new Chapter("Navigation", NavigationStories.All()),
+                    new Chapter("Navigation", NavigationStories.All())
                 };
             }
         }

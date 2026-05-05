@@ -6,15 +6,8 @@ using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
-    /// <summary>
-    /// Shared layout helpers used across all story builders.
-    /// </summary>
     internal static class StoryHelpers
     {
-        /// <summary>
-        /// Constrains <paramref name="content"/> to 50% of the available width by placing it in
-        /// the first half of a two-Expanded row.
-        /// </summary>
         internal static Element HalfWidth(Element content)
         {
             return new Row(crossAxisAlignment: CrossAxisAlignment.Start)
@@ -27,9 +20,6 @@ namespace Fram3.UI.Storybook.Stories
             };
         }
 
-        /// <summary>
-        /// Wraps <paramref name="content"/> in a labeled section block with a colored header label.
-        /// </summary>
         internal static Element Section(string label, Element content, Theme theme)
         {
             return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)

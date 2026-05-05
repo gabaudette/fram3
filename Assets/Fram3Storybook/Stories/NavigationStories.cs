@@ -9,21 +9,22 @@ using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
-    /// <summary>Stories for the Navigation chapter.</summary>
     public static class NavigationStories
     {
         private const string RouteHome = "/";
         private const string RouteDetail = "/detail";
         private const string RouteSettings = "/settings";
 
-        /// <summary>Returns all navigation stories.</summary>
         public static IReadOnlyList<Story> All()
         {
             return new Story[]
             {
-                new Story("Navigator",
-                    "A stack-based router that maps string route keys to builder functions; supports Push, Pop, and replace operations via NavigatorHandle.",
-                    BuildNavigator),
+                new Story(
+                    "Navigator",
+                    "A stack-based router that maps string route keys to builder functions;" +
+                    " supports Push, Pop, and replace operations via NavigatorHandle.",
+                    BuildNavigator
+                )
             };
         }
 
@@ -39,7 +40,7 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         [RouteHome] = BuildHomeRoute,
                         [RouteDetail] = BuildDetailRoute,
-                        [RouteSettings] = BuildSettingsRoute,
+                        [RouteSettings] = BuildSettingsRoute
                     },
                     initialRoute: RouteHome
                 )
@@ -56,10 +57,18 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     Children = new Element[]
                     {
-                        new Text("Home Route", new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0"))),
+                        new Text(
+                            "Home Route",
+                            style: new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0")
+                            )
+                        ),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new Text("Push a route using the buttons below.", new TextStyle(Color: FrameColor.FromHex("#E2E8F0")))
+                            Child = new Text(
+                                "Push a route using the buttons below.",
+                                style: new TextStyle(Color: FrameColor.FromHex("#E2E8F0")
+                                )
+                            )
                         },
                         new Row
                         {
@@ -73,9 +82,9 @@ namespace Fram3.UI.Storybook.Stories
                                 new Button(
                                     label: "Go to Settings",
                                     onPressed: () => navigator.Push(RouteSettings)
-                                ),
+                                )
                             }
-                        },
+                        }
                     }
                 }
             };
@@ -91,10 +100,21 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     Children = new Element[]
                     {
-                        new Text("Detail Route", new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0"))),
+                        new Text("Detail Route",
+                            style: new TextStyle(
+                                FontSize: 20f,
+                                Bold: true,
+                                Color: FrameColor.FromHex("#E2E8F0")
+                            )
+                        ),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new Text("This is the detail page.", new TextStyle(Color: FrameColor.FromHex("#E2E8F0")))
+                            Child = new Text(
+                                "This is the detail page.",
+                                style: new TextStyle(
+                                    Color: FrameColor.FromHex("#E2E8F0")
+                                )
+                            )
                         },
                         new Row
                         {
@@ -114,9 +134,9 @@ namespace Fram3.UI.Storybook.Stories
                                 new Button(
                                     label: "Go to Settings",
                                     onPressed: () => navigator.Push(RouteSettings)
-                                ),
+                                )
                             }
-                        },
+                        }
                     }
                 }
             };
@@ -132,10 +152,20 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     Children = new Element[]
                     {
-                        new Text("Settings Route", new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0"))),
+                        new Text(
+                            "Settings Route",
+                            style: new TextStyle(
+                                FontSize: 20f,
+                                Bold: true,
+                                Color: FrameColor.FromHex("#E2E8F0"))
+                        ),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
-                            Child = new Text("CanPop: " + navigator.CanPop, new TextStyle(Color: FrameColor.FromHex("#E2E8F0")))
+                            Child = new Text(
+                                text: "CanPop: " + navigator.CanPop,
+                                style: new TextStyle(Color: FrameColor.FromHex("#E2E8F0")
+                                )
+                            )
                         },
                         new Button(
                             label: navigator.CanPop ? "Back" : "Back (disabled)",
@@ -146,7 +176,7 @@ namespace Fram3.UI.Storybook.Stories
                                     navigator.Pop();
                                 }
                             }
-                        ),
+                        )
                     }
                 }
             };

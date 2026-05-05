@@ -10,32 +10,38 @@ using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
-    /// <summary>Stories for the Animation chapter.</summary>
     public static class AnimationStories
     {
-        /// <summary>Returns all animation stories.</summary>
         public static IReadOnlyList<Story> All()
         {
             return new Story[]
             {
-                new Story("AnimationBuilder",
-                    "Drives a single animation controller and rebuilds its child on every frame tick, giving full programmatic control over the animated value.",
-                    BuildAnimationBuilder),
-                new Story("AnimatedContainer",
-                    "A container whose size, decoration, and padding interpolate smoothly to new values whenever its properties change.",
-                    BuildAnimatedContainer),
-                new Story("ImplicitAnimation",
-                    "Animates one or more named values toward their latest targets using a shared duration and curve, without manual controller management.",
-                    BuildImplicitAnimation),
-                new Story("Curves",
-                    "A library of pre-built easing functions -- Linear, EaseIn, EaseOut, EaseInOut, ElasticOut, and BounceOut -- used to shape animation playback.",
-                    BuildCurves),
+                new Story(
+                    "AnimationBuilder",
+                    "Drives a single animation controller and rebuilds its child on every frame tick, " +
+                    "giving full programmatic control over the animated value.",
+                    BuildAnimationBuilder
+                ),
+                new Story(
+                    "AnimatedContainer",
+                    "A container whose size, decoration, and padding interpolate smoothly " +
+                    "to new values whenever its properties change.",
+                    BuildAnimatedContainer
+                ),
+                new Story(
+                    "ImplicitAnimation",
+                    "Animates one or more named values toward their latest targets using " +
+                    "a shared duration and curve, without manual controller management.",
+                    BuildImplicitAnimation
+                ),
+                new Story(
+                    "Curves",
+                    "A library of pre-built easing functions -- Linear, EaseIn, EaseOut, EaseInOut, " +
+                    "ElasticOut, and BounceOut -- used to shape animation playback.",
+                    BuildCurves
+                ),
             };
         }
-
-        // ---------------------------------------------------------------------------
-        // AnimationBuilder
-        // ---------------------------------------------------------------------------
 
         private static Element BuildAnimationBuilder()
         {
@@ -116,10 +122,6 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // AnimatedContainer
-        // ---------------------------------------------------------------------------
-
         private static Element BuildAnimatedContainer()
         {
             return new AnimatedContainerStory();
@@ -176,10 +178,6 @@ namespace Fram3.UI.Storybook.Stories
                 }
             }
         }
-
-        // ---------------------------------------------------------------------------
-        // ImplicitAnimation
-        // ---------------------------------------------------------------------------
 
         private static Element BuildImplicitAnimation()
         {
@@ -254,10 +252,6 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // Curves
-        // ---------------------------------------------------------------------------
-
         private static Element BuildCurves()
         {
             return new CurvesStory();
@@ -292,6 +286,7 @@ namespace Fram3.UI.Storybook.Stories
                                     {
                                         c?.Reset();
                                     }
+
                                     _running = true;
                                 })
                             ),
@@ -302,17 +297,23 @@ namespace Fram3.UI.Storybook.Stories
                                     Children = new Element[]
                                     {
                                         CurveRow("Linear", Curves.Linear, 0, _running,
-                                            () => SetState(() => _running = false)),
+                                            () => SetState(() => _running = false)
+                                        ),
                                         CurveRow("EaseIn", Curves.EaseIn, 1, _running,
-                                            () => SetState(() => _running = false)),
+                                            () => SetState(() => _running = false)
+                                        ),
                                         CurveRow("EaseOut", Curves.EaseOut, 2, _running,
-                                            () => SetState(() => _running = false)),
+                                            () => SetState(() => _running = false)
+                                        ),
                                         CurveRow("EaseInOut", Curves.EaseInOut, 3, _running,
-                                            () => SetState(() => _running = false)),
+                                            () => SetState(() => _running = false)
+                                        ),
                                         CurveRow("ElasticOut", Curves.ElasticOut, 4, _running,
-                                            () => SetState(() => _running = false)),
+                                            () => SetState(() => _running = false)
+                                        ),
                                         CurveRow("BounceOut", Curves.BounceOut, 5, _running,
-                                            () => SetState(() => _running = false)),
+                                            () => SetState(() => _running = false)
+                                        ),
                                     }
                                 }
                             },

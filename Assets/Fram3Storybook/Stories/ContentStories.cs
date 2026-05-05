@@ -9,48 +9,57 @@ using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
-    /// <summary>Stories for the Content chapter.</summary>
     public static class ContentStories
     {
-        /// <summary>Returns all content stories.</summary>
         public static IReadOnlyList<Story> All()
         {
             return new Story[]
             {
-                new Story("Text",
+                new Story(
+                    "Text",
                     "Renders a string with optional font size, color, weight, style, and letter-spacing overrides.",
-                    () => new TextStory()),
-                new Story("ProgressBar",
+                    () => new TextStory()
+                ),
+                new Story(
+                    "ProgressBar",
                     "Shows a bounded progress value between a min and max, with an optional title label above the track.",
-                    () => new ProgressBarStory()),
-                new Story("Spinner",
-                    "Displays an indeterminate loading indicator as a spinning ring, configurable in size, stroke width, color, and rotation speed.",
-                    () => new SpinnerStory()),
-                new Story("TabView",
+                    () => new ProgressBarStory()
+                ),
+                new Story(
+                    "Spinner",
+                    "Displays an indeterminate loading indicator as a spinning ring, configurable in size," +
+                    " stroke width, color, and rotation speed.",
+                    () => new SpinnerStory()
+                ),
+                new Story
+                ("TabView",
                     "Renders a row of tab labels and swaps the visible content panel when a tab is selected.",
-                    () => new TabViewStory()),
-                new Story("ListView",
+                    () => new TabViewStory()
+                ),
+                new Story(
+                    "ListView",
                     "Virtualized list with search, class filter, and pagination over a roster of game characters.",
-                    BuildListView),
-                new Story("Tooltip", "Attaches a plain-text tooltip to its child that appears on hover.",
-                    () => new TooltipStory()),
-                new Story("Snackbar",
+                    BuildListView
+                ),
+                new Story(
+                    "Tooltip", "Attaches a plain-text tooltip to its child that appears on hover.",
+                    () => new TooltipStory()
+                ),
+                new Story(
+                    "Snackbar",
                     "Shows a transient message bar triggered by a button, with and without an action label.",
-                    () => new SnackbarStory()),
+                    () => new SnackbarStory()
+                )
             };
         }
 
         private static Element BuildListView() => new RosterListViewElement();
 
-        // ---------------------------------------------------------------------------
-        // Text
-        // ---------------------------------------------------------------------------
-
         private sealed class TextStory : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new TextStoryState();
+            public override State CreateState() => new TextStoryState();
 
-            private sealed class TextStoryState : Fram3.UI.Core.State<TextStory>
+            private sealed class TextStoryState : State<TextStory>
             {
                 public override Element Build(BuildContext context)
                 {
@@ -61,7 +70,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
                         }
                     };
                 }
@@ -73,7 +82,9 @@ namespace Fram3.UI.Storybook.Stories
                         Children = new Element[]
                         {
                             new Text("Default text", new TextStyle(Color: theme.PrimaryTextColor)),
-                            new Text("Large bold text", new TextStyle(FontSize: 24f, Bold: true, Color: theme.PrimaryTextColor)),
+                            new Text("Large bold text",
+                                style: new TextStyle(FontSize: 24f, Bold: true, Color: theme.PrimaryTextColor)
+                            ),
                             new Text("Accent italic text", new TextStyle(
                                 FontSize: 16f,
                                 Color: theme.PrimaryColor,
@@ -83,7 +94,7 @@ namespace Fram3.UI.Storybook.Stories
                                 FontSize: 11f,
                                 LetterSpacing: 2f,
                                 Color: theme.SecondaryTextColor
-                            )),
+                            ))
                         }
                     };
                 }
@@ -101,15 +112,33 @@ namespace Fram3.UI.Storybook.Stories
                                 LetterSpacing: 1.5f
                             )),
                             SizedBox.FromSize(height: theme.Spacing),
-                            KillFeedEntry("Drex Ironfoot", "eliminated", "a Goblin Scout", FrameColor.FromHex("#FF6B6B"), theme),
-                            KillFeedEntry("Lyria Moonwhisper", "cast", "Arcane Surge", FrameColor.FromHex("#7B61FF"), theme),
-                            KillFeedEntry("Seraphine Vale", "healed", "Aric for 142 HP", FrameColor.FromHex("#00D4AA"), theme),
-                            KillFeedEntry("Vex Nightfall", "looted", "Shadowblade", FrameColor.FromHex("#FFD700"), theme),
+                            KillFeedEntry(
+                                "Drex Ironfoot", "eliminated", "a Goblin Scout",
+                                FrameColor.FromHex("#FF6B6B"), theme
+                            ),
+                            KillFeedEntry(
+                                "Lyria Moonwhisper", "cast", "Arcane Surge", FrameColor.FromHex("#7B61FF"),
+                                theme
+                            ),
+                            KillFeedEntry(
+                                "Seraphine Vale", "healed", "Aric for 142 HP", FrameColor.FromHex("#00D4AA"),
+                                theme
+                            ),
+                            KillFeedEntry(
+                                "Vex Nightfall", "looted", "Shadowblade", FrameColor.FromHex("#FFD700"),
+                                theme
+                            )
                         }
                     };
                 }
 
-                private static Element KillFeedEntry(string actor, string verb, string target, FrameColor actorColor, Theme theme)
+                private static Element KillFeedEntry(
+                    string actor,
+                    string verb,
+                    string target,
+                    FrameColor actorColor,
+                    Theme theme
+                )
                 {
                     return new Padding(EdgeInsets.Symmetric(vertical: 2f, horizontal: 0f))
                     {
@@ -117,9 +146,15 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             Children = new Element[]
                             {
-                                new Text(actor, new TextStyle(FontSize: theme.FontSizeSmall, Bold: true, Color: actorColor)),
-                                new Text($" {verb} ", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
-                                new Text(target, new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.PrimaryTextColor)),
+                                new Text(actor,
+                                    style: new TextStyle(FontSize: theme.FontSizeSmall, Bold: true, Color: actorColor)
+                                ),
+                                new Text($" {verb} ",
+                                    style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)
+                                ),
+                                new Text(target,
+                                    style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.PrimaryTextColor)
+                                )
                             }
                         }
                     };
@@ -127,15 +162,11 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // ProgressBar
-        // ---------------------------------------------------------------------------
-
         private sealed class ProgressBarStory : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new ProgressBarStoryState();
+            public override State CreateState() => new ProgressBarStoryState();
 
-            private sealed class ProgressBarStoryState : Fram3.UI.Core.State<ProgressBarStory>
+            private sealed class ProgressBarStoryState : State<ProgressBarStory>
             {
                 public override Element Build(BuildContext context)
                 {
@@ -146,7 +177,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
                         }
                     };
                 }
@@ -157,13 +188,17 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            new Text("25% progress:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            new Text("25% progress:",
+                                style: new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)
+                            ),
                             SizedBox.FromSize(height: 4f),
-                            ThemedBar(25f, 100f, theme.PrimaryColor, theme),
+                            ThemedBar(25f, 100f, theme.PrimaryColor),
                             SizedBox.FromSize(height: theme.Spacing),
-                            new Text("75% progress:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            new Text("75% progress:",
+                                style: new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)
+                            ),
                             SizedBox.FromSize(height: 4f),
-                            ThemedBar(75f, 100f, theme.PrimaryColor, theme),
+                            ThemedBar(75f, 100f, theme.PrimaryColor)
                         }
                     };
                 }
@@ -185,7 +220,7 @@ namespace Fram3.UI.Storybook.Stories
                             SizedBox.FromSize(height: theme.Spacing),
                             GameStatBar("MP", 42, 80, FrameColor.FromHex("#7B61FF"), theme),
                             SizedBox.FromSize(height: theme.Spacing),
-                            GameStatBar("XP", 1240, 2000, FrameColor.FromHex("#FFD700"), theme),
+                            GameStatBar("XP", 1240, 2000, FrameColor.FromHex("#FFD700"), theme)
                         }
                     };
                 }
@@ -207,18 +242,18 @@ namespace Fram3.UI.Storybook.Stories
                             SizedBox.FromSize(width: theme.Spacing),
                             new Expanded
                             {
-                                Child = ThemedBar((float)value, (float)max, color, theme)
+                                Child = ThemedBar(value, max, color)
                             },
                             SizedBox.FromSize(width: theme.Spacing),
                             new Text($"{value}/{max}", new TextStyle(
                                 FontSize: theme.FontSizeSmall,
                                 Color: theme.SecondaryTextColor
-                            )),
+                            ))
                         }
                     };
                 }
 
-                private static Element ThemedBar(float value, float max, FrameColor fillColor, Theme theme)
+                private static Element ThemedBar(float value, float max, FrameColor fillColor)
                 {
                     var fill = max > 0f ? System.Math.Min(value / max, 1f) : 0f;
                     var empty = System.Math.Max(1f - fill, 0f);
@@ -244,7 +279,7 @@ namespace Fram3.UI.Storybook.Stories
                                         )
                                     )
                                 },
-                                new Expanded(flex: empty) { Child = new Container(height: 12f) },
+                                new Expanded(flex: empty) { Child = new Container(height: 12f) }
                             }
                         }
                     };
@@ -252,15 +287,11 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // Spinner
-        // ---------------------------------------------------------------------------
-
         private sealed class SpinnerStory : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new SpinnerStoryState();
+            public override State CreateState() => new SpinnerStoryState();
 
-            private sealed class SpinnerStoryState : Fram3.UI.Core.State<SpinnerStory>
+            private sealed class SpinnerStoryState : State<SpinnerStory>
             {
                 public override Element Build(BuildContext context)
                 {
@@ -271,7 +302,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
                         }
                     };
                 }
@@ -282,13 +313,15 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            new Text("Default spinner (32px):", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            new Text("Default spinner (32px):",
+                                new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
                             SizedBox.FromSize(height: 4f),
                             new Spinner(),
                             SizedBox.FromSize(height: theme.Spacing),
-                            new Text("Large spinner (64px, primary color):", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            new Text("Large spinner (64px, primary color):",
+                                new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
                             SizedBox.FromSize(height: 4f),
-                            new Spinner(size: 64f, strokeWidth: 6f, color: theme.PrimaryColor, speed: 2f),
+                            new Spinner(size: 64f, strokeWidth: 6f, color: theme.PrimaryColor, speed: 2f)
                         }
                     };
                 }
@@ -309,15 +342,21 @@ namespace Fram3.UI.Storybook.Stories
                             {
                                 new Spinner(size: 48f, strokeWidth: 4f, color: theme.SecondaryColor),
                                 SizedBox.FromSize(height: theme.Spacing * 2f),
-                                new Text("Connecting to server...", new TextStyle(
-                                    FontSize: theme.FontSize,
-                                    Bold: true,
-                                    Color: theme.PrimaryTextColor
-                                )),
-                                new Text("Please wait", new TextStyle(
-                                    FontSize: theme.FontSizeSmall,
-                                    Color: theme.SecondaryTextColor
-                                )),
+                                new Text(
+                                    "Connecting to server...",
+                                    style: new TextStyle(
+                                        FontSize: theme.FontSize,
+                                        Bold: true,
+                                        Color: theme.PrimaryTextColor
+                                    )
+                                ),
+                                new Text(
+                                    "Please wait",
+                                    style: new TextStyle(
+                                        FontSize: theme.FontSizeSmall,
+                                        Color: theme.SecondaryTextColor
+                                    )
+                                )
                             }
                         }
                     };
@@ -325,15 +364,11 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // TabView
-        // ---------------------------------------------------------------------------
-
         private sealed class TabViewStory : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new TabViewStoryState();
+            public override State CreateState() => new TabViewStoryState();
 
-            private sealed class TabViewStoryState : Fram3.UI.Core.State<TabViewStory>
+            private sealed class TabViewStoryState : State<TabViewStory>
             {
                 public override Element Build(BuildContext context)
                 {
@@ -344,7 +379,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
                         }
                     };
                 }
@@ -365,7 +400,7 @@ namespace Fram3.UI.Storybook.Stories
                             new Tab("Gamma", new Padding(EdgeInsets.All(16f))
                             {
                                 Child = new Text("Content for tab Gamma.", new TextStyle(Color: theme.PrimaryTextColor))
-                            }),
+                            })
                         },
                         initialIndex: 0
                     );
@@ -382,8 +417,19 @@ namespace Fram3.UI.Storybook.Stories
                                 {
                                     Children = new Element[]
                                     {
-                                        new Text("Aric Stormblade", new TextStyle(Bold: true, FontSize: theme.FontSizeLarge, Color: theme.PrimaryTextColor)),
-                                        new Text("Warrior - Level 42", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                                        new Text("Aric Stormblade",
+                                            style: new TextStyle(
+                                                Bold: true, FontSize: theme.FontSizeLarge,
+                                                Color: theme.PrimaryTextColor
+                                            )
+                                        ),
+                                        new Text(
+                                            "Warrior - Level 42",
+                                            style: new TextStyle(
+                                                Color: theme.SecondaryTextColor,
+                                                FontSize: theme.FontSizeSmall
+                                            )
+                                        )
                                     }
                                 }
                             }),
@@ -395,7 +441,13 @@ namespace Fram3.UI.Storybook.Stories
                                     {
                                         new Text("Shadowblade x1", new TextStyle(Color: theme.PrimaryTextColor)),
                                         new Text("Health Potion x5", new TextStyle(Color: theme.PrimaryTextColor)),
-                                        new Text("Gold x1,240", new TextStyle(Color: FrameColor.FromHex("#FFD700"), Bold: true)),
+                                        new Text(
+                                            "Gold x1,240",
+                                            style: new TextStyle(
+                                                Color: FrameColor.FromHex("#FFD700"),
+                                                Bold: true
+                                            )
+                                        )
                                     }
                                 }
                             }),
@@ -407,10 +459,10 @@ namespace Fram3.UI.Storybook.Stories
                                     {
                                         new Text("Cleave - Lv 3", new TextStyle(Color: theme.PrimaryTextColor)),
                                         new Text("Battlecry - Lv 2", new TextStyle(Color: theme.PrimaryTextColor)),
-                                        new Text("Shield Bash - Lv 5", new TextStyle(Color: theme.PrimaryTextColor)),
+                                        new Text("Shield Bash - Lv 5", new TextStyle(Color: theme.PrimaryTextColor))
                                     }
                                 }
-                            }),
+                            })
                         },
                         initialIndex: 0
                     );
@@ -418,15 +470,11 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // Tooltip
-        // ---------------------------------------------------------------------------
-
         private sealed class TooltipStory : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new TooltipStoryState();
+            public override State CreateState() => new TooltipStoryState();
 
-            private sealed class TooltipStoryState : Fram3.UI.Core.State<TooltipStory>
+            private sealed class TooltipStoryState : State<TooltipStory>
             {
                 public override Element Build(BuildContext context)
                 {
@@ -437,7 +485,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
                         }
                     };
                 }
@@ -448,7 +496,10 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            new Text("Hover over the box below:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            new Text(
+                                "Hover over the box below:",
+                                style: new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)
+                            ),
                             SizedBox.FromSize(height: theme.Spacing),
                             new Tooltip("This is the tooltip message!")
                             {
@@ -463,7 +514,7 @@ namespace Fram3.UI.Storybook.Stories
                                 {
                                     Child = new Text("Hover me", new TextStyle(Color: theme.PrimaryTextColor))
                                 }
-                            },
+                            }
                         }
                     };
                 }
@@ -474,19 +525,39 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         Children = new Element[]
                         {
-                            new Text("Hover over an ability icon:", new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)),
+                            new Text("Hover over an ability icon:",
+                                style: new TextStyle(Color: theme.SecondaryTextColor, FontSize: theme.FontSizeSmall)
+                            ),
                             SizedBox.FromSize(height: theme.Spacing),
                             new Row(crossAxisAlignment: CrossAxisAlignment.Center)
                             {
                                 Children = new Element[]
                                 {
-                                    AbilityIcon("C", "Cleave", "Deals 150% weapon damage to all enemies in front.", FrameColor.FromHex("#FF6B6B"), theme),
+                                    AbilityIcon(
+                                        "C",
+                                        "Cleave",
+                                        "Deals 150% weapon damage to all enemies in front.",
+                                        FrameColor.FromHex("#FF6B6B"),
+                                        theme
+                                    ),
                                     SizedBox.FromSize(width: theme.Spacing),
-                                    AbilityIcon("B", "Battlecry", "Increases party ATK by 20% for 10 seconds.", FrameColor.FromHex("#FFD700"), theme),
+                                    AbilityIcon(
+                                        "B",
+                                        "Battlecry",
+                                        "Increases party ATK by 20% for 10 seconds.",
+                                        FrameColor.FromHex("#FFD700"),
+                                        theme
+                                    ),
                                     SizedBox.FromSize(width: theme.Spacing),
-                                    AbilityIcon("S", "Shield Bash", "Stuns target for 2 seconds. 12s cooldown.", FrameColor.FromHex("#7B61FF"), theme),
+                                    AbilityIcon(
+                                        "S",
+                                        "Shield Bash",
+                                        "Stuns target for 2 seconds. 12s cooldown.",
+                                        FrameColor.FromHex("#7B61FF"),
+                                        theme
+                                    )
                                 }
-                            },
+                            }
                         }
                     };
                 }
@@ -518,15 +589,11 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // Snackbar
-        // ---------------------------------------------------------------------------
-
         private sealed class SnackbarStory : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new SnackbarStoryState();
+            public override State CreateState() => new SnackbarStoryState();
 
-            private sealed class SnackbarStoryState : Fram3.UI.Core.State<SnackbarStory>
+            private sealed class SnackbarStoryState : State<SnackbarStory>
             {
                 private bool _showSimple;
                 private bool _showLoot;
@@ -540,7 +607,7 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             StoryHelpers.Section("Basic", BuildBasic(theme), theme),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
-                            StoryHelpers.Section("Game Example", BuildGame(theme), theme),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
                         }
                     };
                 }
@@ -552,14 +619,19 @@ namespace Fram3.UI.Storybook.Stories
                         new Button(
                             label: _showSimple ? "Dismiss" : "Show Snackbar",
                             onPressed: () => SetState(() => _showSimple = !_showSimple)
-                        ),
+                        )
                     };
 
-                    if (_showSimple)
+                    if (!_showSimple)
                     {
-                        children.Add(SizedBox.FromSize(height: theme.Spacing));
-                        children.Add(new Snackbar(message: "File saved successfully."));
+                        return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                        {
+                            Children = children.ToArray()
+                        };
                     }
+
+                    children.Add(SizedBox.FromSize(height: theme.Spacing));
+                    children.Add(new Snackbar(message: "File saved successfully."));
 
                     return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
@@ -574,18 +646,23 @@ namespace Fram3.UI.Storybook.Stories
                         new Button(
                             label: _showLoot ? "Dismiss" : "Pick Up Item",
                             onPressed: () => SetState(() => _showLoot = !_showLoot)
-                        ),
+                        )
                     };
 
-                    if (_showLoot)
+                    if (!_showLoot)
                     {
-                        children.Add(SizedBox.FromSize(height: theme.Spacing));
-                        children.Add(new Snackbar(
-                            message: "You picked up: Shadowblade (Epic)",
-                            actionLabel: "Equip",
-                            onAction: () => SetState(() => _showLoot = false)
-                        ));
+                        return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                        {
+                            Children = children.ToArray()
+                        };
                     }
+
+                    children.Add(SizedBox.FromSize(height: theme.Spacing));
+                    children.Add(new Snackbar(
+                        message: "You picked up: Shadowblade (Epic)",
+                        actionLabel: "Equip",
+                        onAction: () => SetState(() => _showLoot = false)
+                    ));
 
                     return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
@@ -595,15 +672,12 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        // ---------------------------------------------------------------------------
-        // ListView story (unchanged - already game-themed)
-        // ---------------------------------------------------------------------------
-
         private sealed class Character
         {
             public string Name { get; }
             public string Class { get; }
             public int Level { get; }
+
             public Character(string name, string @class, int level)
             {
                 Name = name;
@@ -612,7 +686,7 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        private static readonly Character[] AllCharacters = new Character[]
+        private static readonly Character[] AllCharacters =
         {
             new("Aric Stormblade", "Warrior", 42),
             new("Lyria Moonwhisper", "Mage", 38),
@@ -635,38 +709,47 @@ namespace Fram3.UI.Storybook.Stories
             new("Brix Ironveil", "Berserker", 65),
             new("Solene Dawnmere", "Ranger", 22),
             new("Varg Stonehide", "Warrior", 57),
-            new("Ophira Vex", "Healer", 35),
+            new("Ophira Vex", "Healer", 35)
         };
 
-        private static readonly string[] ClassFilters = new string[]
+        private static readonly string[] ClassFilters =
         {
-            "All", "Warrior", "Mage", "Rogue", "Healer", "Ranger", "Paladin", "Assassin", "Berserker",
+            "All", "Warrior", "Mage", "Rogue", "Healer", "Ranger", "Paladin", "Assassin", "Berserker"
         };
 
         private const int PageSize = 8;
 
         private sealed class RosterListViewElement : StatefulElement
         {
-            public override Fram3.UI.Core.State CreateState() => new RosterListViewState();
+            public override State CreateState() => new RosterListViewState();
 
-            private sealed class RosterListViewState : Fram3.UI.Core.State<RosterListViewElement>
+            private sealed class RosterListViewState : State<RosterListViewElement>
             {
                 private string _searchQuery = "";
                 private string _classFilter = "All";
-                private int _page = 0;
+                private int _page;
 
                 public override Element Build(BuildContext context)
                 {
                     var theme = ThemeConsumer.Of(context);
 
                     var filtered = FilterCharacters();
+
                     var totalPages = (filtered.Count + PageSize - 1) / PageSize;
-                    if (totalPages == 0) totalPages = 1;
+                    if (totalPages == 0)
+                    {
+                        totalPages = 1;
+                    }
+
                     var currentPage = _page >= totalPages ? totalPages - 1 : _page;
                     var pageStart = currentPage * PageSize;
                     var pageEnd = System.Math.Min(pageStart + PageSize, filtered.Count);
                     var pageItems = new List<Character>();
-                    for (var i = pageStart; i < pageEnd; i++) pageItems.Add(filtered[i]);
+
+                    for (var i = pageStart; i < pageEnd; i++)
+                    {
+                        pageItems.Add(filtered[i]);
+                    }
 
                     return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
@@ -686,7 +769,7 @@ namespace Fram3.UI.Storybook.Stories
                                 )
                             },
                             SizedBox.FromSize(height: theme.Spacing),
-                            BuildPagination(currentPage, totalPages, theme),
+                            BuildPagination(currentPage, totalPages, theme)
                         }
                     };
                 }
@@ -696,11 +779,22 @@ namespace Fram3.UI.Storybook.Stories
                     var result = new List<Character>();
                     foreach (var c in AllCharacters)
                     {
-                        if (_classFilter != "All" && c.Class != _classFilter) continue;
-                        if (_searchQuery.Length > 0 &&
-                            !c.Name.ToLower().Contains(_searchQuery.ToLower())) continue;
+                        if (_classFilter != "All" && c.Class != _classFilter)
+                        {
+                            continue;
+                        }
+
+                        if (
+                            _searchQuery.Length > 0 &&
+                            !c.Name.ToLower().Contains(_searchQuery.ToLower())
+                        )
+                        {
+                            continue;
+                        }
+
                         result.Add(c);
                     }
+
                     return result;
                 }
 
@@ -729,17 +823,20 @@ namespace Fram3.UI.Storybook.Stories
                                     _classFilter = ClassFilters[i];
                                     _page = 0;
                                 })
-                            ),
+                            )
                         }
                     };
                 }
 
                 private static Element BuildResultCount(int count, Theme theme)
                 {
-                    return new Text($"{count} character{(count == 1 ? "" : "s")} found", new TextStyle(
-                        FontSize: theme.FontSizeSmall,
-                        Color: theme.SecondaryTextColor
-                    ));
+                    return new Text(
+                        $"{count} character{(count == 1 ? "" : "s")} found",
+                        style: new TextStyle(
+                            FontSize: theme.FontSizeSmall,
+                            Color: theme.SecondaryTextColor
+                        )
+                    );
                 }
 
                 private static Element BuildCharacterRow(Character c, Theme theme)
@@ -771,7 +868,7 @@ namespace Fram3.UI.Storybook.Stories
                                                 new Text(c.Class, new TextStyle(
                                                     FontSize: theme.FontSizeSmall,
                                                     Color: theme.SecondaryTextColor
-                                                )),
+                                                ))
                                             }
                                         }
                                     },
@@ -779,7 +876,7 @@ namespace Fram3.UI.Storybook.Stories
                                         FontSize: theme.FontSize,
                                         Bold: true,
                                         Color: theme.SecondaryColor
-                                    )),
+                                    ))
                                 }
                             }
                         }
@@ -812,7 +909,7 @@ namespace Fram3.UI.Storybook.Stories
                                 onPressed: currentPage < totalPages - 1
                                     ? () => SetState(() => _page = currentPage + 1)
                                     : null
-                            ),
+                            )
                         }
                     };
                 }

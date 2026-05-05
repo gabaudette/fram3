@@ -10,35 +10,44 @@ using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories
 {
-    /// <summary>Stories for the State chapter.</summary>
     public static class StateStories
     {
-        /// <summary>Returns all state stories.</summary>
         public static IReadOnlyList<Story> All()
         {
             return new Story[]
             {
-                new Story("Provider / Consumer",
-                    "Injects an arbitrary value into a subtree via Provider and reads the nearest matching value back out via Consumer.",
-                    BuildProviderConsumer),
-                new Story("ValueListenableBuilder",
-                    "Rebuilds its subtree whenever a ValueNotifier's value changes, enabling lightweight reactive state without a full cubit.",
-                    BuildValueListenable),
-                new Story("CubitBuilder",
-                    "Connects a Cubit to the element tree and rebuilds automatically each time the cubit emits a new state.",
-                    BuildCubitBuilder),
-                new Story("Selector",
-                    "Like CubitBuilder but rebuilds only when a derived slice of state changes, minimising unnecessary rebuilds.",
-                    BuildSelector),
-                new Story("Store",
-                    "A Redux-style global store: dispatches typed actions through a pure reducer function and exposes the resulting state.",
-                    BuildStore),
+                new Story(
+                    "Provider / Consumer",
+                    "Injects an arbitrary value into a subtree via Provider and reads" +
+                    " the nearest matching value back out via Consumer.",
+                    BuildProviderConsumer
+                ),
+                new Story(
+                    "ValueListenableBuilder",
+                    "Rebuilds its subtree whenever a ValueNotifier's value changes," +
+                    " enabling lightweight reactive state without a full cubit.",
+                    BuildValueListenable
+                ),
+                new Story(
+                    "CubitBuilder",
+                    "Connects a Cubit to the element tree and rebuilds automatically" +
+                    " each time the cubit emits a new state.",
+                    BuildCubitBuilder
+                ),
+                new Story(
+                    "Selector",
+                    "Like CubitBuilder but rebuilds only when a derived slice of state changes," +
+                    " minimising unnecessary rebuilds.",
+                    BuildSelector
+                ),
+                new Story(
+                    "Store",
+                    "A Redux-style global store: dispatches typed actions through a pure reducer function" +
+                    " and exposes the resulting state.",
+                    BuildStore
+                )
             };
         }
-
-        // ---------------------------------------------------------------------------
-        // Provider / Consumer
-        // ---------------------------------------------------------------------------
 
         private static Element BuildProviderConsumer()
         {
@@ -51,7 +60,7 @@ namespace Fram3.UI.Storybook.Stories
                         new Text("Consumer reads the nearest Provider<string>:"),
                         new Consumer<string>((_, value) => new Container(
                             decoration: new BoxDecoration(
-                                 Color: FrameColor.FromHex("#7B61FF").WithAlpha(0.2f),
+                                Color: FrameColor.FromHex("#7B61FF").WithAlpha(0.2f),
                                 BorderRadius: BorderRadius.All(4f)
                             ),
                             padding: EdgeInsets.All(12f)
@@ -69,15 +78,11 @@ namespace Fram3.UI.Storybook.Stories
                         new Provider<int>(
                             42,
                             new Consumer<int>((_, n) => new Text($"Consumed int: {n}"))
-                        ),
+                        )
                     }
                 }
             );
         }
-
-        // ---------------------------------------------------------------------------
-        // ValueListenableBuilder
-        // ---------------------------------------------------------------------------
 
         private static Element BuildValueListenable()
         {
@@ -130,10 +135,10 @@ namespace Fram3.UI.Storybook.Stories
                                         SizedBox.FromSize(width: 8f),
                                         new Button(label: "Decrement", onPressed: () => { _counter!.Value -= 1; }),
                                         SizedBox.FromSize(width: 8f),
-                                        new Button(label: "Reset", onPressed: () => { _counter!.Value = 0; }),
+                                        new Button(label: "Reset", onPressed: () => { _counter!.Value = 0; })
                                     }
                                 }
-                            },
+                            }
                         }
                     };
                 }
@@ -144,10 +149,6 @@ namespace Fram3.UI.Storybook.Stories
                 }
             }
         }
-
-        // ---------------------------------------------------------------------------
-        // CubitBuilder
-        // ---------------------------------------------------------------------------
 
         private static Element BuildCubitBuilder()
         {
@@ -201,10 +202,10 @@ namespace Fram3.UI.Storybook.Stories
                                             SizedBox.FromSize(width: 8f),
                                             new Button(label: "-1", onPressed: () => _cubit!.Decrement()),
                                             SizedBox.FromSize(width: 8f),
-                                            new Button(label: "Reset", onPressed: () => _cubit!.Reset()),
+                                            new Button(label: "Reset", onPressed: () => _cubit!.Reset())
                                         }
                                     }
-                                },
+                                }
                             }
                         }
                     );
@@ -216,10 +217,6 @@ namespace Fram3.UI.Storybook.Stories
                 }
             }
         }
-
-        // ---------------------------------------------------------------------------
-        // Selector
-        // ---------------------------------------------------------------------------
 
         private static Element BuildSelector()
         {
@@ -281,10 +278,10 @@ namespace Fram3.UI.Storybook.Stories
                                         {
                                             new Button(label: "+1", onPressed: () => _cubit!.Increment()),
                                             SizedBox.FromSize(width: 8f),
-                                            new Button(label: "Reset", onPressed: () => _cubit!.Reset()),
+                                            new Button(label: "Reset", onPressed: () => _cubit!.Reset())
                                         }
                                     }
-                                },
+                                }
                             }
                         }
                     );
@@ -296,10 +293,6 @@ namespace Fram3.UI.Storybook.Stories
                 }
             }
         }
-
-        // ---------------------------------------------------------------------------
-        // Store
-        // ---------------------------------------------------------------------------
 
         private static Element BuildStore()
         {
@@ -317,7 +310,7 @@ namespace Fram3.UI.Storybook.Stories
                         new Text("Store (Redux-style) -- TodoState:"),
                         new CubitBuilder<Store<TodoState>, TodoState>(
                             builder: (_, state) => BuildTodoView(state, store)
-                        ),
+                        )
                     }
                 }
             );
@@ -350,17 +343,8 @@ namespace Fram3.UI.Storybook.Stories
 
         private static TodoState TodoReducer(TodoState state, FrameAction action)
         {
-            if (action is MarkOneDoneAction)
-            {
-                return new TodoState(state.Items, state.DoneCount + 1);
-            }
-
-            return state;
+            return action is MarkOneDoneAction ? new TodoState(state.Items, state.DoneCount + 1) : state;
         }
-
-        // ---------------------------------------------------------------------------
-        // Supporting types
-        // ---------------------------------------------------------------------------
 
         private sealed class CounterCubit : Cubit<int>
         {
