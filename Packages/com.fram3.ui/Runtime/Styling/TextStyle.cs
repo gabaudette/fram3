@@ -1,5 +1,5 @@
 #nullable enable
-#if !FRAM3_PURE_TESTS
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 #endif
@@ -33,7 +33,7 @@ namespace Fram3.UI.Styling
         bool Underline = false,
         float LetterSpacing = 0f,
         float? LineHeight = null,
-#if !FRAM3_PURE_TESTS
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
         TextAnchor? TextAlign = null,
         FontAsset? FontAsset = null
 #else
