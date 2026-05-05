@@ -34,6 +34,7 @@ namespace Fram3.UI.Tests.Integration
             var shallowState = new OrderRecordingState(1, order);
 
             // Build tree: shallowStateful -> deepStateful -> leaf
+            deepState.SetChild(new TestLeafElement("leaf"));
             var deepStateful = new TestStatefulElement(() => deepState, "deep");
             shallowState.SetChild(deepStateful);
             var shallowStateful = new TestStatefulElement(() => shallowState, "shallow");
