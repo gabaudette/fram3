@@ -977,16 +977,28 @@ namespace Fram3.UI.Rendering.Internal
                 return;
             }
 
+            if (icon.ResourcePath != null)
+            {
+                var loaded = UnityEngine.Resources.Load<VectorImage>(icon.ResourcePath);
+                if (loaded != null)
+                {
+                    img.vectorImage = loaded;
+                }
+                return;
+            }
+
             if (icon.SvgPath == null)
             {
                 return;
             }
 
-            var loaded = UnityEditor.AssetDatabase.LoadAssetAtPath<VectorImage>(icon.SvgPath);
-            if (loaded != null)
+#if UNITY_EDITOR
+            var svgLoaded = UnityEditor.AssetDatabase.LoadAssetAtPath<VectorImage>(icon.SvgPath);
+            if (svgLoaded != null)
             {
-                img.vectorImage = loaded;
+                img.vectorImage = svgLoaded;
             }
+#endif
         }
 #endif
 
