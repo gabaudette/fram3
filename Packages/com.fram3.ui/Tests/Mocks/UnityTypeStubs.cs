@@ -27,7 +27,13 @@ namespace UnityEngine.UIElements
     public sealed class AttachToPanelEvent { }
 
     /// <summary>Stub for UIToolkit PointerDownEvent.</summary>
-    public sealed class PointerDownEvent { }
+    public sealed class PointerDownEvent
+    {
+        public int clickCount { get; set; }
+    }
+
+    /// <summary>Stub for UIToolkit PointerUpEvent.</summary>
+    public sealed class PointerUpEvent { }
 
     /// <summary>Stub for UIToolkit PointerMoveEvent.</summary>
     public sealed class PointerMoveEvent
@@ -635,9 +641,15 @@ namespace UnityEngine.UIElements
         void ExecuteLater(long delayMs);
     }
 
+    public interface IVisualElementScheduledItem : IScheduledItem
+    {
+        IVisualElementScheduledItem StartingIn(long delayMs);
+        void Pause();
+    }
+
     public interface IVisualElementScheduler
     {
-        IScheduledItem Execute(Action task);
+        IVisualElementScheduledItem Execute(Action task);
     }
 
     public interface IPanel
@@ -647,12 +659,14 @@ namespace UnityEngine.UIElements
 
     internal sealed class VisualElementScheduler : IVisualElementScheduler
     {
-        private sealed class NopItem : IScheduledItem
+        private sealed class NopItem : IVisualElementScheduledItem
         {
             public void ExecuteLater(long delayMs) { }
+            public IVisualElementScheduledItem StartingIn(long delayMs) => this;
+            public void Pause() { }
         }
 
-        public IScheduledItem Execute(Action task) => new NopItem();
+        public IVisualElementScheduledItem Execute(Action task) => new NopItem();
     }
 }
 

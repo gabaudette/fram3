@@ -566,7 +566,7 @@ namespace Fram3.UI.Tests.Elements.Input
             var element = new GestureDetector(new Text("x"), onTap: () => tapped = true);
             var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
-            native.SimulateEvent(new ClickEvent());
+            native.SimulateEvent(new PointerDownEvent { clickCount = 1 });
 
             Assert.That(tapped, Is.True);
         }
