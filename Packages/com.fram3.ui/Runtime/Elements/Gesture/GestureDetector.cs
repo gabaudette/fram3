@@ -16,6 +16,16 @@ namespace Fram3.UI.Elements.Gesture
         public Action? OnTap { get; }
 
         /// <summary>
+        /// Callback invoked when the user double-taps (double-clicks) inside this element's bounds.
+        /// </summary>
+        public Action? OnDoubleTap { get; }
+
+        /// <summary>
+        /// Callback invoked when the pointer is held down for 500 ms without releasing.
+        /// </summary>
+        public Action? OnLongPress { get; }
+
+        /// <summary>
         /// Callback invoked when the pointer enters this element's bounds.
         /// </summary>
         public Action? OnPointerEnter { get; }
@@ -26,16 +36,20 @@ namespace Fram3.UI.Elements.Gesture
         public Action? OnPointerExit { get; }
 
         /// <summary>
-        /// Creates an <see cref="GestureDetector"/> element.
+        /// Creates a <see cref="GestureDetector"/> element.
         /// </summary>
         /// <param name="child">The child element whose area is monitored for gestures.</param>
-        /// <param name="onTap">Callback invoked on tap/click.</param>
+        /// <param name="onTap">Callback invoked on a single tap/click.</param>
+        /// <param name="onDoubleTap">Callback invoked on a double-tap/double-click.</param>
+        /// <param name="onLongPress">Callback invoked when the pointer is held for 500 ms.</param>
         /// <param name="onPointerEnter">Callback invoked when the pointer enters.</param>
         /// <param name="onPointerExit">Callback invoked when the pointer exits.</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
         public GestureDetector(
             Element child,
             Action? onTap = null,
+            Action? onDoubleTap = null,
+            Action? onLongPress = null,
             Action? onPointerEnter = null,
             Action? onPointerExit = null,
             Key? key = null
@@ -43,6 +57,8 @@ namespace Fram3.UI.Elements.Gesture
         {
             Child = child ?? throw new ArgumentNullException(nameof(child));
             OnTap = onTap;
+            OnDoubleTap = onDoubleTap;
+            OnLongPress = onLongPress;
             OnPointerEnter = onPointerEnter;
             OnPointerExit = onPointerExit;
         }
