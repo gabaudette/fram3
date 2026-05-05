@@ -688,7 +688,7 @@ namespace Fram3.UI.Storybook.Stories
                 {
                     var theme = ThemeConsumer.Of(context);
                     var texture = Resources.Load<Texture2D>("Images/sample");
-                    var sprite = Resources.Load<Sprite>("Images/sample");
+                    var sprite = Resources.Load<Sprite>("Images/sample-sprite");
 
                     return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
