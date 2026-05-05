@@ -1645,6 +1645,8 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyExpandedLayout(Expanded expanded, VisualElement native)
         {
             native.style.flexGrow = expanded.Flex;
+            native.style.alignSelf = Align.Stretch;
+            native.style.alignItems = Align.Stretch;
         }
 
         private static void ApplyDividerLayout(Divider divider, VisualElement native)
