@@ -5,7 +5,9 @@ using Fram3.UI.Animation;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Elements.Layout;
+using Fram3.UI.Elements.Theme;
 using Fram3.UI.Rendering.Internal;
+using Fram3.UI.Styling;
 using UnityEngine.UIElements;
 
 namespace Fram3.UI.Rendering
@@ -189,12 +191,28 @@ namespace Fram3.UI.Rendering
                     return;
                 }
 
-                ElementPainter.Paint(node.Element, handle.NativeElement);
+                ElementPainter.Paint(node.Element, handle.NativeElement, ResolveTheme(node));
             }
 
             private VisualElement CreateNativeElement(Node node)
             {
-                return ElementPainter.CreateNative(node.Element);
+                return ElementPainter.CreateNative(node.Element, ResolveTheme(node));
+            }
+
+            private static Theme ResolveTheme(Node node)
+            {
+                var current = node.Parent;
+                while (current != null)
+                {
+                    if (current.Element is ThemeProvider provider)
+                    {
+                        return provider.Theme;
+                    }
+
+                    current = current.Parent;
+                }
+
+                return Theme.Default;
             }
 
             private void AttachToParent(Node node, VisualElement native)

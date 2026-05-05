@@ -72,22 +72,27 @@ namespace Fram3.UI.Elements.Content
             public override Element Build(BuildContext context)
             {
                 var tabs = Element!.Tabs;
-                var tabBarButtons = new Element[tabs.Count];
+                var tabBarItems = new System.Collections.Generic.List<Element>();
 
                 for (var i = 0; i < tabs.Count; i++)
                 {
                     var capturedIndex = i;
-                    tabBarButtons[i] = new Button(
+                    if (i > 0)
+                    {
+                        tabBarItems.Add(SizedBox.FromSize(width: 4f));
+                    }
+
+                    tabBarItems.Add(new Button(
                         label: tabs[i].Label,
                         onPressed: () => SelectTab(capturedIndex)
-                    );
+                    ));
                 }
 
                 return new Column
                 {
                     Children = new Element[]
                     {
-                        new Row { Children = tabBarButtons },
+                        new Row { Children = tabBarItems.ToArray() },
                         tabs[_selectedIndex].Content
                     }
                 };

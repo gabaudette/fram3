@@ -51,14 +51,14 @@ namespace Fram3.UI.Storybook.Stories
                         new Text("Consumer reads the nearest Provider<string>:"),
                         new Consumer<string>((_, value) => new Container(
                             decoration: new BoxDecoration(
-                                Color: FrameColor.FromHex("#6200EE").WithAlpha(0.1f),
+                                 Color: FrameColor.FromHex("#7B61FF").WithAlpha(0.2f),
                                 BorderRadius: BorderRadius.All(4f)
                             ),
                             padding: EdgeInsets.All(12f)
                         )
                         {
                             Child = new Text(value, new TextStyle(
-                                Color: FrameColor.FromHex("#6200EE"),
+                                Color: FrameColor.FromHex("#E2E8F0"),
                                 Bold: true
                             ))
                         }),
