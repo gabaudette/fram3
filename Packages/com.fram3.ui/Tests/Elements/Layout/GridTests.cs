@@ -76,114 +76,60 @@ namespace Fram3.UI.Tests.Elements.Layout
         }
 
         // -----------------------------------------------------------------------
-        // Build — structure
+        // LeafElement — no framework children
         // -----------------------------------------------------------------------
 
         [Test]
-        public void Build_EmptyItems_ReturnsColumn()
-        {
-            var grid = new Grid<int>(columnCount: 3, items: Array.Empty<int>(), itemBuilder: i => new Text(i.ToString()));
-            var result = grid.Build(null!);
-
-            Assert.That(result, Is.InstanceOf<Column>());
-        }
-
-        [Test]
-        public void Build_EmptyItems_ReturnsEmptyColumn()
-        {
-            var grid = new Grid<int>(columnCount: 3, items: Array.Empty<int>(), itemBuilder: i => new Text(i.ToString()));
-            var column = (Column)grid.Build(null!);
-
-            Assert.That(column.GetChildren(), Is.Empty);
-        }
-
-        [Test]
-        public void Build_ExactlyOneRow_ProducesOneRow()
+        public void GetChildren_ReturnsEmpty()
         {
             var grid = new Grid<int>(columnCount: 3, items: new[] { 1, 2, 3 }, itemBuilder: i => new Text(i.ToString()));
-            var column = (Column)grid.Build(null!);
-            var rows = column.GetChildren();
+            Assert.That(grid.GetChildren(), Is.Empty);
+        }
 
-            Assert.That(rows, Has.Count.EqualTo(1));
-            Assert.That(rows[0], Is.InstanceOf<Row>());
+        // -----------------------------------------------------------------------
+        // IGridElement — ItemCount and BuildItemAt
+        // -----------------------------------------------------------------------
+
+        [Test]
+        public void IGridElement_ItemCount_MatchesItemsCount()
+        {
+            var grid = new Grid<int>(columnCount: 2, items: new[] { 10, 20, 30 }, itemBuilder: i => new Text(i.ToString()));
+            var descriptor = (IGridElement)(object)grid;
+
+            Assert.That(descriptor.ItemCount, Is.EqualTo(3));
         }
 
         [Test]
-        public void Build_TwoFullRows_ProducesTwoRows()
+        public void IGridElement_BuildItemAt_InvokesItemBuilder()
         {
-            var grid = new Grid<int>(columnCount: 2, items: new[] { 1, 2, 3, 4 }, itemBuilder: i => new Text(i.ToString()));
-            var column = (Column)grid.Build(null!);
-
-            Assert.That(column.GetChildren(), Has.Count.EqualTo(2));
-        }
-
-        [Test]
-        public void Build_PartialLastRow_FilledWithEmptyExpanded()
-        {
-            // 3 items in a 2-column grid: row 0 = [1,2], row 1 = [3, empty]
-            var grid = new Grid<int>(columnCount: 2, items: new[] { 1, 2, 3 }, itemBuilder: i => new Text(i.ToString()));
-            var column = (Column)grid.Build(null!);
-            var rows = column.GetChildren();
-
-            Assert.That(rows, Has.Count.EqualTo(2));
-            var lastRow = (Row)rows[1];
-            var cells = lastRow.GetChildren();
-            // Two Expanded cells: first wraps a Text, second has no child
-            Assert.That(cells, Has.Count.EqualTo(2));
-            var lastCell = (Expanded)cells[1];
-            Assert.That(lastCell.Child, Is.Null);
-        }
-
-        [Test]
-        public void Build_WithRowSpacing_InsertsSizedBoxBetweenRows()
-        {
-            var grid = new Grid<int>(columnCount: 1, items: new[] { 1, 2 }, itemBuilder: i => new Text(i.ToString()), rowSpacing: 8f);
-            var column = (Column)grid.Build(null!);
-            var children = column.GetChildren();
-
-            // Row, SizedBox, Row
-            Assert.That(children, Has.Count.EqualTo(3));
-            Assert.That(children[1], Is.InstanceOf<SizedBox>());
-        }
-
-        [Test]
-        public void Build_WithColumnSpacing_InsertsSizedBoxBetweenCells()
-        {
-            var grid = new Grid<int>(columnCount: 2, items: new[] { 1, 2 }, itemBuilder: i => new Text(i.ToString()), columnSpacing: 4f);
-            var column = (Column)grid.Build(null!);
-            var row = (Row)column.GetChildren()[0];
-            var cells = row.GetChildren();
-
-            // Expanded, SizedBox, Expanded
-            Assert.That(cells, Has.Count.EqualTo(3));
-            Assert.That(cells[1], Is.InstanceOf<SizedBox>());
-        }
-
-        [Test]
-        public void Build_NoSpacing_NoSizedBoxInserted()
-        {
-            var grid = new Grid<int>(columnCount: 2, items: new[] { 1, 2, 3, 4 }, itemBuilder: i => new Text(i.ToString()));
-            var column = (Column)grid.Build(null!);
-            var children = column.GetChildren();
-
-            // Two rows, no SizedBox spacers
-            Assert.That(children, Has.Count.EqualTo(2));
-            foreach (var child in children)
-                Assert.That(child, Is.InstanceOf<Row>());
-        }
-
-        [Test]
-        public void Build_ItemBuilderCalledForEachItem()
-        {
-            var called = new List<int>();
+            var built = new List<int>();
             var grid = new Grid<int>(
                 columnCount: 2,
                 items: new[] { 10, 20, 30 },
-                itemBuilder: i => { called.Add(i); return new Text(i.ToString()); });
+                itemBuilder: i => { built.Add(i); return new Text(i.ToString()); });
 
-            grid.Build(null!);
+            var descriptor = (IGridElement)(object)grid;
+            descriptor.BuildItemAt(0);
+            descriptor.BuildItemAt(2);
 
-            Assert.That(called, Is.EqualTo(new[] { 10, 20, 30 }));
+            Assert.That(built, Is.EqualTo(new[] { 10, 30 }));
+        }
+
+        [Test]
+        public void IGridElement_ColumnCountAndSpacing_Exposed()
+        {
+            var grid = new Grid<int>(
+                columnCount: 4,
+                items: new[] { 1 },
+                itemBuilder: i => new Text(i.ToString()),
+                columnSpacing: 8f,
+                rowSpacing: 4f);
+
+            var descriptor = (IGridElement)(object)grid;
+
+            Assert.That(descriptor.ColumnCount, Is.EqualTo(4));
+            Assert.That(descriptor.ColumnSpacing, Is.EqualTo(8f));
+            Assert.That(descriptor.RowSpacing, Is.EqualTo(4f));
         }
     }
 }

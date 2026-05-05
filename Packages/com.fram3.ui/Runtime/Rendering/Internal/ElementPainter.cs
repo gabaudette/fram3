@@ -88,6 +88,8 @@ namespace Fram3.UI.Rendering.Internal
                 default:
                     switch (element)
                     {
+                        case IGridElement gridElement:
+                            return CreateGrid(gridElement, theme);
                         case IListViewDescriptor listView:
                             return CreateListView(listView, theme);
                         case IEnumFieldDescriptor enumFieldDesc:
@@ -177,6 +179,12 @@ namespace Fram3.UI.Rendering.Internal
                     PaintIcon(icon, iconImg);
                     break;
                 default:
+                    if (element is IGridElement gridElementPaint)
+                    {
+                        RebuildNativeGrid(gridElementPaint, native, theme);
+                        break;
+                    }
+
                     if (element is IListViewDescriptor listView && native is ListView lv)
                     {
                         PaintListView(listView, lv);
@@ -981,6 +989,73 @@ namespace Fram3.UI.Rendering.Internal
         }
 #endif
 
+        private static VisualElement CreateGrid(IGridElement grid, Theme theme)
+        {
+            var container = new VisualElement();
+            container.style.flexDirection = FlexDirection.Column;
+            container.style.alignSelf = Align.Stretch;
+            container.style.flexGrow = 1f;
+            container.style.flexShrink = 1f;
+            BuildNativeGridRows(grid, container, theme);
+            return container;
+        }
+
+        private static void RebuildNativeGrid(IGridElement grid, VisualElement container, Theme theme)
+        {
+            container.Clear();
+            BuildNativeGridRows(grid, container, theme);
+        }
+
+        private static void BuildNativeGridRows(IGridElement grid, VisualElement container, Theme theme)
+        {
+            var columnCount = grid.ColumnCount;
+            var itemCount = grid.ItemCount;
+            var rowSpacing = grid.RowSpacing;
+            var columnSpacing = grid.ColumnSpacing;
+            var rowIndex = 0;
+
+            for (var i = 0; i < itemCount; i += columnCount)
+            {
+                if (rowIndex > 0 && rowSpacing > 0f)
+                {
+                    var spacer = new VisualElement();
+                    spacer.style.height = rowSpacing;
+                    container.Add(spacer);
+                }
+
+                var row = new VisualElement();
+                row.style.flexDirection = FlexDirection.Row;
+                row.style.alignSelf = Align.Stretch;
+                row.style.alignItems = Align.Stretch;
+
+                for (var j = 0; j < columnCount; j++)
+                {
+                    if (j > 0 && columnSpacing > 0f)
+                    {
+                        var spacer = new VisualElement();
+                        spacer.style.width = columnSpacing;
+                        row.Add(spacer);
+                    }
+
+                    var cell = new VisualElement();
+                    cell.style.flexGrow = 1f;
+                    cell.style.flexShrink = 1f;
+                    cell.style.alignSelf = Align.Stretch;
+
+                    var index = i + j;
+                    if (index < itemCount)
+                    {
+                        BuildNativeTree(grid.BuildItemAt(index), cell, theme);
+                    }
+
+                    row.Add(cell);
+                }
+
+                container.Add(row);
+                rowIndex++;
+            }
+        }
+
         private sealed class ListViewDescriptorHolder
         {
             public IListViewDescriptor? Descriptor;
@@ -1207,9 +1282,6 @@ namespace Fram3.UI.Rendering.Internal
                 case Stack:
                     ApplyStackLayout(native);
                     break;
-                case IGridElement:
-                    ApplyGridLayout(native);
-                    break;
                 case GestureDetector:
                     ApplyPassthroughLayout(native);
                     break;
@@ -1220,15 +1292,6 @@ namespace Fram3.UI.Rendering.Internal
                     ApplyPassthroughLayout(native);
                     break;
             }
-        }
-
-        private static void ApplyGridLayout(VisualElement native)
-        {
-            native.style.flexGrow = 1f;
-            native.style.flexShrink = 1f;
-            native.style.alignSelf = Align.Stretch;
-            native.style.alignItems = Align.Stretch;
-            native.style.flexDirection = FlexDirection.Column;
         }
 
         private static void ApplyPassthroughLayout(VisualElement native)

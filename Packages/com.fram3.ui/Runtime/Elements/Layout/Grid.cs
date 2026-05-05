@@ -2,16 +2,15 @@
 using System;
 using System.Collections.Generic;
 using Fram3.UI.Core;
-using Fram3.UI.Styling;
 
 namespace Fram3.UI.Elements.Layout
 {
     /// <summary>
     /// Arranges a sequence of items in a fixed-column grid.
-    /// Items are distributed into rows of <see cref="ColumnCount"/> cells each.
-    /// Each row is a <see cref="Row"/>; the rows are stacked in a <see cref="Column"/>.
+    /// Rendered as a leaf element: the painter builds the native UIToolkit VE subtree
+    /// directly, using explicit flex properties to guarantee equal-width columns.
     /// </summary>
-    public sealed class Grid<T> : StatelessElement
+    public sealed class Grid<T> : LeafElement, IGridElement
     {
         /// <summary>Number of columns per row.</summary>
         public int ColumnCount { get; }
@@ -54,39 +53,8 @@ namespace Fram3.UI.Elements.Layout
             RowSpacing = rowSpacing;
         }
 
-        /// <inheritdoc/>
-        public override Element Build(BuildContext context)
-        {
-            var rows = new List<Element>();
+        int IGridElement.ItemCount => Items.Count;
 
-            for (var i = 0; i < Items.Count; i += ColumnCount)
-            {
-                if (rows.Count > 0 && RowSpacing > 0f)
-                    rows.Add(SizedBox.FromSize(height: RowSpacing));
-
-                var cells = new List<Element>();
-                for (var j = 0; j < ColumnCount; j++)
-                {
-                    if (cells.Count > 0 && ColumnSpacing > 0f)
-                        cells.Add(SizedBox.FromSize(width: ColumnSpacing));
-
-                    var index = i + j;
-                    if (index < Items.Count)
-                        cells.Add(new Expanded { Child = ItemBuilder(Items[index]) });
-                    else
-                        cells.Add(new Expanded());
-                }
-
-                rows.Add(new Row(crossAxisAlignment: CrossAxisAlignment.Stretch)
-                {
-                    Children = cells.ToArray()
-                });
-            }
-
-            return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
-            {
-                Children = rows.ToArray()
-            };
-        }
+        Element IGridElement.BuildItemAt(int index) => ItemBuilder(Items[index]);
     }
 }
