@@ -77,7 +77,7 @@ namespace Fram3.UI.Elements.Layout
                         cells.Add(new Expanded());
                 }
 
-                rows.Add(new Row(crossAxisAlignment: CrossAxisAlignment.Start)
+                rows.Add(new Row(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = cells.ToArray()
                 });
