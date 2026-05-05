@@ -1287,7 +1287,7 @@ namespace Fram3.UI.Storybook.Stories
                         columnCount: 3,
                         items: colors,
                         itemBuilder: color => new Container(
-                            decoration: new BoxDecoration(color: color, borderRadius: BorderRadius.All(theme.BorderRadius)),
+                            decoration: new BoxDecoration(Color: color, BorderRadius: BorderRadius.All(theme.BorderRadius)),
                             height: 48f,
                             padding: EdgeInsets.All(theme.Spacing))
                         {
@@ -1336,9 +1336,9 @@ namespace Fram3.UI.Storybook.Stories
                                     var rarityColor = FrameColor.FromHex(item.RarityHex);
                                     return new Container(
                                         decoration: new BoxDecoration(
-                                            color: theme.SurfaceColor,
-                                            borderRadius: BorderRadius.All(theme.BorderRadius),
-                                            border: new Border(1.5f, rarityColor)),
+                                            Color: theme.SurfaceColor,
+                                            BorderRadius: BorderRadius.All(theme.BorderRadius),
+                                            Border: new Border(rarityColor, 1.5f)),
                                         padding: EdgeInsets.All(theme.Spacing))
                                     {
                                         Child = new Column(crossAxisAlignment: CrossAxisAlignment.Center)
@@ -1347,8 +1347,8 @@ namespace Fram3.UI.Storybook.Stories
                                             {
                                                 new Container(
                                                     decoration: new BoxDecoration(
-                                                        color: rarityColor.WithAlpha(0.15f),
-                                                        borderRadius: BorderRadius.All(theme.BorderRadius * 0.5f)),
+                                                        Color: rarityColor.WithAlpha(0.15f),
+                                                        BorderRadius: BorderRadius.All(theme.BorderRadius * 0.5f)),
                                                     width: 36f,
                                                     height: 36f)
                                                 {
@@ -1361,7 +1361,7 @@ namespace Fram3.UI.Storybook.Stories
                                                 new Text(item.Name, new TextStyle(
                                                     FontSize: theme.FontSizeSmall,
                                                     Bold: true,
-                                                    Color: theme.TextColor)),
+                                                    Color: theme.PrimaryTextColor)),
                                                 new Text(item.Rarity, new TextStyle(
                                                     FontSize: theme.FontSizeSmall * 0.85f,
                                                     Color: rarityColor)),

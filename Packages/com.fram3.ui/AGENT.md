@@ -309,10 +309,10 @@ new BorderRadius(topLeft: 4f, topRight: 4f, bottomRight: 8f, bottomLeft: 8f)
 
 ```csharp
 new BoxDecoration(
-    color: FrameColor.FromHex("#FFFFFF"),
-    borderRadius: BorderRadius.All(8f),
-    border: new Border(width: 1f, color: FrameColor.FromHex("#E0E0E0")),
-    shadow: new Shadow(color: new FrameColor(0f, 0f, 0f, 0.1f), blurRadius: 8f)
+    Color: FrameColor.FromHex("#FFFFFF"),
+    BorderRadius: BorderRadius.All(8f),
+    Border: new Border(FrameColor.FromHex("#E0E0E0"), 1f),
+    Shadow: Shadow.Ambient(new FrameColor(0f, 0f, 0f, 0.1f), 8f)
 )
 ```
 
@@ -530,7 +530,7 @@ new ImplicitAnimation(
 new AnimatedContainer(
     duration: 0.3f,
     child: new Text("hello"),
-    decoration: new BoxDecoration(color: _highlighted ? FrameColor.FromHex("#FFFF00") : FrameColor.White),
+    decoration: new BoxDecoration(Color: _highlighted ? FrameColor.FromHex("#FFFF00") : FrameColor.White),
     width: _expanded ? 300f : 150f,
     curve: Curves.EaseInOut
 )
