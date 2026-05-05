@@ -63,6 +63,7 @@ namespace UnityEngine.UIElements
     {
         public float? flexGrow;
         public float? flexShrink;
+        public StyleLength flexBasis;
         public float? width;
         public float? height;
         public float? paddingTop;
@@ -104,6 +105,24 @@ namespace UnityEngine.UIElements
         public float? top;
         public Visibility? visibility;
     }
+
+    public struct StyleLength
+    {
+        public Length value;
+        public StyleLength(Length v) { value = v; }
+        public static implicit operator StyleLength(float v) => new StyleLength(new Length(v));
+        public static implicit operator StyleLength(Length v) => new StyleLength(v);
+    }
+
+    public struct Length
+    {
+        public float value;
+        public LengthUnit unit;
+        public Length(float value, LengthUnit unit = LengthUnit.Pixel) { this.value = value; this.unit = unit; }
+        public static Length Percent(float v) => new Length(v, LengthUnit.Percent);
+    }
+
+    public enum LengthUnit { Pixel, Percent }
 
     public enum Position
     {
