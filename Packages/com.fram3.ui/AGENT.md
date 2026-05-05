@@ -151,7 +151,9 @@ Namespace: `Fram3.UI.Elements.Content`
 ```csharp
 new Text("Hello", style: new TextStyle(fontSize: 16f, bold: true))
 
-new Icon("star", size: 24f, color: FrameColor.FromHex("#FFCC00"))
+new Icon(source: preloadedVectorImage, width: 24f, height: 24f)
+new Icon(resourcePath: "Icons/star", width: 24f, height: 24f)   // Resources.Load — works in builds
+new Icon(svgPath: "Assets/Icons/star.svg", width: 24f, height: 24f)  // AssetDatabase — Editor only
 
 new FrameImage("path/to/image", width: 128f, height: 128f, fit: BoxFit.Contain)
 
@@ -170,7 +172,11 @@ new TabView(
     initialIndex: 0
 )
 
-new Snackbar(message: "Saved!", backgroundColor: FrameColor.FromHex("#323232"))
+new Snackbar(
+    message: "Saved!",
+    duration: 4f,
+    onDismiss: () => SetState(() => _showSnackbar = false)  // optional — snackbar hides itself regardless
+)
 
 new Tooltip(message: "More info", child: new Icon("info"))
 ```
@@ -320,12 +326,15 @@ new BoxDecoration(
 
 ```csharp
 new TextStyle(
-    color: FrameColor.Black,
-    fontSize: 14f,
-    bold: true,
-    italic: false
+    FontSize: 14f,
+    Color: FrameColor.Black,
+    Bold: true,
+    Italic: false,
+    LetterSpacing: 0f,
+    LineHeight: 1.4f,
+    TextAlign: TextAnchor.MiddleCenter,      // maps to style.unityTextAlign
+    FontAsset: myFontAsset                   // UnityEngine.TextCore.Text.FontAsset — SDF rendering
 )
-// Merge two styles: base.Merge(override) — override wins on non-null fields
 ```
 
 ### Alignment
@@ -356,7 +365,7 @@ Read the theme anywhere in the tree:
 
 ```csharp
 // Option 1: static method (preferred in StatelessElement.Build)
-var theme = ThemeProvider.Of(context);
+var theme = ThemeConsumer.Of(context);
 
 // Option 2: builder element
 new ThemeConsumer(builder: (ctx, theme) => new Text("hello", style: theme.DefaultTextStyle))
@@ -561,7 +570,7 @@ Lerp.Shadow(a, b, t)
 - `Dropdown<T>` and `RadioGroup<T>` accept `IReadOnlyList<T>`, not arrays — wrap arrays with `.ToList()` or cast if needed.
 - `ListView` takes an `IListViewDescriptor`, not a raw list. Use the provided `ListViewDescriptor<T>` implementation.
 - `AnimationSystem.Tick(deltaTime)` must be called each frame if using `AnimationController` outside of `AnimationBuilder`. When using `AppRoot` this is handled automatically.
-- `ThemeProvider.Of(context)` is the preferred way to read the theme. `ThemeConsumer` as an element is an alternative when you need to scope a builder.
+- `ThemeConsumer.Of(context)` is the preferred way to read the theme. `ThemeConsumer` as an element is an alternative when you need to scope a builder.
 - All `Element` constructors accept an optional `Key? key` as the last parameter.
 
 ---
