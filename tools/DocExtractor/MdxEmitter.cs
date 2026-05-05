@@ -14,7 +14,7 @@ namespace DocExtractor
 
             var typeEntries = entries
                 .Where(e => e.MemberKind == "T")
-                .OrderBy(e => e.TypeName)
+                .OrderBy(e => SimpleTypeName(e.TypeName))
                 .ToList();
 
             foreach (var typeEntry in typeEntries)
