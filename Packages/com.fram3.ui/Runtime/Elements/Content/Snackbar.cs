@@ -5,13 +5,17 @@ using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
+#if !FRAM3_PURE_TESTS
+using Fram3.UI.Animation;
+#endif
 
 namespace Fram3.UI.Elements.Content
 {
     /// <summary>
     /// A brief notification bar that appears temporarily at the bottom of the screen.
     /// Supports an optional action button that the user can tap.
-    /// Renders itself using Container, Row, Text, and GestureDetector primitives.
+    /// After <see cref="Duration"/> seconds the snackbar hides itself and invokes
+    /// <see cref="OnDismiss"/> so the caller can remove it from the tree.
     /// </summary>
     public sealed class Snackbar : StatefulElement
     {
@@ -37,12 +41,22 @@ namespace Fram3.UI.Elements.Content
         public float Duration { get; }
 
         /// <summary>
+        /// Callback invoked after the snackbar auto-dismisses.
+        /// Use this to remove the snackbar from the tree.
+        /// Optional — the snackbar hides itself regardless.
+        /// </summary>
+        public Action? OnDismiss { get; }
+
+        /// <summary>
         /// Creates a <see cref="Snackbar"/> element.
         /// </summary>
         /// <param name="message">The notification text. Must not be null.</param>
         /// <param name="actionLabel">Label for the optional action button.</param>
         /// <param name="onAction">Callback invoked when the action button is tapped.</param>
         /// <param name="duration">Visible duration in seconds. Defaults to 4.</param>
+        /// <param name="onDismiss">
+        /// Callback invoked after auto-dismiss. Use to remove the snackbar from the tree.
+        /// </param>
         /// <param name="key">An optional key for reconciliation identity.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="message"/> is null.</exception>
         public Snackbar(
@@ -50,6 +64,7 @@ namespace Fram3.UI.Elements.Content
             string? actionLabel = null,
             Action? onAction = null,
             float duration = 4f,
+            Action? onDismiss = null,
             Key? key = null
         ) : base(key)
         {
@@ -57,6 +72,7 @@ namespace Fram3.UI.Elements.Content
             ActionLabel = actionLabel;
             OnAction = onAction;
             Duration = duration;
+            OnDismiss = onDismiss;
         }
 
         /// <inheritdoc/>
@@ -64,8 +80,72 @@ namespace Fram3.UI.Elements.Content
 
         private sealed class SnackbarState : State<Snackbar>
         {
+            private bool _visible = true;
+
+#if !FRAM3_PURE_TESTS
+            private AnimationController? _timer;
+#endif
+
+            public override void InitState()
+            {
+                base.InitState();
+                StartTimer();
+            }
+
+            public override void DidUpdateElement(StatefulElement previous)
+            {
+                base.DidUpdateElement(previous);
+                var prev = (Snackbar)previous;
+                if (prev.Duration != Element!.Duration || prev.Message != Element.Message)
+                {
+                    StopTimer();
+                    SetState(() => _visible = true);
+                    StartTimer();
+                }
+            }
+
+            public override void Dispose()
+            {
+                StopTimer();
+                base.Dispose();
+            }
+
+            private void StartTimer()
+            {
+#if !FRAM3_PURE_TESTS
+                _timer = new AnimationController(duration: Element!.Duration);
+                _timer.AddListener(OnTick);
+                _timer.Forward();
+#endif
+            }
+
+            private void StopTimer()
+            {
+#if !FRAM3_PURE_TESTS
+                _timer?.Dispose();
+                _timer = null;
+#endif
+            }
+
+#if !FRAM3_PURE_TESTS
+            private void OnTick(float value)
+            {
+                if (_timer?.Status == AnimationStatus.Completed)
+                {
+                    StopTimer();
+                    SetState(() => _visible = false);
+                    Element?.OnDismiss?.Invoke();
+                }
+            }
+#endif
+
             public override Element Build(BuildContext context)
             {
+                if (!_visible)
+                {
+                    return SizedBox.FromSize();
+                }
+
                 var theme = ThemeConsumer.Of(context);
 
                 var bg = FrameColor.FromHex("#2D3142");
