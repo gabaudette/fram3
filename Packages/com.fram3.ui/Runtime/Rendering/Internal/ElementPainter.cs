@@ -202,6 +202,8 @@ namespace Fram3.UI.Rendering.Internal
                     if (element is GestureDetector updatedGesture && native.userData is GestureCallbackHolder holder)
                     {
                         holder.OnTap = updatedGesture.OnTap;
+                        holder.OnDoubleTap = updatedGesture.OnDoubleTap;
+                        holder.OnLongPress = updatedGesture.OnLongPress;
                         holder.OnPointerEnter = updatedGesture.OnPointerEnter;
                         holder.OnPointerExit = updatedGesture.OnPointerExit;
                     }
@@ -1177,11 +1179,16 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
+        private const long LongPressThresholdMs = 500;
+
         private sealed class GestureCallbackHolder
         {
             public Action? OnTap;
+            public Action? OnDoubleTap;
+            public Action? OnLongPress;
             public Action? OnPointerEnter;
             public Action? OnPointerExit;
+            public IVisualElementScheduledItem? LongPressSchedule;
         }
 
         private static void RegisterGestureCallbacks(Element element, VisualElement native)
@@ -1194,14 +1201,51 @@ namespace Fram3.UI.Rendering.Internal
             var holder = new GestureCallbackHolder
             {
                 OnTap = gesture.OnTap,
+                OnDoubleTap = gesture.OnDoubleTap,
+                OnLongPress = gesture.OnLongPress,
                 OnPointerEnter = gesture.OnPointerEnter,
                 OnPointerExit = gesture.OnPointerExit
             };
             native.userData = holder;
 
-            native.RegisterCallback<ClickEvent>(_ => holder.OnTap?.Invoke());
+            native.RegisterCallback<PointerDownEvent>(evt =>
+            {
+                if (evt.clickCount == 2)
+                {
+                    holder.LongPressSchedule?.Pause();
+                    holder.LongPressSchedule = null;
+                    holder.OnDoubleTap?.Invoke();
+                }
+                else
+                {
+                    holder.OnTap?.Invoke();
+                    if (holder.OnLongPress != null)
+                    {
+                        holder.LongPressSchedule = native.schedule
+                            .Execute(() =>
+                            {
+                                holder.LongPressSchedule = null;
+                                holder.OnLongPress?.Invoke();
+                            })
+                            .StartingIn(LongPressThresholdMs);
+                    }
+                }
+            });
+
+            native.RegisterCallback<PointerUpEvent>(_ =>
+            {
+                holder.LongPressSchedule?.Pause();
+                holder.LongPressSchedule = null;
+            });
+
             native.RegisterCallback<PointerEnterEvent>(_ => holder.OnPointerEnter?.Invoke());
-            native.RegisterCallback<PointerLeaveEvent>(_ => holder.OnPointerExit?.Invoke());
+
+            native.RegisterCallback<PointerLeaveEvent>(_ =>
+            {
+                holder.LongPressSchedule?.Pause();
+                holder.LongPressSchedule = null;
+                holder.OnPointerExit?.Invoke();
+            });
         }
 
         private static void PaintText(Text text, Label label)
