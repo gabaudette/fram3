@@ -859,7 +859,7 @@ namespace UnityEngine.UIElements
         public Overflow? overflow;
         public Wrap? flexWrap;
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
-        public UnityEngine.TextAnchor? unityTextAlign;
+        public int? unityTextAlign;
         public object? unityFontDefinition;
         public Position? position;
         public float? opacity;
