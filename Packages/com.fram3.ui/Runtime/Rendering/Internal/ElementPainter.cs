@@ -1246,6 +1246,7 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyColumnLayout(Column column, VisualElement native)
         {
+            native.style.alignSelf = Align.Stretch;
             native.style.flexDirection = FlexDirection.Column;
             native.style.justifyContent = MapMainAxis(column.MainAxisAlignment);
             native.style.alignItems = MapCrossAxis(column.CrossAxisAlignment);
@@ -1253,6 +1254,7 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyRowLayout(Row row, VisualElement native)
         {
+            native.style.alignSelf = Align.Stretch;
             native.style.flexDirection = FlexDirection.Row;
             native.style.justifyContent = MapMainAxis(row.MainAxisAlignment);
             native.style.alignItems = MapCrossAxis(row.CrossAxisAlignment);
