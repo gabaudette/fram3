@@ -1207,6 +1207,9 @@ namespace Fram3.UI.Rendering.Internal
                 case Stack:
                     ApplyStackLayout(native);
                     break;
+                case IGridElement:
+                    ApplyGridLayout(native);
+                    break;
                 case GestureDetector:
                     ApplyPassthroughLayout(native);
                     break;
@@ -1217,6 +1220,15 @@ namespace Fram3.UI.Rendering.Internal
                     ApplyPassthroughLayout(native);
                     break;
             }
+        }
+
+        private static void ApplyGridLayout(VisualElement native)
+        {
+            native.style.flexGrow = 1f;
+            native.style.flexShrink = 1f;
+            native.style.alignSelf = Align.Stretch;
+            native.style.alignItems = Align.Stretch;
+            native.style.flexDirection = FlexDirection.Column;
         }
 
         private static void ApplyPassthroughLayout(VisualElement native)
@@ -1246,8 +1258,6 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyColumnLayout(Column column, VisualElement native)
         {
-            native.style.flexGrow = 1f;
-            native.style.alignSelf = Align.Stretch;
             native.style.flexDirection = FlexDirection.Column;
             native.style.justifyContent = MapMainAxis(column.MainAxisAlignment);
             native.style.alignItems = MapCrossAxis(column.CrossAxisAlignment);
@@ -1647,7 +1657,6 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyExpandedLayout(Expanded expanded, VisualElement native)
         {
             native.style.flexGrow = expanded.Flex;
-            native.style.alignItems = Align.Stretch;
         }
 
         private static void ApplyDividerLayout(Divider divider, VisualElement native)
