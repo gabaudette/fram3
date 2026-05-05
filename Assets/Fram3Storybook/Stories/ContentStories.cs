@@ -711,8 +711,10 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             new FrameImage(source: texture, width: 128f, height: 128f),
                             SizedBox.FromSize(height: 4f),
-                            new Text("Loaded as Texture2D via Resources.Load",
-                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
+                            new Text(
+                                "Loaded as Texture2D via Resources.Load",
+                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)
+                            )
                         }
                     };
                 }
@@ -725,8 +727,10 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             new FrameImage(source: sprite, width: 128f, height: 128f),
                             SizedBox.FromSize(height: 4f),
-                            new Text("Loaded as Sprite via Resources.Load",
-                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
+                            new Text(
+                                "Loaded as Sprite via Resources.Load",
+                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)
+                            )
                         }
                     };
                 }
@@ -739,8 +743,10 @@ namespace Fram3.UI.Storybook.Stories
                         {
                             new Icon(svgPath: "Assets/Fram3Storybook/Icons/sample.svg", width: 64f, height: 64f),
                             SizedBox.FromSize(height: 4f),
-                            new Text("SVG icon loaded via svgPath",
-                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
+                            new Text(
+                                "SVG icon loaded via svgPath",
+                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)
+                            )
                         }
                     };
                 }
