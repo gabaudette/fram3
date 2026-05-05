@@ -96,6 +96,8 @@ namespace UnityEngine.UIElements
         public Overflow? overflow;
         public Wrap? flexWrap;
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
+        public UnityEngine.TextAnchor? unityTextAlign;
+        public object? unityFontDefinition;
         public Position? position;
         public float? opacity;
         public DisplayStyle? display;
@@ -666,6 +668,13 @@ namespace UnityEngine
         BoldAndItalic
     }
 
+    public enum TextAnchor
+    {
+        UpperLeft, UpperCenter, UpperRight,
+        MiddleLeft, MiddleCenter, MiddleRight,
+        LowerLeft, LowerCenter, LowerRight
+    }
+
     public struct Color
     {
         public float r, g, b, a;
@@ -836,6 +845,8 @@ namespace UnityEngine.UIElements
         public Overflow? overflow;
         public Wrap? flexWrap;
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
+        public UnityEngine.TextAnchor? unityTextAlign;
+        public object? unityFontDefinition;
         public Position? position;
         public float? opacity;
     }

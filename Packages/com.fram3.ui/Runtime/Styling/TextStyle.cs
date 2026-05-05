@@ -1,8 +1,14 @@
 #nullable enable
+#if !FRAM3_PURE_TESTS
+using UnityEngine;
+using UnityEngine.TextCore.Text;
+#endif
+
 namespace Fram3.UI.Styling
 {
     /// <summary>
-    /// Describes the visual style of a text label, including font size, color, weight, and decoration.
+    /// Describes the visual style of a text label, including font size, color, weight, decoration,
+    /// alignment, and font asset.
     /// </summary>
     /// <param name="FontSize">The font size in logical pixels. Null inherits from the parent.</param>
     /// <param name="Color">The text color. Null inherits from the parent.</param>
@@ -11,6 +17,14 @@ namespace Fram3.UI.Styling
     /// <param name="Underline">Whether the text is underlined.</param>
     /// <param name="LetterSpacing">Additional spacing between characters in logical pixels.</param>
     /// <param name="LineHeight">Line height as a multiplier of the font size. Null uses the default.</param>
+    /// <param name="TextAlign">
+    /// Horizontal and vertical text alignment within the label bounds.
+    /// Null inherits from the parent. Maps to <c>style.unityTextAlign</c>.
+    /// </param>
+    /// <param name="FontAsset">
+    /// SDF font asset used for rendering. Null inherits from the parent.
+    /// Maps to <c>style.unityFontDefinition</c> via <c>FontDefinition.FromSDFFont</c>.
+    /// </param>
     public sealed record TextStyle(
         float? FontSize = null,
         FrameColor? Color = null,
@@ -18,7 +32,14 @@ namespace Fram3.UI.Styling
         bool Italic = false,
         bool Underline = false,
         float LetterSpacing = 0f,
-        float? LineHeight = null
+        float? LineHeight = null,
+#if !FRAM3_PURE_TESTS
+        TextAnchor? TextAlign = null,
+        FontAsset? FontAsset = null
+#else
+        int? TextAlign = null,
+        object? FontAsset = null
+#endif
     )
     {
         /// <summary>A text style with no overrides, inheriting all values from the parent.</summary>
