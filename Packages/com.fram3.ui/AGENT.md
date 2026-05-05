@@ -129,6 +129,17 @@ new Margin(insets: EdgeInsets.All(8f)) { Child = ... }
 new Center() { Child = ... }
 new Expanded(flex: 1) { Child = ... }
 new Divider(axis: DividerAxis.Horizontal, thickness: 1f, color: FrameColor.FromHex("#E0E0E0"))
+
+new Grid<MyItem>(
+    columnCount: 4,
+    items: myList,
+    itemBuilder: item => new Text(item.Name),
+    columnSpacing: 8f,   // gap between cells within a row (default 0)
+    rowSpacing: 8f       // gap between rows (default 0)
+)
+// Grid<T> is a StatelessElement. It builds a Column of Rows of Expanded cells internally.
+// Partial last rows are padded with empty Expanded cells to maintain column alignment.
+// columnCount must be > 0. items and itemBuilder must not be null.
 ```
 
 ---
