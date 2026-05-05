@@ -1246,8 +1246,6 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyColumnLayout(Column column, VisualElement native)
         {
-            native.style.flexGrow = 1f;
-            native.style.alignSelf = Align.Stretch;
             native.style.flexDirection = FlexDirection.Column;
             native.style.justifyContent = MapMainAxis(column.MainAxisAlignment);
             native.style.alignItems = MapCrossAxis(column.CrossAxisAlignment);
@@ -1255,8 +1253,6 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyRowLayout(Row row, VisualElement native)
         {
-            native.style.flexGrow = 1f;
-            native.style.alignSelf = Align.Stretch;
             native.style.flexDirection = FlexDirection.Row;
             native.style.justifyContent = MapMainAxis(row.MainAxisAlignment);
             native.style.alignItems = MapCrossAxis(row.CrossAxisAlignment);
@@ -1311,11 +1307,6 @@ namespace Fram3.UI.Rendering.Internal
             if (container.Height.HasValue)
             {
                 native.style.height = container.Height.Value;
-            }
-            else
-            {
-                native.style.flexGrow = 1f;
-                native.style.alignSelf = Align.Stretch;
             }
 
             if (container.Padding.HasValue)
@@ -1654,6 +1645,7 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyExpandedLayout(Expanded expanded, VisualElement native)
         {
             native.style.flexGrow = expanded.Flex;
+            native.style.alignItems = Align.Stretch;
         }
 
         private static void ApplyDividerLayout(Divider divider, VisualElement native)
