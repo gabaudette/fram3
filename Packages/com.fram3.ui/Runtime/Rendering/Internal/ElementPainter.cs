@@ -1236,6 +1236,16 @@ namespace Fram3.UI.Rendering.Internal
             {
                 native.style.letterSpacing = style.LetterSpacing;
             }
+
+            if (style.TextAlign.HasValue)
+            {
+                native.style.unityTextAlign = style.TextAlign.Value;
+            }
+
+            if (style.FontAsset != null)
+            {
+                native.style.unityFontDefinition = FontDefinition.FromSDFFont(style.FontAsset);
+            }
 #endif
         }
 
