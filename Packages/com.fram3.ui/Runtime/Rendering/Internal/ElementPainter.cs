@@ -1048,6 +1048,7 @@ namespace Fram3.UI.Rendering.Internal
                     var cell = new VisualElement();
                     cell.style.flexGrow = 1f;
                     cell.style.flexShrink = 1f;
+                    cell.style.flexBasis = new StyleLength(new Length(0, LengthUnit.Percent));
                     cell.style.alignSelf = Align.Stretch;
 
                     var index = i + j;
