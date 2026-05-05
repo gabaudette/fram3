@@ -39,7 +39,7 @@ namespace Fram3.UI.Elements.Input
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new ButtonState();
 
-        private sealed class ButtonState : Fram3.UI.Core.State<Button>
+        private sealed class ButtonState : State<Button>
         {
             private bool _hovered;
 
@@ -78,8 +78,8 @@ namespace Fram3.UI.Elements.Input
 
                 return new GestureDetector(
                     onTap: disabled ? null : Element.OnPressed,
-                    onPointerEnter: disabled ? null : (() => SetState(() => _hovered = true)),
-                    onPointerExit: disabled ? null : (() => SetState(() => _hovered = false)),
+                    onPointerEnter: disabled ? null : () => SetState(() => _hovered = true),
+                    onPointerExit: disabled ? null : () => SetState(() => _hovered = false),
                     child: new Container(
                         padding: EdgeInsets.Symmetric(
                             vertical: theme.Spacing,

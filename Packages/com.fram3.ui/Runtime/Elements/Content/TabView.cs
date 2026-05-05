@@ -60,7 +60,7 @@ namespace Fram3.UI.Elements.Content
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new TabViewState();
 
-        private sealed class TabViewState : Fram3.UI.Core.State<TabView>
+        private sealed class TabViewState : State<TabView>
         {
             private int _selectedIndex;
 
@@ -72,7 +72,7 @@ namespace Fram3.UI.Elements.Content
             public override Element Build(BuildContext context)
             {
                 var tabs = Element!.Tabs;
-                var tabBarItems = new System.Collections.Generic.List<Element>();
+                var tabBarItems = new List<Element>();
 
                 for (var i = 0; i < tabs.Count; i++)
                 {

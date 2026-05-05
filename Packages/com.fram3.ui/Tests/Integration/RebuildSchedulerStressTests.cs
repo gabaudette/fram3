@@ -172,10 +172,16 @@ namespace Fram3.UI.Tests.Integration
             TreeBuilder.Mount(root, _expander);
 
             var countsBefore = new int[count];
-            for (var i = 0; i < count; i++) { countsBefore[i] = states[i].BuildCount; }
+            for (var i = 0; i < count; i++)
+            {
+                countsBefore[i] = states[i].BuildCount;
+            }
 
             // Mark all dirty
-            foreach (var s in states) { s.MarkDirty(); }
+            foreach (var s in states)
+            {
+                s.MarkDirty();
+            }
 
             TreeBuilder.Flush(_scheduler, _expander);
 
@@ -200,7 +206,10 @@ namespace Fram3.UI.Tests.Integration
                 _order = order;
             }
 
-            public void SetChild(Element child) { _child = child; }
+            public void SetChild(Element child)
+            {
+                _child = child;
+            }
 
             public void ScheduleRebuild()
             {
@@ -210,7 +219,7 @@ namespace Fram3.UI.Tests.Integration
             public override Element Build(BuildContext context)
             {
                 _order.Add(_depth);
-                return _child ?? (Element)new TestLeafElement($"leaf-{_depth}");
+                return _child;
             }
         }
 
@@ -287,6 +296,7 @@ namespace Fram3.UI.Tests.Integration
                 return _child;
             }
         }
+
         private sealed class SwappableChildState : State
         {
             public int BuildCount { get; private set; }

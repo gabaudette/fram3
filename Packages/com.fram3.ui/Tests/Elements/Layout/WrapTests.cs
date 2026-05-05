@@ -14,10 +14,6 @@ namespace Fram3.UI.Tests.Elements.Layout
     [TestFixture]
     internal sealed class WrapTests
     {
-        // -----------------------------------------------------------------------
-        // Constructor
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Constructor_SetsKey()
         {
@@ -43,11 +39,7 @@ namespace Fram3.UI.Tests.Elements.Layout
 
             Assert.That(element.GetChildren(), Has.Count.EqualTo(1));
         }
-
-        // -----------------------------------------------------------------------
-        // Painter -- CreateNative
-        // -----------------------------------------------------------------------
-
+        
         [Test]
         public void CreateNative_FWrap_ReturnsVisualElement()
         {

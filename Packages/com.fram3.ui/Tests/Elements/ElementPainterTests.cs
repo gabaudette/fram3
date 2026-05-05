@@ -1,8 +1,6 @@
 #nullable enable
-using System;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
-using Fram3.UI.Elements.Input;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Rendering.Internal;
 using Fram3.UI.Styling;
@@ -14,8 +12,8 @@ using ProgressBar = Fram3.UI.Elements.Content.ProgressBar;
 using ScrollView = Fram3.UI.Elements.Content.ScrollView;
 using Column = Fram3.UI.Elements.Layout.Column;
 using Row = Fram3.UI.Elements.Layout.Row;
-using UiProgressBar = UnityEngine.UIElements.ProgressBar;
-using UiScrollView = UnityEngine.UIElements.ScrollView;
+using UIProgressBar = UnityEngine.UIElements.ProgressBar;
+using UIScrollView = UnityEngine.UIElements.ScrollView;
 
 namespace Fram3.UI.Tests.Elements
 {
@@ -138,7 +136,7 @@ namespace Fram3.UI.Tests.Elements
 
             var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
-            Assert.That(native, Is.InstanceOf<UiProgressBar>());
+            Assert.That(native, Is.InstanceOf<UIProgressBar>());
         }
 
         [Test]
@@ -148,7 +146,7 @@ namespace Fram3.UI.Tests.Elements
 
             var native = ElementPainter.CreateNative(element, StylingTheme.Default);
 
-            Assert.That(native, Is.InstanceOf<UiScrollView>());
+            Assert.That(native, Is.InstanceOf<UIScrollView>());
         }
 
         [Test]
@@ -215,7 +213,7 @@ namespace Fram3.UI.Tests.Elements
         public void Paint_FProgressBar_UpdatesValue()
         {
             var original = new ProgressBar(value: 10f);
-            var native = (UiProgressBar)ElementPainter.CreateNative(original, StylingTheme.Default);
+            var native = (UIProgressBar)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new ProgressBar(value: 90f);
             ElementPainter.Paint(updated, native, StylingTheme.Default);
@@ -226,8 +224,8 @@ namespace Fram3.UI.Tests.Elements
         [Test]
         public void Paint_FScrollView_UpdatesMode()
         {
-            var original = new ScrollView(ScrollDirection.Vertical) { Child = new Text("x") };
-            var native = (UiScrollView)ElementPainter.CreateNative(original, StylingTheme.Default);
+            var original = new ScrollView() { Child = new Text("x") };
+            var native = (UIScrollView)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new ScrollView(ScrollDirection.Horizontal) { Child = new Text("x") };
             ElementPainter.Paint(updated, native, StylingTheme.Default);

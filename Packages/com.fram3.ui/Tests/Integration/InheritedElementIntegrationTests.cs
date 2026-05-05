@@ -1,5 +1,4 @@
 #nullable enable
-using System;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Elements.State;
@@ -148,7 +147,7 @@ namespace Fram3.UI.Tests.Integration
         {
             string? capturedValue = null;
 
-            var consumer = new Consumer<string>((ctx, val) =>
+            var consumer = new Consumer<string>((_, val) =>
             {
                 capturedValue = val;
                 return new TestLeafElement("leaf");
@@ -167,7 +166,7 @@ namespace Fram3.UI.Tests.Integration
             var host = new TestStatefulElement(() => providerState);
 
             var lastSeenValue = -1;
-            var consumer = new Consumer<int>((ctx, val) =>
+            var consumer = new Consumer<int>((_, val) =>
             {
                 lastSeenValue = val;
                 return new TestLeafElement("leaf");

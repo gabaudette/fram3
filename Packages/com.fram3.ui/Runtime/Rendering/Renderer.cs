@@ -126,6 +126,7 @@ namespace Fram3.UI.Rendering
         /// and debugging only.
         /// </summary>
         /// <param name="node">The node whose native element to retrieve.</param>
+        // ReSharper disable once UnusedMember.Global
         internal VisualElement? GetNativeElement(Node node)
         {
             return _adapter.GetNativeElement(node);

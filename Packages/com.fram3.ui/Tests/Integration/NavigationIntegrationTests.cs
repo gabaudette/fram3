@@ -71,20 +71,6 @@ namespace Fram3.UI.Tests.Integration
         {
             var renderedPages = new List<string>();
 
-            var routes = new Dictionary<string, System.Func<BuildContext, Element>>
-            {
-                ["home"] = _ =>
-                {
-                    renderedPages.Add("home");
-                    return new TestLeafElement("home");
-                },
-                ["detail"] = _ =>
-                {
-                    renderedPages.Add("detail");
-                    return new TestLeafElement("detail");
-                }
-            };
-
             NavigatorHandle? handle = null;
             var navigatorWithHandle = new Dictionary<string, System.Func<BuildContext, Element>>
             {

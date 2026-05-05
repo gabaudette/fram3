@@ -10,10 +10,15 @@ namespace Fram3.UI.Tests.GlobalState
     {
         private sealed class CounterCubit : Cubit<int>
         {
-            public CounterCubit(int initial = 0) : base(initial) { }
+            public CounterCubit(int initial = 0) : base(initial)
+            {
+            }
 
             public void Increment() => Emit(State + 1);
+
+            // ReSharper disable once UnusedMember.Local
             public void Decrement() => Emit(State - 1);
+
             public void SetTo(int value) => Emit(value);
         }
 
@@ -28,7 +33,7 @@ namespace Fram3.UI.Tests.GlobalState
         [Test]
         public void Emit_ChangesState()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
 
             cubit.Increment();
 
@@ -38,7 +43,7 @@ namespace Fram3.UI.Tests.GlobalState
         [Test]
         public void Emit_NotifiesListeners()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
             int? received = null;
             cubit.AddListener(v => received = v);
 
@@ -78,9 +83,8 @@ namespace Fram3.UI.Tests.GlobalState
         [Test]
         public void RemoveListener_StopsNotifications()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
             var callCount = 0;
-            void Listener(int _) => callCount++;
 
             cubit.AddListener(Listener);
             cubit.Increment();
@@ -88,6 +92,9 @@ namespace Fram3.UI.Tests.GlobalState
             cubit.Increment();
 
             Assert.That(callCount, Is.EqualTo(1));
+            return;
+
+            void Listener(int _) => callCount++;
         }
 
         [Test]
@@ -96,7 +103,7 @@ namespace Fram3.UI.Tests.GlobalState
             var cubit = new CounterCubit();
             cubit.Dispose();
 
-            Assert.Throws<ObjectDisposedException>(() => { var _ = cubit.State; });
+            Assert.Throws<ObjectDisposedException>(() => { _ = cubit.State; });
         }
 
         [Test]
@@ -111,7 +118,7 @@ namespace Fram3.UI.Tests.GlobalState
         [Test]
         public void Dispose_ClearsListeners()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
             var callCount = 0;
             cubit.AddListener(_ => callCount++);
             cubit.Dispose();
@@ -127,16 +134,16 @@ namespace Fram3.UI.Tests.GlobalState
 
             cubit.Dispose();
 
-            Assert.DoesNotThrow(() => cubit.Dispose());
+            Assert.DoesNotThrow(cubit.Dispose);
         }
 
         [Test]
         public void MultipleListeners_AllReceiveNotification()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
             var received = new System.Collections.Generic.List<int>();
 
-            cubit.AddListener(v => received.Add(v));
+            cubit.AddListener(received.Add);
             cubit.AddListener(v => received.Add(v * 10));
             cubit.Increment();
 
@@ -171,7 +178,10 @@ namespace Fram3.UI.Tests.GlobalState
 
         private sealed class EquatableCubit : Cubit<EquatableState>
         {
-            public EquatableCubit(EquatableState initial) : base(initial) { }
+            public EquatableCubit(EquatableState initial) : base(initial)
+            {
+            }
+
             public void SetSameValue() => Emit(new EquatableState(State.Value));
             public void SetDifferentValue() => Emit(new EquatableState(State.Value + 1));
         }

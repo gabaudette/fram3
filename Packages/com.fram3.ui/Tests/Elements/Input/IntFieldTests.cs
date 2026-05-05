@@ -12,10 +12,6 @@ namespace Fram3.UI.Tests.Elements.Input
     [TestFixture]
     internal sealed class IntFieldTests
     {
-        // -----------------------------------------------------------------------
-        // Constructor
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Constructor_DefaultValue_IsZero()
         {
@@ -82,10 +78,6 @@ namespace Fram3.UI.Tests.Elements.Input
 
             Assert.That(element.GetChildren(), Is.Empty);
         }
-
-        // -----------------------------------------------------------------------
-        // Painter -- CreateNative
-        // -----------------------------------------------------------------------
 
         [Test]
         public void CreateNative_FIntField_ReturnsIntegerField()

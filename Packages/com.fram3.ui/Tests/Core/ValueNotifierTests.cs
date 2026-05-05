@@ -120,7 +120,7 @@ namespace Fram3.UI.Tests.Core
             var notifier = new ValueNotifier<int>(0);
             notifier.Dispose();
 
-            Assert.DoesNotThrow(() => notifier.Dispose());
+            Assert.DoesNotThrow(notifier.Dispose);
         }
 
         [Test]

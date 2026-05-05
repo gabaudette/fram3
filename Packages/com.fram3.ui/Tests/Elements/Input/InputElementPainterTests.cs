@@ -15,10 +15,6 @@ namespace Fram3.UI.Tests.Elements.Input
     [TestFixture]
     internal sealed class InputElementPainterTests
     {
-        // -----------------------------------------------------------------------
-        // TextField -- CreateNative
-        // -----------------------------------------------------------------------
-
         [Test]
         public void CreateNative_FTextField_ReturnsTextField()
         {
@@ -44,10 +40,6 @@ namespace Fram3.UI.Tests.Elements.Input
 
             Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
-
-        // -----------------------------------------------------------------------
-        // FrameToggle -- CreateNative
-        // -----------------------------------------------------------------------
 
         [Test]
         public void CreateNative_FToggle_ReturnsToggle()
@@ -75,10 +67,6 @@ namespace Fram3.UI.Tests.Elements.Input
             Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
-        // -----------------------------------------------------------------------
-        // FrameSlider -- CreateNative
-        // -----------------------------------------------------------------------
-
         [Test]
         public void CreateNative_FSlider_ReturnsSlider()
         {
@@ -105,10 +93,6 @@ namespace Fram3.UI.Tests.Elements.Input
             Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
-        // -----------------------------------------------------------------------
-        // Dropdown -- CreateNative
-        // -----------------------------------------------------------------------
-
         [Test]
         public void CreateNative_FDropdown_ReturnsDropdownField()
         {
@@ -134,10 +118,6 @@ namespace Fram3.UI.Tests.Elements.Input
 
             Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
-
-        // -----------------------------------------------------------------------
-        // GestureDetector -- CreateNative
-        // -----------------------------------------------------------------------
 
         [Test]
         public void CreateNative_FGestureDetector_ReturnsVisualElement()
@@ -169,10 +149,6 @@ namespace Fram3.UI.Tests.Elements.Input
             Assert.DoesNotThrow(() => ElementPainter.CreateNative(element, StylingTheme.Default));
         }
 
-        // -----------------------------------------------------------------------
-        // Paint -- TextField
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Paint_FTextField_DoesNotThrow()
         {
@@ -183,10 +159,6 @@ namespace Fram3.UI.Tests.Elements.Input
 
             Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, StylingTheme.Default));
         }
-
-        // -----------------------------------------------------------------------
-        // Paint -- FrameToggle
-        // -----------------------------------------------------------------------
 
         [Test]
         public void Paint_FToggle_DoesNotThrow()
@@ -199,10 +171,6 @@ namespace Fram3.UI.Tests.Elements.Input
             Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, StylingTheme.Default));
         }
 
-        // -----------------------------------------------------------------------
-        // Paint -- FrameSlider
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Paint_FSlider_DoesNotThrow()
         {
@@ -213,10 +181,6 @@ namespace Fram3.UI.Tests.Elements.Input
 
             Assert.DoesNotThrow(() => ElementPainter.Paint(updated, native, StylingTheme.Default));
         }
-
-        // -----------------------------------------------------------------------
-        // Paint -- Dropdown
-        // -----------------------------------------------------------------------
 
         [Test]
         public void Paint_FDropdown_DoesNotThrow()

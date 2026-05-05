@@ -25,7 +25,8 @@ namespace Fram3.UI.Tests.Elements.State
         public void Constructor_NullChild_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new Provider<int>(42, null!));
+                new Provider<int>(42, null!)
+            );
         }
 
         [Test]
@@ -38,7 +39,8 @@ namespace Fram3.UI.Tests.Elements.State
                 {
                     capturedValue = ctx.GetInherited<Provider<int>>().Value;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             _expander.Mount(provider, null);
 
@@ -81,19 +83,23 @@ namespace Fram3.UI.Tests.Elements.State
                 new TestStatelessElement(ctx =>
                 {
                     ctx.GetInherited<Provider<int>>();
+                    // ReSharper disable once AccessToModifiedClosure
                     buildCount++;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             var providerNode = _expander.Mount(provider, null);
             buildCount = 0;
 
             var newProvider = new Provider<int>(2, new TestStatelessElement(ctx =>
-            {
-                ctx.GetInherited<Provider<int>>();
-                buildCount++;
-                return new TestLeafElement("leaf");
-            }));
+                {
+                    ctx.GetInherited<Provider<int>>();
+                    buildCount++;
+                    return new TestLeafElement("leaf");
+                })
+            );
+
             _expander.UpdateElement(providerNode, newProvider);
             _scheduler.Flush(_expander);
 
@@ -109,19 +115,23 @@ namespace Fram3.UI.Tests.Elements.State
                 new TestStatelessElement(ctx =>
                 {
                     ctx.GetInherited<Provider<int>>();
+                    // ReSharper disable once AccessToModifiedClosure
                     buildCount++;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             var providerNode = _expander.Mount(provider, null);
             buildCount = 0;
 
             var newProvider = new Provider<int>(5, new TestStatelessElement(ctx =>
-            {
-                ctx.GetInherited<Provider<int>>();
-                buildCount++;
-                return new TestLeafElement("leaf");
-            }));
+                {
+                    ctx.GetInherited<Provider<int>>();
+                    buildCount++;
+                    return new TestLeafElement("leaf");
+                })
+            );
+            
             _expander.UpdateElement(providerNode, newProvider);
             _scheduler.Flush(_expander);
 

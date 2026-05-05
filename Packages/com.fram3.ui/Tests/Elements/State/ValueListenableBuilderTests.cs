@@ -25,7 +25,8 @@ namespace Fram3.UI.Tests.Elements.State
         public void Constructor_NullNotifier_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new ValueListenableBuilder<int>(null!, (_, _) => new TestLeafElement("x")));
+                new ValueListenableBuilder<int>(null!, (_, _) => new TestLeafElement("x"))
+            );
         }
 
         [Test]
@@ -34,7 +35,8 @@ namespace Fram3.UI.Tests.Elements.State
             var notifier = new ValueNotifier<int>(0);
 
             Assert.Throws<ArgumentNullException>(() =>
-                new ValueListenableBuilder<int>(notifier, null!));
+                new ValueListenableBuilder<int>(notifier, null!)
+            );
         }
 
         [Test]
@@ -48,7 +50,8 @@ namespace Fram3.UI.Tests.Elements.State
                 {
                     capturedValue = v;
                     return new TestLeafElement("x");
-                });
+                }
+            );
 
             _expander.Mount(element, null);
 
@@ -77,7 +80,8 @@ namespace Fram3.UI.Tests.Elements.State
             var notifier = new ValueNotifier<int>(5);
             var element = new ValueListenableBuilder<int>(
                 notifier,
-                (_, v) => new TestLeafElement(v.ToString()));
+                (_, v) => new TestLeafElement(v.ToString())
+            );
 
             var node = _expander.Mount(element, null);
 
@@ -92,12 +96,12 @@ namespace Fram3.UI.Tests.Elements.State
             var notifier = new ValueNotifier<int>(0);
             var element = new ValueListenableBuilder<int>(
                 notifier,
-                (_, v) => new TestLeafElement(v.ToString()));
+                (_, v) => new TestLeafElement(v.ToString())
+            );
 
             var node = _expander.Mount(element, null);
             _expander.Unmount(node);
 
-            // After unmount the listener is gone -- dirty flag must not be set.
             notifier.Value = 99;
             Assert.That(node.IsDirty, Is.False);
         }
@@ -109,13 +113,16 @@ namespace Fram3.UI.Tests.Elements.State
             var notifier2 = new ValueNotifier<int>(10);
             var element1 = new ValueListenableBuilder<int>(
                 notifier1,
-                (_, v) => new TestLeafElement(v.ToString()));
+                (_, v) => new TestLeafElement(v.ToString())
+            );
 
             var node = _expander.Mount(element1, null);
 
             var element2 = new ValueListenableBuilder<int>(
                 notifier2,
-                (_, v) => new TestLeafElement(v.ToString()));
+                (_, v) => new TestLeafElement(v.ToString())
+            );
+
             _expander.UpdateElement(node, element2);
             _expander.Rebuild(node);
             node.IsDirty = false;
@@ -133,18 +140,19 @@ namespace Fram3.UI.Tests.Elements.State
         public void DidUpdateElement_SameNotifier_DoesNotDoubleSubscribe()
         {
             var notifier = new ValueNotifier<int>(0);
-            var buildCount = 0;
             var element1 = new ValueListenableBuilder<int>(
                 notifier,
-                (_, v) => { buildCount++; return new TestLeafElement(v.ToString()); });
+                (_, v) => new TestLeafElement(v.ToString())
+            );
 
             var node = _expander.Mount(element1, null);
-            buildCount = 0;
 
             // Update to a new element sharing the same notifier.
             var element2 = new ValueListenableBuilder<int>(
                 notifier,
-                (_, v) => { buildCount++; return new TestLeafElement(v.ToString()); });
+                (_, v) => new TestLeafElement(v.ToString())
+            );
+
             _expander.UpdateElement(node, element2);
 
             // Change the value once -- should mark dirty once, not twice.
@@ -168,7 +176,8 @@ namespace Fram3.UI.Tests.Elements.State
                 {
                     capturedContext = ctx;
                     return new TestLeafElement("x");
-                });
+                }
+            );
 
             _expander.Mount(element, null);
 

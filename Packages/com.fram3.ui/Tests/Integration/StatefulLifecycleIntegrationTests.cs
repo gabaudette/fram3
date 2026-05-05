@@ -126,7 +126,7 @@ namespace Fram3.UI.Tests.Integration
             {
                 Children = new Element[]
                 {
-                    new TestLeafElement("child"),
+                    new TestLeafElement("child")
                 }
             };
 
@@ -160,7 +160,11 @@ namespace Fram3.UI.Tests.Integration
         private sealed class ParentConfig
         {
             public string Value;
-            public ParentConfig(string value) { Value = value; }
+
+            public ParentConfig(string value)
+            {
+                Value = value;
+            }
         }
 
         private sealed class ParentRebuildState : State

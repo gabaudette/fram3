@@ -14,10 +14,6 @@ namespace Fram3.UI.Tests.Elements.Input
     [TestFixture]
     internal sealed class MinMaxSliderTests
     {
-        // -----------------------------------------------------------------------
-        // Constructor
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Constructor_DefaultValues()
         {
@@ -97,11 +93,7 @@ namespace Fram3.UI.Tests.Elements.Input
 
             Assert.That(element.GetChildren(), Is.Empty);
         }
-
-        // -----------------------------------------------------------------------
-        // Painter -- CreateNative
-        // -----------------------------------------------------------------------
-
+        
         [Test]
         public void CreateNative_FMinMaxSlider_ReturnsMinMaxSlider()
         {

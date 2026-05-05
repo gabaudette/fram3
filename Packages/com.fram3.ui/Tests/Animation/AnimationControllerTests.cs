@@ -210,7 +210,7 @@ namespace Fram3.UI.Tests.Animation
             var ctrl = new AnimationController(1f);
             ctrl.Dispose();
 
-            Assert.DoesNotThrow(() => ctrl.Dispose());
+            Assert.DoesNotThrow(ctrl.Dispose);
         }
 
         [Test]
@@ -219,12 +219,13 @@ namespace Fram3.UI.Tests.Animation
             var ctrl = new AnimationController(1f);
             ctrl.Dispose();
 
-            Assert.Throws<ObjectDisposedException>(() => ctrl.Forward());
+            Assert.Throws<ObjectDisposedException>(ctrl.Forward);
         }
 
         [Test]
         public void Curve_IsAppliedToValue()
         {
+            // ReSharper disable once ConvertToLocalFunction
             Curve squareCurve = t => t * t;
             using var ctrl = new AnimationController(1f, squareCurve);
             ctrl.Forward();

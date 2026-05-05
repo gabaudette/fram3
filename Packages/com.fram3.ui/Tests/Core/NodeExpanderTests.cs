@@ -75,7 +75,8 @@ namespace Fram3.UI.Tests.Core
 
             Assert.That(node.State, Is.Not.Null);
             Assert.That(capturedState!.InitStateCalled, Is.True);
-            Assert.That(capturedState.Mounted, Is.True);        }
+            Assert.That(capturedState.Mounted, Is.True);
+        }
 
         [Test]
         public void Mount_StatefulElement_BuildsChildFromState()
@@ -177,7 +178,7 @@ namespace Fram3.UI.Tests.Core
 
             _expander.UpdateElement(node, updated);
 
-            Assert.That(state?.LastOldElement, Is.SameAs(original));
+            Assert.That(state.LastOldElement, Is.SameAs(original));
             Assert.That(node.Element, Is.SameAs(updated));
         }
 

@@ -24,9 +24,13 @@ namespace Fram3.UI.Tests.Elements.State
 
         private sealed class CounterCubit : Cubit<int>
         {
-            public CounterCubit(int initial = 0) : base(initial) { }
+            public CounterCubit(int initial = 0) : base(initial)
+            {
+            }
 
+            // ReSharper disable once UnusedMember.Local
             public void Increment() => Emit(State + 1);
+
             public void SetTo(int v) => Emit(v);
         }
 
@@ -41,7 +45,8 @@ namespace Fram3.UI.Tests.Elements.State
         public void Constructor_NullBuilder_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new Selector<CounterCubit, int, bool>(state => state > 0, null!));
+                new Selector<CounterCubit, int, bool>(state => state > 0, null!)
+            );
         }
 
         [Test]
@@ -58,7 +63,8 @@ namespace Fram3.UI.Tests.Elements.State
                     {
                         captured = isAbove;
                         return new TestLeafElement("leaf");
-                    }));
+                    })
+            );
 
             _expander.Mount(tree, null);
 
@@ -68,13 +74,15 @@ namespace Fram3.UI.Tests.Elements.State
         [Test]
         public void StateChange_DerivedValueChanges_SchedulesRebuild()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
 
             var tree = new Provider<CounterCubit>(
                 cubit,
                 new Selector<CounterCubit, int, bool>(
                     state => state > 5,
-                    (_, _) => new TestLeafElement("leaf")));
+                    (_, _) => new TestLeafElement("leaf")
+                )
+            );
 
             var providerNode = _expander.Mount(tree, null);
             var selectorNode = providerNode.Children[0];
@@ -94,7 +102,9 @@ namespace Fram3.UI.Tests.Elements.State
                 cubit,
                 new Selector<CounterCubit, int, bool>(
                     state => state > 5,
-                    (_, _) => new TestLeafElement("leaf")));
+                    (_, _) => new TestLeafElement("leaf")
+                )
+            );
 
             var providerNode = _expander.Mount(tree, null);
             var selectorNode = providerNode.Children[0];
@@ -108,7 +118,7 @@ namespace Fram3.UI.Tests.Elements.State
         [Test]
         public void StateChange_DerivedValueChanges_RebuildPassesNewValueToBuilder()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
             bool? lastValue = null;
 
             var tree = new Provider<CounterCubit>(
@@ -119,7 +129,9 @@ namespace Fram3.UI.Tests.Elements.State
                     {
                         lastValue = isAbove;
                         return new TestLeafElement("leaf");
-                    }));
+                    }
+                )
+            );
 
             _expander.Mount(tree, null);
             lastValue = null;
@@ -133,16 +145,19 @@ namespace Fram3.UI.Tests.Elements.State
         [Test]
         public void Unmount_RemovesListenerFromCubit()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
 
             var tree = new Provider<CounterCubit>(
                 cubit,
                 new Selector<CounterCubit, int, bool>(
                     state => state > 5,
-                    (_, _) => new TestLeafElement("leaf")));
+                    (_, _) => new TestLeafElement("leaf")
+                )
+            );
 
             var providerNode = _expander.Mount(tree, null);
             var selectorNode = providerNode.Children[0];
+
             _expander.Unmount(selectorNode);
             selectorNode.IsDirty = false;
 
@@ -154,7 +169,7 @@ namespace Fram3.UI.Tests.Elements.State
         [Test]
         public void MultipleStateChanges_OnlyRebuildsWhenDerivedValueFlips()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
             var buildCount = 0;
 
             var tree = new Provider<CounterCubit>(
@@ -163,26 +178,26 @@ namespace Fram3.UI.Tests.Elements.State
                     state => state > 5,
                     (_, _) =>
                     {
+                        // ReSharper disable once AccessToModifiedClosure
                         buildCount++;
                         return new TestLeafElement("leaf");
-                    }));
+                    }
+                )
+            );
 
             _expander.Mount(tree, null);
             buildCount = 0;
 
-            // Stays false -- no rebuild.
             cubit.SetTo(1);
             cubit.SetTo(2);
             cubit.SetTo(3);
             _scheduler.Flush(_expander);
             Assert.That(buildCount, Is.EqualTo(0));
 
-            // Flips to true -- one rebuild.
             cubit.SetTo(6);
             _scheduler.Flush(_expander);
             Assert.That(buildCount, Is.EqualTo(1));
 
-            // Stays true -- no additional rebuild.
             buildCount = 0;
             cubit.SetTo(7);
             cubit.SetTo(8);

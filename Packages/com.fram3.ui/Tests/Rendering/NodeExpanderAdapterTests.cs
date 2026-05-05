@@ -59,7 +59,7 @@ namespace Fram3.UI.Tests.Rendering
         {
             var state = new RebuildState();
             var element = new TestStatefulElement(() => state);
-            var node = _expander.Mount(element, null);
+            _expander.Mount(element, null);
 
             state.Trigger();
             _scheduler.Flush(_expander);

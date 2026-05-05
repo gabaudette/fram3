@@ -29,7 +29,7 @@ namespace Fram3.UI.Tests.Styling
         [Test]
         public void FromRgba255_NormalizesChannels()
         {
-            var color = FrameColor.FromRgba255(255, 128, 0, 255);
+            var color = FrameColor.FromRgba255(255, 128, 0);
 
             Assert.That(color.R, Is.EqualTo(1f));
             Assert.That(color.G, Is.EqualTo(128 / 255f));
@@ -109,7 +109,7 @@ namespace Fram3.UI.Tests.Styling
         [Test]
         public void EqualityOperator_SameValues_ReturnsTrue()
         {
-            Assert.That(FrameColor.White == new FrameColor(1f, 1f, 1f, 1f), Is.True);
+            Assert.That(FrameColor.White == new FrameColor(1f, 1f, 1f), Is.True);
         }
 
         [Test]
@@ -122,11 +122,11 @@ namespace Fram3.UI.Tests.Styling
         public void StaticColors_HaveExpectedValues()
         {
             Assert.That(FrameColor.Transparent, Is.EqualTo(new FrameColor(0f, 0f, 0f, 0f)));
-            Assert.That(FrameColor.White, Is.EqualTo(new FrameColor(1f, 1f, 1f, 1f)));
-            Assert.That(FrameColor.Black, Is.EqualTo(new FrameColor(0f, 0f, 0f, 1f)));
-            Assert.That(FrameColor.Red, Is.EqualTo(new FrameColor(1f, 0f, 0f, 1f)));
-            Assert.That(FrameColor.Green, Is.EqualTo(new FrameColor(0f, 1f, 0f, 1f)));
-            Assert.That(FrameColor.Blue, Is.EqualTo(new FrameColor(0f, 0f, 1f, 1f)));
+            Assert.That(FrameColor.White, Is.EqualTo(new FrameColor(1f, 1f, 1f)));
+            Assert.That(FrameColor.Black, Is.EqualTo(new FrameColor(0f, 0f, 0f)));
+            Assert.That(FrameColor.Red, Is.EqualTo(new FrameColor(1f, 0f, 0f)));
+            Assert.That(FrameColor.Green, Is.EqualTo(new FrameColor(0f, 1f, 0f)));
+            Assert.That(FrameColor.Blue, Is.EqualTo(new FrameColor(0f, 0f, 1f)));
         }
     }
 }

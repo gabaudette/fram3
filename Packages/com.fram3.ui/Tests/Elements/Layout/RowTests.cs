@@ -23,7 +23,8 @@ namespace Fram3.UI.Tests.Elements.Layout
         {
             var element = new Row(
                 mainAxisAlignment: MainAxisAlignment.SpaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.End);
+                crossAxisAlignment: CrossAxisAlignment.End
+            );
 
             Assert.That(element.MainAxisAlignment, Is.EqualTo(MainAxisAlignment.SpaceBetween));
             Assert.That(element.CrossAxisAlignment, Is.EqualTo(CrossAxisAlignment.End));

@@ -9,12 +9,12 @@ using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
 using UnityEngine.UIElements;
-using UiTextField = UnityEngine.UIElements.TextField;
-using UiScrollView = UnityEngine.UIElements.ScrollView;
-using UiProgressBar = UnityEngine.UIElements.ProgressBar;
-using UiFloatField = UnityEngine.UIElements.FloatField;
-using UiMinMaxSlider = UnityEngine.UIElements.MinMaxSlider;
-using UiWrap = UnityEngine.UIElements.Wrap;
+using UITextField = UnityEngine.UIElements.TextField;
+using UIScrollView = UnityEngine.UIElements.ScrollView;
+using UIProgressBar = UnityEngine.UIElements.ProgressBar;
+using UIFloatField = UnityEngine.UIElements.FloatField;
+using UIMinMaxSlider = UnityEngine.UIElements.MinMaxSlider;
+using UIWrap = UnityEngine.UIElements.Wrap;
 using Column = Fram3.UI.Elements.Layout.Column;
 using Row = Fram3.UI.Elements.Layout.Row;
 
@@ -27,6 +27,7 @@ namespace Fram3.UI.Rendering.Internal
     internal static class ElementPainter
     {
         private static UnityEngine.Color ToUnity(FrameColor c) => new(c.R, c.G, c.B, c.A);
+
         /// <summary>
         /// Creates the appropriate native <see cref="VisualElement"/> for the given element
         /// and applies all initial style properties to it.
@@ -55,7 +56,7 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateLabel(text);
                 case PasswordField passwordField:
                     return CreatePasswordField(passwordField, theme);
-                case Fram3.UI.Elements.Input.TextField textField:
+                case Elements.Input.TextField textField:
                     return CreateTextField(textField, theme);
                 case Checkbox checkbox:
                     return CreateCheckbox(checkbox, theme);
@@ -67,9 +68,9 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateToggle(toggle, theme);
                 case IntField intField:
                     return CreateIntField(intField, theme);
-                case Fram3.UI.Elements.Input.FloatField floatField:
+                case Elements.Input.FloatField floatField:
                     return CreateFloatField(floatField, theme);
-                case Fram3.UI.Elements.Input.MinMaxSlider minMaxSlider:
+                case Elements.Input.MinMaxSlider minMaxSlider:
                     return CreateMinMaxSlider(minMaxSlider, theme);
                 case IEnumFieldDescriptor enumField:
                     return CreateEnumField(enumField);
@@ -77,9 +78,9 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateSlider(slider, theme);
                 case Dropdown dropdown:
                     return CreateDropdown(dropdown, theme);
-                case Fram3.UI.Elements.Content.ProgressBar progressBar:
+                case Elements.Content.ProgressBar progressBar:
                     return CreateProgressBar(progressBar, theme);
-                case Fram3.UI.Elements.Content.ScrollView scrollView:
+                case Elements.Content.ScrollView scrollView:
                     return CreateScrollView(scrollView, theme);
                 case FrameImage image:
                     return CreateImage(image);
@@ -119,6 +120,7 @@ namespace Fram3.UI.Rendering.Internal
         /// </summary>
         /// <param name="element">The current element description.</param>
         /// <param name="native">The existing native element to update.</param>
+        /// <param name="theme">The active theme used when applying colors and style values.</param>
         internal static void Paint(Element element, VisualElement native, Theme theme)
         {
 #if !FRAM3_PURE_TESTS
@@ -133,10 +135,10 @@ namespace Fram3.UI.Rendering.Internal
                 case Text text when native is Label label:
                     PaintText(text, label);
                     break;
-                case PasswordField passwordField when native is UiTextField ptf:
+                case PasswordField passwordField when native is UITextField ptf:
                     PaintPasswordField(passwordField, ptf);
                     break;
-                case Fram3.UI.Elements.Input.TextField textField when native is UiTextField tf:
+                case Elements.Input.TextField textField when native is UITextField tf:
                     PaintTextField(textField, tf);
                     break;
                 case Checkbox checkbox when native is Toggle chkTgl:
@@ -145,8 +147,8 @@ namespace Fram3.UI.Rendering.Internal
                 case RadioGroup radioGroup when native is RadioButtonGroup rbg:
                     PaintRadioGroup(radioGroup, rbg);
                     break;
-                case Modal modal:
-                    PaintModal(modal, native);
+                case Modal:
+                    PaintModal(native);
                     break;
                 case FrameToggle toggle when native is Toggle tgl:
                     PaintToggle(toggle, tgl);
@@ -154,10 +156,10 @@ namespace Fram3.UI.Rendering.Internal
                 case IntField intField when native is IntegerField intf:
                     PaintIntField(intField, intf);
                     break;
-                case Fram3.UI.Elements.Input.FloatField floatField when native is UiFloatField ff:
+                case Elements.Input.FloatField floatField when native is UIFloatField ff:
                     PaintFloatField(floatField, ff);
                     break;
-                case Fram3.UI.Elements.Input.MinMaxSlider minMaxSlider when native is UiMinMaxSlider mms:
+                case Elements.Input.MinMaxSlider minMaxSlider when native is UIMinMaxSlider mms:
                     PaintMinMaxSlider(minMaxSlider, mms);
                     break;
                 case FrameSlider slider when native is Slider sld:
@@ -166,10 +168,10 @@ namespace Fram3.UI.Rendering.Internal
                 case Dropdown dropdown when native is DropdownField dd:
                     PaintDropdown(dropdown, dd);
                     break;
-                case Fram3.UI.Elements.Content.ProgressBar progressBar when native is UiProgressBar pb:
+                case Elements.Content.ProgressBar progressBar when native is UIProgressBar pb:
                     PaintProgressBar(progressBar, pb);
                     break;
-                case Fram3.UI.Elements.Content.ScrollView scrollView when native is UiScrollView sv:
+                case Elements.Content.ScrollView scrollView when native is UIScrollView sv:
                     PaintScrollView(scrollView, sv);
                     break;
                 case FrameImage image when native is Image img:
@@ -249,9 +251,9 @@ namespace Fram3.UI.Rendering.Internal
             return label;
         }
 
-        private static UiTextField CreatePasswordField(PasswordField passwordField, Theme theme)
+        private static UITextField CreatePasswordField(PasswordField passwordField, Theme theme)
         {
-            var tf = new UiTextField
+            var tf = new UITextField
             {
                 value = passwordField.Value,
                 isReadOnly = passwordField.ReadOnly,
@@ -294,9 +296,9 @@ namespace Fram3.UI.Rendering.Internal
             return tf;
         }
 
-        private static UiTextField CreateTextField(Fram3.UI.Elements.Input.TextField textField, Theme theme)
+        private static UITextField CreateTextField(Elements.Input.TextField textField, Theme theme)
         {
-            var tf = new UiTextField
+            var tf = new UITextField
             {
                 value = textField.Value,
                 isReadOnly = textField.ReadOnly,
@@ -430,7 +432,8 @@ namespace Fram3.UI.Rendering.Internal
                     checkmark.style.backgroundColor = ToUnity(theme.PrimaryColor);
                 }
 
-                foreach (var checkmarkBg in rbg.Query<VisualElement>(className: "unity-radio-button__checkmark-background").ToList())
+                foreach (var checkmarkBg in rbg
+                             .Query<VisualElement>(className: "unity-radio-button__checkmark-background").ToList())
                 {
                     checkmarkBg.style.borderTopColor = ToUnity(theme.PrimaryColor);
                     checkmarkBg.style.borderRightColor = ToUnity(theme.PrimaryColor);
@@ -528,7 +531,7 @@ namespace Fram3.UI.Rendering.Internal
             return -1;
         }
 
-        private static void PaintModal(Modal modal, VisualElement native)
+        private static void PaintModal(VisualElement native)
         {
             native.style.position = Position.Absolute;
         }
@@ -666,7 +669,8 @@ namespace Fram3.UI.Rendering.Internal
                             containerInner.style.borderLeftWidth = 0f;
                         }
 
-                        foreach (var item in popup.Query<VisualElement>(className: "unity-base-dropdown__item").ToList())
+                        foreach (var item in popup.Query<VisualElement>(className: "unity-base-dropdown__item")
+                                     .ToList())
                         {
                             item.style.color = ToUnity(theme.PrimaryTextColor);
                             item.style.backgroundColor = ToUnity(theme.SurfaceColor);
@@ -692,7 +696,7 @@ namespace Fram3.UI.Rendering.Internal
             return dd;
         }
 
-        private static void PaintPasswordField(PasswordField passwordField, UiTextField tf)
+        private static void PaintPasswordField(PasswordField passwordField, UITextField tf)
         {
             tf.value = passwordField.Value;
             tf.isReadOnly = passwordField.ReadOnly;
@@ -702,7 +706,7 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void PaintTextField(Fram3.UI.Elements.Input.TextField textField, UiTextField tf)
+        private static void PaintTextField(Elements.Input.TextField textField, UITextField tf)
         {
             tf.value = textField.Value;
             tf.isReadOnly = textField.ReadOnly;
@@ -743,16 +747,19 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static UiScrollView CreateScrollView(Fram3.UI.Elements.Content.ScrollView scrollView, Theme theme)
+        private static UIScrollView CreateScrollView(Elements.Content.ScrollView scrollView, Theme theme)
         {
-            var sv = new UiScrollView(MapScrollMode(scrollView.ScrollDirection));
-            sv.RegisterCallback<AttachToPanelEvent>(_ => sv.schedule.Execute(() => ApplyScrollbarTheme(sv, theme)).ExecuteLater(1));
+            var sv = new UIScrollView(MapScrollMode(scrollView.ScrollDirection));
+            sv.RegisterCallback<AttachToPanelEvent>(_ =>
+                sv.schedule.Execute(() => ApplyScrollbarTheme(sv, theme)).ExecuteLater(1));
             return sv;
         }
 
         private static void ApplyScrollbarTheme(VisualElement container, Theme theme)
         {
-            foreach (var c in container.Query<VisualElement>(className: "unity-scroll-view__content-and-vertical-scroll-container").ToList())
+            foreach (var c in container
+                         .Query<VisualElement>(className: "unity-scroll-view__content-and-vertical-scroll-container")
+                         .ToList())
             {
                 c.style.borderTopColor = ToUnity(theme.InputBorderColor);
                 c.style.borderRightColor = ToUnity(theme.InputBorderColor);
@@ -822,7 +829,8 @@ namespace Fram3.UI.Rendering.Internal
                 sliderInput.style.borderLeftWidth = 0f;
             }
 
-            foreach (var dragContainer in container.Query<VisualElement>(className: "unity-base-slider__drag-container").ToList())
+            foreach (var dragContainer in container.Query<VisualElement>(className: "unity-base-slider__drag-container")
+                         .ToList())
             {
                 dragContainer.style.overflow = Overflow.Visible;
                 dragContainer.style.marginTop = 0f;
@@ -854,14 +862,14 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void PaintScrollView(Fram3.UI.Elements.Content.ScrollView scrollView, UiScrollView sv)
+        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView sv)
         {
             sv.mode = MapScrollMode(scrollView.ScrollDirection);
         }
 
-        private static UiProgressBar CreateProgressBar(Fram3.UI.Elements.Content.ProgressBar progressBar, Theme theme)
+        private static UIProgressBar CreateProgressBar(Elements.Content.ProgressBar progressBar, Theme theme)
         {
-            var pb = new UiProgressBar
+            var pb = new UIProgressBar
             {
                 value = progressBar.Value,
                 lowValue = progressBar.Min,
@@ -897,7 +905,7 @@ namespace Fram3.UI.Rendering.Internal
             return pb;
         }
 
-        private static void PaintProgressBar(Fram3.UI.Elements.Content.ProgressBar progressBar, UiProgressBar pb)
+        private static void PaintProgressBar(Elements.Content.ProgressBar progressBar, UIProgressBar pb)
         {
             pb.value = progressBar.Value;
             pb.lowValue = progressBar.Min;
@@ -1101,7 +1109,8 @@ namespace Fram3.UI.Rendering.Internal
             lv.style.flexGrow = 1f;
             lv.style.flexShrink = 1f;
 
-            lv.RegisterCallback<AttachToPanelEvent>(_ => lv.schedule.Execute(() => ApplyScrollbarTheme(lv, theme)).ExecuteLater(1));
+            lv.RegisterCallback<AttachToPanelEvent>(_ =>
+                lv.schedule.Execute(() => ApplyScrollbarTheme(lv, theme)).ExecuteLater(1));
             if (listView.OnSelectionChangedUntyped != null)
             {
                 var callback = listView.OnSelectionChangedUntyped;
@@ -1270,7 +1279,7 @@ namespace Fram3.UI.Rendering.Internal
                 case Tooltip tooltip:
                     ApplyTooltipLayout(tooltip, native, theme);
                     break;
-                case Fram3.UI.Elements.Layout.Wrap:
+                case Elements.Layout.Wrap:
                     ApplyWrapLayout(native);
                     break;
                 case Opacity opacity:
@@ -1393,13 +1402,15 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.paddingLeft = insets.Left;
             }
 
-            if (container.Decoration != null)
+            if (container.Decoration == null)
             {
-                ApplyDecoration(container.Decoration, native);
-                if (container.Decoration.BorderRadius.HasValue)
-                {
-                    native.style.overflow = Overflow.Hidden;
-                }
+                return;
+            }
+
+            ApplyDecoration(container.Decoration, native);
+            if (container.Decoration.BorderRadius.HasValue)
+            {
+                native.style.overflow = Overflow.Hidden;
             }
         }
 
@@ -1506,7 +1517,8 @@ namespace Fram3.UI.Rendering.Internal
 
             intf.RegisterCallback<KeyDownEvent>(evt =>
             {
-                if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: false))
+                if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey,
+                        allowDecimal: false))
                 {
                     evt.StopImmediatePropagation();
                 }
@@ -1532,9 +1544,10 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static UiFloatField CreateFloatField(Fram3.UI.Elements.Input.FloatField floatField, Theme theme)
+        private static UIFloatField CreateFloatField(Elements.Input.FloatField floatField, Theme theme)
         {
-            var ff = new UiFloatField { value = floatField.Value };
+            if (floatField == null) throw new ArgumentNullException(nameof(floatField));
+            var ff = new UIFloatField { value = floatField.Value };
             if (floatField.Label != null)
             {
                 ff.label = floatField.Label;
@@ -1584,7 +1597,7 @@ namespace Fram3.UI.Rendering.Internal
             return ff;
         }
 
-        private static void PaintFloatField(Fram3.UI.Elements.Input.FloatField floatField, UiFloatField ff)
+        private static void PaintFloatField(Elements.Input.FloatField floatField, UIFloatField ff)
         {
             ff.value = floatField.Value;
             if (floatField.Label != null)
@@ -1593,9 +1606,9 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static UiMinMaxSlider CreateMinMaxSlider(Fram3.UI.Elements.Input.MinMaxSlider minMaxSlider, Theme theme)
+        private static UIMinMaxSlider CreateMinMaxSlider(Elements.Input.MinMaxSlider minMaxSlider, Theme theme)
         {
-            var mms = new UiMinMaxSlider(
+            var mms = new UIMinMaxSlider(
                 minMaxSlider.MinValue,
                 minMaxSlider.MaxValue,
                 minMaxSlider.LowLimit,
@@ -1633,7 +1646,8 @@ namespace Fram3.UI.Rendering.Internal
                     fill.style.borderBottomRightRadius = 3f;
                 }
 
-                foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-low").ToList())
+                foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-low")
+                             .ToList())
                 {
                     dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
@@ -1646,7 +1660,8 @@ namespace Fram3.UI.Rendering.Internal
                     dragger.style.borderBottomRightRadius = 4f;
                 }
 
-                foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-high").ToList())
+                foreach (var dragger in mms.Query<VisualElement>(className: "unity-min-max-slider__dragger-high")
+                             .ToList())
                 {
                     dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
@@ -1671,7 +1686,7 @@ namespace Fram3.UI.Rendering.Internal
             return mms;
         }
 
-        private static void PaintMinMaxSlider(Fram3.UI.Elements.Input.MinMaxSlider minMaxSlider, UiMinMaxSlider mms)
+        private static void PaintMinMaxSlider(Elements.Input.MinMaxSlider minMaxSlider, UIMinMaxSlider mms)
         {
             mms.minValue = minMaxSlider.MinValue;
             mms.maxValue = minMaxSlider.MaxValue;
@@ -1771,32 +1786,37 @@ namespace Fram3.UI.Rendering.Internal
                         return;
                     }
 
-                    tip = new Label(message);
-                    tip.pickingMode = PickingMode.Ignore;
-                    tip.style.position = Position.Absolute;
-                    tip.style.backgroundColor = ToUnity(theme.SurfaceColor.WithAlpha(0.96f));
-                    tip.style.color = ToUnity(theme.PrimaryTextColor);
-                    tip.style.paddingTop = 5f;
-                    tip.style.paddingBottom = 5f;
-                    tip.style.paddingLeft = 10f;
-                    tip.style.paddingRight = 10f;
-                    tip.style.borderTopLeftRadius = 4f;
-                    tip.style.borderTopRightRadius = 4f;
-                    tip.style.borderBottomLeftRadius = 4f;
-                    tip.style.borderBottomRightRadius = 4f;
-                    tip.style.fontSize = 12f;
-                    tip.style.maxWidth = 240f;
-                    tip.style.whiteSpace = WhiteSpace.Normal;
-                    tip.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                    tip.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                    tip.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                    tip.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                    tip.style.borderTopWidth = 1f;
-                    tip.style.borderRightWidth = 1f;
-                    tip.style.borderBottomWidth = 1f;
-                    tip.style.borderLeftWidth = 1f;
-                    tip.style.left = evt.position.x + 14f;
-                    tip.style.top = evt.position.y + 18f;
+                    tip = new Label(message)
+                    {
+                        pickingMode = PickingMode.Ignore,
+                        style =
+                        {
+                            position = Position.Absolute,
+                            backgroundColor = ToUnity(theme.SurfaceColor.WithAlpha(0.96f)),
+                            color = ToUnity(theme.PrimaryTextColor),
+                            paddingTop = 5f,
+                            paddingBottom = 5f,
+                            paddingLeft = 10f,
+                            paddingRight = 10f,
+                            borderTopLeftRadius = 4f,
+                            borderTopRightRadius = 4f,
+                            borderBottomLeftRadius = 4f,
+                            borderBottomRightRadius = 4f,
+                            fontSize = 12f,
+                            maxWidth = 240f,
+                            whiteSpace = WhiteSpace.Normal,
+                            borderTopColor = ToUnity(theme.InputBorderColor),
+                            borderRightColor = ToUnity(theme.InputBorderColor),
+                            borderBottomColor = ToUnity(theme.InputBorderColor),
+                            borderLeftColor = ToUnity(theme.InputBorderColor),
+                            borderTopWidth = 1f,
+                            borderRightWidth = 1f,
+                            borderBottomWidth = 1f,
+                            borderLeftWidth = 1f,
+                            left = evt.position.x + 14f,
+                            top = evt.position.y + 18f
+                        }
+                    };
                     native.panel.visualTree.Add(tip);
                 });
 
@@ -1819,7 +1839,8 @@ namespace Fram3.UI.Rendering.Internal
             });
         }
 
-        private static bool IsAllowedNumericKey(char character, UnityEngine.KeyCode keyCode, bool ctrlOrCmd, bool allowDecimal)
+        private static bool IsAllowedNumericKey(char character, UnityEngine.KeyCode keyCode, bool ctrlOrCmd,
+            bool allowDecimal)
         {
             if (ctrlOrCmd)
             {
@@ -1854,7 +1875,7 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyWrapLayout(VisualElement native)
         {
             native.style.flexDirection = FlexDirection.Row;
-            native.style.flexWrap = UiWrap.Wrap;
+            native.style.flexWrap = UIWrap.Wrap;
         }
 
         private static void ApplyOpacityLayout(Opacity opacity, VisualElement native)

@@ -45,7 +45,11 @@ namespace Fram3.UI.Elements.Layout
             Key? key = null
         ) : base(key)
         {
-            if (columnCount <= 0) throw new ArgumentOutOfRangeException(nameof(columnCount), "Must be greater than zero.");
+            if (columnCount <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnCount), "Must be greater than zero.");
+            }
+
             ColumnCount = columnCount;
             Items = items ?? throw new ArgumentNullException(nameof(items));
             ItemBuilder = itemBuilder ?? throw new ArgumentNullException(nameof(itemBuilder));

@@ -45,13 +45,12 @@ namespace Fram3.UI.Tests.Navigation
             };
         }
 
-        // ---- Construction validation ----
-
         [Test]
         public void Constructor_NullRoutes_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new Navigator(null!, "home"));
+                new Navigator(null!, "home")
+            );
         }
 
         [Test]
@@ -60,7 +59,9 @@ namespace Fram3.UI.Tests.Navigation
             Assert.Throws<ArgumentException>(() =>
                 new Navigator(
                     new Dictionary<string, Func<BuildContext, Element>>(),
-                    "home"));
+                    "home"
+                )
+            );
         }
 
         [Test]
@@ -69,7 +70,9 @@ namespace Fram3.UI.Tests.Navigation
             Assert.Throws<ArgumentNullException>(() =>
                 new Navigator(
                     SingleRoute("home", _ => new TestLeafElement("h")),
-                    null!));
+                    null!
+                )
+            );
         }
 
         [Test]
@@ -78,7 +81,9 @@ namespace Fram3.UI.Tests.Navigation
             Assert.Throws<ArgumentException>(() =>
                 new Navigator(
                     SingleRoute("home", _ => new TestLeafElement("h")),
-                    "unknown"));
+                    "unknown"
+                )
+            );
         }
 
         // ---- Mount / initial render ----
@@ -88,7 +93,8 @@ namespace Fram3.UI.Tests.Navigation
         {
             var navigator = new Navigator(
                 SingleRoute("home", _ => new TestLeafElement("home-leaf")),
-                "home");
+                "home"
+            );
 
             var navigatorNode = _expander.Mount(navigator, null);
 
@@ -103,11 +109,13 @@ namespace Fram3.UI.Tests.Navigation
 
             var navigator = new Navigator(
                 SingleRoute("home", ctx =>
-                {
-                    captured = ctx.GetInherited<NavigatorScope>().Navigator;
-                    return new TestLeafElement("home-leaf");
-                }),
-                "home");
+                    {
+                        captured = ctx.GetInherited<NavigatorScope>().Navigator;
+                        return new TestLeafElement("home-leaf");
+                    }
+                ),
+                "home"
+            );
 
             _expander.Mount(navigator, null);
 
@@ -129,8 +137,10 @@ namespace Fram3.UI.Tests.Navigation
                         handle = ctx.GetInherited<NavigatorScope>().Navigator;
                         return new TestLeafElement("home");
                     },
-                    "detail", _ => new TestLeafElement("detail")),
-                "home");
+                    "detail", _ => new TestLeafElement("detail")
+                ),
+                "home"
+            );
 
             _expander.Mount(navigator, null);
 
@@ -160,10 +170,12 @@ namespace Fram3.UI.Tests.Navigation
                     {
                         builtRoutes.Add("detail");
                         return new TestLeafElement("detail");
-                    }),
-                "home");
+                    }
+                ),
+                "home"
+            );
 
-            var navigatorNode = _expander.Mount(navigator, null);
+            _expander.Mount(navigator, null);
 
             handle!.Push("detail");
             _scheduler.Flush(_expander);
@@ -178,11 +190,13 @@ namespace Fram3.UI.Tests.Navigation
 
             var navigator = new Navigator(
                 SingleRoute("home", ctx =>
-                {
-                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
-                    return new TestLeafElement("home");
-                }),
-                "home");
+                    {
+                        handle = ctx.GetInherited<NavigatorScope>().Navigator;
+                        return new TestLeafElement("home");
+                    }
+                ),
+                "home"
+            );
 
             _expander.Mount(navigator, null);
 
@@ -201,8 +215,10 @@ namespace Fram3.UI.Tests.Navigation
                         handle = ctx.GetInherited<NavigatorScope>().Navigator;
                         return new TestLeafElement("home");
                     },
-                    "detail", _ => new TestLeafElement("detail")),
-                "home");
+                    "detail", _ => new TestLeafElement("detail")
+                ),
+                "home"
+            );
 
             _expander.Mount(navigator, null);
 
@@ -218,11 +234,13 @@ namespace Fram3.UI.Tests.Navigation
 
             var navigator = new Navigator(
                 SingleRoute("home", ctx =>
-                {
-                    handle = ctx.GetInherited<NavigatorScope>().Navigator;
-                    return new TestLeafElement("home");
-                }),
-                "home");
+                    {
+                        handle = ctx.GetInherited<NavigatorScope>().Navigator;
+                        return new TestLeafElement("home");
+                    }
+                ),
+                "home"
+            );
 
             _expander.Mount(navigator, null);
 
@@ -248,10 +266,12 @@ namespace Fram3.UI.Tests.Navigation
                     {
                         builtRoutes.Add("detail");
                         return new TestLeafElement("detail");
-                    }),
-                "home");
+                    }
+                ),
+                "home"
+            );
 
-            var navigatorNode = _expander.Mount(navigator, null);
+            _expander.Mount(navigator, null);
             handle!.Push("detail");
             _scheduler.Flush(_expander);
 
@@ -276,12 +296,16 @@ namespace Fram3.UI.Tests.Navigation
                         handle = ctx.GetInherited<NavigatorScope>().Navigator;
                         return new TestLeafElement("home");
                     },
-                    "detail", _ => new TestLeafElement("detail")),
-                "home");
+                    "detail", _ => new TestLeafElement("detail")
+                ),
+                "home"
+            );
 
-            var navigatorNode = _expander.Mount(navigator, null);
+            _expander.Mount(navigator, null);
+
             handle!.Push("detail");
             _scheduler.Flush(_expander);
+
             handle.Push("detail");
             _scheduler.Flush(_expander);
 
@@ -304,7 +328,8 @@ namespace Fram3.UI.Tests.Navigation
                     captured = ctx.GetInherited<NavigatorScope>();
                     return new TestLeafElement("home");
                 }),
-                "home");
+                "home"
+            );
 
             _expander.Mount(navigator, null);
 
@@ -315,12 +340,12 @@ namespace Fram3.UI.Tests.Navigation
         [Test]
         public void UpdateShouldNotify_SameStateReference_DoesNotNotifyDependents()
         {
-            NavigatorScope? capturedScope = null;
-            int buildCount = 0;
+            var buildCount = 0;
 
             var routeBuilder = new Func<BuildContext, Element>(ctx =>
             {
-                capturedScope = ctx.GetInherited<NavigatorScope>();
+                ctx.GetInherited<NavigatorScope>();
+                // ReSharper disable once AccessToModifiedClosure
                 buildCount++;
                 return new TestLeafElement("home");
             });

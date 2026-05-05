@@ -129,7 +129,7 @@ namespace Fram3.UI.Tests.Core
         public void State_CanBeAssigned()
         {
             var node = new Node(new TestLeafElement("test"), null);
-            var state = new TestState(ctx => new TestLeafElement("x"));
+            var state = new TestState(_ => new TestLeafElement("x"));
 
             node.State = state;
 

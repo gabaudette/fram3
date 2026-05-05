@@ -53,7 +53,7 @@ namespace Fram3.UI.Tests.Core
             var element = new TestLeafElement("a");
             var node = new Node(element, null);
 
-            DiffOp op = DiffOp.Remove(node);
+            var op = DiffOp.Remove(node);
 
             Assert.That(op.Kind, Is.EqualTo(DiffOpKind.Remove));
             Assert.That(op.ExistingNode, Is.SameAs(node));
@@ -72,7 +72,7 @@ namespace Fram3.UI.Tests.Core
             var node = new Node(element, null);
             var newElement = new TestLeafElement("b");
 
-            DiffOp op = DiffOp.Move(3, 1, node, newElement);
+            var op = DiffOp.Move(3, 1, node, newElement);
 
             Assert.That(op.Kind, Is.EqualTo(DiffOpKind.Move));
             Assert.That(op.NewIndex, Is.EqualTo(3));
