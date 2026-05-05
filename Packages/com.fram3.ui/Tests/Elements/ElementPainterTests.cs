@@ -370,7 +370,7 @@ namespace Fram3.UI.Tests.Elements
         {
             var element = new ProgressBar(value: 75f, min: 0f, max: 100f);
 
-            var native = (UiProgressBar)ElementPainter.CreateNative(element, StylingTheme.Default);
+            var native = (UIProgressBar)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.value, Is.EqualTo(75f));
             Assert.That(native.lowValue, Is.EqualTo(0f));
@@ -382,7 +382,7 @@ namespace Fram3.UI.Tests.Elements
         {
             var element = new ProgressBar(value: 50f, title: "Loading");
 
-            var native = (UiProgressBar)ElementPainter.CreateNative(element, StylingTheme.Default);
+            var native = (UIProgressBar)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.title, Is.EqualTo("Loading"));
         }
@@ -392,7 +392,7 @@ namespace Fram3.UI.Tests.Elements
         {
             var element = new ScrollView { Child = new Text("x") };
 
-            var native = (UiScrollView)ElementPainter.CreateNative(element, StylingTheme.Default);
+            var native = (UIScrollView)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.mode, Is.EqualTo(ScrollViewMode.Vertical));
         }
@@ -402,7 +402,7 @@ namespace Fram3.UI.Tests.Elements
         {
             var element = new ScrollView(ScrollDirection.Horizontal) { Child = new Text("x") };
 
-            var native = (UiScrollView)ElementPainter.CreateNative(element, StylingTheme.Default);
+            var native = (UIScrollView)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.mode, Is.EqualTo(ScrollViewMode.Horizontal));
         }
@@ -412,7 +412,7 @@ namespace Fram3.UI.Tests.Elements
         {
             var element = new ScrollView(ScrollDirection.Both) { Child = new Text("x") };
 
-            var native = (UiScrollView)ElementPainter.CreateNative(element, StylingTheme.Default);
+            var native = (UIScrollView)ElementPainter.CreateNative(element, StylingTheme.Default);
 
             Assert.That(native.mode, Is.EqualTo(ScrollViewMode.VerticalAndHorizontal));
         }
