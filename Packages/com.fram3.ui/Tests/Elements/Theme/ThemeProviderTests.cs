@@ -27,14 +27,16 @@ namespace Fram3.UI.Tests.Elements.Theme
         public void Constructor_NullTheme_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new ThemeProvider(null!, new TestLeafElement("child")));
+                new ThemeProvider(null!, new TestLeafElement("child"))
+            );
         }
 
         [Test]
         public void Constructor_NullChild_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new ThemeProvider(StylingTheme.Default, null!));
+                new ThemeProvider(StylingTheme.Default, null!)
+            );
         }
 
         [Test]
@@ -49,7 +51,8 @@ namespace Fram3.UI.Tests.Elements.Theme
                 {
                     capturedTheme = ctx.GetInherited<ThemeProvider>().Theme;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             _expander.Mount(provider, null);
 
@@ -94,6 +97,7 @@ namespace Fram3.UI.Tests.Elements.Theme
                 new TestStatelessElement(ctx =>
                 {
                     ctx.GetInherited<ThemeProvider>();
+                    // ReSharper disable once AccessToModifiedClosure
                     buildCount++;
                     return new TestLeafElement("leaf");
                 }));
@@ -108,7 +112,9 @@ namespace Fram3.UI.Tests.Elements.Theme
                     ctx.GetInherited<ThemeProvider>();
                     buildCount++;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
+
             _expander.UpdateElement(providerNode, newProvider);
             _scheduler.Flush(_expander);
 
@@ -124,9 +130,11 @@ namespace Fram3.UI.Tests.Elements.Theme
                 new TestStatelessElement(ctx =>
                 {
                     ctx.GetInherited<ThemeProvider>();
+                    // ReSharper disable once AccessToModifiedClosure
                     buildCount++;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             var providerNode = _expander.Mount(provider, null);
             buildCount = 0;

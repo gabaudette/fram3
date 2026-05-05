@@ -39,7 +39,7 @@ namespace Fram3.UI.Tests.Animation
         public void Constructor_ZeroDuration_ThrowsArgumentOutOfRangeException()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new AnimationBuilder(0f, (_, __) => new TestLeafElement("x")));
+                new AnimationBuilder(0f, (_, _) => new TestLeafElement("x")));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace Fram3.UI.Tests.Animation
         [Test]
         public void Tick_WhenIdle_DoesNotScheduleRebuild()
         {
-            var element = new AnimationBuilder(1f, (_, __) => new TestLeafElement("child"));
+            var element = new AnimationBuilder(1f, (_, _) => new TestLeafElement("child"));
 
             var node = _expander.Mount(element, null);
             node.IsDirty = false;
@@ -110,13 +110,7 @@ namespace Fram3.UI.Tests.Animation
         [Test]
         public void Unmount_DisposesController()
         {
-            AnimationController? captured = null;
-
-            var element = new AnimationBuilder(1f, (_, ctrl) =>
-            {
-                captured = ctrl;
-                return new TestLeafElement("child");
-            });
+            var element = new AnimationBuilder(1f, (_, _) => new TestLeafElement("child"));
 
             var node = _expander.Mount(element, null);
             _expander.Unmount(node);

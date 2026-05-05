@@ -1,6 +1,5 @@
 #nullable enable
 using System;
-using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Tests.Integration.Helpers;
@@ -75,8 +74,7 @@ namespace Fram3.UI.Tests.Integration
         public void Rebuild_InsertChild_AdapterReceivesMountedForNewChild()
         {
             var mutableChildren = new MutableChildList(1);
-            var stateful = new TestStatefulElement(
-                () => new MutableChildListState(mutableChildren)
+            var stateful = new TestStatefulElement(() => new MutableChildListState(mutableChildren)
             );
             TreeBuilder.Mount(stateful, _expander);
             _adapter.Clear();
@@ -92,8 +90,7 @@ namespace Fram3.UI.Tests.Integration
         public void Rebuild_RemoveChild_AdapterReceivesUnmountingForRemovedChild()
         {
             var mutableChildren = new MutableChildList(2);
-            var stateful = new TestStatefulElement(
-                () => new MutableChildListState(mutableChildren)
+            var stateful = new TestStatefulElement(() => new MutableChildListState(mutableChildren)
             );
             TreeBuilder.Mount(stateful, _expander);
             _adapter.Clear();
@@ -111,8 +108,7 @@ namespace Fram3.UI.Tests.Integration
             // Initial: leaf (1 node). After swap: stateless -> leaf (2 nodes).
             // Expected: 1 unmounting (the old leaf), 2 mountings (stateless + its inner leaf).
             var toggle = new ChildTypeToggle(useLeaf: true);
-            var stateful = new TestStatefulElement(
-                () => new ChildTypeToggleState(toggle)
+            var stateful = new TestStatefulElement(() => new ChildTypeToggleState(toggle)
             );
             TreeBuilder.Mount(stateful, _expander);
             _adapter.Clear();
@@ -129,8 +125,7 @@ namespace Fram3.UI.Tests.Integration
         public void Rebuild_KeyedChildren_Reversed_LogicalOrderUpdatedInNode()
         {
             var keyedToggle = new KeyedOrderToggle(reversed: false);
-            var stateful = new TestStatefulElement(
-                () => new KeyedOrderState(keyedToggle)
+            var stateful = new TestStatefulElement(() => new KeyedOrderState(keyedToggle)
             );
             var rootNode = TreeBuilder.Mount(stateful, _expander);
 

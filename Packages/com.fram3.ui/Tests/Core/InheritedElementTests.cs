@@ -40,6 +40,7 @@ namespace Fram3.UI.Tests.Core
         // A stateless element that calls FindInherited<TestInherited>.
         private sealed class TestConsumer : StatelessElement
         {
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public int? LastValue { get; private set; }
 
             public TestConsumer(Element child, Key? key = null) : base(key)
@@ -81,7 +82,6 @@ namespace Fram3.UI.Tests.Core
         public void FindInherited_NoAncestor_ReturnsNull()
         {
             var leaf = new TestLeafElement("leaf");
-            var consumer = new TestConsumer(leaf);
             InheritedElement? captured = null;
 
             var element = new TestStatelessElement(ctx =>

@@ -9,15 +9,17 @@ using UnityEngine.UIElements;
 
 namespace Fram3.UI.Tests.Elements.Input
 {
-    internal enum TestDirection { Left, Right, Up, Down }
+    internal enum TestDirection
+    {
+        Left,
+        Right,
+        Up,
+        Down
+    }
 
     [TestFixture]
     internal sealed class EnumFieldTests
     {
-        // -----------------------------------------------------------------------
-        // Constructor
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Constructor_DefaultValue_IsFirstEnumMember()
         {

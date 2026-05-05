@@ -99,6 +99,7 @@ namespace Fram3.UI.GlobalState
         /// <summary>
         /// Called when this cubit is disposed. Override to release additional resources.
         /// </summary>
+        // ReSharper disable once VirtualMemberNeverOverridden.Global
         protected virtual void OnDispose()
         {
         }

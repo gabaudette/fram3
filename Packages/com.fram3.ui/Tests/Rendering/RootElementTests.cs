@@ -1,10 +1,8 @@
 #nullable enable
 using System;
-using Fram3.UI.Core;
 using Fram3.UI.Rendering;
 using Fram3.UI.Tests.Mocks;
 using NUnit.Framework;
-using UnityEngine.UIElements;
 
 namespace Fram3.UI.Tests.Rendering
 {
@@ -35,10 +33,7 @@ namespace Fram3.UI.Tests.Rendering
         [Test]
         public void NullChild_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var _ = new RootElement { Child = null! };
-            });
+            Assert.Throws<ArgumentNullException>(() => { _ = new RootElement { Child = null! }; });
         }
     }
 }

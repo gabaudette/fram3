@@ -38,8 +38,10 @@ namespace Fram3.UI.Elements.Content
     {
         /// <summary>Content scrolls along the vertical axis.</summary>
         Vertical,
+
         /// <summary>Content scrolls along the horizontal axis.</summary>
         Horizontal,
+
         /// <summary>Content scrolls along both axes.</summary>
         Both
     }

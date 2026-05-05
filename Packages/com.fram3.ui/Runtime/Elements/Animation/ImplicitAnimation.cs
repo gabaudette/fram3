@@ -86,7 +86,7 @@ namespace Fram3.UI.Elements.Animation
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new ImplicitAnimationState();
 
-        private sealed class ImplicitAnimationState : Fram3.UI.Core.State<ImplicitAnimation>
+        private sealed class ImplicitAnimationState : State<ImplicitAnimation>
         {
             private AnimationController? _controller;
             private Action<float>? _listener;

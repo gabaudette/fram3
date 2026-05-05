@@ -34,7 +34,8 @@ namespace Fram3.UI.Tests.Elements.Theme
                 {
                     capturedTheme = ThemeConsumer.Of(ctx);
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             _expander.Mount(tree, null);
 
@@ -74,7 +75,9 @@ namespace Fram3.UI.Tests.Elements.Theme
                     {
                         capturedTheme = ThemeConsumer.Of(ctx);
                         return new TestLeafElement("leaf");
-                    })));
+                    })
+                )
+            );
 
             _expander.Mount(tree, null);
 

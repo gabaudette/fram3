@@ -11,36 +11,36 @@ namespace Fram3.UI.Tests.Elements.Layout
     [TestFixture]
     internal sealed class GridTests
     {
-        // -----------------------------------------------------------------------
-        // Constructor validation
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Constructor_ZeroColumnCount_Throws()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new Grid<int>(columnCount: 0, items: new[] { 1 }, itemBuilder: i => new Text(i.ToString())));
+                new Grid<int>(columnCount: 0, items: new[] { 1 }, itemBuilder: i => new Text(i.ToString()))
+            );
         }
 
         [Test]
         public void Constructor_NegativeColumnCount_Throws()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new Grid<int>(columnCount: -1, items: new[] { 1 }, itemBuilder: i => new Text(i.ToString())));
+                new Grid<int>(columnCount: -1, items: new[] { 1 }, itemBuilder: i => new Text(i.ToString()))
+            );
         }
 
         [Test]
         public void Constructor_NullItems_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new Grid<int>(columnCount: 2, items: null!, itemBuilder: i => new Text(i.ToString())));
+                new Grid<int>(columnCount: 2, items: null!, itemBuilder: i => new Text(i.ToString()))
+            );
         }
 
         [Test]
         public void Constructor_NullItemBuilder_Throws()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new Grid<int>(columnCount: 2, items: new[] { 1 }, itemBuilder: null!));
+                new Grid<int>(columnCount: 2, items: new[] { 1 }, itemBuilder: null!)
+            );
         }
 
         [Test]
@@ -56,7 +56,8 @@ namespace Fram3.UI.Tests.Elements.Layout
                 itemBuilder: builder,
                 columnSpacing: 8f,
                 rowSpacing: 4f,
-                key: key);
+                key: key
+            );
 
             Assert.That(grid.ColumnCount, Is.EqualTo(3));
             Assert.That(grid.Items, Is.SameAs(items));
@@ -69,7 +70,9 @@ namespace Fram3.UI.Tests.Elements.Layout
         [Test]
         public void Constructor_DefaultSpacing_IsZero()
         {
-            var grid = new Grid<int>(columnCount: 2, items: Array.Empty<int>(), itemBuilder: i => new Text(i.ToString()));
+            var grid = new Grid<int>(columnCount: 2, items: Array.Empty<int>(),
+                itemBuilder: i => new Text(i.ToString())
+            );
 
             Assert.That(grid.ColumnSpacing, Is.EqualTo(0f));
             Assert.That(grid.RowSpacing, Is.EqualTo(0f));
@@ -82,7 +85,10 @@ namespace Fram3.UI.Tests.Elements.Layout
         [Test]
         public void GetChildren_ReturnsEmpty()
         {
-            var grid = new Grid<int>(columnCount: 3, items: new[] { 1, 2, 3 }, itemBuilder: i => new Text(i.ToString()));
+            var grid = new Grid<int>(columnCount: 3, items: new[] { 1, 2, 3 },
+                itemBuilder: i => new Text(i.ToString())
+            );
+            
             Assert.That(grid.GetChildren(), Is.Empty);
         }
 
@@ -93,8 +99,11 @@ namespace Fram3.UI.Tests.Elements.Layout
         [Test]
         public void IGridElement_ItemCount_MatchesItemsCount()
         {
-            var grid = new Grid<int>(columnCount: 2, items: new[] { 10, 20, 30 }, itemBuilder: i => new Text(i.ToString()));
-            var descriptor = (IGridElement)(object)grid;
+            var grid = new Grid<int>(columnCount: 2, items: new[] { 10, 20, 30 },
+                itemBuilder: i => new Text(i.ToString())
+            );
+
+            IGridElement descriptor = grid;
 
             Assert.That(descriptor.ItemCount, Is.EqualTo(3));
         }
@@ -106,9 +115,14 @@ namespace Fram3.UI.Tests.Elements.Layout
             var grid = new Grid<int>(
                 columnCount: 2,
                 items: new[] { 10, 20, 30 },
-                itemBuilder: i => { built.Add(i); return new Text(i.ToString()); });
+                itemBuilder: i =>
+                {
+                    built.Add(i);
+                    return new Text(i.ToString());
+                }
+            );
 
-            var descriptor = (IGridElement)(object)grid;
+            IGridElement descriptor = grid;
             descriptor.BuildItemAt(0);
             descriptor.BuildItemAt(2);
 
@@ -123,9 +137,10 @@ namespace Fram3.UI.Tests.Elements.Layout
                 items: new[] { 1 },
                 itemBuilder: i => new Text(i.ToString()),
                 columnSpacing: 8f,
-                rowSpacing: 4f);
+                rowSpacing: 4f
+            );
 
-            var descriptor = (IGridElement)(object)grid;
+            IGridElement descriptor = grid;
 
             Assert.That(descriptor.ColumnCount, Is.EqualTo(4));
             Assert.That(descriptor.ColumnSpacing, Is.EqualTo(8f));

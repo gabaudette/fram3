@@ -39,7 +39,7 @@ namespace Fram3.UI.Tests.Animation
         public void Constructor_NullValues_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new ImplicitAnimation(null!, 1f, (_, __) => new TestLeafElement("x")));
+                new ImplicitAnimation(null!, 1f, (_, _) => new TestLeafElement("x")));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Fram3.UI.Tests.Animation
         public void Constructor_ZeroDuration_ThrowsArgumentOutOfRangeException()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new ImplicitAnimation(FloatValues(0f), 0f, (_, __) => new TestLeafElement("x")));
+                new ImplicitAnimation(FloatValues(0f), 0f, (_, _) => new TestLeafElement("x")));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(5f),
                 1f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -82,7 +82,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(5f),
                 1f,
-                (_, __) => new TestLeafElement("child")
+                (_, _) => new TestLeafElement("child")
             );
 
             var node = _expander.Mount(element, null);
@@ -91,7 +91,7 @@ namespace Fram3.UI.Tests.Animation
             _expander.UpdateElement(node, new ImplicitAnimation(
                 FloatValues(5f),
                 1f,
-                (_, __) => new TestLeafElement("child")
+                (_, _) => new TestLeafElement("child")
             ));
 
             AnimationSystem.Tick(0.1f);
@@ -105,7 +105,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(0f),
                 1f,
-                (_, __) => new TestLeafElement("child")
+                (_, _) => new TestLeafElement("child")
             );
 
             var node = _expander.Mount(element, null);
@@ -114,7 +114,7 @@ namespace Fram3.UI.Tests.Animation
             _expander.UpdateElement(node, new ImplicitAnimation(
                 FloatValues(1f),
                 1f,
-                (_, __) => new TestLeafElement("child")
+                (_, _) => new TestLeafElement("child")
             ));
 
             AnimationSystem.Tick(0.1f);
@@ -130,7 +130,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(0f),
                 1f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -142,7 +142,7 @@ namespace Fram3.UI.Tests.Animation
             _expander.UpdateElement(node, new ImplicitAnimation(
                 FloatValues(10f),
                 1f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -163,7 +163,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(0f),
                 0.5f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -175,7 +175,7 @@ namespace Fram3.UI.Tests.Animation
             _expander.UpdateElement(node, new ImplicitAnimation(
                 FloatValues(10f),
                 0.5f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -196,7 +196,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(0f),
                 1f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -208,7 +208,7 @@ namespace Fram3.UI.Tests.Animation
             _expander.UpdateElement(node, new ImplicitAnimation(
                 FloatValues(10f),
                 1f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -220,7 +220,7 @@ namespace Fram3.UI.Tests.Animation
             _expander.UpdateElement(node, new ImplicitAnimation(
                 FloatValues(20f),
                 1f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     capturedX = snapshot.Get<float>("x");
                     return new TestLeafElement("child");
@@ -239,7 +239,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(0f),
                 1f,
-                (_, __) => new TestLeafElement("child")
+                (_, _) => new TestLeafElement("child")
             );
 
             var node = _expander.Mount(element, null);
@@ -247,7 +247,7 @@ namespace Fram3.UI.Tests.Animation
             _expander.UpdateElement(node, new ImplicitAnimation(
                 FloatValues(1f),
                 1f,
-                (_, __) => new TestLeafElement("child")
+                (_, _) => new TestLeafElement("child")
             ));
 
             _expander.Unmount(node);
@@ -263,7 +263,7 @@ namespace Fram3.UI.Tests.Animation
             var element = new ImplicitAnimation(
                 FloatValues(1f),
                 1f,
-                (ctx, snapshot) =>
+                (_, snapshot) =>
                 {
                     captured = snapshot;
                     return new TestLeafElement("child");

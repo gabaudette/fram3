@@ -27,7 +27,7 @@ namespace Fram3.UI.Tests.Navigation
         private sealed class StubSceneAdapter : ISceneAdapter
         {
             public string? LastSceneName { get; private set; }
-            public SceneOperation? LastOperation { get; private set; }
+            private SceneOperation? LastOperation { get; set; }
             public int CallCount { get; private set; }
 
             public SceneOperation LoadAsync(string sceneName)
@@ -45,8 +45,6 @@ namespace Fram3.UI.Tests.Navigation
             }
         }
 
-        // ---- GoTo argument validation ----
-
         [Test]
         public void GoTo_NullSceneName_ThrowsArgumentNullException()
         {
@@ -58,8 +56,6 @@ namespace Fram3.UI.Tests.Navigation
         {
             Assert.Throws<ArgumentNullException>(() => SceneNavigator.GoTo(string.Empty));
         }
-
-        // ---- GoTo delegates to adapter ----
 
         [Test]
         public void GoTo_PassesSceneNameToAdapter()
@@ -85,8 +81,6 @@ namespace Fram3.UI.Tests.Navigation
 
             Assert.That(_stub.CallCount, Is.EqualTo(2));
         }
-
-        // ---- SceneOperation progress ----
 
         [Test]
         public void Operation_InitialProgress_IsZero()
@@ -131,8 +125,6 @@ namespace Fram3.UI.Tests.Navigation
             Assert.That(operation.Progress, Is.EqualTo(0.5f).Within(0.001f));
         }
 
-        // ---- SceneOperation Completed event ----
-
         [Test]
         public void Operation_CompletedEvent_RaisedOnComplete()
         {
@@ -149,7 +141,7 @@ namespace Fram3.UI.Tests.Navigation
         public void Operation_CompletedEvent_NotRaisedBeforeComplete()
         {
             var operation = SceneNavigator.GoTo("MainMenu");
-            bool raised = false;
+            var raised = false;
             operation.Completed += () => raised = true;
 
             Assert.That(raised, Is.False);
@@ -159,7 +151,7 @@ namespace Fram3.UI.Tests.Navigation
         public void Operation_CompleteCalledTwice_EventRaisedOnce()
         {
             var operation = SceneNavigator.GoTo("MainMenu");
-            int count = 0;
+            var count = 0;
             operation.Completed += () => count++;
 
             _stub.CompleteLoad();
@@ -167,9 +159,7 @@ namespace Fram3.UI.Tests.Navigation
 
             Assert.That(count, Is.EqualTo(1));
         }
-
-        // ---- SetAdapter restores default ----
-
+        
         [Test]
         public void SetAdapter_Null_RestoresDefaultAdapter()
         {

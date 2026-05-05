@@ -63,7 +63,7 @@ namespace Fram3.UI.Elements.State
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new SelectorState();
 
-        private sealed class SelectorState : Fram3.UI.Core.State<Selector<TCubit, TState, TValue>>
+        private sealed class SelectorState : State<Selector<TCubit, TState, TValue>>
         {
             private TCubit? _cubit;
             private TValue _lastValue = default!;

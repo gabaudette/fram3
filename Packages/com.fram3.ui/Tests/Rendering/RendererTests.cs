@@ -45,7 +45,8 @@ namespace Fram3.UI.Tests.Rendering
             _renderer.Mount(new TestRenderLeaf("a"), _container);
 
             Assert.Throws<InvalidOperationException>(() =>
-                _renderer.Mount(new TestRenderLeaf("b"), _container));
+                _renderer.Mount(new TestRenderLeaf("b"), _container)
+            );
         }
 
         [Test]
@@ -102,8 +103,6 @@ namespace Fram3.UI.Tests.Rendering
             var element = new TestStatefulElement(() => toggleState);
 
             _renderer.Mount(element, _container);
-
-            int childCountBefore = _container.childCount;
 
             toggleState.Toggle();
             _renderer.Tick(0f);

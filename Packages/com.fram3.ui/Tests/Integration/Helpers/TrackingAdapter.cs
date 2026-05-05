@@ -6,7 +6,12 @@ namespace Fram3.UI.Tests.Integration.Helpers
 {
     internal sealed class TrackingAdapter : IRenderAdapter
     {
-        public enum EventKind { Mounted, Unmounting, Rebuilt }
+        public enum EventKind
+        {
+            Mounted,
+            Unmounting,
+            Rebuilt
+        }
 
         public readonly struct AdapterEvent
         {

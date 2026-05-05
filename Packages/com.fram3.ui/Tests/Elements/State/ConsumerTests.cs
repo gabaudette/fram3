@@ -92,6 +92,7 @@ namespace Fram3.UI.Tests.Elements.State
                     lastValue = v;
                     return new TestLeafElement("leaf");
                 })));
+
             _scheduler.Flush(_expander);
 
             Assert.That(lastValue, Is.EqualTo(99));
@@ -109,7 +110,9 @@ namespace Fram3.UI.Tests.Elements.State
                     {
                         capturedValue = v;
                         return new TestLeafElement("leaf");
-                    })));
+                    })
+                )
+            );
 
             _expander.Mount(tree, null);
 

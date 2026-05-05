@@ -55,7 +55,7 @@ namespace Fram3.UI.Tests.Styling
         public void WithSyntax_DoesNotMutateOriginal()
         {
             var original = Theme.Default.FontSize;
-            var _ = Theme.Default with { FontSize = 99f };
+            _ = Theme.Default with { FontSize = 99f };
 
             Assert.That(Theme.Default.FontSize, Is.EqualTo(original).Within(0.0001f));
         }

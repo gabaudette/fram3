@@ -96,7 +96,7 @@ namespace Fram3.UI.Tests.Animation
         [Test]
         public void Interpolate_PreviousTypeMismatch_UsesCurrentTargetAsFrom()
         {
-            var previous = new AnimatedValue<int>("x", 0, (a, b, t) => a);
+            var previous = new AnimatedValue<int>("x", 0, (a, _, _) => a);
             var current = new AnimatedValue<float>("x", 5f, Lerp.Float);
 
             var result = (float)current.Interpolate(previous, 0.5f);

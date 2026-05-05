@@ -64,7 +64,7 @@ namespace Fram3.UI.Tests.GlobalState
         public void StateChange_PersistsAutomatically()
         {
             var adapter = new InMemoryAdapter<int>("test");
-            var store = new PersistentStore<int>(0, adapter);
+            new PersistentStore<int>(0, adapter);
 
             // Cubit.Emit is protected; we subclass to expose it.
             var counter = new PersistentCounter(0, adapter);
@@ -102,7 +102,9 @@ namespace Fram3.UI.Tests.GlobalState
         private sealed class PersistentCounter : PersistentStore<int>
         {
             public PersistentCounter(int initial, IPersistenceAdapter<int> adapter)
-                : base(initial, adapter) { }
+                : base(initial, adapter)
+            {
+            }
 
             public void Increment() => Emit(State + 1);
             public void SetTo(int v) => Emit(v);

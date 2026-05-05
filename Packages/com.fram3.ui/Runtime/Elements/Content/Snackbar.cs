@@ -62,7 +62,7 @@ namespace Fram3.UI.Elements.Content
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new SnackbarState();
 
-        private sealed class SnackbarState : Fram3.UI.Core.State<Snackbar>
+        private sealed class SnackbarState : State<Snackbar>
         {
             public override Element Build(BuildContext context)
             {
@@ -98,7 +98,7 @@ namespace Fram3.UI.Elements.Content
                                 FontSize: theme.FontSize
                             ))
                         },
-                        actionButton,
+                        actionButton
                     }
                     : new Element[]
                     {
@@ -108,7 +108,7 @@ namespace Fram3.UI.Elements.Content
                                 Color: textColor,
                                 FontSize: theme.FontSize
                             ))
-                        },
+                        }
                     };
 
                 return new Container(

@@ -41,7 +41,7 @@ namespace Fram3.UI.Elements.State
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new CubitBuilderState();
 
-        private sealed class CubitBuilderState : Fram3.UI.Core.State<CubitBuilder<TCubit, TState>>
+        private sealed class CubitBuilderState : State<CubitBuilder<TCubit, TState>>
         {
             private TCubit? _cubit;
             private Action<TState>? _listener;

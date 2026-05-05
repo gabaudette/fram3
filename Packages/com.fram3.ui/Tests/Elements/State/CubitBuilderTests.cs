@@ -24,7 +24,9 @@ namespace Fram3.UI.Tests.Elements.State
 
         private sealed class CounterCubit : Cubit<int>
         {
-            public CounterCubit(int initial = 0) : base(initial) { }
+            public CounterCubit(int initial = 0) : base(initial)
+            {
+            }
 
             public void Increment() => Emit(State + 1);
             public void SetTo(int v) => Emit(v);
@@ -34,7 +36,8 @@ namespace Fram3.UI.Tests.Elements.State
         public void Constructor_NullBuilder_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new CubitBuilder<CounterCubit, int>(null!));
+                new CubitBuilder<CounterCubit, int>(null!)
+            );
         }
 
         [Test]
@@ -49,7 +52,8 @@ namespace Fram3.UI.Tests.Elements.State
                 {
                     captured = state;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             _expander.Mount(tree, null);
 
@@ -59,11 +63,11 @@ namespace Fram3.UI.Tests.Elements.State
         [Test]
         public void StateChange_SchedulesRebuild()
         {
-            var cubit = new CounterCubit(0);
-
+            var cubit = new CounterCubit();
             var tree = new Provider<CounterCubit>(
                 cubit,
-                new CubitBuilder<CounterCubit, int>((_, _) => new TestLeafElement("leaf")));
+                new CubitBuilder<CounterCubit, int>((_, _) => new TestLeafElement("leaf"))
+            );
 
             var providerNode = _expander.Mount(tree, null);
             var builderNode = providerNode.Children[0];
@@ -77,7 +81,7 @@ namespace Fram3.UI.Tests.Elements.State
         [Test]
         public void StateChange_RebuildPassesUpdatedStateToBuilder()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
             var lastState = -1;
 
             var tree = new Provider<CounterCubit>(
@@ -86,7 +90,8 @@ namespace Fram3.UI.Tests.Elements.State
                 {
                     lastState = state;
                     return new TestLeafElement("leaf");
-                }));
+                })
+            );
 
             _expander.Mount(tree, null);
             lastState = -1;
@@ -104,7 +109,8 @@ namespace Fram3.UI.Tests.Elements.State
 
             var tree = new Provider<CounterCubit>(
                 cubit,
-                new CubitBuilder<CounterCubit, int>((_, _) => new TestLeafElement("leaf")));
+                new CubitBuilder<CounterCubit, int>((_, _) => new TestLeafElement("leaf"))
+            );
 
             var providerNode = _expander.Mount(tree, null);
             var builderNode = providerNode.Children[0];
@@ -118,14 +124,16 @@ namespace Fram3.UI.Tests.Elements.State
         [Test]
         public void Unmount_RemovesListenerFromCubit()
         {
-            var cubit = new CounterCubit(0);
+            var cubit = new CounterCubit();
 
             var tree = new Provider<CounterCubit>(
                 cubit,
-                new CubitBuilder<CounterCubit, int>((_, _) => new TestLeafElement("leaf")));
+                new CubitBuilder<CounterCubit, int>((_, _) => new TestLeafElement("leaf"))
+            );
 
             var providerNode = _expander.Mount(tree, null);
             var builderNode = providerNode.Children[0];
+
             _expander.Unmount(builderNode);
             builderNode.IsDirty = false;
 

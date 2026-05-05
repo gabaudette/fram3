@@ -20,6 +20,7 @@ namespace Fram3.UI.Tests.Mocks
     /// </summary>
     internal sealed class TestRenderLeaf : LeafElement
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Label { get; }
 
         public TestRenderLeaf(string label, Key? key = null) : base(key)

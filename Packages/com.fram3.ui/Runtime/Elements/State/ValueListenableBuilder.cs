@@ -50,7 +50,7 @@ namespace Fram3.UI.Elements.State
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new ValueListenableBuilderState();
 
-        private sealed class ValueListenableBuilderState : Fram3.UI.Core.State<ValueListenableBuilder<T>>
+        private sealed class ValueListenableBuilderState : State<ValueListenableBuilder<T>>
         {
             private Action? _listener;
             private ValueNotifier<T>? _subscribedNotifier;

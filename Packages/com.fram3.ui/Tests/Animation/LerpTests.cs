@@ -49,8 +49,8 @@ namespace Fram3.UI.Tests.Animation
         [Test]
         public void Color_BlendsMidpoint()
         {
-            var a = new FrameColor(0f, 0f, 0f, 1f);
-            var b = new FrameColor(1f, 1f, 1f, 1f);
+            var a = new FrameColor(0f, 0f, 0f);
+            var b = new FrameColor(1f, 1f, 1f);
 
             var result = Lerp.Color(a, b, 0.5f);
 

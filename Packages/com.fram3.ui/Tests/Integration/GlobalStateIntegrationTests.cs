@@ -31,7 +31,7 @@ namespace Fram3.UI.Tests.Integration
             var cubit = new CounterCubit(7);
             int? capturedState = null;
 
-            var builder = new CubitBuilder<CounterCubit, int>((ctx, state) =>
+            var builder = new CubitBuilder<CounterCubit, int>((_, state) =>
             {
                 capturedState = state;
                 return new TestLeafElement(state.ToString());
@@ -50,7 +50,7 @@ namespace Fram3.UI.Tests.Integration
             var cubit = new CounterCubit(0);
             var buildCount = 0;
 
-            var builder = new CubitBuilder<CounterCubit, int>((ctx, state) =>
+            var builder = new CubitBuilder<CounterCubit, int>((_, state) =>
             {
                 buildCount++;
                 return new TestLeafElement(state.ToString());
@@ -73,7 +73,7 @@ namespace Fram3.UI.Tests.Integration
             var cubit = new CounterCubit(0);
             var buildCount = 0;
 
-            var builder = new CubitBuilder<CounterCubit, int>((ctx, state) =>
+            var builder = new CubitBuilder<CounterCubit, int>((_, state) =>
             {
                 buildCount++;
                 return new TestLeafElement(state.ToString());
@@ -100,7 +100,7 @@ namespace Fram3.UI.Tests.Integration
             // Select only the parity (even/odd) of the counter
             var selector = new Selector<CounterCubit, int, bool>(
                 state => state % 2 == 0,
-                (ctx, isEven) =>
+                (_, isEven) =>
                 {
                     buildCount++;
                     return new TestLeafElement(isEven.ToString());
@@ -132,7 +132,7 @@ namespace Fram3.UI.Tests.Integration
 
             var selector = new Selector<CounterCubit, int, int>(
                 state => state,
-                (ctx, val) =>
+                (_, val) =>
                 {
                     buildCount++;
                     return new TestLeafElement(val.ToString());
@@ -157,7 +157,7 @@ namespace Fram3.UI.Tests.Integration
             var host = new TestStatefulElement(() => providerState);
 
             var buildCount = 0;
-            var consumer = new Consumer<string>((ctx, val) =>
+            var consumer = new Consumer<string>((_, val) =>
             {
                 buildCount++;
                 return new TestLeafElement(val);
@@ -184,7 +184,7 @@ namespace Fram3.UI.Tests.Integration
             var host = new TestStatefulElement(() => providerState);
 
             var buildCount = 0;
-            var consumer = new Consumer<string>((ctx, val) =>
+            var consumer = new Consumer<string>((_, val) =>
             {
                 buildCount++;
                 return new TestLeafElement(val);
@@ -204,7 +204,10 @@ namespace Fram3.UI.Tests.Integration
 
         private sealed class CounterCubit : Cubit<int>
         {
-            public CounterCubit(int initial) : base(initial) { }
+            public CounterCubit(int initial) : base(initial)
+            {
+            }
+
             public void Increment() => Emit(State + 1);
             public void IncrementBy(int n) => Emit(State + n);
         }
@@ -216,9 +219,15 @@ namespace Fram3.UI.Tests.Integration
             private T _value;
             private Element? _consumer;
 
-            public SimpleProviderState(T initial) { _value = initial; }
+            public SimpleProviderState(T initial)
+            {
+                _value = initial;
+            }
 
-            public void SetConsumer(Element consumer) { _consumer = consumer; }
+            public void SetConsumer(Element consumer)
+            {
+                _consumer = consumer;
+            }
 
             public void Transition(T newValue)
             {
