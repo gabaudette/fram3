@@ -6,6 +6,7 @@ using Fram3.UI.Elements.Input;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
+using UnityEngine;
 
 namespace Fram3.UI.Storybook.Stories
 {
@@ -49,6 +50,11 @@ namespace Fram3.UI.Storybook.Stories
                     "Snackbar",
                     "Shows a transient message bar triggered by a button, with and without an action label.",
                     () => new SnackbarStory()
+                ),
+                new Story(
+                    "Images & Icons",
+                    "Displays a Texture2D and Sprite loaded via Resources.Load, and an SVG icon loaded via svgPath.",
+                    () => new ImageStory()
                 )
             };
         }
@@ -667,6 +673,75 @@ namespace Fram3.UI.Storybook.Stories
                     return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
                         Children = children.ToArray()
+                    };
+                }
+            }
+        }
+
+        private sealed class ImageStory : StatefulElement
+        {
+            public override State CreateState() => new ImageStoryState();
+
+            private sealed class ImageStoryState : State<ImageStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    var texture = Resources.Load<Texture2D>("Images/sample");
+                    var sprite = Resources.Load<Sprite>("Images/sample-sprite");
+
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Texture2D", BuildTexture(texture, theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Sprite", BuildSprite(sprite, theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("SVG Icon", BuildIcon(theme), theme)
+                        }
+                    };
+                }
+
+                private static Element BuildTexture(Texture2D? texture, Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new FrameImage(source: texture, width: 128f, height: 128f),
+                            SizedBox.FromSize(height: 4f),
+                            new Text("Loaded as Texture2D via Resources.Load",
+                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
+                        }
+                    };
+                }
+
+                private static Element BuildSprite(Sprite? sprite, Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new FrameImage(source: sprite, width: 128f, height: 128f),
+                            SizedBox.FromSize(height: 4f),
+                            new Text("Loaded as Sprite via Resources.Load",
+                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
+                        }
+                    };
+                }
+
+                private static Element BuildIcon(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new Icon(svgPath: "Assets/Fram3Storybook/Icons/sample.svg", width: 64f, height: 64f),
+                            SizedBox.FromSize(height: 4f),
+                            new Text("SVG icon loaded via svgPath",
+                                style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
+                        }
                     };
                 }
             }
