@@ -156,13 +156,8 @@ namespace Fram3.UI.Storybook
                     {
                         Children = new Element[]
                         {
-                            new Text("FRAM3", new TextStyle(
-                                FontSize: theme.FontSizeLarge,
-                                Bold: true,
-                                Color: theme.PrimaryColor,
-                                LetterSpacing: 3f
-                            )),
-                            SizedBox.FromSize(height: 2f),
+                            new Icon(svgPath: "Assets/Fram3Storybook/Icons/fram3-logo.svg", width: 48f, height: 48f),
+                            SizedBox.FromSize(height: 6f),
                             new Text("UI FRAMEWORK", new TextStyle(
                                 FontSize: 10f,
                                 Color: theme.SecondaryColor,
