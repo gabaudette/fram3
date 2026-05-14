@@ -405,6 +405,7 @@ namespace Fram3.UI.Rendering.Internal
                     checkmark.style.borderRightColor = ToUnity(theme.PrimaryColor);
                     checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                     checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                    checkmark.style.color = ToUnity(theme.PrimaryColor);
                 }
             });
 
@@ -682,6 +683,11 @@ namespace Fram3.UI.Rendering.Internal
                             {
                                 checkmark.style.visibility = Visibility.Hidden;
                             }
+
+                            var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
+                            var surfaceColor = ToUnity(theme.SurfaceColor);
+                            item.RegisterCallback<PointerEnterEvent>(_ => item.style.backgroundColor = hoverColor);
+                            item.RegisterCallback<PointerLeaveEvent>(_ => item.style.backgroundColor = surfaceColor);
                         }
                     }).ExecuteLater(1);
                 });
