@@ -92,6 +92,7 @@ namespace Fram3.UI.Elements.Animation
             private Action<float>? _listener;
             private IReadOnlyList<IAnimatedValue>? _previousValues;
             private float _animationProgress;
+            private readonly Dictionary<string, object> _snapshotBuffer = new();
 
             public override void InitState()
             {
@@ -145,21 +146,21 @@ namespace Fram3.UI.Elements.Animation
                 SetState(null);
             }
 
-            private static ImplicitAnimationSnapshot BuildSnapshot(
+            private ImplicitAnimationSnapshot BuildSnapshot(
                 IReadOnlyList<IAnimatedValue> previousValues,
                 IReadOnlyList<IAnimatedValue> targetValues,
                 float t
             )
             {
-                var dict = new Dictionary<string, object>();
+                _snapshotBuffer.Clear();
 
                 foreach (var targetValue in targetValues)
                 {
                     var previousValue = FindByKey(previousValues, targetValue.Key) ?? targetValue;
-                    dict[targetValue.Key] = targetValue.Interpolate(previousValue, t);
+                    _snapshotBuffer[targetValue.Key] = targetValue.Interpolate(previousValue, t);
                 }
 
-                return new ImplicitAnimationSnapshot(dict);
+                return new ImplicitAnimationSnapshot(new Dictionary<string, object>(_snapshotBuffer));
             }
 
             private static IReadOnlyList<IAnimatedValue> SnapshotToValues(
