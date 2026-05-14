@@ -48,6 +48,8 @@ jobs:
           rm -rf fram3-docs/content/api/*.mdx
           cp generated-api/*.mdx fram3-docs/content/api/
           cp generated-api/_meta.js fram3-docs/content/api/_meta.js
+          VERSION=$(node -p "require('./Packages/com.fram3.ui/package.json').version")
+          echo "export const version = \"$VERSION\";" > fram3-docs/content/version.js
 
       - name: Open PR in docs repo
         uses: peter-evans/create-pull-request@v6
