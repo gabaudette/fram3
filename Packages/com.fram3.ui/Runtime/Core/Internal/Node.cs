@@ -44,6 +44,13 @@ namespace Fram3.UI.Core.Internal
         internal bool IsDirty { get; set; }
 
         /// <summary>
+        /// True if this node's last Build call threw an unhandled exception.
+        /// A faulted node renders an <see cref="ErrorPlaceholder"/> and will not be
+        /// re-queued for rebuilds until the parent replaces it with a fresh element.
+        /// </summary>
+        internal bool IsFaulted { get; set; }
+
+        /// <summary>
         /// True once this node has been unmounted. A node that is unmounted may still
         /// be in the rebuild scheduler queue (scheduled before the parent rebuilt and
         /// replaced this subtree). The scheduler skips unmounted nodes.

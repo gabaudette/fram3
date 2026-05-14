@@ -66,7 +66,7 @@ namespace Fram3.UI.Core.Internal
                     continue;
                 }
 
-                if (node.IsUnmounted || !node.IsDirty)
+                if (node.IsUnmounted || !node.IsDirty || node.IsFaulted)
                 {
                     continue;
                 }
