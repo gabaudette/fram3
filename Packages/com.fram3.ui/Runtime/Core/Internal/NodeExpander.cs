@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Fram3.UI.Core.Internal
 {
@@ -134,14 +135,37 @@ namespace Fram3.UI.Core.Internal
                 );
             }
 
-            var built = node.State.Build(node.Context);
-            return new[] { built };
+            try
+            {
+                var built = node.State.Build(node.Context);
+                node.IsFaulted = false;
+                return new[] { built };
+            }
+            catch (Exception ex)
+            {
+                return HandleBuildException(node, ex);
+            }
         }
 
         private IReadOnlyList<Element> ResolveStatelessChildren(StatelessElement stateless, Node node)
         {
-            var built = stateless.Build(node.Context);
-            return new[] { built };
+            try
+            {
+                var built = stateless.Build(node.Context);
+                node.IsFaulted = false;
+                return new[] { built };
+            }
+            catch (Exception ex)
+            {
+                return HandleBuildException(node, ex);
+            }
+        }
+
+        private static IReadOnlyList<Element> HandleBuildException(Node node, Exception ex)
+        {
+            node.IsFaulted = true;
+            Debug.WriteLine($"[fram3] Unhandled exception in Build() for {node.Element.GetType().Name}: {ex}");
+            return new Element[] { new ErrorPlaceholder(ex) };
         }
 
         private void UnmountChildren(Node node)

@@ -63,11 +63,13 @@ namespace Fram3.UI.Tests.Elements.State
         }
 
         [Test]
-        public void Build_NoProvider_ThrowsInvalidOperationException()
+        public void Build_NoProvider_RootNodeIsFaulted()
         {
             var consumer = new Consumer<int>((_, _) => new TestLeafElement("leaf"));
 
-            Assert.Throws<InvalidOperationException>(() => _expander.Mount(consumer, null));
+            var node = _expander.Mount(consumer, null);
+
+            Assert.That(node.IsFaulted, Is.True);
         }
 
         [Test]
