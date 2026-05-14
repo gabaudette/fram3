@@ -104,6 +104,7 @@ namespace UnityEngine.UIElements
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
         public UnityEngine.TextAnchor? unityTextAlign;
         public object? unityFontDefinition;
+        public UnityEngine.Color? unityBackgroundImageTintColor;
         public Position? position;
         public float? opacity;
         public DisplayStyle? display;
@@ -861,6 +862,7 @@ namespace UnityEngine.UIElements
         public UnityEngine.FontStyle? unityFontStyleAndWeight;
         public int? unityTextAlign;
         public object? unityFontDefinition;
+        public UnityEngine.Color? unityBackgroundImageTintColor;
         public Position? position;
         public float? opacity;
     }

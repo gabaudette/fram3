@@ -406,6 +406,7 @@ namespace Fram3.UI.Rendering.Internal
                     checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                     checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
                     checkmark.style.color = ToUnity(theme.PrimaryColor);
+                    checkmark.style.unityBackgroundImageTintColor = ToUnity(theme.PrimaryColor);
                 }
             });
 
