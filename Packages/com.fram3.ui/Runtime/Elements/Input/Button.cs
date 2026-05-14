@@ -45,7 +45,14 @@ namespace Fram3.UI.Elements.Input
 
             public override void DidUpdateElement(StatefulElement oldElement)
             {
-                SetState(null);
+                var old = (Button)oldElement;
+                var wasDisabled = old.OnPressed == null;
+                var isDisabled = Element!.OnPressed == null;
+
+                if (old.Label != Element.Label || wasDisabled != isDisabled)
+                {
+                    SetState(null);
+                }
             }
 
             public override Element Build(BuildContext context)
