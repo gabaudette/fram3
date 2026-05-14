@@ -1240,9 +1240,6 @@ namespace Fram3.UI.Rendering.Internal
         private sealed class ListViewDescriptorHolder
         {
             public IListViewDescriptor? Descriptor;
-#pragma warning disable CS0649
-            public List<int>? IndexList;
-#pragma warning restore CS0649
             public int IndexListCount = -1;
         }
 
@@ -1327,9 +1324,8 @@ namespace Fram3.UI.Rendering.Internal
 #if !FRAM3_PURE_TESTS
                 if (holder.IndexListCount != listView.ItemCount)
                 {
-                    holder.IndexList = BuildIndexList(listView.ItemCount);
                     holder.IndexListCount = listView.ItemCount;
-                    lv.itemsSource = holder.IndexList;
+                    lv.itemsSource = BuildIndexList(listView.ItemCount);
                 }
 #endif
             }
