@@ -400,13 +400,18 @@ namespace Fram3.UI.Rendering.Internal
                 var checkmark = tgl.Q<VisualElement>(className: "unity-toggle__checkmark");
                 if (checkmark != null)
                 {
-                    checkmark.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                    checkmark.style.backgroundImage = default;
                     checkmark.style.borderTopColor = ToUnity(theme.PrimaryColor);
                     checkmark.style.borderRightColor = ToUnity(theme.PrimaryColor);
                     checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                     checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    checkmark.style.color = ToUnity(theme.PrimaryColor);
-                    checkmark.style.unityBackgroundImageTintColor = ToUnity(theme.PrimaryColor);
+
+                    var checkedBg = ToUnity(theme.PrimaryColor);
+                    var uncheckedBg = ToUnity(theme.SurfaceColor);
+                    checkmark.style.backgroundColor = tgl.value ? checkedBg : uncheckedBg;
+
+                    tgl.RegisterValueChangedCallback(evt =>
+                        checkmark.style.backgroundColor = evt.newValue ? checkedBg : uncheckedBg);
                 }
             });
 
