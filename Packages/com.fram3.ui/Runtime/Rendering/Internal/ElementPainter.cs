@@ -1240,6 +1240,9 @@ namespace Fram3.UI.Rendering.Internal
         private sealed class ListViewDescriptorHolder
         {
             public IListViewDescriptor? Descriptor;
+            // ReSharper disable once NotAccessedField.Local
+            public List<int>? IndexList;
+            public int IndexListCount = -1;
         }
 
         private static ListView CreateListView(IListViewDescriptor listViewDescriptor, Theme theme)
@@ -1320,9 +1323,20 @@ namespace Fram3.UI.Rendering.Internal
             if (lv.userData is ListViewDescriptorHolder holder)
             {
                 holder.Descriptor = listView;
+#if !FRAM3_PURE_TESTS
+                if (holder.IndexListCount != listView.ItemCount)
+                {
+                    holder.IndexList = BuildIndexList(listView.ItemCount);
+                    holder.IndexListCount = listView.ItemCount;
+                    lv.itemsSource = holder.IndexList;
+                }
+#endif
             }
 #if !FRAM3_PURE_TESTS
-            lv.itemsSource = BuildIndexList(listView.ItemCount);
+            else
+            {
+                lv.itemsSource = BuildIndexList(listView.ItemCount);
+            }
 #endif
         }
 

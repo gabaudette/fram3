@@ -135,6 +135,7 @@ namespace Fram3.UI.Rendering
         private sealed class NativeAdapter : IRenderAdapter
         {
             private readonly Dictionary<Node, RenderHandle> _handles = new();
+            private readonly Dictionary<Node, Theme> _themeCache = new();
             private VisualElement? _rootContainer;
 
             internal void SetRootContainer(VisualElement container)
@@ -183,6 +184,7 @@ namespace Fram3.UI.Rendering
 
                 handle.NativeElement.RemoveFromHierarchy();
                 _handles.Remove(node);
+                _themeCache.Remove(node);
             }
 
             public void OnRebuilt(Node node)
@@ -192,7 +194,30 @@ namespace Fram3.UI.Rendering
                     return;
                 }
 
+                if (node.Element is ThemeProvider)
+                {
+                    InvalidateThemeCacheUnder(node);
+                }
+
                 ElementPainter.Paint(node.Element, handle.NativeElement, ResolveTheme(node));
+            }
+
+            private void InvalidateThemeCacheUnder(Node node)
+            {
+                foreach (var key in new List<Node>(_themeCache.Keys))
+                {
+                    var current = key;
+                    while (current != null)
+                    {
+                        if (current == node)
+                        {
+                            _themeCache.Remove(key);
+                            break;
+                        }
+
+                        current = current.Parent;
+                    }
+                }
             }
 
             private VisualElement CreateNativeElement(Node node)
@@ -200,19 +225,26 @@ namespace Fram3.UI.Rendering
                 return ElementPainter.CreateNative(node.Element, ResolveTheme(node));
             }
 
-            private static Theme ResolveTheme(Node node)
+            private Theme ResolveTheme(Node node)
             {
+                if (_themeCache.TryGetValue(node, out var cached))
+                {
+                    return cached;
+                }
+
                 var current = node.Parent;
                 while (current != null)
                 {
                     if (current.Element is ThemeProvider provider)
                     {
+                        _themeCache[node] = provider.Theme;
                         return provider.Theme;
                     }
 
                     current = current.Parent;
                 }
 
+                _themeCache[node] = Theme.Default;
                 return Theme.Default;
             }
 
