@@ -229,6 +229,7 @@ namespace UnityEngine.UIElements
         public IReadOnlyList<VisualElement> Children() => _children;
         public VisualElement? Parent => _parent;
         public int childCount => _children.Count;
+        public VisualElement this[int index] => _children[index];
         public string tooltip { get; set; } = string.Empty;
         public object? userData { get; set; }
         public IVisualElementScheduler schedule { get; } = new VisualElementScheduler();
@@ -841,6 +842,7 @@ namespace UnityEngine.UIElements
     {
         public StyleSheet style { get; } = new StyleSheet();
         public int childCount => 0;
+        public VisualElement this[int index] => throw new System.IndexOutOfRangeException();
         public string tooltip { get; set; } = string.Empty;
         public void Add(VisualElement child) { }
         public void Clear() { }

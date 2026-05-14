@@ -826,6 +826,16 @@ namespace Fram3.UI.Rendering.Internal
             {
                 toggle.label = frameToggle.Label;
             }
+
+            var checkmark = toggle.Q<VisualElement>(className: "unity-toggle__checkmark");
+            if (checkmark != null)
+            {
+                checkmark.style.backgroundImage = default;
+                if (checkmark.childCount > 0)
+                {
+                    checkmark[0].style.visibility = toggle.value ? Visibility.Visible : Visibility.Hidden;
+                }
+            }
         }
 
         private static void PaintSlider(FrameSlider frameSlider, Slider slider)
