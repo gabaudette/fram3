@@ -113,6 +113,8 @@ namespace UnityEngine.UIElements
         public WhiteSpace? whiteSpace;
         public float? left;
         public float? top;
+        public float? right;
+        public float? bottom;
         public Visibility? visibility;
     }
 
@@ -231,6 +233,8 @@ namespace UnityEngine.UIElements
         public object? userData { get; set; }
         public IVisualElementScheduler schedule { get; } = new VisualElementScheduler();
         public IPanel? panel { get; set; }
+        public event Action<MeshGenerationContext> generateVisualContent = delegate { };
+        public Rect contentRect => default;
 
         public T? Q<T>(string? name = null, string? className = null) where T : VisualElement => null;
 
@@ -672,6 +676,29 @@ namespace UnityEngine.UIElements
 
         public IVisualElementScheduledItem Execute(Action task) => new NopItem();
     }
+
+    public enum LineCap { Butt, Round, Square }
+
+    public sealed class Painter2D
+    {
+        public UnityEngine.Color strokeColor { get; set; }
+        public float lineWidth { get; set; }
+        public LineCap lineCap { get; set; }
+        public void BeginPath() { }
+        public void MoveTo(UnityEngine.Vector2 pos) { }
+        public void LineTo(UnityEngine.Vector2 pos) { }
+        public void Stroke() { }
+    }
+
+    public sealed class MeshGenerationContext
+    {
+        public Painter2D painter2D => new Painter2D();
+    }
+
+    public struct Rect
+    {
+        public float x, y, width, height;
+    }
 }
 
 namespace UnityEngine
@@ -867,6 +894,10 @@ namespace UnityEngine.UIElements
         public object? backgroundImage;
         public Position? position;
         public float? opacity;
+        public float? left;
+        public float? top;
+        public float? right;
+        public float? bottom;
     }
 
     public struct StyleLength
@@ -907,6 +938,8 @@ namespace UnityEngine.UIElements
         public float lineWidth { get; set; }
         public LineCap lineCap { get; set; }
         public void BeginPath() { }
+        public void MoveTo(UnityEngine.Vector2 pos) { }
+        public void LineTo(UnityEngine.Vector2 pos) { }
         public void Arc(UnityEngine.Vector2 center, float radius, float startAngle, float endAngle) { }
         public void Stroke() { }
     }
