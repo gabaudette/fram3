@@ -1240,8 +1240,9 @@ namespace Fram3.UI.Rendering.Internal
         private sealed class ListViewDescriptorHolder
         {
             public IListViewDescriptor? Descriptor;
-            // ReSharper disable once NotAccessedField.Local
+#pragma warning disable CS0649
             public List<int>? IndexList;
+#pragma warning restore CS0649
             public int IndexListCount = -1;
         }
 
