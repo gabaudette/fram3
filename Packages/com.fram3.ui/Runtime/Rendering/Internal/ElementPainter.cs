@@ -366,11 +366,40 @@ namespace Fram3.UI.Rendering.Internal
                     return;
                 }
 
+                checkmark.style.backgroundImage = default;
                 checkmark.style.backgroundColor = ToUnity(theme.SurfaceColor);
                 checkmark.style.borderTopColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+
+                var tick = new VisualElement();
+                tick.style.position = Position.Absolute;
+                tick.style.left = 0f;
+                tick.style.top = 0f;
+                tick.style.right = 0f;
+                tick.style.bottom = 0f;
+                tick.style.visibility = toggle.value ? Visibility.Visible : Visibility.Hidden;
+                checkmark.Add(tick);
+
+                var strokeColor = ToUnity(theme.PrimaryColor);
+                tick.generateVisualContent += ctx =>
+                {
+                    var p = ctx.painter2D;
+                    var w = tick.contentRect.width;
+                    var h = tick.contentRect.height;
+                    p.strokeColor = strokeColor;
+                    p.lineWidth = 2f;
+                    p.lineCap = LineCap.Round;
+                    p.BeginPath();
+                    p.MoveTo(new UnityEngine.Vector2(w * 0.15f, h * 0.5f));
+                    p.LineTo(new UnityEngine.Vector2(w * 0.4f, h * 0.75f));
+                    p.LineTo(new UnityEngine.Vector2(w * 0.85f, h * 0.25f));
+                    p.Stroke();
+                };
+
+                toggle.RegisterValueChangedCallback(evt =>
+                    tick.style.visibility = evt.newValue ? Visibility.Visible : Visibility.Hidden);
             });
 
             if (frameToggle.OnChanged == null)
