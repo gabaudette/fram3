@@ -373,13 +373,19 @@ namespace Fram3.UI.Rendering.Internal
                 checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
 
-                var tick = new VisualElement();
-                tick.style.position = Position.Absolute;
-                tick.style.left = 0f;
-                tick.style.top = 0f;
-                tick.style.right = 0f;
-                tick.style.bottom = 0f;
-                tick.style.visibility = toggle.value ? Visibility.Visible : Visibility.Hidden;
+                var tick = new VisualElement
+                {
+                    style =
+                    {
+                        position = Position.Absolute,
+                        left = 0f,
+                        top = 0f,
+                        right = 0f,
+                        bottom = 0f,
+                        visibility = toggle.value ? Visibility.Visible : Visibility.Hidden
+                    }
+                };
+
                 checkmark.Add(tick);
 
                 var strokeColor = ToUnity(theme.PrimaryColor);
@@ -1171,8 +1177,14 @@ namespace Fram3.UI.Rendering.Internal
             {
                 if (rowIndex > 0 && rowSpacing > 0f)
                 {
-                    var spacer = new VisualElement();
-                    spacer.style.height = rowSpacing;
+                    var spacer = new VisualElement
+                    {
+                        style =
+                        {
+                            height = rowSpacing
+                        }
+                    };
+
                     container.Add(spacer);
                 }
 
@@ -1230,19 +1242,25 @@ namespace Fram3.UI.Rendering.Internal
             public IListViewDescriptor? Descriptor;
         }
 
-        private static ListView CreateListView(IListViewDescriptor listView, Theme theme)
+        private static ListView CreateListView(IListViewDescriptor listViewDescriptor, Theme theme)
         {
-            var holder = new ListViewDescriptorHolder { Descriptor = listView };
+            var holder = new ListViewDescriptorHolder { Descriptor = listViewDescriptor };
 
-            var lv = new ListView
+            var listView = new ListView
             {
-                fixedItemHeight = listView.ItemHeight,
-                selectionType = MapSelectionType(listView.SelectionMode),
+                fixedItemHeight = listViewDescriptor.ItemHeight,
+                selectionType = MapSelectionType(listViewDescriptor.SelectionMode),
                 makeItem = () =>
                 {
-                    var container = new VisualElement();
-                    container.style.flexGrow = 1f;
-                    container.style.alignSelf = Align.Stretch;
+                    var container = new VisualElement
+                    {
+                        style =
+                        {
+                            flexGrow = 1f,
+                            alignSelf = Align.Stretch
+                        }
+                    };
+                    
                     return container;
                 },
                 bindItem = (item, index) =>
@@ -1264,23 +1282,23 @@ namespace Fram3.UI.Rendering.Internal
                 userData = holder
             };
 #if !FRAM3_PURE_TESTS
-            lv.itemsSource = BuildIndexList(listView.ItemCount);
+            listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
 #endif
 
-            lv.style.flexGrow = 1f;
-            lv.style.flexShrink = 1f;
+            listView.style.flexGrow = 1f;
+            listView.style.flexShrink = 1f;
 
-            lv.RegisterCallback<AttachToPanelEvent>(_ =>
-                lv.schedule.Execute(() => ApplyScrollbarTheme(lv, theme)).ExecuteLater(1));
+            listView.RegisterCallback<AttachToPanelEvent>(_ =>
+                listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1));
 
-            if (listView.OnSelectionChangedUntyped == null)
+            if (listViewDescriptor.OnSelectionChangedUntyped == null)
             {
-                return lv;
+                return listView;
             }
 
             {
-                var callback = listView.OnSelectionChangedUntyped;
-                lv.selectionChanged += items =>
+                var callback = listViewDescriptor.OnSelectionChangedUntyped;
+                listView.selectionChanged += items =>
                 {
                     var list = new List<object?>();
                     foreach (var item in items)
@@ -1292,7 +1310,7 @@ namespace Fram3.UI.Rendering.Internal
                 };
             }
 
-            return lv;
+            return listView;
         }
 
         private static void PaintListView(IListViewDescriptor listView, ListView lv)
