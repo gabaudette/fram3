@@ -29,7 +29,6 @@ The following UI elements are not yet implemented:
 - **ShouldRebuild / memo** - no mechanism for elements to short-circuit rebuilds; every dirty ancestor rebuild walks the full subtree
 - **GlobalKey** - no stable cross-tree identity for nodes; cannot imperatively access a node's state or native element from outside its subtree
 - **DidMount hook** - `State` has no `DidMount` lifecycle callback that fires after the first native paint
-- **SetStateIfMounted guard** - calling `SetState` after a state has been unmounted silently enqueues a stale rebuild; no built-in guard
 - **Dark mode tokens** - `Theme` has no built-in light/dark token set; consumers must define their own theme variants
 
 ## Known Performance Limitations
