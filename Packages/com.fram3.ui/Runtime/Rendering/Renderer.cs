@@ -257,17 +257,28 @@ namespace Fram3.UI.Rendering
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
                     var rc = _rootContainer;
+                    // Log immediately (layout not yet resolved - NaN is expected here)
                     UnityEngine.Debug.Log(
-                        $"[Modal] Attached to rootContainer. " +
-                        $"rootContainer type={rc?.GetType().Name} " +
-                        $"childCount={rc?.childCount} " +
-                        $"modal childIdx={rc?.IndexOf(native)} " +
-                        $"modal layout={native.layout} " +
-                        $"modal resolvedPos={native.resolvedStyle.position} " +
-                        $"modal t={native.resolvedStyle.top} l={native.resolvedStyle.left} " +
-                        $"r={native.resolvedStyle.right} b={native.resolvedStyle.bottom} " +
-                        $"w={native.resolvedStyle.width} h={native.resolvedStyle.height}"
+                        $"[Modal/mount] rootContainer type={rc?.GetType().Name} " +
+                        $"rc.childCount={rc?.childCount} modal.childIdx={rc?.IndexOf(native)} " +
+                        $"rc.layout={rc?.layout} " +
+                        $"modal.style.pos={native.style.position} " +
+                        $"modal.style.w={native.style.width} modal.style.h={native.style.height}"
                     );
+                    // Log again after layout resolves
+                    native.RegisterCallback<GeometryChangedEvent>(evt =>
+                    {
+                        UnityEngine.Debug.Log(
+                            $"[Modal/layout] rc.layout={rc?.layout} " +
+                            $"modal.layout={native.layout} " +
+                            $"modal.resolvedW={native.resolvedStyle.width} " +
+                            $"modal.resolvedH={native.resolvedStyle.height} " +
+                            $"modal.childCount={native.childCount} " +
+                            (native.childCount > 0
+                                ? $"firstChild.layout={native[0].layout} firstChild.resolvedW={native[0].resolvedStyle.width} firstChild.resolvedH={native[0].resolvedStyle.height}"
+                                : "no children")
+                        );
+                    });
 #endif
                     return;
                 }

@@ -45,22 +45,20 @@ namespace Fram3.UI.Storybook
         private static void AppendElement(StringBuilder sb, VisualElement el, int depth)
         {
             var indent = new string(' ', depth * 2);
-            var pos = el.resolvedStyle.position;
             var rect = el.layout;
-            var top = el.resolvedStyle.top;
-            var left = el.resolvedStyle.left;
-            var right = el.resolvedStyle.right;
-            var bottom = el.resolvedStyle.bottom;
-            var w = el.resolvedStyle.width;
-            var h = el.resolvedStyle.height;
-            var zi = "(n/a)";
+            var rw = el.resolvedStyle.width;
+            var rh = el.resolvedStyle.height;
+            var pos = el.resolvedStyle.position;
+            var sw = el.style.width;
+            var sh = el.style.height;
+            var childIdx = el.parent?.IndexOf(el);
+            var childOf = el.parent?.childCount;
 
             sb.AppendLine(
-                $"{indent}[{el.GetType().Name}] name={el.name} " +
-                $"pos={pos} layout={rect} " +
-                $"t={top} l={left} r={right} b={bottom} " +
-                $"w={w} h={h} zIndex={zi} " +
-                $"childIdx={el.parent?.IndexOf(el)} of {el.parent?.childCount}"
+                $"{indent}[{el.GetType().Name}] " +
+                $"layout={rect} resolvedW={rw} resolvedH={rh} pos={pos} " +
+                $"styleW={sw} styleH={sh} " +
+                $"idx={childIdx}/{childOf} name={el.name}"
             );
 
             foreach (var child in el.Children())
