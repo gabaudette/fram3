@@ -35,10 +35,10 @@ namespace Fram3.UI.Rendering.Internal
         /// <param name="element">The framework element to produce a native element for.</param>
         /// <param name="theme"></param>
         /// <returns>
-        /// A <c>Label</c> for <see cref="Text"/>, a <c>Button</c> for <see cref="Button"/>,
-        /// a <c>TextField</c> for <see cref="TextField"/>, a <c>Toggle</c> for <see cref="FrameToggle"/>,
+        /// A <c>Label</c> for <see cref="Text"/>, a <c>Button</c> for <see cref="Elements.Input.Button"/>,
+        /// a <c>TextField</c> for <see cref="Elements.Input.TextField"/>, a <c>Toggle</c> for <see cref="FrameToggle"/>,
         /// a <c>Slider</c> for <see cref="FrameSlider"/>, a <c>DropdownField</c> for <see cref="Dropdown"/>,
-        /// a <c>ProgressBar</c> for <see cref="ProgressBar"/>, a <c>ScrollView</c> for <see cref="ScrollView"/>,
+        /// a <c>ProgressBar</c> for <see cref="Elements.Content.ProgressBar"/>, a <c>ScrollView</c> for <see cref="Elements.Content.ScrollView"/>,
         /// an <c>Image</c> for <see cref="FrameImage"/> or <see cref="Icon"/>,
         /// an <c>SpinnerElement</c> for <see cref="Spinner"/>,
         /// or a plain <c>VisualElement</c> for all layout/container/gesture elements.
