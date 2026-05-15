@@ -23,6 +23,12 @@ namespace Fram3.UI.Storybook.Stories
                     () => new BadgeStory()
                 ),
                 new Story(
+                    "Chip",
+                    "A compact, pill-shaped label used to represent an attribute, filter, or selection. " +
+                    "Supports an optional dismiss button for removable chips.",
+                    () => new ChipStory()
+                ),
+                new Story(
                     "Images & Icons",
                     "Displays a Texture2D and Sprite loaded via Resources.Load, and an SVG icon loaded via svgPath.",
                     () => new ImageStory()
@@ -1151,6 +1157,127 @@ namespace Fram3.UI.Storybook.Stories
                     }
 
                     return new Badge(slot, count: count, color: theme.SecondaryColor);
+                }
+            }
+        }
+
+        private sealed class ChipStory : StatefulElement
+        {
+            public override State CreateState() => new ChipStoryState();
+
+            private sealed class ChipStoryState : State<ChipStory>
+            {
+                private List<string> _activeFilters = new List<string> { "Warrior", "Mage", "Ranger" };
+
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
+                        }
+                    };
+                }
+
+                private static Element BuildBasic(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text("Static chip (no dismiss):",
+                                new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Chip("Epic"),
+                            SizedBox.FromSize(height: theme.Spacing * 2f),
+                            new Text("Colored chip:",
+                                new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Chip("Legendary", color: FrameColor.FromHex("#FFD700").WithAlpha(0.2f))
+                        }
+                    };
+                }
+
+                private Element BuildGame(Theme theme)
+                {
+                    var filterColors = new System.Collections.Generic.Dictionary<string, FrameColor>
+                    {
+                        { "Warrior", FrameColor.FromHex("#FF6B6B") },
+                        { "Mage", FrameColor.FromHex("#7B61FF") },
+                        { "Ranger", FrameColor.FromHex("#00D4AA") },
+                        { "Rogue", FrameColor.FromHex("#FFD700") },
+                        { "Healer", FrameColor.FromHex("#FF9F43") }
+                    };
+
+                    var chipElements = new List<Element>();
+                    foreach (var filter in _activeFilters)
+                    {
+                        var captured = filter;
+                        var color = filterColors.ContainsKey(filter)
+                            ? filterColors[filter].WithAlpha(0.2f)
+                            : theme.PrimaryColor.WithAlpha(0.15f);
+
+                        chipElements.Add(new Chip(
+                            captured,
+                            onDeleted: () => SetState(() => _activeFilters.Remove(captured)),
+                            color: color
+                        ));
+                        chipElements.Add(SizedBox.FromSize(width: theme.Spacing));
+                    }
+
+                    var addButtons = new List<Element>();
+                    foreach (var kv in filterColors)
+                    {
+                        if (_activeFilters.Contains(kv.Key))
+                        {
+                            continue;
+                        }
+
+                        var captured = kv.Key;
+                        addButtons.Add(new Button(
+                            label: $"+ {captured}",
+                            onPressed: () => SetState(() => _activeFilters.Add(captured))
+                        ));
+                        addButtons.Add(SizedBox.FromSize(width: theme.Spacing));
+                    }
+
+                    var rows = new List<Element>
+                    {
+                        new Text("Active class filters (tap x to remove):",
+                            new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                        SizedBox.FromSize(height: theme.Spacing)
+                    };
+
+                    if (chipElements.Count > 0)
+                    {
+                        rows.Add(new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                        {
+                            Children = chipElements.ToArray()
+                        });
+                    }
+                    else
+                    {
+                        rows.Add(new Text("No filters active.",
+                            new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.DisabledTextColor)));
+                    }
+
+                    if (addButtons.Count > 0)
+                    {
+                        rows.Add(SizedBox.FromSize(height: theme.Spacing * 2f));
+                        rows.Add(new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                        {
+                            Children = addButtons.ToArray()
+                        });
+                    }
+
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = rows.ToArray()
+                    };
                 }
             }
         }
