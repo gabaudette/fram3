@@ -302,6 +302,12 @@ namespace Fram3.UI.Rendering
                 if (float.IsNaN(w) || float.IsNaN(h)) return;
                 modal.style.width = w;
                 modal.style.height = h;
+                UnityEngine.Debug.Log($"[Modal] Applied size {w}x{h}. childCount={modal.childCount}");
+                for (var i = 0; i < modal.childCount; i++)
+                {
+                    var c = modal[i];
+                    UnityEngine.Debug.Log($"[Modal]   child[{i}] {c.GetType().Name}: resolvedLayout=({c.resolvedStyle.width}x{c.resolvedStyle.height}), flexGrow={c.resolvedStyle.flexGrow}, alignSelf={c.resolvedStyle.alignSelf}, display={c.resolvedStyle.display}, visibility={c.resolvedStyle.visibility}");
+                }
             }
 #endif
         }
