@@ -14,13 +14,10 @@ The following UI elements are not yet implemented:
 - **Avatar** - circular image or initials placeholder
 - **Card** - elevated surface container with optional header and footer
 - **Stepper** - numeric input with increment/decrement buttons
-- **Breadcrumb** - hierarchical navigation path
 - **Rating** - star or icon-based rating input
 - **TreeView** - hierarchical expandable/collapsible list
 - **Table** - columnar data display with optional sorting and row selection
 - **Context Menu** - right-click or long-press popup menu
-- **Autocomplete** - text input with filtered suggestions dropdown
-- **DatePicker** - calendar-based date selection input
 
 ## Missing Infrastructure
 
