@@ -582,8 +582,10 @@ namespace Fram3.UI.Rendering.Internal
                     position = Position.Absolute,
                     top = 0,
                     left = 0,
-                    right = 0,
-                    bottom = 0
+#if !FRAM3_PURE_TESTS
+                    width = Length.Percent(100f),
+                    height = Length.Percent(100f)
+#endif
                 }
             };
 
@@ -636,8 +638,10 @@ namespace Fram3.UI.Rendering.Internal
             native.style.position = Position.Absolute;
             native.style.top = 0;
             native.style.left = 0;
-            native.style.right = 0;
-            native.style.bottom = 0;
+#if !FRAM3_PURE_TESTS
+            native.style.width = Length.Percent(100f);
+            native.style.height = Length.Percent(100f);
+#endif
         }
 
         private static Slider CreateSlider(FrameSlider frameSlider, Theme theme)
