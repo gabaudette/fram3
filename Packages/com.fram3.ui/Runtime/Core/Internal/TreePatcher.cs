@@ -82,15 +82,16 @@ namespace Fram3.UI.Core.Internal
             }
 
             var oldElement = op.ExistingNode.Element;
-
             if (op.NewElement != null)
             {
                 expander.UpdateElement(op.ExistingNode, op.NewElement);
             }
 
-            if (oldElement is StatelessElement oldStateless &&
+            if (
+                oldElement is StatelessElement oldStateless &&
                 op.ExistingNode.Element is StatelessElement newStateless &&
-                !newStateless.ShouldRebuild(oldStateless, newStateless))
+                !newStateless.ShouldRebuild(oldStateless, newStateless)
+            )
             {
                 return;
             }
@@ -116,9 +117,11 @@ namespace Fram3.UI.Core.Internal
 
             InsertOrAppend(parent, op.NewIndex, op.ExistingNode);
 
-            if (oldElement is StatelessElement oldStateless &&
+            if (
+                oldElement is StatelessElement oldStateless &&
                 op.ExistingNode.Element is StatelessElement newStateless &&
-                !newStateless.ShouldRebuild(oldStateless, newStateless))
+                !newStateless.ShouldRebuild(oldStateless, newStateless)
+            )
             {
                 return;
             }
