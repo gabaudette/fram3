@@ -579,7 +579,11 @@ namespace Fram3.UI.Rendering.Internal
             {
                 style =
                 {
-                    position = Position.Absolute
+                    position = Position.Absolute,
+                    top = 0,
+                    left = 0,
+                    right = 0,
+                    bottom = 0
                 }
             };
 
@@ -630,6 +634,10 @@ namespace Fram3.UI.Rendering.Internal
         private static void PaintModal(VisualElement native)
         {
             native.style.position = Position.Absolute;
+            native.style.top = 0;
+            native.style.left = 0;
+            native.style.right = 0;
+            native.style.bottom = 0;
         }
 
         private static Slider CreateSlider(FrameSlider frameSlider, Theme theme)
