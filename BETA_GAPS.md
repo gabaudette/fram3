@@ -10,7 +10,6 @@ The following UI elements are not yet implemented:
 - **Chip** - compact, dismissable label or filter tag
 - **Alert / Dialog** - modal or inline alert with title, message, and actions
 - **Accordion** - collapsible section list
-- **Switch (iOS-style)** - toggle with a sliding thumb, distinct from the checkbox-based Toggle
 - **Avatar** - circular image or initials placeholder
 - **Card** - elevated surface container with optional header and footer
 - **Stepper** - numeric input with increment/decrement buttons
