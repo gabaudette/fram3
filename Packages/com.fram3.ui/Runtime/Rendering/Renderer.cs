@@ -253,11 +253,15 @@ namespace Fram3.UI.Rendering
             {
                 if (node.Element is Modal)
                 {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+                    UnityEngine.Debug.Log($"[Modal] AttachToParent: _rootContainer={((_rootContainer == null) ? "NULL" : _rootContainer.GetType().Name)}, childCount={_rootContainer?.childCount}");
+#endif
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
                     native.schedule.Execute(() => SyncModalSizeToRoot(native));
                     _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
+                    UnityEngine.Debug.Log($"[Modal] Added to rootContainer. native childCount={native.childCount}");
 #endif
                     return;
                 }
@@ -270,6 +274,9 @@ namespace Fram3.UI.Rendering
 
                 if (!_handles.TryGetValue(node.Parent, out var parentHandle))
                 {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+                    UnityEngine.Debug.Log($"[Modal] AttachToParent: no handle for parent {node.Parent.Element.GetType().Name}, child={node.Element.GetType().Name}");
+#endif
                     return;
                 }
 
@@ -284,9 +291,14 @@ namespace Fram3.UI.Rendering
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
             private void SyncModalSizeToRoot(VisualElement modal)
             {
-                if (_rootContainer == null) return;
+                if (_rootContainer == null)
+                {
+                    UnityEngine.Debug.Log("[Modal] SyncModalSizeToRoot: _rootContainer is null");
+                    return;
+                }
                 var w = _rootContainer.resolvedStyle.width;
                 var h = _rootContainer.resolvedStyle.height;
+                UnityEngine.Debug.Log($"[Modal] SyncModalSizeToRoot: root=({w}x{h}), modal childCount={modal.childCount}");
                 if (float.IsNaN(w) || float.IsNaN(h)) return;
                 modal.style.width = w;
                 modal.style.height = h;
