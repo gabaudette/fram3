@@ -2,28 +2,15 @@
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Elements.Content;
-using Fram3.UI.Elements.Layout;
-using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
 using Fram3.UI.Tests.Mocks;
 using NUnit.Framework;
-using StylingTheme = Fram3.UI.Styling.Theme;
 
 namespace Fram3.UI.Tests.Elements.Content
 {
     [TestFixture]
     internal sealed class BadgeTests
     {
-        private RebuildScheduler _scheduler = null!;
-        private NodeExpander _expander = null!;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _scheduler = new RebuildScheduler();
-            _expander = new NodeExpander(_scheduler);
-        }
-
         [Test]
         public void Constructor_StoresChild()
         {
@@ -76,54 +63,31 @@ namespace Fram3.UI.Tests.Elements.Content
         }
 
         [Test]
-        public void Build_ReturnsStack()
+        public void GetChildren_ReturnsChild()
         {
             var child = new TestLeafElement("child");
             var badge = new Badge(child);
-            Element? built = null;
 
-            var tree = new ThemeProvider(
-                StylingTheme.Default,
-                new TestStatelessElement(ctx =>
-                {
-                    built = badge.Build(ctx);
-                    return new TestLeafElement("leaf");
-                })
-            );
-
-            _expander.Mount(tree, null);
-
-            Assert.That(built, Is.InstanceOf<Stack>());
+            Assert.That(badge.GetChildren(), Is.EqualTo(new[] { child }));
         }
 
         [Test]
-        public void Build_StackContainsChild()
+        public void GetChildren_ReturnsSingleChild()
         {
-            var child = new TestLeafElement("child");
-            var badge = new Badge(child);
-            Stack? stack = null;
+            var badge = new Badge(new TestLeafElement("child"), count: 3);
 
-            var tree = new ThemeProvider(
-                StylingTheme.Default,
-                new TestStatelessElement(ctx =>
-                {
-                    stack = (Stack)badge.Build(ctx);
-                    return new TestLeafElement("leaf");
-                })
-            );
-
-            _expander.Mount(tree, null);
-
-            Assert.That(stack, Is.Not.Null);
-            Assert.That(stack!.GetChildren(), Does.Contain(child));
+            Assert.That(badge.GetChildren(), Has.Count.EqualTo(1));
         }
 
         [Test]
-        public void GetChildren_ReturnsEmpty()
+        public void Mounts_WithinTree_WithoutThrowing()
         {
-            var badge = new Badge(new TestLeafElement("child"));
+            var scheduler = new RebuildScheduler();
+            var expander = new NodeExpander(scheduler);
+            var child = new TestLeafElement("icon");
+            var badge = new Badge(child, count: 5);
 
-            Assert.That(badge.GetChildren(), Is.Empty);
+            Assert.DoesNotThrow(() => expander.Mount(badge, null));
         }
     }
 }
