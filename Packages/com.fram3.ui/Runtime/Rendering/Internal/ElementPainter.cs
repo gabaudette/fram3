@@ -1129,7 +1129,7 @@ namespace Fram3.UI.Rendering.Internal
 
             var pipHolder = BuildBadgePip(badge, theme);
             wrapper.userData = pipHolder;
-            wrapper.Add(pipHolder.Pip);
+            wrapper.RegisterCallback<AttachToPanelEvent>(_ => wrapper.Add(pipHolder.Pip));
             return wrapper;
         }
 
@@ -1145,6 +1145,10 @@ namespace Fram3.UI.Rendering.Internal
                 var label = badge.Count > 99 ? "99+" : badge.Count?.ToString() ?? string.Empty;
                 holder.PipLabel.text = label;
             }
+
+#if !FRAM3_PURE_TESTS
+            pip.BringToFront();
+#endif
         }
 
         private static BadgePipHolder BuildBadgePip(Badge badge, Theme theme)
