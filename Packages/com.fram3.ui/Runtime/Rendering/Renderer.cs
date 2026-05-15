@@ -256,6 +256,18 @@ namespace Fram3.UI.Rendering
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
+                    var rc = _rootContainer;
+                    UnityEngine.Debug.Log(
+                        $"[Modal] Attached to rootContainer. " +
+                        $"rootContainer type={rc?.GetType().Name} " +
+                        $"childCount={rc?.childCount} " +
+                        $"modal childIdx={rc?.IndexOf(native)} " +
+                        $"modal layout={native.layout} " +
+                        $"modal resolvedPos={native.resolvedStyle.position} " +
+                        $"modal t={native.resolvedStyle.top} l={native.resolvedStyle.left} " +
+                        $"r={native.resolvedStyle.right} b={native.resolvedStyle.bottom} " +
+                        $"w={native.resolvedStyle.width} h={native.resolvedStyle.height}"
+                    );
 #endif
                     return;
                 }
