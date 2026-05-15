@@ -87,6 +87,8 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateImage(image);
                 case Icon icon:
                     return CreateIcon(icon);
+                case Badge badge:
+                    return CreateBadge(badge, theme);
                 default:
                     switch (element)
                     {
@@ -180,6 +182,9 @@ namespace Fram3.UI.Rendering.Internal
                     break;
                 case Icon icon when native is Image iconImg:
                     PaintIcon(icon, iconImg);
+                    break;
+                case Badge badge when native.userData is BadgePipHolder pipHolder:
+                    PaintBadge(badge, pipHolder, theme);
                     break;
                 default:
                     if (element is IGridElement gridElementPaint)
@@ -1097,6 +1102,123 @@ namespace Fram3.UI.Rendering.Internal
 #if !FRAM3_PURE_TESTS
             ApplyIconSource(icon, img);
 #endif
+        }
+
+        private sealed class BadgePipHolder
+        {
+            public VisualElement Pip { get; }
+            public Label? PipLabel { get; }
+
+            public BadgePipHolder(VisualElement pip, Label? pipLabel)
+            {
+                Pip = pip;
+                PipLabel = pipLabel;
+            }
+        }
+
+        private static VisualElement CreateBadge(Badge badge, Theme theme)
+        {
+            var wrapper = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Relative,
+                    overflow = Overflow.Visible
+                }
+            };
+
+            var pipHolder = BuildBadgePip(badge, theme);
+            wrapper.userData = pipHolder;
+            wrapper.RegisterCallback<AttachToPanelEvent>(_ => wrapper.Add(pipHolder.Pip));
+            return wrapper;
+        }
+
+        private static void PaintBadge(Badge badge, BadgePipHolder holder, Theme theme)
+        {
+            var pipColor = badge.Color ?? theme.ErrorColor;
+            var pip = holder.Pip;
+
+            pip.style.backgroundColor = ToUnity(pipColor);
+
+            if (holder.PipLabel != null)
+            {
+                var label = badge.Count > 99 ? "99+" : badge.Count?.ToString() ?? string.Empty;
+                holder.PipLabel.text = label;
+            }
+
+#if !FRAM3_PURE_TESTS
+            pip.BringToFront();
+#endif
+        }
+
+        private static BadgePipHolder BuildBadgePip(Badge badge, Theme theme)
+        {
+            var pipColor = badge.Color ?? theme.ErrorColor;
+            var pipDiameter = theme.Spacing * 2f;
+            var pipRadius = pipDiameter * 0.5f;
+
+            if (badge.Count == null)
+            {
+                var dot = new VisualElement
+                {
+                    style =
+                    {
+                        position = Position.Absolute,
+                        top = -pipRadius * 0.5f,
+                        right = -pipRadius * 0.5f,
+                        width = pipRadius,
+                        height = pipRadius,
+                        borderTopLeftRadius = pipRadius,
+                        borderTopRightRadius = pipRadius,
+                        borderBottomLeftRadius = pipRadius,
+                        borderBottomRightRadius = pipRadius,
+                        backgroundColor = ToUnity(pipColor)
+                    }
+                };
+                return new BadgePipHolder(dot, null);
+            }
+
+            var countText = badge.Count > 99 ? "99+" : badge.Count.ToString()!;
+            var pip = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    top = -pipRadius,
+                    right = -pipRadius,
+                    height = pipDiameter,
+                    paddingLeft = theme.Spacing * 0.5f,
+                    paddingRight = theme.Spacing * 0.5f,
+                    borderTopLeftRadius = theme.BorderRadius,
+                    borderTopRightRadius = theme.BorderRadius,
+                    borderBottomLeftRadius = theme.BorderRadius,
+                    borderBottomRightRadius = theme.BorderRadius,
+                    backgroundColor = ToUnity(pipColor),
+                    alignItems = Align.Center,
+                    justifyContent = Justify.Center
+                }
+            };
+
+            var label = new Label(countText)
+            {
+                style =
+                {
+                    color = ToUnity(theme.OnPrimaryColor),
+                    fontSize = theme.FontSizeSmall,
+                    unityFontStyleAndWeight = UnityEngine.FontStyle.Bold,
+                    paddingTop = 0f,
+                    paddingBottom = 0f,
+                    paddingLeft = 0f,
+                    paddingRight = 0f,
+                    marginTop = 0f,
+                    marginBottom = 0f,
+                    marginLeft = 0f,
+                    marginRight = 0f
+                }
+            };
+
+            pip.Add(label);
+            return new BadgePipHolder(pip, label);
         }
 
 #if !FRAM3_PURE_TESTS

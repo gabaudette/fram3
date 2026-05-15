@@ -6,7 +6,6 @@ This document lists known missing elements, infrastructure gaps, and performance
 
 The following UI elements are not yet implemented:
 
-- **Badge** - numeric or status indicator overlaid on another element
 - **Chip** - compact, dismissable label or filter tag
 - **Alert / Dialog** - modal or inline alert with title, message, and actions
 - **Accordion** - collapsible section list

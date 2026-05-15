@@ -391,13 +391,13 @@ namespace Fram3.UI.Storybook
             {
                 return new Chapter[]
                 {
-                    new Chapter("Theming", ThemeStories.All()),
-                    new Chapter("Layout", LayoutStories.All()),
+                    new Chapter("Animation", AnimationStories.All()),
                     new Chapter("Content", ContentStories.All()),
                     new Chapter("Input", InputStories.All()),
+                    new Chapter("Layout", LayoutStories.All()),
+                    new Chapter("Navigation", NavigationStories.All()),
                     new Chapter("State", StateStories.All()),
-                    new Chapter("Animation", AnimationStories.All()),
-                    new Chapter("Navigation", NavigationStories.All())
+                    new Chapter("Theming", ThemeStories.All())
                 };
             }
         }

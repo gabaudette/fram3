@@ -17,14 +17,30 @@ namespace Fram3.UI.Storybook.Stories
             return new Story[]
             {
                 new Story(
-                    "Text",
-                    "Renders a string with optional font size, color, weight, style, and letter-spacing overrides.",
-                    () => new TextStory()
+                    "Badge",
+                    "Overlays a colored pip on a child element to show a count or status dot. " +
+                    "Common on inventory slots, ability icons, and minimap markers.",
+                    () => new BadgeStory()
+                ),
+                new Story(
+                    "Images & Icons",
+                    "Displays a Texture2D and Sprite loaded via Resources.Load, and an SVG icon loaded via svgPath.",
+                    () => new ImageStory()
+                ),
+                new Story(
+                    "ListView",
+                    "Virtualized list with search, class filter, and pagination over a roster of game characters.",
+                    BuildListView
                 ),
                 new Story(
                     "ProgressBar",
                     "Shows a bounded progress value between a min and max, with an optional title label above the track.",
                     () => new ProgressBarStory()
+                ),
+                new Story(
+                    "Snackbar",
+                    "Shows a transient message bar triggered by a button, with and without an action label.",
+                    () => new SnackbarStory()
                 ),
                 new Story(
                     "Spinner",
@@ -38,23 +54,13 @@ namespace Fram3.UI.Storybook.Stories
                     () => new TabViewStory()
                 ),
                 new Story(
-                    "ListView",
-                    "Virtualized list with search, class filter, and pagination over a roster of game characters.",
-                    BuildListView
+                    "Text",
+                    "Renders a string with optional font size, color, weight, style, and letter-spacing overrides.",
+                    () => new TextStory()
                 ),
                 new Story(
                     "Tooltip", "Attaches a plain-text tooltip to its child that appears on hover.",
                     () => new TooltipStory()
-                ),
-                new Story(
-                    "Snackbar",
-                    "Shows a transient message bar triggered by a button, with and without an action label.",
-                    () => new SnackbarStory()
-                ),
-                new Story(
-                    "Images & Icons",
-                    "Displays a Texture2D and Sprite loaded via Resources.Load, and an SVG icon loaded via svgPath.",
-                    () => new ImageStory()
                 )
             };
         }
@@ -946,7 +952,7 @@ namespace Fram3.UI.Storybook.Stories
                                                     FontSize: theme.FontSize,
                                                     Color: theme.PrimaryTextColor
                                                 )),
-                                                new Text(c.Class, new TextStyle(
+                                                 new Text(c.Class, new TextStyle(
                                                     FontSize: theme.FontSizeSmall,
                                                     Color: theme.SecondaryTextColor
                                                 ))
@@ -993,6 +999,158 @@ namespace Fram3.UI.Storybook.Stories
                             )
                         }
                     };
+                }
+            }
+        }
+
+        private sealed class BadgeStory : StatefulElement
+        {
+            public override State CreateState() => new BadgeStoryState();
+
+            private sealed class BadgeStoryState : State<BadgeStory>
+            {
+                private int _notifications = 3;
+
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Dot badge", BuildDot(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Count badge", BuildCount(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example — Inventory slot", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildDot(Theme theme)
+                {
+                    return new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    {
+                        Children = new Element[]
+                        {
+                            new Badge(
+                                new Container(
+                                    width: theme.Spacing * 5f,
+                                    height: theme.Spacing * 5f,
+                                    decoration: new BoxDecoration(
+                                        Color: theme.SurfaceColor,
+                                        Border: new Border(theme.InputBorderColor, 1f),
+                                        BorderRadius: BorderRadius.All(theme.BorderRadius)
+                                    )
+                                )
+                            ),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Text("Dot badge — no count", new TextStyle(
+                                FontSize: theme.FontSize,
+                                Color: theme.SecondaryTextColor
+                            ))
+                        }
+                    };
+                }
+
+                private static Element BuildCount(Theme theme)
+                {
+                    return new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    {
+                        Children = new Element[]
+                        {
+                            new Badge(
+                                new Container(
+                                    width: theme.Spacing * 5f,
+                                    height: theme.Spacing * 5f,
+                                    decoration: new BoxDecoration(
+                                        Color: theme.SurfaceColor,
+                                        Border: new Border(theme.InputBorderColor, 1f),
+                                        BorderRadius: BorderRadius.All(theme.BorderRadius)
+                                    )
+                                ),
+                                count: 42
+                            ),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Badge(
+                                new Container(
+                                    width: theme.Spacing * 5f,
+                                    height: theme.Spacing * 5f,
+                                    decoration: new BoxDecoration(
+                                        Color: theme.SurfaceColor,
+                                        Border: new Border(theme.InputBorderColor, 1f),
+                                        BorderRadius: BorderRadius.All(theme.BorderRadius)
+                                    )
+                                ),
+                                count: 150
+                            ),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Text("42 and 99+ capped", new TextStyle(
+                                FontSize: theme.FontSize,
+                                Color: theme.SecondaryTextColor
+                            ))
+                        }
+                    };
+                }
+
+                private Element BuildGame(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new Text(
+                                "Inventory slots with pending notifications. Press the button to add more.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            ),
+                            SizedBox.FromSize(height: theme.Spacing * 2f),
+                            new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                            {
+                                Children = new Element[]
+                                {
+                                    BuildSlot(theme, "Sword", _notifications),
+                                    SizedBox.FromSize(width: theme.Spacing),
+                                    BuildSlot(theme, "Shield", 0),
+                                    SizedBox.FromSize(width: theme.Spacing),
+                                    BuildSlot(theme, "Potion", 99),
+                                    SizedBox.FromSize(width: theme.Spacing * 3f),
+                                    new Button(
+                                        label: "+ Alert",
+                                        onPressed: () => SetState(() => _notifications++)
+                                    )
+                                }
+                            }
+                        }
+                    };
+                }
+
+                private static Element BuildSlot(Theme theme, string label, int count)
+                {
+                    var slot = new Container(
+                        width: theme.Spacing * 7f,
+                        height: theme.Spacing * 7f,
+                        decoration: new BoxDecoration(
+                            Color: theme.SurfaceColor,
+                            Border: new Border(theme.InputBorderColor, 1f),
+                            BorderRadius: BorderRadius.All(theme.BorderRadius)
+                        )
+                    )
+                    {
+                        Child = new Center
+                        {
+                            Child = new Text(label, new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: theme.PrimaryTextColor
+                            ))
+                        }
+                    };
+
+                    if (count <= 0)
+                    {
+                        return slot;
+                    }
+
+                    return new Badge(slot, count: count, color: theme.SecondaryColor);
                 }
             }
         }

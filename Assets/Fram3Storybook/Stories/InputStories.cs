@@ -21,39 +21,9 @@ namespace Fram3.UI.Storybook.Stories
                     () => new ButtonStory()
                 ),
                 new Story(
-                    "TextField",
-                    "A single- or multi-line text input with optional placeholder, initial value, and read-only mode.",
-                    () => new TextFieldStory()
-                ),
-                new Story(
-                    "PasswordField",
-                    "A text input that masks its characters; behaves identically to TextField but with a hidden-text display.",
-                    () => new PasswordFieldStory()
-                ),
-                new Story(
                     "Checkbox",
                     "A binary toggle rendered as a checkbox, with an optional text label placed beside it.",
                     () => new CheckboxStory()
-                ),
-                new Story(
-                    "FrameToggle",
-                    "A binary toggle rendered as a switch, with an optional text label; functionally equivalent to Checkbox with a different visual style.",
-                    () => new ToggleStory()
-                ),
-                new Story(
-                    "FrameSlider",
-                    "A continuous value picker that slides between a minimum and maximum, with an optional label.",
-                    () => new SliderStory()
-                ),
-                new Story(
-                    "MinMaxSlider",
-                    "A dual-handle slider for selecting a numeric range; both the lower and upper bound are independently draggable.",
-                    () => new MinMaxSliderStory()
-                ),
-                new Story(
-                    "RadioGroup",
-                    "A list of mutually exclusive options rendered as radio buttons; at most one option can be selected at a time.",
-                    () => new RadioGroupStory()
                 ),
                 new Story(
                     "Dropdown",
@@ -61,19 +31,49 @@ namespace Fram3.UI.Storybook.Stories
                     () => new DropdownStory()
                 ),
                 new Story(
-                    "IntField",
-                    "A numeric input constrained to integers, with an optional label and initial value.",
-                    () => new IntFieldStory()
-                ),
-                new Story(
                     "FloatField",
                     "A numeric input that accepts floating-point values, with an optional label and initial value.",
                     () => new FloatFieldStory()
                 ),
                 new Story(
+                    "FrameSlider",
+                    "A continuous value picker that slides between a minimum and maximum, with an optional label.",
+                    () => new SliderStory()
+                ),
+                new Story(
+                    "FrameToggle",
+                    "A binary toggle rendered as a switch, with an optional text label; functionally equivalent to Checkbox with a different visual style.",
+                    () => new ToggleStory()
+                ),
+                new Story(
+                    "IntField",
+                    "A numeric input constrained to integers, with an optional label and initial value.",
+                    () => new IntFieldStory()
+                ),
+                new Story(
+                    "MinMaxSlider",
+                    "A dual-handle slider for selecting a numeric range; both the lower and upper bound are independently draggable.",
+                    () => new MinMaxSliderStory()
+                ),
+                new Story(
+                    "PasswordField",
+                    "A text input that masks its characters; behaves identically to TextField but with a hidden-text display.",
+                    () => new PasswordFieldStory()
+                ),
+                new Story(
+                    "RadioGroup",
+                    "A list of mutually exclusive options rendered as radio buttons; at most one option can be selected at a time.",
+                    () => new RadioGroupStory()
+                ),
+                new Story(
                     "Settings Form",
                     "A complete game settings panel with Audio, Graphics, and Gameplay sections demonstrating sliders, toggles, and dropdowns working together.",
                     BuildSettingsForm
+                ),
+                new Story(
+                    "TextField",
+                    "A single- or multi-line text input with optional placeholder, initial value, and read-only mode.",
+                    () => new TextFieldStory()
                 ),
             };
         }

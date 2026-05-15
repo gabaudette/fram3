@@ -17,22 +17,16 @@ namespace Fram3.UI.Storybook.Stories
             return new Story[]
             {
                 new Story(
-                    "Provider / Consumer",
-                    "Injects an arbitrary value into a subtree via Provider and reads" +
-                    " the nearest matching value back out via Consumer.",
-                    BuildProviderConsumer
-                ),
-                new Story(
-                    "ValueListenableBuilder",
-                    "Rebuilds its subtree whenever a ValueNotifier's value changes," +
-                    " enabling lightweight reactive state without a full cubit.",
-                    BuildValueListenable
-                ),
-                new Story(
                     "CubitBuilder",
                     "Connects a Cubit to the element tree and rebuilds automatically" +
                     " each time the cubit emits a new state.",
                     BuildCubitBuilder
+                ),
+                new Story(
+                    "Provider / Consumer",
+                    "Injects an arbitrary value into a subtree via Provider and reads" +
+                    " the nearest matching value back out via Consumer.",
+                    BuildProviderConsumer
                 ),
                 new Story(
                     "Selector",
@@ -45,6 +39,12 @@ namespace Fram3.UI.Storybook.Stories
                     "A Redux-style global store: dispatches typed actions through a pure reducer function" +
                     " and exposes the resulting state.",
                     BuildStore
+                ),
+                new Story(
+                    "ValueListenableBuilder",
+                    "Rebuilds its subtree whenever a ValueNotifier's value changes," +
+                    " enabling lightweight reactive state without a full cubit.",
+                    BuildValueListenable
                 )
             };
         }
