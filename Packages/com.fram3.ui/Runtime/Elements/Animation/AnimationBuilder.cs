@@ -136,7 +136,7 @@ namespace Fram3.UI.Elements.Animation
 
             private void OnTick(float value)
             {
-                SetState(null);
+                SetStateIfMounted(null);
             }
         }
     }
