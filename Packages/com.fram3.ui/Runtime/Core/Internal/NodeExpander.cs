@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Fram3.UI.Core;
 
 namespace Fram3.UI.Core.Internal
 {
@@ -42,6 +43,12 @@ namespace Fram3.UI.Core.Internal
             ExpandChildren(node);
             _adapter?.OnMounted(node);
             node.State?.DidMount();
+
+            if (element.Key is GlobalKey globalKey)
+            {
+                GlobalKey.Register(globalKey, node);
+            }
+
             return node;
         }
 
@@ -52,6 +59,12 @@ namespace Fram3.UI.Core.Internal
         internal void Unmount(Node node)
         {
             node.MarkUnmounted();
+
+            if (node.Element.Key is GlobalKey globalKey)
+            {
+                GlobalKey.Unregister(globalKey);
+            }
+
             _adapter?.OnUnmounting(node);
             UnmountChildren(node);
             DisposeState(node);
