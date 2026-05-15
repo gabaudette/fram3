@@ -254,6 +254,9 @@ namespace Fram3.UI.Rendering
                 if (node.Element is Modal)
                 {
                     _rootContainer?.Add(native);
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+                    native.BringToFront();
+#endif
                     return;
                 }
 
