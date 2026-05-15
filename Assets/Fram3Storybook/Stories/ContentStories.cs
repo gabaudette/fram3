@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
@@ -17,6 +18,12 @@ namespace Fram3.UI.Storybook.Stories
             return new Story[]
             {
                 new Story(
+                    "Alert",
+                    "An inline notification surface that displays a severity-tinted title, an optional message, " +
+                    "and optional action buttons. Use Info, Success, Warning, or Error severity.",
+                    () => new AlertStory()
+                ),
+                new Story(
                     "Badge",
                     "Overlays a colored pip on a child element to show a count or status dot. " +
                     "Common on inventory slots, ability icons, and minimap markers.",
@@ -27,6 +34,12 @@ namespace Fram3.UI.Storybook.Stories
                     "A compact, pill-shaped label used to represent an attribute, filter, or selection. " +
                     "Supports an optional dismiss button for removable chips.",
                     () => new ChipStory()
+                ),
+                new Story(
+                    "Dialog",
+                    "A modal overlay dialog with a title, optional body content, and action buttons. " +
+                    "Centered on a dimmed backdrop. Toggled by mounting or unmounting the element.",
+                    () => new DialogStory()
                 ),
                 new Story(
                     "Images & Icons",
@@ -1161,6 +1174,81 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
+        private sealed class AlertStory : StatefulElement
+        {
+            public override State CreateState() => new AlertStoryState();
+
+            private sealed class AlertStoryState : State<AlertStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
+                        }
+                    };
+                }
+
+                private static Element BuildBasic(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new Alert("Information", message: "Your settings have been saved."),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Alert("Success", message: "Character created successfully.", severity: AlertSeverity.Success),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Alert("Warning", message: "Your session will expire in 5 minutes.", severity: AlertSeverity.Warning),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Alert("Error", message: "Failed to connect to the server.", severity: AlertSeverity.Error)
+                        }
+                    };
+                }
+
+                private static Element BuildGame(Theme theme)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new Alert(
+                                "Low Health",
+                                message: "Aric Stormblade is below 20% HP. Use a Health Potion before the next encounter.",
+                                severity: AlertSeverity.Warning
+                            ),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Alert(
+                                "Quest Complete",
+                                message: "You defeated the Goblin King. Reward: 500 XP and the Shadowblade.",
+                                severity: AlertSeverity.Success,
+                                actions: new List<(string, Action)>
+                                {
+                                    ("View Rewards", () => { }),
+                                    ("Continue", () => { })
+                                }
+                            ),
+                            SizedBox.FromSize(height: theme.Spacing),
+                            new Alert(
+                                "Connection Lost",
+                                message: "Lost connection to the game server. Progress from the last checkpoint has been saved.",
+                                severity: AlertSeverity.Error,
+                                actions: new List<(string, Action)>
+                                {
+                                    ("Reconnect", () => { })
+                                }
+                            )
+                        }
+                    };
+                }
+            }
+        }
+
         private sealed class ChipStory : StatefulElement
         {
             public override State CreateState() => new ChipStoryState();
@@ -1285,6 +1373,112 @@ namespace Fram3.UI.Storybook.Stories
                     return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
                     {
                         Children = rows.ToArray()
+                    };
+                }
+            }
+        }
+        private sealed class DialogStory : StatefulElement
+        {
+            public override State CreateState() => new DialogStoryState();
+
+            private sealed class DialogStoryState : State<DialogStory>
+            {
+                private bool _showBasic;
+                private bool _showGame;
+
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Basic", BuildBasic(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example", BuildGame(theme), theme)
+                        }
+                    };
+                }
+
+                private Element BuildBasic(Theme theme)
+                {
+                    var children = new List<Element>
+                    {
+                        new Button(
+                            label: _showBasic ? "Close Dialog" : "Open Dialog",
+                            onPressed: () => SetState(() => _showBasic = !_showBasic)
+                        )
+                    };
+
+                    if (_showBasic)
+                    {
+                        children.Add(SizedBox.FromSize(height: theme.Spacing));
+                        children.Add(new Dialog(
+                            title: "Confirm",
+                            content: new Text(
+                                "Are you sure you want to proceed?",
+                                new TextStyle(Color: theme.PrimaryTextColor)
+                            ),
+                            actions: new List<(string, Action)>
+                            {
+                                ("Cancel", () => SetState(() => _showBasic = false)),
+                                ("OK", () => SetState(() => _showBasic = false))
+                            },
+                            onDismiss: () => SetState(() => _showBasic = false)
+                        ));
+                    }
+
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = children.ToArray()
+                    };
+                }
+
+                private Element BuildGame(Theme theme)
+                {
+                    var children = new List<Element>
+                    {
+                        new Button(
+                            label: _showGame ? "Close Dialog" : "Abandon Quest",
+                            onPressed: () => SetState(() => _showGame = !_showGame)
+                        )
+                    };
+
+                    if (_showGame)
+                    {
+                        children.Add(SizedBox.FromSize(height: theme.Spacing));
+                        children.Add(new Dialog(
+                            title: "Abandon Quest?",
+                            content: new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                            {
+                                Children = new Element[]
+                                {
+                                    new Text(
+                                        "\"Into the Dark Forest\" will be removed from your quest log.",
+                                        new TextStyle(Color: theme.PrimaryTextColor)
+                                    ),
+                                    SizedBox.FromSize(height: theme.Spacing),
+                                    new Text(
+                                        "All progress and collected items will be lost.",
+                                        new TextStyle(
+                                            FontSize: theme.FontSizeSmall,
+                                            Color: theme.SecondaryTextColor
+                                        )
+                                    )
+                                }
+                            },
+                            actions: new List<(string, Action)>
+                            {
+                                ("Keep Quest", () => SetState(() => _showGame = false)),
+                                ("Abandon", () => SetState(() => _showGame = false))
+                            },
+                            onDismiss: () => SetState(() => _showGame = false)
+                        ));
+                    }
+
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = children.ToArray()
                     };
                 }
             }
