@@ -17,14 +17,30 @@ namespace Fram3.UI.Storybook.Stories
             return new Story[]
             {
                 new Story(
-                    "Text",
-                    "Renders a string with optional font size, color, weight, style, and letter-spacing overrides.",
-                    () => new TextStory()
+                    "Badge",
+                    "Overlays a colored pip on a child element to show a count or status dot. " +
+                    "Common on inventory slots, ability icons, and minimap markers.",
+                    () => new BadgeStory()
+                ),
+                new Story(
+                    "Images & Icons",
+                    "Displays a Texture2D and Sprite loaded via Resources.Load, and an SVG icon loaded via svgPath.",
+                    () => new ImageStory()
+                ),
+                new Story(
+                    "ListView",
+                    "Virtualized list with search, class filter, and pagination over a roster of game characters.",
+                    BuildListView
                 ),
                 new Story(
                     "ProgressBar",
                     "Shows a bounded progress value between a min and max, with an optional title label above the track.",
                     () => new ProgressBarStory()
+                ),
+                new Story(
+                    "Snackbar",
+                    "Shows a transient message bar triggered by a button, with and without an action label.",
+                    () => new SnackbarStory()
                 ),
                 new Story(
                     "Spinner",
@@ -38,29 +54,13 @@ namespace Fram3.UI.Storybook.Stories
                     () => new TabViewStory()
                 ),
                 new Story(
-                    "ListView",
-                    "Virtualized list with search, class filter, and pagination over a roster of game characters.",
-                    BuildListView
+                    "Text",
+                    "Renders a string with optional font size, color, weight, style, and letter-spacing overrides.",
+                    () => new TextStory()
                 ),
                 new Story(
                     "Tooltip", "Attaches a plain-text tooltip to its child that appears on hover.",
                     () => new TooltipStory()
-                ),
-                new Story(
-                    "Snackbar",
-                    "Shows a transient message bar triggered by a button, with and without an action label.",
-                    () => new SnackbarStory()
-                ),
-                new Story(
-                    "Images & Icons",
-                    "Displays a Texture2D and Sprite loaded via Resources.Load, and an SVG icon loaded via svgPath.",
-                    () => new ImageStory()
-                ),
-                new Story(
-                    "Badge",
-                    "Overlays a colored pip on a child element to show a count or status dot. " +
-                    "Common on inventory slots, ability icons, and minimap markers.",
-                    () => new BadgeStory()
                 )
             };
         }

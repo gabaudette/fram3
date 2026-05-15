@@ -17,28 +17,28 @@ namespace Fram3.UI.Storybook.Stories
             return new Story[]
             {
                 new Story(
-                    "AnimationBuilder",
-                    "Drives a single animation controller and rebuilds its child on every frame tick, " +
-                    "giving full programmatic control over the animated value.",
-                    BuildAnimationBuilder
-                ),
-                new Story(
                     "AnimatedContainer",
                     "A container whose size, decoration, and padding interpolate smoothly " +
                     "to new values whenever its properties change.",
                     BuildAnimatedContainer
                 ),
                 new Story(
-                    "ImplicitAnimation",
-                    "Animates one or more named values toward their latest targets using " +
-                    "a shared duration and curve, without manual controller management.",
-                    BuildImplicitAnimation
+                    "AnimationBuilder",
+                    "Drives a single animation controller and rebuilds its child on every frame tick, " +
+                    "giving full programmatic control over the animated value.",
+                    BuildAnimationBuilder
                 ),
                 new Story(
                     "Curves",
                     "A library of pre-built easing functions -- Linear, EaseIn, EaseOut, EaseInOut, " +
                     "ElasticOut, and BounceOut -- used to shape animation playback.",
                     BuildCurves
+                ),
+                new Story(
+                    "ImplicitAnimation",
+                    "Animates one or more named values toward their latest targets using " +
+                    "a shared duration and curve, without manual controller management.",
+                    BuildImplicitAnimation
                 ),
             };
         }
