@@ -66,7 +66,6 @@ namespace Fram3.UI.Elements.Content
                 var theme = ThemeConsumer.Of(context);
                 var bgColor = Element!.Color ?? theme.PrimaryColor.WithAlpha(0.15f);
                 var labelColor = theme.PrimaryTextColor;
-                var deleteColor = theme.SecondaryTextColor;
 
                 Element? deleteButton = null;
                 if (Element.OnDeleted != null)
@@ -78,7 +77,7 @@ namespace Fram3.UI.Elements.Content
                         {
                             Child = new Text("x", new TextStyle(
                                 FontSize: theme.FontSizeSmall,
-                                Color: deleteColor,
+                                Color: labelColor,
                                 Bold: true
                             ))
                         }
@@ -102,7 +101,7 @@ namespace Fram3.UI.Elements.Content
                         ))
                     };
 
-                return new Container(
+                var chip = new Container(
                     decoration: new BoxDecoration(
                         Color: bgColor,
                         BorderRadius: BorderRadius.All(theme.BorderRadius)
@@ -117,6 +116,11 @@ namespace Fram3.UI.Elements.Content
                     {
                         Children = children
                     }
+                };
+
+                return new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                {
+                    Children = new Element[] { chip }
                 };
             }
         }

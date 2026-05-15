@@ -1221,12 +1221,16 @@ namespace Fram3.UI.Storybook.Stories
                             ? filterColors[filter].WithAlpha(0.2f)
                             : theme.PrimaryColor.WithAlpha(0.15f);
 
+                        if (chipElements.Count > 0)
+                        {
+                            chipElements.Add(SizedBox.FromSize(width: theme.Spacing));
+                        }
+
                         chipElements.Add(new Chip(
                             captured,
                             onDeleted: () => SetState(() => _activeFilters.Remove(captured)),
                             color: color
                         ));
-                        chipElements.Add(SizedBox.FromSize(width: theme.Spacing));
                     }
 
                     var addButtons = new List<Element>();
@@ -1238,11 +1242,15 @@ namespace Fram3.UI.Storybook.Stories
                         }
 
                         var captured = kv.Key;
+                        if (addButtons.Count > 0)
+                        {
+                            addButtons.Add(SizedBox.FromSize(width: theme.Spacing));
+                        }
+
                         addButtons.Add(new Button(
                             label: $"+ {captured}",
                             onPressed: () => SetState(() => _activeFilters.Add(captured))
                         ));
-                        addButtons.Add(SizedBox.FromSize(width: theme.Spacing));
                     }
 
                     var rows = new List<Element>
