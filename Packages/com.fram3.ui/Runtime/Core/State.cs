@@ -101,6 +101,28 @@ namespace Fram3.UI.Core
             _node?.MarkDirty();
         }
 
+        /// <summary>
+        /// Schedules a rebuild of the subtree rooted at this state's element,
+        /// but only if the state is currently mounted. Does nothing when the state
+        /// has been unmounted. Use this instead of <see cref="SetState"/> in
+        /// async callbacks or event handlers where the state may have been disposed
+        /// before the callback fires.
+        /// </summary>
+        /// <param name="action">
+        /// An action that mutates the state. Executed synchronously before
+        /// the rebuild is scheduled. Not invoked when the state is unmounted.
+        /// </param>
+        public void SetStateIfMounted(Action? action)
+        {
+            if (!Mounted)
+            {
+                return;
+            }
+
+            action?.Invoke();
+            _node?.MarkDirty();
+        }
+
         internal void Mount(Node node)
         {
             _node = node ?? throw new ArgumentNullException(nameof(node));

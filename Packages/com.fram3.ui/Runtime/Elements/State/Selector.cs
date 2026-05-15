@@ -86,7 +86,7 @@ namespace Fram3.UI.Elements.State
                 }
 
                 _lastValue = newValue;
-                SetState(null);
+                SetStateIfMounted(null);
             }
 
             public override Element Build(BuildContext context)

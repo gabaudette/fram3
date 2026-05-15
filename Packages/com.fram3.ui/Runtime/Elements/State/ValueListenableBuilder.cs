@@ -89,7 +89,7 @@ namespace Fram3.UI.Elements.State
 
             private void OnValueChanged()
             {
-                SetState(null);
+                SetStateIfMounted(null);
             }
         }
     }

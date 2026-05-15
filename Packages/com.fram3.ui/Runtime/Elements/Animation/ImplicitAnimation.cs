@@ -143,7 +143,7 @@ namespace Fram3.UI.Elements.Animation
             private void OnTick(float value)
             {
                 _animationProgress = value;
-                SetState(null);
+                SetStateIfMounted(null);
             }
 
             private ImplicitAnimationSnapshot BuildSnapshot(

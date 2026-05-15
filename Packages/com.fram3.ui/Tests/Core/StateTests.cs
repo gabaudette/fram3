@@ -151,5 +151,37 @@ namespace Fram3.UI.Tests.Core
             Assert.That(state.Element, Is.InstanceOf<TestStatefulElement>());
             Assert.That(state.Element?.Config, Is.EqualTo("typed"));
         }
+
+        [Test]
+        public void SetStateIfMounted_WhenMounted_ExecutesActionAndMarksDirty()
+        {
+            var state = CreateMountedState();
+            bool actionCalled = false;
+
+            state.SetStateIfMounted(() => { actionCalled = true; });
+
+            Assert.That(actionCalled, Is.True);
+            Assert.That(state.Context != null && state.Context.Node.IsDirty, Is.True);
+        }
+
+        [Test]
+        public void SetStateIfMounted_WhenUnmounted_DoesNotThrowAndDoesNotExecuteAction()
+        {
+            var state = CreateMountedState();
+            state.Unmount();
+            bool actionCalled = false;
+
+            Assert.DoesNotThrow(() => state.SetStateIfMounted(() => { actionCalled = true; }));
+            Assert.That(actionCalled, Is.False);
+        }
+
+        [Test]
+        public void SetStateIfMounted_WhenUnmounted_WithNullAction_DoesNotThrow()
+        {
+            var state = CreateMountedState();
+            state.Unmount();
+
+            Assert.DoesNotThrow(() => state.SetStateIfMounted(null));
+        }
     }
 }
