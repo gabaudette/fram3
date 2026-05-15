@@ -268,6 +268,11 @@ namespace Fram3.UI.Rendering
                         {
                             var c = native[i];
                             UnityEngine.Debug.Log($"[Modal]   child[{i}] {c.GetType().Name}: resolvedLayout=({c.resolvedStyle.width}x{c.resolvedStyle.height}), flexGrow={c.resolvedStyle.flexGrow}, alignSelf={c.resolvedStyle.alignSelf}");
+                            for (var j = 0; j < c.childCount; j++)
+                            {
+                                var gc = c[j];
+                                UnityEngine.Debug.Log($"[Modal]     grandchild[{j}] {gc.GetType().Name}: resolvedLayout=({gc.resolvedStyle.width}x{gc.resolvedStyle.height}), bg={gc.resolvedStyle.backgroundColor}");
+                            }
                         }
                     });
 #endif
