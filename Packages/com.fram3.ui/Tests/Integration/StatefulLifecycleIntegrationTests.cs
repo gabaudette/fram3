@@ -157,6 +157,65 @@ namespace Fram3.UI.Tests.Integration
 
         // ---- Helpers --------------------------------------------------------------------------
 
+        [Test]
+        public void DidMount_CalledOnce_AfterMount()
+        {
+            var state = new TestState(_ => new TestLeafElement("x"));
+            var stateful = new TestStatefulElement(() => state);
+
+            TreeBuilder.Mount(stateful, _expander);
+
+            Assert.That(state.DidMountCalled, Is.True);
+        }
+
+        [Test]
+        public void DidMount_CalledAfterBuild()
+        {
+            int buildCountAtDidMount = -1;
+            var state = new TrackingState(didMount: s => buildCountAtDidMount = s.BuildCount);
+            var stateful = new TestStatefulElement(() => state);
+
+            TreeBuilder.Mount(stateful, _expander);
+
+            Assert.That(buildCountAtDidMount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void DidMount_NotCalledAgain_OnRebuild()
+        {
+            var state = new TestState(_ => new TestLeafElement("x"));
+            var stateful = new TestStatefulElement(() => state);
+            TreeBuilder.Mount(stateful, _expander);
+
+            state.SetState(null);
+            TreeBuilder.Flush(_scheduler, _expander);
+
+            Assert.That(state.DidMountCalled, Is.True);
+            Assert.That(state.BuildCount, Is.EqualTo(2));
+        }
+
+        private sealed class TrackingState : State
+        {
+            private readonly Action<TrackingState> _didMount;
+            public int BuildCount { get; private set; }
+
+            public TrackingState(Action<TrackingState> didMount)
+            {
+                _didMount = didMount;
+            }
+
+            public override Element Build(BuildContext context)
+            {
+                BuildCount++;
+                return new TestLeafElement("x");
+            }
+
+            public override void DidMount()
+            {
+                _didMount(this);
+            }
+        }
+
         private sealed class ParentConfig
         {
             public string Value;

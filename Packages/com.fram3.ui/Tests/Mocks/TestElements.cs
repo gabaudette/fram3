@@ -79,6 +79,7 @@ namespace Fram3.UI.Tests.Mocks
     internal sealed class TestState : State<TestStatefulElement>
     {
         public bool InitStateCalled { get; private set; }
+        public bool DidMountCalled { get; private set; }
         public bool DisposeCalled { get; private set; }
         public StatefulElement? LastOldElement { get; private set; }
         public int BuildCount { get; private set; }
@@ -93,6 +94,11 @@ namespace Fram3.UI.Tests.Mocks
         public override void InitState()
         {
             InitStateCalled = true;
+        }
+
+        public override void DidMount()
+        {
+            DidMountCalled = true;
         }
 
         public override Element Build(BuildContext context)
