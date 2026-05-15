@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fram3.UI.Animation;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
+using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Rendering.Internal;
@@ -250,6 +251,12 @@ namespace Fram3.UI.Rendering
 
             private void AttachToParent(Node node, VisualElement native)
             {
+                if (node.Element is Modal)
+                {
+                    _rootContainer?.Add(native);
+                    return;
+                }
+
                 if (node.Parent == null)
                 {
                     _rootContainer?.Add(native);

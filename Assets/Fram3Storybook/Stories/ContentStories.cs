@@ -1402,83 +1402,81 @@ namespace Fram3.UI.Storybook.Stories
 
                 private Element BuildBasic(Theme theme)
                 {
-                    var trigger = new Button(
-                        label: "Open Dialog",
-                        onPressed: () => SetState(() => _showBasic = true)
-                    );
-
-                    if (!_showBasic)
+                    var rows = new List<Element>
                     {
-                        return trigger;
+                        new Button(
+                            label: "Open Dialog",
+                            onPressed: () => SetState(() => _showBasic = true)
+                        )
+                    };
+
+                    if (_showBasic)
+                    {
+                        rows.Add(new Dialog(
+                            title: "Confirm",
+                            content: new Text(
+                                "Are you sure you want to proceed?",
+                                new TextStyle(Color: theme.PrimaryTextColor)
+                            ),
+                            actions: new List<(string, Action)>
+                            {
+                                ("Cancel", () => SetState(() => _showBasic = false)),
+                                ("OK", () => SetState(() => _showBasic = false))
+                            },
+                            onDismiss: () => SetState(() => _showBasic = false)
+                        ));
                     }
 
-                    return new Stack
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
-                        Children = new Element[]
-                        {
-                            trigger,
-                            new Dialog(
-                                title: "Confirm",
-                                content: new Text(
-                                    "Are you sure you want to proceed?",
-                                    new TextStyle(Color: theme.PrimaryTextColor)
-                                ),
-                                actions: new List<(string, Action)>
-                                {
-                                    ("Cancel", () => SetState(() => _showBasic = false)),
-                                    ("OK", () => SetState(() => _showBasic = false))
-                                },
-                                onDismiss: () => SetState(() => _showBasic = false)
-                            )
-                        }
+                        Children = rows.ToArray()
                     };
                 }
 
                 private Element BuildGame(Theme theme)
                 {
-                    var trigger = new Button(
-                        label: "Abandon Quest",
-                        onPressed: () => SetState(() => _showGame = true)
-                    );
-
-                    if (!_showGame)
+                    var rows = new List<Element>
                     {
-                        return trigger;
+                        new Button(
+                            label: "Abandon Quest",
+                            onPressed: () => SetState(() => _showGame = true)
+                        )
+                    };
+
+                    if (_showGame)
+                    {
+                        rows.Add(new Dialog(
+                            title: "Abandon Quest?",
+                            content: new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                            {
+                                Children = new Element[]
+                                {
+                                    new Text(
+                                        "\"Into the Dark Forest\" will be removed from your quest log.",
+                                        new TextStyle(Color: theme.PrimaryTextColor)
+                                    ),
+                                    SizedBox.FromSize(height: theme.Spacing),
+                                    new Text(
+                                        "All progress and collected items will be lost.",
+                                        new TextStyle(
+                                            FontSize: theme.FontSizeSmall,
+                                            Color: theme.SecondaryTextColor
+                                        )
+                                    )
+                                }
+                            },
+                            actions: new List<(string, Action)>
+                            {
+                                ("Keep Quest", () => SetState(() => _showGame = false)),
+                                ("Abandon", () => SetState(() => _showGame = false))
+                            },
+                            onDismiss: () => SetState(() => _showGame = false)
+                        ));
                     }
 
-                    return new Stack
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
-                        Children = new Element[]
-                        {
-                            trigger,
-                            new Dialog(
-                                title: "Abandon Quest?",
-                                content: new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
-                                {
-                                    Children = new Element[]
-                                    {
-                                        new Text(
-                                            "\"Into the Dark Forest\" will be removed from your quest log.",
-                                            new TextStyle(Color: theme.PrimaryTextColor)
-                                        ),
-                                        SizedBox.FromSize(height: theme.Spacing),
-                                        new Text(
-                                            "All progress and collected items will be lost.",
-                                            new TextStyle(
-                                                FontSize: theme.FontSizeSmall,
-                                                Color: theme.SecondaryTextColor
-                                            )
-                                        )
-                                    }
-                                },
-                                actions: new List<(string, Action)>
-                                {
-                                    ("Keep Quest", () => SetState(() => _showGame = false)),
-                                    ("Abandon", () => SetState(() => _showGame = false))
-                                },
-                                onDismiss: () => SetState(() => _showGame = false)
-                            )
-                        }
+                        Children = rows.ToArray()
                     };
                 }
             }
