@@ -261,7 +261,15 @@ namespace Fram3.UI.Rendering
                     native.BringToFront();
                     native.schedule.Execute(() => SyncModalSizeToRoot(native));
                     _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
-                    UnityEngine.Debug.Log($"[Modal] Added to rootContainer. native childCount={native.childCount}");
+                    native.RegisterCallback<GeometryChangedEvent>(evt =>
+                    {
+                        UnityEngine.Debug.Log($"[Modal] GeometryChanged on modal: newRect={evt.newRect}");
+                        for (var i = 0; i < native.childCount; i++)
+                        {
+                            var c = native[i];
+                            UnityEngine.Debug.Log($"[Modal]   child[{i}] {c.GetType().Name}: resolvedLayout=({c.resolvedStyle.width}x{c.resolvedStyle.height}), flexGrow={c.resolvedStyle.flexGrow}, alignSelf={c.resolvedStyle.alignSelf}");
+                        }
+                    });
 #endif
                     return;
                 }
