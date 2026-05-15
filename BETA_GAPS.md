@@ -26,7 +26,6 @@ The following UI elements are not yet implemented:
 
 - **Accessibility** - no ARIA roles, focus management, keyboard navigation, or screen reader support
 - **Live theme switching** - changing the active `ThemeProvider` at runtime does not update already-mounted native elements; a full unmount/remount is required
-- **ShouldRebuild / memo** - no mechanism for elements to short-circuit rebuilds; every dirty ancestor rebuild walks the full subtree
 - **GlobalKey** - no stable cross-tree identity for nodes; cannot imperatively access a node's state or native element from outside its subtree
 - **Dark mode tokens** - `Theme` has no built-in light/dark token set; consumers must define their own theme variants
 
