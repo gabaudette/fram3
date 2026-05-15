@@ -44,6 +44,18 @@ namespace Fram3.UI.Core
         }
 
         /// <summary>
+        /// Called once after the first build has completed and the element has been
+        /// painted to the native layer. Override this to perform work that requires
+        /// the element to be present in the rendered tree, such as measuring layout,
+        /// starting animations, or imperatively focusing an input.
+        /// Calling <see cref="SetState"/> or <see cref="SetStateIfMounted"/> here is
+        /// safe and will schedule a single additional rebuild.
+        /// </summary>
+        public virtual void DidMount()
+        {
+        }
+
+        /// <summary>
         /// Describes the UI subtree for the associated stateful element.
         /// Called by the framework whenever this state is marked dirty.
         /// </summary>

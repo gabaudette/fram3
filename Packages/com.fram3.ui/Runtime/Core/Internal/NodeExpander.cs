@@ -41,6 +41,7 @@ namespace Fram3.UI.Core.Internal
 
             ExpandChildren(node);
             _adapter?.OnMounted(node);
+            node.State?.DidMount();
             return node;
         }
 
