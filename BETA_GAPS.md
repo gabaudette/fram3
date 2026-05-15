@@ -24,9 +24,7 @@ The following UI elements are not yet implemented:
 
 ## Missing Infrastructure
 
-- **Accessibility** - no ARIA roles, focus management, keyboard navigation, or screen reader support
-- **Live theme switching** - changing the active `ThemeProvider` at runtime does not update already-mounted native elements; a full unmount/remount is required
-- **Dark mode tokens** - `Theme` has no built-in light/dark token set; consumers must define their own theme variants
+- **Accessibility** - no focus management, keyboard navigation, or screen reader support; deferred to a dedicated beta
 
 ## Known Performance Limitations
 
