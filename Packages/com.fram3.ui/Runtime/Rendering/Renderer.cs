@@ -256,7 +256,7 @@ namespace Fram3.UI.Rendering
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
-                    native.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
+                    native.schedule.Execute(() => SyncModalSizeToRoot(native));
                     _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
 #endif
                     return;
@@ -287,7 +287,7 @@ namespace Fram3.UI.Rendering
                 if (_rootContainer == null) return;
                 var w = _rootContainer.resolvedStyle.width;
                 var h = _rootContainer.resolvedStyle.height;
-                if (float.IsNaN(w) || float.IsNaN(h) || w == 0f || h == 0f) return;
+                if (float.IsNaN(w) || float.IsNaN(h)) return;
                 modal.style.width = w;
                 modal.style.height = h;
             }
