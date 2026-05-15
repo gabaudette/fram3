@@ -6,7 +6,6 @@ This document lists known missing elements, infrastructure gaps, and performance
 
 The following UI elements are not yet implemented:
 
-- **Alert / Dialog** - modal or inline alert with title, message, and actions
 - **Accordion** - collapsible section list
 - **Avatar** - circular image or initials placeholder
 - **Card** - elevated surface container with optional header and footer
