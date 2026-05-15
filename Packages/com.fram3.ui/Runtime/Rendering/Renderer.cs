@@ -256,29 +256,8 @@ namespace Fram3.UI.Rendering
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
-                    var rc = _rootContainer;
-                    // Log immediately (layout not yet resolved - NaN is expected here)
-                    UnityEngine.Debug.Log(
-                        $"[Modal/mount] rootContainer type={rc?.GetType().Name} " +
-                        $"rc.childCount={rc?.childCount} modal.childIdx={rc?.IndexOf(native)} " +
-                        $"rc.layout={rc?.layout} " +
-                        $"modal.style.pos={native.style.position} " +
-                        $"modal.style.w={native.style.width} modal.style.h={native.style.height}"
-                    );
-                    // Log again after layout resolves
-                    native.RegisterCallback<GeometryChangedEvent>(evt =>
-                    {
-                        UnityEngine.Debug.Log(
-                            $"[Modal/layout] rc.layout={rc?.layout} " +
-                            $"modal.layout={native.layout} " +
-                            $"modal.resolvedW={native.resolvedStyle.width} " +
-                            $"modal.resolvedH={native.resolvedStyle.height} " +
-                            $"modal.childCount={native.childCount} " +
-                            (native.childCount > 0
-                                ? $"firstChild.layout={native[0].layout} firstChild.resolvedW={native[0].resolvedStyle.width} firstChild.resolvedH={native[0].resolvedStyle.height}"
-                                : "no children")
-                        );
-                    });
+                    SyncModalSizeToRoot(native);
+                    _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
 #endif
                     return;
                 }
@@ -301,6 +280,18 @@ namespace Fram3.UI.Rendering
                     ElementPainter.ApplyAsStackChild(native);
                 }
             }
+
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            private void SyncModalSizeToRoot(VisualElement modal)
+            {
+                if (_rootContainer == null) return;
+                var w = _rootContainer.resolvedStyle.width;
+                var h = _rootContainer.resolvedStyle.height;
+                if (float.IsNaN(w) || float.IsNaN(h)) return;
+                modal.style.width = w;
+                modal.style.height = h;
+            }
+#endif
         }
     }
 }
