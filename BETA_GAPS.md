@@ -6,7 +6,6 @@ This document lists known missing elements, infrastructure gaps, and performance
 
 The following UI elements are not yet implemented:
 
-- **Alert / Dialog** - modal or inline alert with title, message, and actions
 - **Accordion** - collapsible section list
 - **Avatar** - circular image or initials placeholder
 - **Card** - elevated surface container with optional header and footer
@@ -15,6 +14,7 @@ The following UI elements are not yet implemented:
 - **TreeView** - hierarchical expandable/collapsible list
 - **Table** - columnar data display with optional sorting and row selection
 - **Context Menu** - right-click or long-press popup menu
+- **DraggablePanel** - resizable and draggable floating panel that attaches to the root container like Modal; will require the same `AttachChildrenToNative` skip treatment, likely via a shared `IRootAttached` marker interface
 
 ## Missing Infrastructure
 
