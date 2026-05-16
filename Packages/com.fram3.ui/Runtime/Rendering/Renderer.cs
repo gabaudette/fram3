@@ -259,6 +259,12 @@ namespace Fram3.UI.Rendering
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
+                    UnityEngine.Debug.Log($"[Modal] After BringToFront: modal index={native.parent?.IndexOf(native)}, parent childCount={native.parent?.childCount}, parent={native.parent?.GetType().Name}");
+                    for (var i = 0; i < (native.parent?.childCount ?? 0); i++)
+                    {
+                        var sib = native.parent![i];
+                        UnityEngine.Debug.Log($"[Modal]   sibling[{i}] {sib.GetType().Name} pos={sib.resolvedStyle.position} size=({sib.resolvedStyle.width}x{sib.resolvedStyle.height})");
+                    }
                     native.schedule.Execute(() => SyncModalSizeToRoot(native));
                     _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
                     native.RegisterCallback<GeometryChangedEvent>(evt =>
