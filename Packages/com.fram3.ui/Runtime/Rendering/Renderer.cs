@@ -258,34 +258,11 @@ namespace Fram3.UI.Rendering
             {
                 if (node.Element is Modal)
                 {
-#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
-                    UnityEngine.Debug.Log($"[Modal] AttachToParent: _rootContainer={((_rootContainer == null) ? "NULL" : _rootContainer.GetType().Name)}, childCount={_rootContainer?.childCount}");
-#endif
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
-                    UnityEngine.Debug.Log($"[Modal] After BringToFront: modal index={native.parent?.IndexOf(native)}, parent childCount={native.parent?.childCount}, parent={native.parent?.GetType().Name}");
-                    for (var i = 0; i < (native.parent?.childCount ?? 0); i++)
-                    {
-                        var sib = native.parent![i];
-                        UnityEngine.Debug.Log($"[Modal]   sibling[{i}] {sib.GetType().Name} pos={sib.resolvedStyle.position} size=({sib.resolvedStyle.width}x{sib.resolvedStyle.height})");
-                    }
                     native.schedule.Execute(() => SyncModalSizeToRoot(native));
                     _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
-                    native.RegisterCallback<GeometryChangedEvent>(evt =>
-                    {
-                        UnityEngine.Debug.Log($"[Modal] GeometryChanged on modal: newRect={evt.newRect}");
-                        for (var i = 0; i < native.childCount; i++)
-                        {
-                            var c = native[i];
-                            UnityEngine.Debug.Log($"[Modal]   child[{i}] {c.GetType().Name}: resolvedLayout=({c.resolvedStyle.width}x{c.resolvedStyle.height}), flexGrow={c.resolvedStyle.flexGrow}, alignSelf={c.resolvedStyle.alignSelf}");
-                            for (var j = 0; j < c.childCount; j++)
-                            {
-                                var gc = c[j];
-                                UnityEngine.Debug.Log($"[Modal]     grandchild[{j}] {gc.GetType().Name}: resolvedLayout=({gc.resolvedStyle.width}x{gc.resolvedStyle.height}), bg={gc.resolvedStyle.backgroundColor}");
-                            }
-                        }
-                    });
 #endif
                     return;
                 }
@@ -298,9 +275,6 @@ namespace Fram3.UI.Rendering
 
                 if (!_handles.TryGetValue(node.Parent, out var parentHandle))
                 {
-#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
-                    UnityEngine.Debug.Log($"[Modal] AttachToParent: no handle for parent {node.Parent.Element.GetType().Name}, child={node.Element.GetType().Name}");
-#endif
                     return;
                 }
 
@@ -317,21 +291,19 @@ namespace Fram3.UI.Rendering
             {
                 if (_rootContainer == null)
                 {
-                    UnityEngine.Debug.Log("[Modal] SyncModalSizeToRoot: _rootContainer is null");
                     return;
                 }
+
                 var w = _rootContainer.resolvedStyle.width;
                 var h = _rootContainer.resolvedStyle.height;
-                UnityEngine.Debug.Log($"[Modal] SyncModalSizeToRoot: root=({w}x{h}), modal childCount={modal.childCount}");
-                if (float.IsNaN(w) || float.IsNaN(h)) return;
+
+                if (float.IsNaN(w) || float.IsNaN(h))
+                {
+                    return;
+                }
+
                 modal.style.width = w;
                 modal.style.height = h;
-                UnityEngine.Debug.Log($"[Modal] Applied size {w}x{h}. childCount={modal.childCount}");
-                for (var i = 0; i < modal.childCount; i++)
-                {
-                    var c = modal[i];
-                    UnityEngine.Debug.Log($"[Modal]   child[{i}] {c.GetType().Name}: resolvedLayout=({c.resolvedStyle.width}x{c.resolvedStyle.height}), flexGrow={c.resolvedStyle.flexGrow}, alignSelf={c.resolvedStyle.alignSelf}, display={c.resolvedStyle.display}, visibility={c.resolvedStyle.visibility}");
-                }
             }
 #endif
         }
