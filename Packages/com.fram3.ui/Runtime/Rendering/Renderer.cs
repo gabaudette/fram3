@@ -162,6 +162,11 @@ namespace Fram3.UI.Rendering
             {
                 foreach (var child in node.Children)
                 {
+                    if (child.Element is Modal)
+                    {
+                        continue;
+                    }
+
                     if (!_handles.TryGetValue(child, out var childHandle))
                     {
                         continue;
