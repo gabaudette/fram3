@@ -161,35 +161,42 @@ namespace Fram3.UI.Elements.Content
                 {
                     bgColor = el.BackgroundColor ?? theme.SurfaceColor;
                     var iconSize = diameter * 0.5f;
-                    inner = new Center
+                    inner = new Column(
+                        mainAxisAlignment: MainAxisAlignment.Center,
+                        crossAxisAlignment: CrossAxisAlignment.Center
+                    )
                     {
-                        Child = new Icon(
-                            source: el.IconSource,
-                            svgPath: el.IconSvgPath,
-                            width: iconSize,
-                            height: iconSize
-                        )
+                        Children = new Element[]
+                        {
+                            new Icon(
+                                source: el.IconSource,
+                                svgPath: el.IconSvgPath,
+                                width: iconSize,
+                                height: iconSize
+                            )
+                        }
                     };
                 }
                 else if (hasInitials)
                 {
                     bgColor = el.BackgroundColor ?? theme.PrimaryColor;
                     var fgColor = el.ForegroundColor ?? theme.OnPrimaryColor;
-                    inner = new Center
+                    inner = new Column(
+                        mainAxisAlignment: MainAxisAlignment.Center,
+                        crossAxisAlignment: CrossAxisAlignment.Center
+                    )
                     {
-                        Child = new Text(
-                            el.Initials!,
-                            new TextStyle(
-                                FontSize: InitialsFontSize(el.Size, theme),
-                                Bold: true,
-                                Color: fgColor,
-#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
-                                TextAlign: UnityEngine.TextAnchor.MiddleCenter
-#else
-                                TextAlign: 4 // MiddleCenter
-#endif
+                        Children = new Element[]
+                        {
+                            new Text(
+                                el.Initials!,
+                                new TextStyle(
+                                    FontSize: InitialsFontSize(el.Size, theme),
+                                    Bold: true,
+                                    Color: fgColor
+                                )
                             )
-                        )
+                        }
                     };
                 }
                 else
