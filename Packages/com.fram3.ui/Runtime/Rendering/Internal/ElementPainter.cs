@@ -256,6 +256,24 @@ namespace Fram3.UI.Rendering.Internal
         {
             var label = new Label(text.Content);
             PaintText(text, label);
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            label.RegisterCallback<GeometryChangedEvent>(_ =>
+            {
+                var p = label.parent;
+                var pp = p?.parent;
+                UnityEngine.Debug.Log(
+                    $"[dbg-label] '{text.Content}' " +
+                    $"self={label.resolvedStyle.width:F0}x{label.resolvedStyle.height:F0} " +
+                    $"pos={label.layout.x:F1},{label.layout.y:F1} " +
+                    $"p={p?.resolvedStyle.width:F0}x{p?.resolvedStyle.height:F0} " +
+                    $"p.align={p?.resolvedStyle.alignItems} " +
+                    $"p.justify={p?.resolvedStyle.justifyContent} " +
+                    $"p.name={p?.name} " +
+                    $"pp={pp?.resolvedStyle.width:F0}x{pp?.resolvedStyle.height:F0} " +
+                    $"pp.name={pp?.name}"
+                );
+            });
+#endif
             return label;
         }
 
@@ -1785,6 +1803,11 @@ namespace Fram3.UI.Rendering.Internal
             {
                 native.style.alignItems = Align.Center;
                 native.style.justifyContent = Justify.Center;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+                native.contentContainer.style.alignItems = Align.Center;
+                native.contentContainer.style.justifyContent = Justify.Center;
+                native.contentContainer.style.flexGrow = 1f;
+#endif
             }
 
             if (container.Decoration == null)
