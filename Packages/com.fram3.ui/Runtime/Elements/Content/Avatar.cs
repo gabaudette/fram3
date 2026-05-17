@@ -182,7 +182,12 @@ namespace Fram3.UI.Elements.Content
                             new TextStyle(
                                 FontSize: InitialsFontSize(el.Size, theme),
                                 Bold: true,
-                                Color: fgColor
+                                Color: fgColor,
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+                                TextAlign: UnityEngine.TextAnchor.MiddleCenter
+#else
+                                TextAlign: 4 // MiddleCenter
+#endif
                             )
                         )
                     };
