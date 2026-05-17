@@ -178,6 +178,7 @@ namespace Fram3.UI.Elements.Content
                             FontSize: InitialsFontSize(el.Size, theme),
                             Bold: true,
                             Color: fgColor,
+                            ResetPadding: true,
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                             TextAlign: UnityEngine.TextAnchor.MiddleCenter
 #else
