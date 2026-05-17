@@ -255,7 +255,15 @@ namespace Fram3.UI.Rendering.Internal
         private static Label CreateLabel(Text text)
         {
             var label = new Label(text.Content);
+#if !FRAM3_PURE_TESTS
+            UnityEngine.Debug.Log($"[Avatar-dbg] CreateLabel '{text.Content}': style={(text.Style == null ? "null" : "present")} textAlign={text.Style?.TextAlign}");
+#endif
             PaintText(text, label);
+#if !FRAM3_PURE_TESTS
+            label.RegisterCallback<GeometryChangedEvent>(e =>
+                UnityEngine.Debug.Log($"[Avatar-dbg] Label '{text.Content}' geometry: w={e.newRect.width} h={e.newRect.height} resolvedTextAlign={label.resolvedStyle.unityTextAlign} parent.w={label.parent?.resolvedStyle.width} parent.h={label.parent?.resolvedStyle.height}")
+            );
+#endif
             return label;
         }
 
