@@ -256,6 +256,21 @@ namespace Fram3.UI.Rendering.Internal
         {
             var label = new Label(text.Content);
             PaintText(text, label);
+#if !FRAM3_PURE_TESTS
+            label.RegisterCallback<GeometryChangedEvent>(_ =>
+            {
+                var p = label.parent;
+                var pp = p?.parent;
+                UnityEngine.Debug.Log(
+                    $"[dbg] Label '{text.Content}': " +
+                    $"self={label.resolvedStyle.width:F1}x{label.resolvedStyle.height:F1} " +
+                    $"localPos={label.layout.x:F1},{label.layout.y:F1} " +
+                    $"parent={p?.resolvedStyle.width:F1}x{p?.resolvedStyle.height:F1} " +
+                    $"parent.alignItems={p?.resolvedStyle.alignItems} " +
+                    $"grandparent={pp?.resolvedStyle.width:F1}x{pp?.resolvedStyle.height:F1}"
+                );
+            });
+#endif
             return label;
         }
 
