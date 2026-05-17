@@ -1579,6 +1579,18 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void ApplyTextStyle(TextStyle style, VisualElement native)
         {
+            if (style.ResetPadding)
+            {
+                native.style.paddingTop = 0f;
+                native.style.paddingBottom = 0f;
+                native.style.paddingLeft = 0f;
+                native.style.paddingRight = 0f;
+                native.style.marginTop = 0f;
+                native.style.marginBottom = 0f;
+                native.style.marginLeft = 0f;
+                native.style.marginRight = 0f;
+            }
+
             if (style.FontSize.HasValue)
             {
                 native.style.fontSize = style.FontSize.Value;
@@ -1639,6 +1651,9 @@ namespace Fram3.UI.Rendering.Internal
                     break;
                 case Container container:
                     ApplyContainerLayout(container, native);
+                    break;
+                case Elements.Content.Avatar avatar:
+                    ApplyAvatarLayout(avatar, native, theme);
                     break;
                 case Center:
                     ApplyCenterLayout(native);
@@ -1781,6 +1796,17 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.paddingLeft = insets.Left;
             }
 
+            if (container.CenterChild)
+            {
+                native.style.alignItems = Align.Center;
+                native.style.justifyContent = Justify.Center;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+                native.contentContainer.style.alignItems = Align.Center;
+                native.contentContainer.style.justifyContent = Justify.Center;
+                native.contentContainer.style.flexGrow = 1f;
+#endif
+            }
+
             if (container.Decoration == null)
             {
                 return;
@@ -1791,6 +1817,20 @@ namespace Fram3.UI.Rendering.Internal
             {
                 native.style.overflow = Overflow.Hidden;
             }
+        }
+
+        private static void ApplyAvatarLayout(Elements.Content.Avatar avatar, VisualElement native, Theme theme)
+        {
+            var diameter = avatar.Size switch
+            {
+                AvatarSize.Small => theme.Spacing * 4f,
+                AvatarSize.Large => theme.Spacing * 7f,
+                _ => theme.Spacing * 5f
+            };
+            native.style.width = diameter;
+            native.style.height = diameter;
+            native.style.flexShrink = 0f;
+            native.style.alignSelf = Align.Center;
         }
 
         private static void ApplyCenterLayout(VisualElement native)

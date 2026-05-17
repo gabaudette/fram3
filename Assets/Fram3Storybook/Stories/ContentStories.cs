@@ -8,6 +8,7 @@ using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
 using UnityEngine;
+using Avatar = Fram3.UI.Elements.Content.Avatar;
 
 namespace Fram3.UI.Storybook.Stories
 {
@@ -22,6 +23,12 @@ namespace Fram3.UI.Storybook.Stories
                     "A vertically stacked set of collapsible panels. Each item has a header that toggles " +
                     "its content. Supports single-expand and multi-expand modes.",
                     () => new AccordionStory()
+                ),
+                new Story(
+                    "Avatar",
+                    "A circular element displaying a user image, initials placeholder, or icon. " +
+                    "Available in small, medium, and large sizes with optional ring border.",
+                    () => new AvatarStory()
                 ),
                 new Story(
                     "Alert",
@@ -172,8 +179,148 @@ namespace Fram3.UI.Storybook.Stories
                                 new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
                             )),
                         },
-                        initialIndex: 0
+                         initialIndex: 0
                     );
+            }
+        }
+
+        private sealed class AvatarStory : StatefulElement
+        {
+            public override Fram3.UI.Core.State CreateState() => new AvatarStoryState();
+
+            private sealed class AvatarStoryState : State<AvatarStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Initials", BuildInitials(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Icon", BuildIcon(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Sizes", BuildSizes(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Ring border", BuildRing(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example — Party", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildInitials(Theme theme) =>
+                    new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    {
+                        Children = new Element[]
+                        {
+                            new Avatar(initials: "AB"),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Avatar(initials: "JD", backgroundColor: new FrameColor(0.13f, 0.59f, 0.95f, 1f)),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Avatar(initials: "Z", backgroundColor: new FrameColor(0.61f, 0.15f, 0.69f, 1f)),
+                        }
+                    };
+
+                private static Element BuildIcon(Theme theme) =>
+                    new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    {
+                        Children = new Element[]
+                        {
+                            new Avatar(iconSvgPath: "ui/icons/person.svg"),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Avatar(
+                                iconSvgPath: "ui/icons/shield.svg",
+                                backgroundColor: new FrameColor(0.18f, 0.8f, 0.44f, 1f)
+                            ),
+                        }
+                    };
+
+                private static Element BuildSizes(Theme theme) =>
+                    new Row(
+                        crossAxisAlignment: CrossAxisAlignment.Center,
+                        mainAxisAlignment: MainAxisAlignment.Start
+                    )
+                    {
+                        Children = new Element[]
+                        {
+                            new Avatar(initials: "S", size: AvatarSize.Small),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Avatar(initials: "M", size: AvatarSize.Medium),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Avatar(initials: "L", size: AvatarSize.Large),
+                        }
+                    };
+
+                private static Element BuildRing(Theme theme) =>
+                    new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    {
+                        Children = new Element[]
+                        {
+                            new Avatar(
+                                initials: "AB",
+                                ring: new Border(theme.PrimaryColor, 2f)
+                            ),
+                            SizedBox.FromSize(width: theme.Spacing * 2f),
+                            new Avatar(
+                                initials: "CD",
+                                backgroundColor: theme.SurfaceColor,
+                                foregroundColor: theme.PrimaryTextColor,
+                                ring: new Border(theme.InputBorderColor, 1f)
+                            ),
+                        }
+                    };
+
+                private static Element BuildGame(Theme theme) =>
+                    new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                    {
+                        Children = new Element[]
+                        {
+                            new Column(crossAxisAlignment: CrossAxisAlignment.Center)
+                            {
+                                Children = new Element[]
+                                {
+                                    new Avatar(
+                                        initials: "KN",
+                                        size: AvatarSize.Large,
+                                        backgroundColor: new FrameColor(0.83f, 0.18f, 0.18f, 1f),
+                                        ring: new Border(new FrameColor(1f, 0.84f, 0f, 1f), 3f)
+                                    ),
+                                    SizedBox.FromSize(height: theme.Spacing),
+                                    new Text("Knight", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor, TextAlign: UnityEngine.TextAnchor.MiddleCenter)),
+                                }
+                            },
+                            SizedBox.FromSize(width: theme.Spacing * 3f),
+                            new Column(crossAxisAlignment: CrossAxisAlignment.Center)
+                            {
+                                Children = new Element[]
+                                {
+                                    new Avatar(
+                                        initials: "MG",
+                                        size: AvatarSize.Large,
+                                        backgroundColor: new FrameColor(0.13f, 0.59f, 0.95f, 1f)
+                                    ),
+                                    SizedBox.FromSize(height: theme.Spacing),
+                                    new Text("Mage", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor, TextAlign: UnityEngine.TextAnchor.MiddleCenter)),
+                                }
+                            },
+                            SizedBox.FromSize(width: theme.Spacing * 3f),
+                            new Column(crossAxisAlignment: CrossAxisAlignment.Center)
+                            {
+                                Children = new Element[]
+                                {
+                                    new Avatar(
+                                        initials: "RG",
+                                        size: AvatarSize.Large,
+                                        backgroundColor: new FrameColor(0.18f, 0.8f, 0.44f, 1f)
+                                    ),
+                                    SizedBox.FromSize(height: theme.Spacing),
+                                    new Text("Ranger", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor, TextAlign: UnityEngine.TextAnchor.MiddleCenter)),
+                                }
+                            },
+                        }
+                    };
             }
         }
 

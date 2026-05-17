@@ -6,7 +6,6 @@ This document lists known missing elements, infrastructure gaps, and performance
 
 The following UI elements are not yet implemented:
 
-- **Avatar** - circular image or initials placeholder
 - **Card** - elevated surface container with optional header and footer
 - **Stepper** - numeric input with increment/decrement buttons
 - **Rating** - star or icon-based rating input
