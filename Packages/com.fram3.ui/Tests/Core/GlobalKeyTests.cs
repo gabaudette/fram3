@@ -10,13 +10,12 @@ namespace Fram3.UI.Tests.Core
     [TestFixture]
     internal sealed class GlobalKeyTests
     {
-        private RebuildScheduler _scheduler = null!;
         private NodeExpander _expander = null!;
 
         [SetUp]
         public void SetUp()
         {
-            (_scheduler, _expander) = TreeBuilder.MakePipeline();
+            (_, _expander) = TreeBuilder.MakePipeline();
         }
 
         [Test]

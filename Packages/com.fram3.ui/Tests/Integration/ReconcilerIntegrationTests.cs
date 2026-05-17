@@ -41,7 +41,7 @@ namespace Fram3.UI.Tests.Integration
                 {
                     new TestLeafElement("a"),
                     new TestLeafElement("b"),
-                    new TestLeafElement("c"),
+                    new TestLeafElement("c")
                 }
             };
 
@@ -59,7 +59,7 @@ namespace Fram3.UI.Tests.Integration
                 Children = new Element[]
                 {
                     new TestLeafElement("a"),
-                    new TestLeafElement("b"),
+                    new TestLeafElement("b")
                 }
             };
             var rootNode = TreeBuilder.Mount(root, _expander);
@@ -265,7 +265,7 @@ namespace Fram3.UI.Tests.Integration
                     children = new Element[]
                     {
                         new TestLeafElement("b", new ValueKey<string>("b")),
-                        new TestLeafElement("a", new ValueKey<string>("a")),
+                        new TestLeafElement("a", new ValueKey<string>("a"))
                     };
                 }
                 else
@@ -273,7 +273,7 @@ namespace Fram3.UI.Tests.Integration
                     children = new Element[]
                     {
                         new TestLeafElement("a", new ValueKey<string>("a")),
-                        new TestLeafElement("b", new ValueKey<string>("b")),
+                        new TestLeafElement("b", new ValueKey<string>("b"))
                     };
                 }
 

@@ -14,10 +14,6 @@ namespace Fram3.UI.Tests.Elements.Layout
     [TestFixture]
     internal sealed class MarginTests
     {
-        // -----------------------------------------------------------------------
-        // Constructor
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Constructor_StoresMargin()
         {
@@ -69,10 +65,6 @@ namespace Fram3.UI.Tests.Elements.Layout
 
             Assert.That(element.GetChildren()[0], Is.SameAs(child));
         }
-
-        // -----------------------------------------------------------------------
-        // Painter -- CreateNative
-        // -----------------------------------------------------------------------
 
         [Test]
         public void CreateNative_ReturnsVisualElement()

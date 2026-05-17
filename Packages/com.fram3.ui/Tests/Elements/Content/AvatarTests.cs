@@ -1,10 +1,8 @@
 #nullable enable
-using System;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Styling;
-using Fram3.UI.Tests.Mocks;
 using NUnit.Framework;
 
 namespace Fram3.UI.Tests.Elements.Content
@@ -12,8 +10,6 @@ namespace Fram3.UI.Tests.Elements.Content
     [TestFixture]
     internal sealed class AvatarTests
     {
-        // ── Constructor — defaults ────────────────────────────────────────────
-
         [Test]
         public void Constructor_DefaultSource_IsNull()
         {
@@ -86,8 +82,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.That(avatar.Key, Is.Null);
         }
 
-        // ── Constructor — stored values ───────────────────────────────────────
-
         [Test]
         public void Constructor_StoresSource()
         {
@@ -125,7 +119,7 @@ namespace Fram3.UI.Tests.Elements.Content
         [Test]
         public void Constructor_StoresBackgroundColor()
         {
-            var color = new FrameColor(1f, 0f, 0f, 1f);
+            var color = new FrameColor(1f, 0f, 0f);
             var avatar = new Avatar(backgroundColor: color);
 
             Assert.That(avatar.BackgroundColor, Is.EqualTo(color));
@@ -134,7 +128,7 @@ namespace Fram3.UI.Tests.Elements.Content
         [Test]
         public void Constructor_StoresForegroundColor()
         {
-            var color = new FrameColor(0f, 1f, 0f, 1f);
+            var color = new FrameColor(0f, 1f, 0f);
             var avatar = new Avatar(foregroundColor: color);
 
             Assert.That(avatar.ForegroundColor, Is.EqualTo(color));
@@ -143,7 +137,7 @@ namespace Fram3.UI.Tests.Elements.Content
         [Test]
         public void Constructor_StoresRing()
         {
-            var ring = new Border(new FrameColor(0f, 0f, 1f, 1f), 2f);
+            var ring = new Border(new FrameColor(0f, 0f, 1f), 2f);
             var avatar = new Avatar(ring: ring);
 
             Assert.That(avatar.Ring, Is.EqualTo(ring));
@@ -174,8 +168,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.That(avatar.Key, Is.EqualTo(key));
         }
 
-        // ── GetChildren ───────────────────────────────────────────────────────
-
         [Test]
         public void GetChildren_ReturnsEmpty()
         {
@@ -183,8 +175,6 @@ namespace Fram3.UI.Tests.Elements.Content
 
             Assert.That(avatar.GetChildren(), Is.Empty);
         }
-
-        // ── CreateState ───────────────────────────────────────────────────────
 
         [Test]
         public void CreateState_ReturnsNonNullState()
@@ -201,8 +191,6 @@ namespace Fram3.UI.Tests.Elements.Content
 
             Assert.That(avatar.CreateState(), Is.Not.SameAs(avatar.CreateState()));
         }
-
-        // ── Mount — all variants ──────────────────────────────────────────────
 
         [Test]
         public void Mounts_Blank_WithoutThrowing()
@@ -281,7 +269,7 @@ namespace Fram3.UI.Tests.Elements.Content
         {
             var scheduler = new RebuildScheduler();
             var expander = new NodeExpander(scheduler);
-            var color = new FrameColor(0.2f, 0.4f, 0.8f, 1f);
+            var color = new FrameColor(0.2f, 0.4f, 0.8f);
 
             Assert.DoesNotThrow(() => expander.Mount(new Avatar(initials: "AB", backgroundColor: color), null));
         }
@@ -291,7 +279,7 @@ namespace Fram3.UI.Tests.Elements.Content
         {
             var scheduler = new RebuildScheduler();
             var expander = new NodeExpander(scheduler);
-            var color = new FrameColor(1f, 1f, 1f, 1f);
+            var color = new FrameColor(1f, 1f, 1f);
 
             Assert.DoesNotThrow(() => expander.Mount(new Avatar(initials: "AB", foregroundColor: color), null));
         }
@@ -301,12 +289,10 @@ namespace Fram3.UI.Tests.Elements.Content
         {
             var scheduler = new RebuildScheduler();
             var expander = new NodeExpander(scheduler);
-            var ring = new Border(new FrameColor(1f, 1f, 1f, 1f), 2f);
+            var ring = new Border(new FrameColor(1f, 1f, 1f), 2f);
 
             Assert.DoesNotThrow(() => expander.Mount(new Avatar(initials: "AB", ring: ring), null));
         }
-
-        // ── Build output ──────────────────────────────────────────────────────
 
         [Test]
         public void Build_Blank_ReturnsNonNull()
@@ -380,8 +366,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.That(built, Is.Not.Null);
         }
 
-        // ── DidUpdateElement ──────────────────────────────────────────────────
-
         [Test]
         public void DidUpdateElement_ChangingInitials_DoesNotThrow()
         {
@@ -417,8 +401,6 @@ namespace Fram3.UI.Tests.Elements.Content
 
             Assert.DoesNotThrow(() => expander.Rebuild(node));
         }
-
-        // ── Unmount ───────────────────────────────────────────────────────────
 
         [Test]
         public void Unmount_WithInitials_DoesNotThrow()

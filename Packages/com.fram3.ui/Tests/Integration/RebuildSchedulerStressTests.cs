@@ -75,7 +75,7 @@ namespace Fram3.UI.Tests.Integration
         public void Flush_ReentrantSchedule_NewDirtyNodeProcessedInSameFlushing_WhenDeeperDepth()
         {
             // A parent rebuild will mark a deeper child dirty mid-flush.
-            // Because the child is deeper and we haven't processed it yet, it should
+            // Because the child is deeper, and we haven't processed it yet, it should
             // be included in the current flush pass.
             var childState = new CountingState();
             var childStateful = new TestStatefulElement(() => childState, "child");

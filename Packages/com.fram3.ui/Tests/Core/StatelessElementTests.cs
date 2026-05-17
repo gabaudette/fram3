@@ -75,7 +75,7 @@ namespace Fram3.UI.Tests.Core
             );
 
             var parentState = new DriveState(() => statelessElement);
-            var root = expander.Mount(new TestStatefulElement(() => parentState), null);
+            expander.Mount(new TestStatefulElement(() => parentState), null);
 
             parentState.TriggerRebuild();
             TreeBuilder.Flush(scheduler, expander);
@@ -87,7 +87,7 @@ namespace Fram3.UI.Tests.Core
         public void ShouldRebuild_ReturnsTrue_RebuildOccurs()
         {
             var (scheduler, expander) = TreeBuilder.MakePipeline();
-            int buildCount = 0;
+            var buildCount = 0;
 
             var statelessElement = new MemoStatelessElement(
                 _ =>

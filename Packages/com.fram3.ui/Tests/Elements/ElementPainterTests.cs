@@ -224,7 +224,7 @@ namespace Fram3.UI.Tests.Elements
         [Test]
         public void Paint_FScrollView_UpdatesMode()
         {
-            var original = new ScrollView() { Child = new Text("x") };
+            var original = new ScrollView { Child = new Text("x") };
             var native = (UIScrollView)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new ScrollView(ScrollDirection.Horizontal) { Child = new Text("x") };

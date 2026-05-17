@@ -21,8 +21,6 @@ namespace Fram3.UI.Tests.Elements.Content
         private static IReadOnlyList<AccordionItem> ThreeItems()
             => new[] { Item("A", "a"), Item("B", "b"), Item("C", "c") };
 
-        // ── AccordionItem constructor ──────────────────────────────────────────
-
         [Test]
         public void AccordionItem_Constructor_StoresHeader()
         {
@@ -53,8 +51,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.Throws<ArgumentNullException>(() =>
                 _ = new AccordionItem("H", null!));
         }
-
-        // ── Accordion constructor ──────────────────────────────────────────────
 
         [Test]
         public void Constructor_StoresItems()
@@ -118,8 +114,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.DoesNotThrow(() => _ = new Accordion(Array.Empty<AccordionItem>()));
         }
 
-        // ── Mounting ──────────────────────────────────────────────────────────
-
         [Test]
         public void Mounts_WithEmptyItems_WithoutThrowing()
         {
@@ -165,8 +159,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.DoesNotThrow(() => expander.Mount(new Accordion(ThreeItems()), null));
         }
 
-        // ── GetChildren (StatefulElement returns empty) ───────────────────────
-
         [Test]
         public void GetChildren_ReturnsEmpty()
         {
@@ -174,8 +166,6 @@ namespace Fram3.UI.Tests.Elements.Content
 
             Assert.That(accordion.GetChildren(), Is.Empty);
         }
-
-        // ── InitialIndex behaviour ────────────────────────────────────────────
 
         [Test]
         public void InitialIndex_MinusOne_AllItemsCollapsed()
@@ -234,8 +224,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.DoesNotThrow(() => expander.Mount(accordion, null));
         }
 
-        // ── Toggle behaviour (single-select) ─────────────────────────────────
-
         [Test]
         public void Toggle_OpensItem_WhenAllCollapsed()
         {
@@ -261,7 +249,7 @@ namespace Fram3.UI.Tests.Elements.Content
             var items = TwoItems();
             var accordion = new Accordion(items, allowMultiple: false, initialIndex: 0);
 
-            var node = expander.Mount(accordion, null);
+            expander.Mount(accordion, null);
 
             Assert.DoesNotThrow(() => scheduler.Flush(expander));
         }
@@ -274,12 +262,10 @@ namespace Fram3.UI.Tests.Elements.Content
             var items = TwoItems();
             var accordion = new Accordion(items, allowMultiple: true, initialIndex: 0);
 
-            var node = expander.Mount(accordion, null);
+            expander.Mount(accordion, null);
 
             Assert.DoesNotThrow(() => scheduler.Flush(expander));
         }
-
-        // ── Build output structure ────────────────────────────────────────────
 
         [Test]
         public void Build_ReturnsNonNullElement()
@@ -359,8 +345,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.That(built, Is.Not.Null);
         }
 
-        // ── DidUpdateElement ──────────────────────────────────────────────────
-
         [Test]
         public void DidUpdateElement_SameItemCount_DoesNotThrow()
         {
@@ -417,8 +401,6 @@ namespace Fram3.UI.Tests.Elements.Content
             Assert.DoesNotThrow(() => expander.Rebuild(node));
         }
 
-        // ── Unmount ───────────────────────────────────────────────────────────
-
         [Test]
         public void Unmount_WithoutExpanding_DoesNotThrow()
         {
@@ -448,8 +430,6 @@ namespace Fram3.UI.Tests.Elements.Content
 
             Assert.DoesNotThrow(() => expander.Unmount(node));
         }
-
-        // ── CreateState ───────────────────────────────────────────────────────
 
         [Test]
         public void CreateState_ReturnsNonNullState()

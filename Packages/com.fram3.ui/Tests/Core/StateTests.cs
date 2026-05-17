@@ -169,7 +169,7 @@ namespace Fram3.UI.Tests.Core
         {
             var state = CreateMountedState();
             state.Unmount();
-            bool actionCalled = false;
+            var actionCalled = false;
 
             Assert.DoesNotThrow(() => state.SetStateIfMounted(() => { actionCalled = true; }));
             Assert.That(actionCalled, Is.False);

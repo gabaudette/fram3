@@ -396,17 +396,18 @@ namespace Fram3.UI.Rendering.Internal
                 var strokeColor = ToUnity(theme.PrimaryColor);
                 tick.generateVisualContent += ctx =>
                 {
-                    var p = ctx.painter2D;
-                    var w = tick.contentRect.width;
-                    var h = tick.contentRect.height;
-                    p.strokeColor = strokeColor;
-                    p.lineWidth = 2f;
-                    p.lineCap = LineCap.Round;
-                    p.BeginPath();
-                    p.MoveTo(new UnityEngine.Vector2(w * 0.15f, h * 0.5f));
-                    p.LineTo(new UnityEngine.Vector2(w * 0.4f, h * 0.75f));
-                    p.LineTo(new UnityEngine.Vector2(w * 0.85f, h * 0.25f));
-                    p.Stroke();
+                    var painter2D = ctx.painter2D;
+                    var width = tick.contentRect.width;
+                    var height = tick.contentRect.height;
+
+                    painter2D.strokeColor = strokeColor;
+                    painter2D.lineWidth = 2f;
+                    painter2D.lineCap = LineCap.Round;
+                    painter2D.BeginPath();
+                    painter2D.MoveTo(new UnityEngine.Vector2(width * 0.15f, height * 0.5f));
+                    painter2D.LineTo(new UnityEngine.Vector2(width * 0.4f, height * 0.75f));
+                    painter2D.LineTo(new UnityEngine.Vector2(width * 0.85f, height * 0.25f));
+                    painter2D.Stroke();
                 };
 
                 toggle.RegisterValueChangedCallback(evt =>
@@ -535,21 +536,30 @@ namespace Fram3.UI.Rendering.Internal
                     checkmarkBackground.style.backgroundColor = ToUnity(theme.SurfaceColor);
                 }
 
-                foreach (var label in radioButtonGroup.Query<VisualElement>(className: "unity-base-field__label")
-                             .ToList())
+                var labels = radioButtonGroup.Query<VisualElement>(
+                    className: "unity-base-field__label"
+                ).ToList();
+
+                foreach (var label in labels)
                 {
                     label.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
-                foreach (var itemLabel in radioButtonGroup.Query<VisualElement>(className: "unity-radio-button__label")
-                             .ToList())
+                var itemLabels = radioButtonGroup.Query<VisualElement>(
+                    className: "unity-radio-button__label"
+                ).ToList();
+
+                foreach (var itemLabel in itemLabels)
                 {
                     itemLabel.style.color = ToUnity(theme.PrimaryTextColor);
                     itemLabel.style.marginLeft = 6f;
                 }
 
-                foreach (var input in radioButtonGroup.Query<VisualElement>(className: "unity-radio-button__input")
-                             .ToList())
+                var buttonInputs = radioButtonGroup.Query<VisualElement>(
+                    className: "unity-radio-button__input"
+                ).ToList();
+
+                foreach (var input in buttonInputs)
                 {
                     input.style.marginRight = 0f;
                 }
@@ -646,6 +656,7 @@ namespace Fram3.UI.Rendering.Internal
                     alignSelf = Align.Stretch
                 }
             };
+
             if (frameSlider.Label != null)
             {
                 slider.label = frameSlider.Label;
@@ -780,13 +791,16 @@ namespace Fram3.UI.Rendering.Internal
                             containerInner.style.borderLeftWidth = 0f;
                         }
 
-                        foreach (var item in popup.Query<VisualElement>(className: "unity-base-dropdown__item")
-                                     .ToList())
-                        {
-                            item.style.color = ToUnity(theme.PrimaryTextColor);
-                            item.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                        var dropdownItems = popup.Query<VisualElement>(
+                            className: "unity-base-dropdown__item"
+                        ).ToList();
 
-                            var checkmark = item.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
+                        foreach (var dropdownItem in dropdownItems)
+                        {
+                            dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
+                            dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
+
+                            var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
                             if (checkmark != null)
                             {
                                 checkmark.style.visibility = Visibility.Hidden;
@@ -795,8 +809,13 @@ namespace Fram3.UI.Rendering.Internal
                             var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
                             var surfaceColor = ToUnity(theme.SurfaceColor);
 
-                            item.RegisterCallback<PointerEnterEvent>(_ => item.style.backgroundColor = hoverColor);
-                            item.RegisterCallback<PointerLeaveEvent>(_ => item.style.backgroundColor = surfaceColor);
+                            dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
+                                dropdownItem.style.backgroundColor = hoverColor
+                            );
+
+                            dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
+                                dropdownItem.style.backgroundColor = surfaceColor
+                            );
                         }
                     }).ExecuteLater(1);
                 });
@@ -843,13 +862,15 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var checkmark = toggle.Q<VisualElement>(className: "unity-toggle__checkmark");
-            if (checkmark != null)
+            if (checkmark == null)
             {
-                checkmark.style.backgroundImage = default;
-                if (checkmark.childCount > 0)
-                {
-                    checkmark[0].style.visibility = toggle.value ? Visibility.Visible : Visibility.Hidden;
-                }
+                return;
+            }
+
+            checkmark.style.backgroundImage = default;
+            if (checkmark.childCount > 0)
+            {
+                checkmark[0].style.visibility = toggle.value ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -1002,9 +1023,9 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView sv)
+        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView uiScrollView)
         {
-            sv.mode = MapScrollMode(scrollView.ScrollDirection);
+            uiScrollView.mode = MapScrollMode(scrollView.ScrollDirection);
         }
 
         private static UIProgressBar CreateProgressBar(Elements.Content.ProgressBar progressBar, Theme theme)
@@ -1023,10 +1044,13 @@ namespace Fram3.UI.Rendering.Internal
 
             uiProgressBar.RegisterCallback<AttachToPanelEvent>(_ =>
             {
-                var bg = uiProgressBar.Q<VisualElement>(className: "unity-progress-bar__background");
-                if (bg != null)
+                var progressBarBackground = uiProgressBar.Q<VisualElement>(
+                    className: "unity-progress-bar__background"
+                );
+
+                if (progressBarBackground != null)
                 {
-                    bg.style.backgroundColor = ToUnity(theme.TrackColor);
+                    progressBarBackground.style.backgroundColor = ToUnity(theme.TrackColor);
                 }
 
                 var progress = uiProgressBar.Q<VisualElement>(className: "unity-progress-bar__progress");
@@ -1179,6 +1203,7 @@ namespace Fram3.UI.Rendering.Internal
                         backgroundColor = ToUnity(pipColor)
                     }
                 };
+
                 return new BadgePipHolder(dot, null);
             }
 
@@ -1387,7 +1412,7 @@ namespace Fram3.UI.Rendering.Internal
                             alignSelf = Align.Stretch
                         }
                     };
-                    
+
                     return container;
                 },
                 bindItem = (item, index) =>
@@ -1397,13 +1422,18 @@ namespace Fram3.UI.Rendering.Internal
                     {
                         item.userData = new object();
                         item.RegisterCallback<PointerEnterEvent>(_ =>
-                            item.style.backgroundColor = ToUnity(theme.TrackColor));
+                            item.style.backgroundColor = ToUnity(theme.TrackColor)
+                        );
+
                         item.RegisterCallback<PointerLeaveEvent>(_ =>
-                            item.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f));
+                            item.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f)
+                        );
                     }
 
                     item.Clear();
+
                     var childElement = holder.Descriptor!.BuildItemAt(index);
+
                     BuildNativeTree(childElement, item, theme);
                 },
                 userData = holder
@@ -1440,25 +1470,27 @@ namespace Fram3.UI.Rendering.Internal
             return listView;
         }
 
-        private static void PaintListView(IListViewDescriptor listView, ListView lv)
+        private static void PaintListView(IListViewDescriptor listViewDescriptor, ListView listView)
         {
-            lv.fixedItemHeight = listView.ItemHeight;
-            lv.selectionType = MapSelectionType(listView.SelectionMode);
-            if (lv.userData is ListViewDescriptorHolder holder)
+            listView.fixedItemHeight = listViewDescriptor.ItemHeight;
+            listView.selectionType = MapSelectionType(listViewDescriptor.SelectionMode);
+            if (listView.userData is ListViewDescriptorHolder holder)
             {
-                holder.Descriptor = listView;
+                holder.Descriptor = listViewDescriptor;
 #if !FRAM3_PURE_TESTS
-                if (holder.IndexListCount != listView.ItemCount)
+                if (holder.IndexListCount == listViewDescriptor.ItemCount)
                 {
-                    holder.IndexListCount = listView.ItemCount;
-                    lv.itemsSource = BuildIndexList(listView.ItemCount);
+                    return;
                 }
+
+                holder.IndexListCount = listViewDescriptor.ItemCount;
+                listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
 #endif
             }
 #if !FRAM3_PURE_TESTS
             else
             {
-                lv.itemsSource = BuildIndexList(listView.ItemCount);
+                listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
             }
 #endif
         }
@@ -1652,7 +1684,7 @@ namespace Fram3.UI.Rendering.Internal
                 case Container container:
                     ApplyContainerLayout(container, native);
                     break;
-                case Elements.Content.Avatar avatar:
+                case Avatar avatar:
                     ApplyAvatarLayout(avatar, native, theme);
                     break;
                 case Center:
@@ -1819,7 +1851,7 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void ApplyAvatarLayout(Elements.Content.Avatar avatar, VisualElement native, Theme theme)
+        private static void ApplyAvatarLayout(Avatar avatar, VisualElement native, Theme theme)
         {
             var diameter = avatar.Size switch
             {
@@ -1827,6 +1859,7 @@ namespace Fram3.UI.Rendering.Internal
                 AvatarSize.Large => theme.Spacing * 7f,
                 _ => theme.Spacing * 5f
             };
+
             native.style.width = diameter;
             native.style.height = diameter;
             native.style.flexShrink = 0f;
@@ -1949,6 +1982,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var callback = intField.OnChanged;
+
             intf.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return intf;
@@ -1965,22 +1999,26 @@ namespace Fram3.UI.Rendering.Internal
 
         private static UIFloatField CreateFloatField(Elements.Input.FloatField floatField, Theme theme)
         {
-            if (floatField == null) throw new ArgumentNullException(nameof(floatField));
-            var ff = new UIFloatField { value = floatField.Value };
-            if (floatField.Label != null)
+            if (floatField == null)
             {
-                ff.label = floatField.Label;
+                throw new ArgumentNullException(nameof(floatField));
             }
 
-            ff.RegisterCallback<AttachToPanelEvent>(_ =>
+            var uiFloatField = new UIFloatField { value = floatField.Value };
+            if (floatField.Label != null)
             {
-                var label = ff.Q<VisualElement>(className: "unity-base-field__label");
+                uiFloatField.label = floatField.Label;
+            }
+
+            uiFloatField.RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                var label = uiFloatField.Q<VisualElement>(className: "unity-base-field__label");
                 if (label != null)
                 {
                     label.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
-                var input = ff.Q<VisualElement>(className: "unity-base-text-field__input");
+                var input = uiFloatField.Q<VisualElement>(className: "unity-base-text-field__input");
                 if (input != null)
                 {
                     input.style.backgroundColor = ToUnity(theme.SurfaceColor);
@@ -1990,14 +2028,14 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
                 }
 
-                var textEl = ff.Q<VisualElement>(className: "unity-text-element");
+                var textEl = uiFloatField.Q<VisualElement>(className: "unity-text-element");
                 if (textEl != null)
                 {
                     textEl.style.color = ToUnity(theme.PrimaryTextColor);
                 }
             });
 
-            ff.RegisterCallback<KeyDownEvent>(evt =>
+            uiFloatField.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: true))
                 {
@@ -2007,21 +2045,21 @@ namespace Fram3.UI.Rendering.Internal
 
             if (floatField.OnChanged == null)
             {
-                return ff;
+                return uiFloatField;
             }
 
             var callback = floatField.OnChanged;
-            ff.RegisterValueChangedCallback(evt => callback(evt.newValue));
+            uiFloatField.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
-            return ff;
+            return uiFloatField;
         }
 
-        private static void PaintFloatField(Elements.Input.FloatField floatField, UIFloatField ff)
+        private static void PaintFloatField(Elements.Input.FloatField floatField, UIFloatField uiFloatField)
         {
-            ff.value = floatField.Value;
+            uiFloatField.value = floatField.Value;
             if (floatField.Label != null)
             {
-                ff.label = floatField.Label;
+                uiFloatField.label = floatField.Label;
             }
         }
 
@@ -2116,15 +2154,15 @@ namespace Fram3.UI.Rendering.Internal
             return newMinMaxSlider;
         }
 
-        private static void PaintMinMaxSlider(Elements.Input.MinMaxSlider minMaxSlider, UIMinMaxSlider mms)
+        private static void PaintMinMaxSlider(Elements.Input.MinMaxSlider minMaxSlider, UIMinMaxSlider uiMinMaxSlider)
         {
-            mms.minValue = minMaxSlider.MinValue;
-            mms.maxValue = minMaxSlider.MaxValue;
-            mms.lowLimit = minMaxSlider.LowLimit;
-            mms.highLimit = minMaxSlider.HighLimit;
+            uiMinMaxSlider.minValue = minMaxSlider.MinValue;
+            uiMinMaxSlider.maxValue = minMaxSlider.MaxValue;
+            uiMinMaxSlider.lowLimit = minMaxSlider.LowLimit;
+            uiMinMaxSlider.highLimit = minMaxSlider.HighLimit;
             if (minMaxSlider.Label != null)
             {
-                mms.label = minMaxSlider.Label;
+                uiMinMaxSlider.label = minMaxSlider.Label;
             }
         }
 
@@ -2193,8 +2231,8 @@ namespace Fram3.UI.Rendering.Internal
                 return;
             }
 
-            var c = divider.Color.Value;
-            native.style.backgroundColor = new UnityEngine.Color(c.R, c.G, c.B, c.A);
+            var color = divider.Color.Value;
+            native.style.backgroundColor = new UnityEngine.Color(color.R, color.G, color.B, color.A);
         }
 
         private static void ApplyTooltipLayout(Tooltip tooltip, VisualElement native, Theme theme)
