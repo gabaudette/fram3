@@ -1784,6 +1784,12 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.height = container.Height.Value;
             }
 
+            if (container.Width.HasValue && container.Height.HasValue)
+            {
+                native.style.flexShrink = 0f;
+                native.style.alignSelf = Align.FlexStart;
+            }
+
             if (container.Padding.HasValue)
             {
                 var insets = container.Padding.Value;
