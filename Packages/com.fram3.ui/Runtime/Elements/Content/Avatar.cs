@@ -161,43 +161,25 @@ namespace Fram3.UI.Elements.Content
                 {
                     bgColor = el.BackgroundColor ?? theme.SurfaceColor;
                     var iconSize = diameter * 0.5f;
-                    inner = new Column(
-                        mainAxisAlignment: MainAxisAlignment.Center,
-                        crossAxisAlignment: CrossAxisAlignment.Center
-                    )
-                    {
-                        Children = new Element[]
-                        {
-                            new Icon(
-                                source: el.IconSource,
-                                svgPath: el.IconSvgPath,
-                                width: iconSize,
-                                height: iconSize
-                            )
-                        }
-                    };
+                    inner = new Icon(
+                        source: el.IconSource,
+                        svgPath: el.IconSvgPath,
+                        width: iconSize,
+                        height: iconSize
+                    );
                 }
                 else if (hasInitials)
                 {
                     bgColor = el.BackgroundColor ?? theme.PrimaryColor;
                     var fgColor = el.ForegroundColor ?? theme.OnPrimaryColor;
-                    inner = new Column(
-                        mainAxisAlignment: MainAxisAlignment.Center,
-                        crossAxisAlignment: CrossAxisAlignment.Center
-                    )
-                    {
-                        Children = new Element[]
-                        {
-                            new Text(
-                                el.Initials!,
-                                new TextStyle(
-                                    FontSize: InitialsFontSize(el.Size, theme),
-                                    Bold: true,
-                                    Color: fgColor
-                                )
-                            )
-                        }
-                    };
+                    inner = new Text(
+                        el.Initials!,
+                        new TextStyle(
+                            FontSize: InitialsFontSize(el.Size, theme),
+                            Bold: true,
+                            Color: fgColor
+                        )
+                    );
                 }
                 else
                 {
@@ -208,6 +190,7 @@ namespace Fram3.UI.Elements.Content
                 return new Container(
                     width: diameter,
                     height: diameter,
+                    centerChild: true,
                     decoration: new BoxDecoration(
                         Color: bgColor,
                         BorderRadius: BorderRadius.All(radius),

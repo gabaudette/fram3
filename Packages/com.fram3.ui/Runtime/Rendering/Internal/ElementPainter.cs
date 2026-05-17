@@ -1781,6 +1781,12 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.paddingLeft = insets.Left;
             }
 
+            if (container.CenterChild)
+            {
+                native.style.alignItems = Align.Center;
+                native.style.justifyContent = Justify.Center;
+            }
+
             if (container.Decoration == null)
             {
                 return;
