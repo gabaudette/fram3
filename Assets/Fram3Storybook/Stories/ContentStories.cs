@@ -18,6 +18,12 @@ namespace Fram3.UI.Storybook.Stories
             return new Story[]
             {
                 new Story(
+                    "Accordion",
+                    "A vertically stacked set of collapsible panels. Each item has a header that toggles " +
+                    "its content. Supports single-expand and multi-expand modes.",
+                    () => new AccordionStory()
+                ),
+                new Story(
                     "Alert",
                     "An inline notification surface that displays a severity-tinted title, an optional message, " +
                     "and optional action buttons. Use Info, Success, Warning, or Error severity.",
@@ -85,6 +91,91 @@ namespace Fram3.UI.Storybook.Stories
         }
 
         private static Element BuildListView() => new RosterListViewElement();
+
+        private sealed class AccordionStory : StatefulElement
+        {
+            public override Fram3.UI.Core.State CreateState() => new AccordionStoryState();
+
+            private sealed class AccordionStoryState : State<AccordionStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Single-expand", BuildSingle(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Multi-expand", BuildMulti(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example — Codex", BuildGame(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildSingle(Theme theme) =>
+                    new Accordion(
+                        new List<AccordionItem>
+                        {
+                            new AccordionItem("What is fram3?", new Text(
+                                "fram3 is a retained-mode UI framework for Unity built on a virtual element tree.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                            new AccordionItem("How do themes work?", new Text(
+                                "Elements pull colors, spacing, and typography from the active ThemeData via ThemeConsumer.Of.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                            new AccordionItem("Is it production-ready?", new Text(
+                                "Currently in beta — APIs are stable but the element library is still growing.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                        },
+                        initialIndex: 0
+                    );
+
+                private static Element BuildMulti(Theme theme) =>
+                    new Accordion(
+                        new List<AccordionItem>
+                        {
+                            new AccordionItem("Movement", new Text(
+                                "WASD or left-stick to move. Hold shift to sprint.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                            new AccordionItem("Combat", new Text(
+                                "Left-click to attack. Right-click to block. Q to dodge-roll.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                            new AccordionItem("Inventory", new Text(
+                                "Press I to open inventory. Drag items to equip or combine.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                        },
+                        allowMultiple: true,
+                        initialIndex: 0
+                    );
+
+                private static Element BuildGame(Theme theme) =>
+                    new Accordion(
+                        new List<AccordionItem>
+                        {
+                            new AccordionItem("Chapter I — The Awakening", new Text(
+                                "You wake in the ruins of Vel'Kara with no memory of how you arrived.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                            new AccordionItem("Chapter II — The Sunken Archive", new Text(
+                                "Ancient texts beneath the city hint at a weapon capable of sealing the rift.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                            new AccordionItem("Chapter III — Betrayal at the Gate", new Text(
+                                "Your guide reveals their true allegiance moments before the gate is destroyed.",
+                                new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                            )),
+                        },
+                        initialIndex: 0
+                    );
+            }
+        }
 
         private sealed class TextStory : StatefulElement
         {
