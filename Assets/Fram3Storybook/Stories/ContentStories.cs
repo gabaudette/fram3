@@ -8,6 +8,7 @@ using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
 using UnityEngine;
+using Avatar = Fram3.UI.Elements.Content.Avatar;
 
 namespace Fram3.UI.Storybook.Stories
 {
