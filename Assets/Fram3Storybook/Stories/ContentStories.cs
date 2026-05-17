@@ -1638,7 +1638,6 @@ namespace Fram3.UI.Storybook.Stories
                     };
             }
         }
-        }
 
         private sealed class ChipStory : StatefulElement
         {
