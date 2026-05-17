@@ -288,7 +288,7 @@ namespace Fram3.UI.Storybook.Stories
                                         ring: new Border(new FrameColor(1f, 0.84f, 0f, 1f), 3f)
                                     ),
                                     SizedBox.FromSize(height: theme.Spacing),
-                                    new Text("Knight", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                                    new Text("Knight", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor, TextAlign: UnityEngine.TextAnchor.MiddleCenter)),
                                 }
                             },
                             SizedBox.FromSize(width: theme.Spacing * 3f),
@@ -302,7 +302,7 @@ namespace Fram3.UI.Storybook.Stories
                                         backgroundColor: new FrameColor(0.13f, 0.59f, 0.95f, 1f)
                                     ),
                                     SizedBox.FromSize(height: theme.Spacing),
-                                    new Text("Mage", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                                    new Text("Mage", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor, TextAlign: UnityEngine.TextAnchor.MiddleCenter)),
                                 }
                             },
                             SizedBox.FromSize(width: theme.Spacing * 3f),
@@ -316,7 +316,7 @@ namespace Fram3.UI.Storybook.Stories
                                         backgroundColor: new FrameColor(0.18f, 0.8f, 0.44f, 1f)
                                     ),
                                     SizedBox.FromSize(height: theme.Spacing),
-                                    new Text("Ranger", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                                    new Text("Ranger", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor, TextAlign: UnityEngine.TextAnchor.MiddleCenter)),
                                 }
                             },
                         }
