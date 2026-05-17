@@ -1571,10 +1571,16 @@ namespace Fram3.UI.Rendering.Internal
             label.text = text.Content;
             if (text.Style == null)
             {
+#if !FRAM3_PURE_TESTS
+                UnityEngine.Debug.Log($"[Avatar-dbg] PaintText '{text.Content}': no style, skipping");
+#endif
                 return;
             }
 
             ApplyTextStyle(text.Style, label);
+#if !FRAM3_PURE_TESTS
+            UnityEngine.Debug.Log($"[Avatar-dbg] PaintText '{text.Content}': textAlign={label.resolvedStyle.unityTextAlign} fontSize={label.resolvedStyle.fontSize} color={label.resolvedStyle.color}");
+#endif
         }
 
         private static void ApplyTextStyle(TextStyle style, VisualElement native)
@@ -1601,7 +1607,12 @@ namespace Fram3.UI.Rendering.Internal
 
             if (style.TextAlign.HasValue)
             {
+                UnityEngine.Debug.Log($"[Avatar-dbg] ApplyTextStyle: setting TextAlign={style.TextAlign.Value}");
                 native.style.unityTextAlign = style.TextAlign.Value;
+            }
+            else
+            {
+                UnityEngine.Debug.Log($"[Avatar-dbg] ApplyTextStyle: TextAlign is null, not set");
             }
 
             if (style.FontAsset != null)
@@ -1799,6 +1810,11 @@ namespace Fram3.UI.Rendering.Internal
             native.style.justifyContent = Justify.Center;
             native.style.flexGrow = 1f;
             native.style.alignSelf = Align.Stretch;
+#if !FRAM3_PURE_TESTS
+            native.RegisterCallback<GeometryChangedEvent>(e =>
+                UnityEngine.Debug.Log($"[Avatar-dbg] Center layout: w={e.newRect.width} h={e.newRect.height} alignItems={native.resolvedStyle.alignItems} justifyContent={native.resolvedStyle.justifyContent}")
+            );
+#endif
         }
 
         private static void ApplyDecoration(BoxDecoration decoration, VisualElement native)
