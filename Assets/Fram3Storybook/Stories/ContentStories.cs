@@ -1493,8 +1493,6 @@ namespace Fram3.UI.Storybook.Stories
             }
         }
 
-        }
-
         private sealed class CardStory : StatefulElement
         {
             public override State CreateState() => new CardStoryState();
