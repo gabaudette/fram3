@@ -1585,14 +1585,14 @@ namespace Fram3.UI.Storybook.Stories
                                         Children = new Element[]
                                         {
                                             new Text("Defeat the Dragon", new TextStyle(FontSize: theme.FontSize, Bold: true, Color: theme.PrimaryTextColor)),
-                                            new Badge(count: 3)
-                                            {
-                                                Child = new Container(
+                                            new Badge(
+                                                new Container(
                                                     width: theme.Spacing * 3f,
                                                     height: theme.Spacing * 3f,
                                                     decoration: new BoxDecoration(Color: theme.PrimaryColor, BorderRadius: BorderRadius.All(theme.BorderRadius))
-                                                )
-                                            }
+                                                ),
+                                                count: 3
+                                            )
                                         }
                                     },
                                     content: new Column(crossAxisAlignment: CrossAxisAlignment.Start)
