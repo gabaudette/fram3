@@ -1652,6 +1652,9 @@ namespace Fram3.UI.Rendering.Internal
                 case Container container:
                     ApplyContainerLayout(container, native);
                     break;
+                case Elements.Content.Avatar avatar:
+                    ApplyAvatarLayout(avatar, native, theme);
+                    break;
                 case Center:
                     ApplyCenterLayout(native);
                     break;
@@ -1784,12 +1787,6 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.height = container.Height.Value;
             }
 
-            if (container.Width.HasValue && container.Height.HasValue)
-            {
-                native.style.flexShrink = 0f;
-                native.style.alignSelf = Align.FlexStart;
-            }
-
             if (container.Padding.HasValue)
             {
                 var insets = container.Padding.Value;
@@ -1820,6 +1817,20 @@ namespace Fram3.UI.Rendering.Internal
             {
                 native.style.overflow = Overflow.Hidden;
             }
+        }
+
+        private static void ApplyAvatarLayout(Elements.Content.Avatar avatar, VisualElement native, Theme theme)
+        {
+            var diameter = avatar.Size switch
+            {
+                AvatarSize.Small => theme.Spacing * 4f,
+                AvatarSize.Large => theme.Spacing * 7f,
+                _ => theme.Spacing * 5f
+            };
+            native.style.width = diameter;
+            native.style.height = diameter;
+            native.style.flexShrink = 0f;
+            native.style.alignSelf = Align.Center;
         }
 
         private static void ApplyCenterLayout(VisualElement native)
