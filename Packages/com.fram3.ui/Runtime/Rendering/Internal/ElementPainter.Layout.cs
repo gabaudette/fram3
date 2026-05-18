@@ -261,6 +261,7 @@ namespace Fram3.UI.Rendering.Internal
             if (container.Width.HasValue)
             {
                 native.style.width = container.Width.Value;
+                native.style.flexShrink = 0f;
             }
 
             if (container.Height.HasValue)
