@@ -107,6 +107,14 @@ namespace Fram3.UI.Storybook.Stories.Content
                     name: "Tooltip",
                     description: "Attaches a plain-text tooltip to its child that appears on hover.",
                     build: () => new TooltipStory()
+                ),
+                new Story(
+                    name: "TreeView",
+                    description: "A hierarchical expandable/collapsible tree." +
+                                 " Nodes with children toggle their subtree on tap." +
+                                 " Supports optional icons, pre-expanded nodes, configurable indent," +
+                                 " and a tap callback on leaf nodes.",
+                    build: () => new TreeViewStory()
                 )
             };
         }
