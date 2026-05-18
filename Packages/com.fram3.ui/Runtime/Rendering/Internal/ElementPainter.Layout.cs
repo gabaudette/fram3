@@ -448,6 +448,22 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.paddingBottom = insets.Bottom;
                 native.style.paddingLeft = insets.Left;
             }
+
+            if (expanded.OnTap != null)
+            {
+                if (native.userData is Action)
+                {
+                    native.userData = expanded.OnTap;
+                }
+                else
+                {
+                    native.userData = expanded.OnTap;
+                    native.RegisterCallback<PointerDownEvent>(_ =>
+                    {
+                        if (native.userData is Action tap) tap();
+                    });
+                }
+            }
         }
 
         private static void ApplyDividerLayout(Divider divider, VisualElement native)

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Fram3.UI.Core;
-using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
@@ -204,48 +203,41 @@ namespace Fram3.UI.Elements.Content
 
                     if (col.Width.HasValue)
                     {
-                        Element cellContent = col.Sortable
-                            ? new GestureDetector(
-                                child: label,
-                                onTap: () => SetState(() =>
+                        Action? onTap = null;
+                        if (col.Sortable)
+                        {
+                            var ci = colIndex;
+                            onTap = () => SetState(() =>
+                            {
+                                if (_sortColumnIndex == ci)
+                                    _sortAscending = !_sortAscending;
+                                else
                                 {
-                                    if (_sortColumnIndex == colIndex)
-                                        _sortAscending = !_sortAscending;
-                                    else
-                                    {
-                                        _sortColumnIndex = colIndex;
-                                        _sortAscending = true;
-                                    }
-                                })
-                            )
-                            : label;
-                        cells.Add(new Container(padding: cellPadding, width: col.Width) { Child = cellContent });
+                                    _sortColumnIndex = ci;
+                                    _sortAscending = true;
+                                }
+                            });
+                        }
+                        cells.Add(new Container(padding: cellPadding, width: col.Width, onTap: onTap) { Child = label });
                     }
                     else
                     {
+                        Action? onTap = null;
                         if (col.Sortable)
                         {
-                            cells.Add(new Expanded(padding: cellPadding)
+                            var ci = colIndex;
+                            onTap = () => SetState(() =>
                             {
-                                Child = new GestureDetector(
-                                    child: label,
-                                    onTap: () => SetState(() =>
-                                    {
-                                        if (_sortColumnIndex == colIndex)
-                                            _sortAscending = !_sortAscending;
-                                        else
-                                        {
-                                            _sortColumnIndex = colIndex;
-                                            _sortAscending = true;
-                                        }
-                                    })
-                                )
+                                if (_sortColumnIndex == ci)
+                                    _sortAscending = !_sortAscending;
+                                else
+                                {
+                                    _sortColumnIndex = ci;
+                                    _sortAscending = true;
+                                }
                             });
                         }
-                        else
-                        {
-                            cells.Add(new Expanded(padding: cellPadding) { Child = label });
-                        }
+                        cells.Add(new Expanded(padding: cellPadding, onTap: onTap) { Child = label });
                     }
                 }
 
