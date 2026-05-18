@@ -43,6 +43,12 @@ namespace Fram3.UI.Storybook.Stories
                     () => new BadgeStory()
                 ),
                 new Story(
+                    "Card",
+                    "An elevated surface container with an optional header and footer. " +
+                    "Supports elevated (shadow) and outlined (border) variants.",
+                    () => new CardStory()
+                ),
+                new Story(
                     "Chip",
                     "A compact, pill-shaped label used to represent an attribute, filter, or selection. " +
                     "Supports an optional dismiss button for removable chips.",
@@ -1484,6 +1490,150 @@ namespace Fram3.UI.Storybook.Stories
                         }
                     };
                 }
+            }
+        }
+
+        private sealed class CardStory : StatefulElement
+        {
+            public override State CreateState() => new CardStoryState();
+
+            private sealed class CardStoryState : State<CardStory>
+            {
+                public override Element Build(BuildContext context)
+                {
+                    var theme = ThemeConsumer.Of(context);
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            StoryHelpers.Section("Elevated", BuildElevated(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Outlined", BuildOutlined(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("With Header", BuildWithHeader(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("With Header and Footer", BuildWithHeaderAndFooter(theme), theme),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section("Game Example — Quest Card", BuildGameExample(theme), theme),
+                        }
+                    };
+                }
+
+                private static Element BuildElevated(Theme theme) =>
+                    new Card(
+                        content: new Text(
+                            "This is an elevated card. It uses a shadow to convey depth above the surface.",
+                            new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
+                        )
+                    );
+
+                private static Element BuildOutlined(Theme theme) =>
+                    new Card(
+                        outlined: true,
+                        content: new Text(
+                            "This is an outlined card. It uses a border instead of a shadow for a flat look.",
+                            new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
+                        )
+                    );
+
+                private static Element BuildWithHeader(Theme theme) =>
+                    new Card(
+                        header: new Text(
+                            "Card Header",
+                            new TextStyle(FontSize: theme.FontSize, Bold: true, Color: theme.PrimaryTextColor)
+                        ),
+                        content: new Text(
+                            "Card body content appears here. The header above is separated by a divider.",
+                            new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
+                        )
+                    );
+
+                private static Element BuildWithHeaderAndFooter(Theme theme) =>
+                    new Card(
+                        header: new Text(
+                            "Card Header",
+                            new TextStyle(FontSize: theme.FontSize, Bold: true, Color: theme.PrimaryTextColor)
+                        ),
+                        content: new Text(
+                            "Card body content appears here.",
+                            new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
+                        ),
+                        footer: new Row(crossAxisAlignment: CrossAxisAlignment.Center, mainAxisAlignment: MainAxisAlignment.End)
+                        {
+                            Children = new Element[]
+                            {
+                                new Button("Cancel", () => { }),
+                                SizedBox.FromSize(width: theme.Spacing),
+                                new Button("Confirm", () => { }),
+                            }
+                        }
+                    );
+
+                private static Element BuildGameExample(Theme theme) =>
+                    new Row(crossAxisAlignment: CrossAxisAlignment.Start)
+                    {
+                        Children = new Element[]
+                        {
+                            new Expanded
+                            {
+                                Child = new Card(
+                                    header: new Row(
+                                        crossAxisAlignment: CrossAxisAlignment.Center,
+                                        mainAxisAlignment: MainAxisAlignment.SpaceBetween
+                                    )
+                                    {
+                                        Children = new Element[]
+                                        {
+                                            new Text("Defeat the Dragon", new TextStyle(FontSize: theme.FontSize, Bold: true, Color: theme.PrimaryTextColor)),
+                                            new Badge(
+                                                new Container(
+                                                    width: theme.Spacing * 3f,
+                                                    height: theme.Spacing * 3f,
+                                                    decoration: new BoxDecoration(Color: theme.PrimaryColor, BorderRadius: BorderRadius.All(theme.BorderRadius))
+                                                ),
+                                                count: 3
+                                            )
+                                        }
+                                    },
+                                    content: new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                                    {
+                                        Children = new Element[]
+                                        {
+                                            new Text("Travel to the Ember Peaks and slay the ancient dragon terrorizing the region.", new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)),
+                                            SizedBox.FromSize(height: theme.Spacing),
+                                            new Text("Reward: 500 gold", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                                        }
+                                    },
+                                    footer: new Row(crossAxisAlignment: CrossAxisAlignment.Center, mainAxisAlignment: MainAxisAlignment.End)
+                                    {
+                                        Children = new Element[]
+                                        {
+                                            new Button("Abandon", () => { }),
+                                            SizedBox.FromSize(width: theme.Spacing),
+                                            new Button("Track Quest", () => { }),
+                                        }
+                                    }
+                                )
+                            },
+                            SizedBox.FromSize(width: theme.Spacing * 3f),
+                            new Expanded
+                            {
+                                Child = new Card(
+                                    outlined: true,
+                                    header: new Text("Gather Herbs", new TextStyle(FontSize: theme.FontSize, Bold: true, Color: theme.PrimaryTextColor)),
+                                    content: new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                                    {
+                                        Children = new Element[]
+                                        {
+                                            new Text("Collect 10 moonbloom herbs from the Verdant Forest.", new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)),
+                                            SizedBox.FromSize(height: theme.Spacing),
+                                            new Text("Reward: 80 gold", new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)),
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    };
             }
         }
 
