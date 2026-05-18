@@ -194,35 +194,35 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static Image CreateImage(FrameImage image)
+        private static Image CreateImage(FrameImage frameImage)
         {
-            var img = new Image();
-            ApplyImageDimensions(image.Width, image.Height, img);
+            var image = new Image();
+            ApplyImageDimensions(frameImage.Width, frameImage.Height, image);
 #if !FRAM3_PURE_TESTS
-            switch (image.Source)
+            switch (frameImage.Source)
             {
                 case UnityEngine.Sprite sprite:
-                    img.sprite = sprite;
+                    image.sprite = sprite;
                     break;
                 case UnityEngine.Texture2D texture:
-                    img.image = texture;
+                    image.image = texture;
                     break;
             }
 #endif
-            return img;
+            return image;
         }
 
-        private static void PaintImage(FrameImage image, Image img)
+        private static void PaintImage(FrameImage frameImage, Image image)
         {
-            ApplyImageDimensions(image.Width, image.Height, img);
+            ApplyImageDimensions(frameImage.Width, frameImage.Height, image);
 #if !FRAM3_PURE_TESTS
-            switch (image.Source)
+            switch (frameImage.Source)
             {
                 case UnityEngine.Sprite sprite:
-                    img.sprite = sprite;
+                    image.sprite = sprite;
                     break;
                 case UnityEngine.Texture2D texture:
-                    img.image = texture;
+                    image.image = texture;
                     break;
             }
 #endif
@@ -230,19 +230,19 @@ namespace Fram3.UI.Rendering.Internal
 
         private static Image CreateIcon(Icon icon)
         {
-            var img = new Image();
-            ApplyImageDimensions(icon.Width, icon.Height, img);
+            var image = new Image();
+            ApplyImageDimensions(icon.Width, icon.Height, image);
 #if !FRAM3_PURE_TESTS
-            ApplyIconSource(icon, img);
+            ApplyIconSource(icon, image);
 #endif
-            return img;
+            return image;
         }
 
-        private static void PaintIcon(Icon icon, Image img)
+        private static void PaintIcon(Icon icon, Image image)
         {
-            ApplyImageDimensions(icon.Width, icon.Height, img);
+            ApplyImageDimensions(icon.Width, icon.Height, image);
 #if !FRAM3_PURE_TESTS
-            ApplyIconSource(icon, img);
+            ApplyIconSource(icon, image);
 #endif
         }
 

@@ -1,11 +1,9 @@
 #nullable enable
-using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Input;
 using Fram3.UI.Elements.Layout;
-using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
 using UnityEngine.UIElements;
 using UITextField = UnityEngine.UIElements.TextField;
@@ -13,10 +11,6 @@ using UIScrollView = UnityEngine.UIElements.ScrollView;
 using UIProgressBar = UnityEngine.UIElements.ProgressBar;
 using UIFloatField = UnityEngine.UIElements.FloatField;
 using UIMinMaxSlider = UnityEngine.UIElements.MinMaxSlider;
-using UIWrap = UnityEngine.UIElements.Wrap;
-using Column = Fram3.UI.Elements.Layout.Column;
-using Row = Fram3.UI.Elements.Layout.Row;
-
 namespace Fram3.UI.Rendering.Internal
 {
     /// <summary>
