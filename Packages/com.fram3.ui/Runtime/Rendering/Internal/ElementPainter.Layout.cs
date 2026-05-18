@@ -325,6 +325,22 @@ namespace Fram3.UI.Rendering.Internal
 #endif
             }
 
+            if (container.OnTap != null)
+            {
+                if (native.userData is Action)
+                {
+                    native.userData = container.OnTap;
+                }
+                else
+                {
+                    native.userData = container.OnTap;
+                    native.RegisterCallback<PointerDownEvent>(_ =>
+                    {
+                        if (native.userData is Action tap) tap();
+                    });
+                }
+            }
+
             if (container.Decoration == null)
             {
                 return;

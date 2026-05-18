@@ -429,15 +429,6 @@ namespace Fram3.UI.Tests.Elements.Content
             return possibleRow;
         }
 
-        private static string DumpNative(VisualElement n, int depth = 0)
-        {
-            var indent = new string(' ', depth * 2);
-            var s = $"{indent}[{n.GetType().Name}] w={n.style.width} fg={n.style.flexGrow} fs={n.style.flexShrink} children={n.childCount}\n";
-            foreach (var c in n.Children())
-                s += DumpNative(c, depth + 1);
-            return s;
-        }
-
         [Test]
         public void HeaderRow_FixedWidthColumn_HasCorrectWidth()
         {

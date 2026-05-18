@@ -44,6 +44,14 @@ namespace Fram3.UI.Elements.Layout
         public bool CenterChild { get; }
 
         /// <summary>
+        /// Optional tap callback. When set, the container's native element registers
+        /// a pointer-down handler that invokes this action. Use this instead of wrapping
+        /// in a <see cref="Fram3.UI.Elements.Gesture.GestureDetector"/> when the tap
+        /// handler must not introduce an extra layout node.
+        /// </summary>
+        public Action? OnTap { get; }
+
+        /// <summary>
         /// Creates an <see cref="Container"/> element.
         /// </summary>
         /// <param name="decoration">Optional visual decoration.</param>
@@ -51,6 +59,7 @@ namespace Fram3.UI.Elements.Layout
         /// <param name="height">Optional explicit height in logical pixels.</param>
         /// <param name="padding">Optional inner padding.</param>
         /// <param name="centerChild">When true, centers the child along both axes.</param>
+        /// <param name="onTap">Optional tap callback registered directly on the native element.</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
         public Container(
             BoxDecoration? decoration = null,
@@ -58,6 +67,7 @@ namespace Fram3.UI.Elements.Layout
             float? height = null,
             EdgeInsets? padding = null,
             bool centerChild = false,
+            Action? onTap = null,
             Key? key = null
         ) : base(key)
         {
@@ -66,6 +76,7 @@ namespace Fram3.UI.Elements.Layout
             Height = height;
             Padding = padding;
             CenterChild = centerChild;
+            OnTap = onTap;
         }
 
         /// <summary>

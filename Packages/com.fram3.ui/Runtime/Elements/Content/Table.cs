@@ -309,8 +309,23 @@ namespace Fram3.UI.Elements.Content
                     }
                 }
 
-                var rowContent = new Container(
-                    decoration: new BoxDecoration(Color: bg)
+                Action? onTap = null;
+                if (Element.OnRowSelected != null)
+                {
+                    var capturedRow = row;
+                    var capturedSortedIndex = sortedIndex;
+                    onTap = () => SetState(() =>
+                    {
+                        _selectedRowIndex = _selectedRowIndex == capturedSortedIndex
+                            ? -1
+                            : capturedSortedIndex;
+                        Element.OnRowSelected?.Invoke(capturedRow);
+                    });
+                }
+
+                return new Container(
+                    decoration: new BoxDecoration(Color: bg),
+                    onTap: onTap
                 )
                 {
                     Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
@@ -318,24 +333,6 @@ namespace Fram3.UI.Elements.Content
                         Children = cells.ToArray()
                     }
                 };
-
-                if (Element.OnRowSelected == null)
-                {
-                    return rowContent;
-                }
-
-                var capturedRow = row;
-                var capturedSortedIndex = sortedIndex;
-                return new GestureDetector(
-                    child: rowContent,
-                    onTap: () => SetState(() =>
-                    {
-                        _selectedRowIndex = _selectedRowIndex == capturedSortedIndex
-                            ? -1
-                            : capturedSortedIndex;
-                        Element.OnRowSelected?.Invoke(capturedRow);
-                    })
-                );
             }
         }
     }
