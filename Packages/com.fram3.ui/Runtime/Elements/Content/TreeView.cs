@@ -166,57 +166,57 @@ namespace Fram3.UI.Elements.Content
                 Styling.Theme theme
             )
             {
-                var indent = Element!.Indent * depth;
+                var rowChildren = new List<Element>();
 
-                // Chevron: "v" expanded, ">" collapsed, " " leaf (same width for alignment).
-                string chevron;
-                if (!node.HasChildren) chevron = " ";
-                else if (isExpanded) chevron = "v";
-                else chevron = ">";
-
-                var chevronEl = new Container(width: theme.Spacing * 2f, centerChild: true)
+                // Per-level indent.
+                if (depth > 0)
                 {
-                    Child = new Text(chevron, new TextStyle(
-                        FontSize: theme.FontSizeSmall,
-                        Color: node.HasChildren ? theme.PrimaryColor : theme.SecondaryTextColor.WithAlpha(0f)
-                    ))
-                };
-
-                Element? iconEl = null;
-                if (node.Icon != null)
-                {
-                    iconEl = new Container(width: theme.Spacing * 2.5f, centerChild: true)
-                    {
-                        Child = new Text(node.Icon, new TextStyle(
-                            FontSize: theme.FontSizeSmall,
-                            Color: theme.SecondaryTextColor
-                        ))
-                    };
+                    rowChildren.Add(SizedBox.FromSize(width: Element!.Indent * depth));
                 }
 
-                var labelEl = new Text(node.Label, new TextStyle(
+                // Chevron — same font size as the label so it reads at the same scale.
+                // Leaf nodes get an invisible placeholder to keep label alignment consistent.
+                if (node.HasChildren)
+                {
+                    var capturedPath = path;
+                    rowChildren.Add(new Text(
+                        isExpanded ? "v" : ">",
+                        new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryColor, Bold: true)
+                    ));
+                }
+                else
+                {
+                    // Invisible placeholder — same character width keeps labels aligned.
+                    rowChildren.Add(new Text(
+                        "v",
+                        new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryColor.WithAlpha(0f))
+                    ));
+                }
+
+                // Fixed gap between chevron and label (or icon).
+                rowChildren.Add(SizedBox.FromSize(width: theme.Spacing));
+
+                // Optional icon.
+                if (node.Icon != null)
+                {
+                    rowChildren.Add(new Text(
+                        node.Icon,
+                        new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
+                    ));
+                    rowChildren.Add(SizedBox.FromSize(width: theme.Spacing * 0.5f));
+                }
+
+                // Label.
+                rowChildren.Add(new Text(node.Label, new TextStyle(
                     FontSize: theme.FontSize,
                     Color: theme.PrimaryTextColor,
                     Bold: node.HasChildren
-                ));
-
-                var rowChildren = new List<Element>();
-                if (indent > 0f)
-                {
-                    rowChildren.Add(SizedBox.FromSize(width: indent));
-                }
-                rowChildren.Add(chevronEl);
-                if (iconEl != null) rowChildren.Add(iconEl);
-                rowChildren.Add(SizedBox.FromSize(width: theme.Spacing * 0.5f));
-                rowChildren.Add(labelEl);
+                )));
 
                 var rowContent = new Container(
                     padding: EdgeInsets.Symmetric(
                         vertical: theme.Spacing * 0.75f,
-                        horizontal: 0f
-                    ),
-                    decoration: new BoxDecoration(
-                        Color: FrameColor.FromHex("#00000000")
+                        horizontal: theme.Spacing
                     )
                 )
                 {
@@ -238,7 +238,7 @@ namespace Fram3.UI.Elements.Content
                             _expanded.Add(capturedPath);
                     });
                 }
-                else if (Element.OnNodeTap != null)
+                else if (Element!.OnNodeTap != null)
                 {
                     var capturedNode = node;
                     onTap = () => Element.OnNodeTap(capturedNode);
