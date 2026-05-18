@@ -218,20 +218,25 @@ namespace Fram3.UI.Rendering.Internal
                 sb.AppendLine($"[Fram3.Table.Debug] Column resolved w={native.resolvedStyle.width} h={native.resolvedStyle.height} children={native.childCount}");
                 for (var ci = 0; ci < native.childCount; ci++)
                 {
-                    var rowWrap = native[ci];
-                    sb.AppendLine($"  [row {ci}] {rowWrap.GetType().Name} x={rowWrap.layout.x} w={rowWrap.resolvedStyle.width} fg={rowWrap.style.flexGrow} fs={rowWrap.style.flexShrink} fd={rowWrap.style.flexDirection} children={rowWrap.childCount}");
-                    for (var cj = 0; cj < rowWrap.childCount; cj++)
+                    var l1 = native[ci];
+                    sb.AppendLine($"  [L1 {ci}] {l1.GetType().Name} x={l1.layout.x} w={l1.resolvedStyle.width} fg={l1.style.flexGrow} fs={l1.style.flexShrink} fd={l1.style.flexDirection} n={l1.childCount}");
+                    for (var cj = 0; cj < l1.childCount; cj++)
                     {
-                        var l2 = rowWrap[cj];
-                        sb.AppendLine($"    [L2 {cj}] {l2.GetType().Name} x={l2.layout.x} w={l2.resolvedStyle.width} fg={l2.style.flexGrow} fs={l2.style.flexShrink} fd={l2.style.flexDirection} children={l2.childCount}");
+                        var l2 = l1[cj];
+                        sb.AppendLine($"    [L2 {cj}] {l2.GetType().Name} x={l2.layout.x} w={l2.resolvedStyle.width} fg={l2.style.flexGrow} fs={l2.style.flexShrink} fd={l2.style.flexDirection} n={l2.childCount}");
                         for (var ck = 0; ck < l2.childCount; ck++)
                         {
                             var l3 = l2[ck];
-                            sb.AppendLine($"      [L3 {ck}] {l3.GetType().Name} x={l3.layout.x} w={l3.resolvedStyle.width} fg={l3.style.flexGrow} fs={l3.style.flexShrink} fd={l3.style.flexDirection} children={l3.childCount}");
+                            sb.AppendLine($"      [L3 {ck}] {l3.GetType().Name} x={l3.layout.x} w={l3.resolvedStyle.width} fg={l3.style.flexGrow} fs={l3.style.flexShrink} fd={l3.style.flexDirection} n={l3.childCount}");
                             for (var cl = 0; cl < l3.childCount; cl++)
                             {
                                 var l4 = l3[cl];
-                                sb.AppendLine($"        [L4 {cl}] {l4.GetType().Name} x={l4.layout.x} w={l4.resolvedStyle.width} fg={l4.style.flexGrow} fs={l4.style.flexShrink} fd={l4.style.flexDirection} children={l4.childCount}");
+                                sb.AppendLine($"        [L4 {cl}] {l4.GetType().Name} x={l4.layout.x} w={l4.resolvedStyle.width} fg={l4.style.flexGrow} fs={l4.style.flexShrink} fd={l4.style.flexDirection} n={l4.childCount}");
+                                for (var cm = 0; cm < l4.childCount; cm++)
+                                {
+                                    var l5 = l4[cm];
+                                    sb.AppendLine($"          [L5 {cm}] {l5.GetType().Name} x={l5.layout.x} w={l5.resolvedStyle.width} fg={l5.style.flexGrow} fs={l5.style.flexShrink} fd={l5.style.flexDirection} n={l5.childCount}");
+                                }
                             }
                         }
                     }
