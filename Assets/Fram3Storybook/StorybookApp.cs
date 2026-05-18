@@ -6,7 +6,13 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
-using Fram3.UI.Storybook.Stories;
+using Fram3.UI.Storybook.Stories.Theming;
+using Fram3.UI.Storybook.Stories.Animation;
+using Fram3.UI.Storybook.Stories.Content;
+using Fram3.UI.Storybook.Stories.Input;
+using Fram3.UI.Storybook.Stories.Layout;
+using Fram3.UI.Storybook.Stories.Navigation;
+using Fram3.UI.Storybook.Stories.States;
 using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook
@@ -113,7 +119,10 @@ namespace Fram3.UI.Storybook
                 return new Container(
                     decoration: new BoxDecoration(
                         Color: FrameColor.FromHex("#0A0C16"),
-                        Border: new Border(FrameColor.FromHex("#1E2235"), 1f)
+                        Border: new Border(
+                            Color: FrameColor.FromHex("#1E2235"),
+                            Width: 1f
+                        )
                     ),
                     width: 260f
                 )
@@ -146,9 +155,15 @@ namespace Fram3.UI.Storybook
             private static Element BuildSidebarHeader(Theme theme)
             {
                 return new Container(
-                    padding: EdgeInsets.Symmetric(vertical: theme.Spacing * 2.5f, horizontal: theme.Spacing * 2f),
+                    padding: EdgeInsets.Symmetric(
+                        vertical: theme.Spacing * 2.5f,
+                        horizontal: theme.Spacing * 2f
+                    ),
                     decoration: new BoxDecoration(
-                        Border: new Border(FrameColor.FromHex("#1E2235"), 1f)
+                        Border: new Border(
+                            Color: FrameColor.FromHex("#1E2235"),
+                            Width: 1f
+                        )
                     )
                 )
                 {
@@ -156,13 +171,19 @@ namespace Fram3.UI.Storybook
                     {
                         Children = new Element[]
                         {
-                            new Icon(svgPath: "Assets/Fram3Storybook/Icons/fram3-logo.svg", width: 48f, height: 48f),
+                            new Icon(
+                                svgPath: "Assets/Fram3Storybook/Icons/fram3-logo.svg",
+                                width: 48f,
+                                height: 48f
+                            ),
                             SizedBox.FromSize(height: 6f),
-                            new Text("UI FRAMEWORK", new TextStyle(
-                                FontSize: 10f,
-                                Color: theme.SecondaryColor,
-                                LetterSpacing: 2f
-                            ))
+                            new Text("A declarative UI Framework",
+                                style: new TextStyle(
+                                    FontSize: 10f,
+                                    Color: theme.SecondaryColor,
+                                    LetterSpacing: 2f
+                                )
+                            )
                         }
                     }
                 };
@@ -172,42 +193,55 @@ namespace Fram3.UI.Storybook
             {
                 var items = new List<Element>();
 
-                for (var ci = 0; ci < _chapters!.Count; ci++)
+                for (var chapterIndex = 0; chapterIndex < _chapters!.Count; chapterIndex++)
                 {
-                    var chapter = _chapters[ci];
-                    var capturedCi = ci;
+                    var chapter = _chapters[chapterIndex];
+                    var capturedChapterIndex = chapterIndex;
 
-                    if (ci > 0)
+                    if (chapterIndex > 0)
                     {
-                        items.Add(SizedBox.FromSize(height: theme.Spacing * 1.5f));
+                        items.Add(
+                            SizedBox.FromSize(height: theme.Spacing * 1.5f)
+                        );
                     }
 
                     items.Add(
                         new Padding(new EdgeInsets(4f, 4f, 6f, 4f))
                         {
-                            Child = new Text(chapter.Title.ToUpperInvariant(), new TextStyle(
-                                FontSize: 10f,
-                                Color: theme.SecondaryTextColor,
-                                Bold: true,
-                                LetterSpacing: 1.5f
-                            ))
+                            Child = new Text(
+                                chapter.Title.ToUpperInvariant(),
+                                style: new TextStyle(
+                                    FontSize: 10f,
+                                    Color: theme.SecondaryTextColor,
+                                    Bold: true,
+                                    LetterSpacing: 1.5f
+                                )
+                            )
                         }
                     );
 
-                    for (var si = 0; si < chapter.Stories.Count; si++)
+                    for (var storyIndex = 0; storyIndex < chapter.Stories.Count; storyIndex++)
                     {
-                        var story = chapter.Stories[si];
-                        var capturedSi = si;
-                        var isSelected = _selectedChapter == capturedCi && _selectedStory == capturedSi;
+                        var story = chapter.Stories[storyIndex];
+                        var capturedStoryIndex = storyIndex;
+                        var isSelected = _selectedChapter == capturedChapterIndex &&
+                                         _selectedStory == capturedStoryIndex;
 
-                        items.Add(BuildSidebarItem(story.Name, isSelected, theme, () =>
-                        {
-                            SetState(() =>
-                            {
-                                _selectedChapter = capturedCi;
-                                _selectedStory = capturedSi;
-                            });
-                        }));
+                        items.Add(
+                            BuildSidebarItem(
+                                name: story.Name,
+                                isSelected,
+                                theme,
+                                onTap: () =>
+                                {
+                                    SetState(() =>
+                                    {
+                                        _selectedChapter = capturedChapterIndex;
+                                        _selectedStory = capturedStoryIndex;
+                                    });
+                                }
+                            )
+                        );
                     }
                 }
 
@@ -245,11 +279,14 @@ namespace Fram3.UI.Storybook
                         padding: EdgeInsets.Symmetric(vertical: 8f, horizontal: theme.Spacing)
                     )
                     {
-                        Child = new Text(name, new TextStyle(
-                            FontSize: theme.FontSize,
-                            Color: textColor,
-                            Bold: isSelected
-                        ))
+                        Child = new Text(
+                            name,
+                            style: new TextStyle(
+                                FontSize: theme.FontSize,
+                                Color: textColor,
+                                Bold: isSelected
+                            )
+                        )
                     }
                 );
             }
@@ -272,13 +309,19 @@ namespace Fram3.UI.Storybook
             {
                 if (_chapters == null || _chapters.Count == 0)
                 {
-                    return new Text("No stories registered.", new TextStyle(Color: theme.PrimaryTextColor));
+                    return new Text(
+                        "No stories registered.",
+                        style: new TextStyle(Color: theme.PrimaryTextColor)
+                    );
                 }
 
                 var chapter = _chapters[_selectedChapter];
                 if (chapter.Stories.Count == 0)
                 {
-                    return new Text("No stories in this chapter.", new TextStyle(Color: theme.PrimaryTextColor));
+                    return new Text(
+                        "No stories in this chapter.",
+                        style: new TextStyle(Color: theme.PrimaryTextColor)
+                    );
                 }
 
                 var story = chapter.Stories[_selectedStory];
@@ -287,7 +330,10 @@ namespace Fram3.UI.Storybook
                     decoration: new BoxDecoration(
                         Color: theme.SurfaceColor,
                         BorderRadius: BorderRadius.All(12f),
-                        Border: new Border(FrameColor.FromHex("#1E2235"), 1f)
+                        Border: new Border(
+                            Color: FrameColor.FromHex("#1E2235"),
+                            Width: 1f
+                        )
                     )
                 )
                 {
@@ -305,7 +351,10 @@ namespace Fram3.UI.Storybook
                                         BuildStoryHeader(story, theme),
                                         new Container(
                                             decoration: new BoxDecoration(
-                                                Border: new Border(FrameColor.FromHex("#1E2235"), 1f)
+                                                Border: new Border(
+                                                    Color: FrameColor.FromHex("#1E2235"),
+                                                    Width: 1f
+                                                )
                                             ),
                                             padding: EdgeInsets.Symmetric(vertical: 0f, horizontal: 0f)
                                         ),
@@ -326,7 +375,10 @@ namespace Fram3.UI.Storybook
                         Color: theme.PrimaryColor.WithAlpha(0.12f),
                         BorderRadius: BorderRadius.Only(topLeft: 12f, topRight: 12f)
                     ),
-                    padding: EdgeInsets.Symmetric(vertical: theme.Spacing, horizontal: theme.Spacing * 3f)
+                    padding: EdgeInsets.Symmetric(
+                        vertical: theme.Spacing,
+                        horizontal: theme.Spacing * 3f
+                    )
                 )
                 {
                     Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
@@ -342,23 +394,32 @@ namespace Fram3.UI.Storybook
                                 )
                             ),
                             SizedBox.FromSize(width: theme.Spacing),
-                            new Text(chapter.Title.ToUpperInvariant(), new TextStyle(
-                                FontSize: 14f,
-                                Color: theme.PrimaryColor,
-                                LetterSpacing: 1.5f,
-                                Bold: true
-                            )),
+                            new Text(
+                                chapter.Title.ToUpperInvariant(),
+                                style: new TextStyle(
+                                    FontSize: 14f,
+                                    Color: theme.PrimaryColor,
+                                    LetterSpacing: 1.5f,
+                                    Bold: true
+                                )
+                            ),
                             SizedBox.FromSize(width: 6f),
-                            new Text("/", new TextStyle(
-                                FontSize: 14f,
-                                Color: theme.SecondaryTextColor
-                            )),
+                            new Text(
+                                "/",
+                                style: new TextStyle(
+                                    FontSize: 14f,
+                                    Color: theme.SecondaryTextColor
+                                )
+                            ),
                             SizedBox.FromSize(width: 6f),
-                            new Text(story.Name, new TextStyle(
-                                FontSize: 14f,
-                                Color: theme.SecondaryTextColor,
-                                LetterSpacing: 0.5f
-                            ))
+                            new Text(
+                                story.Name,
+                                style: new TextStyle(
+                                    FontSize: 14f,
+                                    Color: theme.SecondaryTextColor,
+                                    LetterSpacing: 0.5f
+                                )
+                            )
                         }
                     }
                 };
@@ -372,16 +433,22 @@ namespace Fram3.UI.Storybook
                     {
                         Children = new Element[]
                         {
-                            new Text(story.Name, new TextStyle(
-                                FontSize: 26f,
-                                Bold: true,
-                                Color: theme.PrimaryTextColor
-                            )),
+                            new Text(
+                                story.Name,
+                                style: new TextStyle(
+                                    FontSize: 26f,
+                                    Bold: true,
+                                    Color: theme.PrimaryTextColor
+                                )
+                            ),
                             SizedBox.FromSize(height: 6f),
-                            new Text(story.Description, new TextStyle(
-                                FontSize: theme.FontSize,
-                                Color: FrameColor.FromHex("#94A3B8")
-                            ))
+                            new Text(
+                                story.Description,
+                                style: new TextStyle(
+                                    FontSize: theme.FontSize,
+                                    Color: FrameColor.FromHex("#94A3B8")
+                                )
+                            )
                         }
                     }
                 };
@@ -391,13 +458,13 @@ namespace Fram3.UI.Storybook
             {
                 return new Chapter[]
                 {
-                    new Chapter("Animation", AnimationStories.All()),
-                    new Chapter("Content", ContentStories.All()),
-                    new Chapter("Input", InputStories.All()),
-                    new Chapter("Layout", LayoutStories.All()),
-                    new Chapter("Navigation", NavigationStories.All()),
-                    new Chapter("State", StateStories.All()),
-                    new Chapter("Theming", ThemeStories.All())
+                    new Chapter(title: "Animation", stories: AnimationStories.All()),
+                    new Chapter(title: "Content", stories: ContentStories.All()),
+                    new Chapter(title: "Input", stories: InputStories.All()),
+                    new Chapter(title: "Layout", stories: LayoutStories.All()),
+                    new Chapter(title: "Navigation", stories: NavigationStories.All()),
+                    new Chapter(title: "State", stories: StateStories.All()),
+                    new Chapter(title: "Theming", stories: ThemingStories.All())
                 };
             }
         }

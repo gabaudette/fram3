@@ -7,7 +7,7 @@ using Fram3.UI.Elements.Layout;
 using Fram3.UI.Navigation;
 using Fram3.UI.Styling;
 
-namespace Fram3.UI.Storybook.Stories
+namespace Fram3.UI.Storybook.Stories.Navigation
 {
     public static class NavigationStories
     {
@@ -20,10 +20,10 @@ namespace Fram3.UI.Storybook.Stories
             return new Story[]
             {
                 new Story(
-                    "Navigator",
-                    "A stack-based router that maps string route keys to builder functions;" +
-                    " supports Push, Pop, and replace operations via NavigatorHandle.",
-                    BuildNavigator
+                    name: "Navigator",
+                    description: "A stack-based router that maps string route keys to builder functions;" +
+                                 " supports Push, Pop, and replace operations via NavigatorHandle.",
+                    build: BuildNavigator
                 )
             };
         }
@@ -31,7 +31,9 @@ namespace Fram3.UI.Storybook.Stories
         private static Element BuildNavigator()
         {
             return new Container(
-                decoration: new BoxDecoration(Color: FrameColor.FromHex("#0C0E1A")),
+                decoration: new BoxDecoration(
+                    Color: FrameColor.FromHex("#0C0E1A")
+                ),
                 height: 320f
             )
             {
@@ -59,14 +61,18 @@ namespace Fram3.UI.Storybook.Stories
                     {
                         new Text(
                             "Home Route",
-                            style: new TextStyle(FontSize: 20f, Bold: true, Color: FrameColor.FromHex("#E2E8F0")
+                            style: new TextStyle(
+                                FontSize: 20f,
+                                Bold: true,
+                                Color: FrameColor.FromHex("#E2E8F0")
                             )
                         ),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
                             Child = new Text(
                                 "Push a route using the buttons below.",
-                                style: new TextStyle(Color: FrameColor.FromHex("#E2E8F0")
+                                style: new TextStyle(
+                                    Color: FrameColor.FromHex("#E2E8F0")
                                 )
                             )
                         },
@@ -157,13 +163,15 @@ namespace Fram3.UI.Storybook.Stories
                             style: new TextStyle(
                                 FontSize: 20f,
                                 Bold: true,
-                                Color: FrameColor.FromHex("#E2E8F0"))
+                                Color: FrameColor.FromHex("#E2E8F0")
+                            )
                         ),
                         new Padding(EdgeInsets.Symmetric(vertical: 8f, horizontal: 0f))
                         {
                             Child = new Text(
                                 text: "CanPop: " + navigator.CanPop,
-                                style: new TextStyle(Color: FrameColor.FromHex("#E2E8F0")
+                                style: new TextStyle(
+                                    Color: FrameColor.FromHex("#E2E8F0")
                                 )
                             )
                         },
