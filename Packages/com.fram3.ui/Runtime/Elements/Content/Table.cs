@@ -192,8 +192,7 @@ namespace Fram3.UI.Elements.Content
                         padding: EdgeInsets.Symmetric(
                             vertical: theme.Spacing * 0.75f,
                             horizontal: theme.Spacing
-                        ),
-                        width: col.Width
+                        )
                     )
                     {
                         Child = new Text(
@@ -226,7 +225,7 @@ namespace Fram3.UI.Elements.Content
 
                     if (col.Width.HasValue)
                     {
-                        cells.Add(headerElement);
+                        cells.Add(new Container(width: col.Width) { Child = headerElement });
                     }
                     else
                     {
@@ -278,8 +277,7 @@ namespace Fram3.UI.Elements.Content
                         padding: EdgeInsets.Symmetric(
                             vertical: theme.Spacing * 0.75f,
                             horizontal: theme.Spacing
-                        ),
-                        width: col.Width
+                        )
                     )
                     {
                         Child = new Text(
@@ -290,7 +288,7 @@ namespace Fram3.UI.Elements.Content
 
                     if (col.Width.HasValue)
                     {
-                        cells.Add(cellContainer);
+                        cells.Add(new Container(width: col.Width) { Child = cellContainer });
                     }
                     else
                     {
