@@ -263,6 +263,12 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.width = container.Width.Value;
                 native.style.flexShrink = 0f;
             }
+            else
+            {
+                native.style.flexGrow = 1f;
+                native.style.flexShrink = 1f;
+                native.style.alignSelf = Align.Stretch;
+            }
 
             if (container.Height.HasValue)
             {

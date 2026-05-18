@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
 using Fram3.UI.Elements.Content;
+using Fram3.UI.Rendering.Internal;
 using NUnit.Framework;
+using StylingTheme = Fram3.UI.Styling.Theme;
+using UnityEngine.UIElements;
 
 namespace Fram3.UI.Tests.Elements.Content
 {
@@ -386,5 +389,208 @@ namespace Fram3.UI.Tests.Elements.Content
                 new Table<Item>(TwoCols(), ThreeRows(), onRowSelected: _ => { }), null);
             Assert.DoesNotThrow(() => expander.Unmount(node));
         }
+
+#if FRAM3_PURE_TESTS
+        private static VisualElement BuildNative(Element element)
+        {
+            var theme = StylingTheme.Default;
+            var native = ElementPainter.CreateNative(element, theme);
+            ElementPainter.Paint(element, native, theme);
+            foreach (var child in element.GetChildren())
+            {
+                native.Add(BuildNative(child));
+            }
+            return native;
+        }
+
+        private static VisualElement GetHeaderRowNative(Element built)
+        {
+            var native = BuildNative(built);
+            // built = Column > [headerContainer, divider, ...dataRows]
+            // headerContainer > Row > [cell0, cell1, cell2, ...]
+            var headerContainer = native.Children()[0];
+            var row = headerContainer.Children()[0];
+            return row;
+        }
+
+        private static VisualElement GetDataRowNative(Element built, int rowIndex = 0)
+        {
+            var native = BuildNative(built);
+            // built = Column > [headerContainer, divider, dataRow0, dataRow1, ...]
+            var dataRowWrapper = native.Children()[2 + rowIndex];
+            // dataRowWrapper is Container (no onRowSelected) or GestureDetector > Container
+            // either way first child is the Row
+            var possibleRow = dataRowWrapper.Children()[0];
+            if (possibleRow.childCount > 0 && possibleRow.Children()[0].childCount == 0)
+            {
+                // dataRowWrapper was a GestureDetector; its child is the Container, whose child is the Row
+                return possibleRow.Children()[0];
+            }
+            return possibleRow;
+        }
+
+        private static string DumpNative(VisualElement n, int depth = 0)
+        {
+            var indent = new string(' ', depth * 2);
+            var s = $"{indent}[{n.GetType().Name}] w={n.style.width} fg={n.style.flexGrow} fs={n.style.flexShrink} children={n.childCount}\n";
+            foreach (var c in n.Children())
+                s += DumpNative(c, depth + 1);
+            return s;
+        }
+
+        [Test]
+        public void HeaderRow_FixedWidthColumn_HasCorrectWidth()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var row = GetHeaderRowNative(built);
+            var cell = row.Children()[1];
+
+            Assert.That(cell.style.width, Is.EqualTo(80f).Within(0.001f));
+        }
+
+        [Test]
+        public void DataRow_FixedWidthColumn_HasCorrectWidth()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var row = GetDataRowNative(built);
+            var cell = row.Children()[1];
+
+            Assert.That(cell.style.width, Is.EqualTo(80f).Within(0.001f));
+        }
+
+        [Test]
+        public void HeaderRow_FixedWidthColumn_FlexShrinkIsZero()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var row = GetHeaderRowNative(built);
+            var cell = row.Children()[1];
+
+            Assert.That(cell.style.flexShrink, Is.EqualTo(0f).Within(0.001f));
+        }
+
+        [Test]
+        public void DataRow_FixedWidthColumn_FlexShrinkIsZero()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var row = GetDataRowNative(built);
+            var cell = row.Children()[1];
+
+            Assert.That(cell.style.flexShrink, Is.EqualTo(0f).Within(0.001f));
+        }
+
+        [Test]
+        public void HeaderRow_ExpandedColumn_FlexGrowIsOne()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var row = GetHeaderRowNative(built);
+            var cell = row.Children()[0];
+
+            Assert.That(cell.style.flexGrow, Is.EqualTo(1f).Within(0.001f));
+        }
+
+        [Test]
+        public void DataRow_ExpandedColumn_FlexGrowIsOne()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var row = GetDataRowNative(built);
+            var cell = row.Children()[0];
+
+            Assert.That(cell.style.flexGrow, Is.EqualTo(1f).Within(0.001f));
+        }
+
+        [Test]
+        public void HeaderAndDataRow_FixedWidthColumn_HaveSameWidth()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var headerRow = GetHeaderRowNative(built);
+            var dataRow = GetDataRowNative(built);
+
+            Assert.That(headerRow.Children()[1].style.width,
+                Is.EqualTo(dataRow.Children()[1].style.width).Within(0.001f));
+        }
+
+        [Test]
+        public void HeaderAndDataRow_ExpandedColumn_HaveSameFlexGrow()
+        {
+            var cols = new[]
+            {
+                new TableColumn<Item>("Name", r => r.Name),
+                new TableColumn<Item>("Value", r => r.Value.ToString(), width: 80f),
+                new TableColumn<Item>("Type", r => r.Type)
+            };
+            var expander = new NodeExpander(new RebuildScheduler());
+            var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
+            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+
+            var headerRow = GetHeaderRowNative(built);
+            var dataRow = GetDataRowNative(built);
+
+            Assert.That(headerRow.Children()[0].style.flexGrow,
+                Is.EqualTo(dataRow.Children()[0].style.flexGrow).Within(0.001f));
+        }
+#endif
     }
 }
