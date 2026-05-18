@@ -90,6 +90,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                                  " and a disabled state.",
                     build: () => new StepperStory()
                 ),
+                new Story(
+                    name: "Table",
+                    description: "A sortable, selectable data table for displaying structured row and column data." +
+                                 " Supports column sorting, row selection, striped rows, and fixed-width columns.",
+                    build: () => new TableStory()
+                ),
                 new Story
                 (
                     name: "TabView",
