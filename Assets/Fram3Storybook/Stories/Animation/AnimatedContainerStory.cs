@@ -49,7 +49,10 @@ namespace Fram3.UI.Storybook.Stories.Animation
                                 {
                                     Child = new Text(
                                         _expanded ? "Expanded" : "Small",
-                                        style: new TextStyle(Color: FrameColor.White, Bold: true)
+                                        style: new TextStyle(
+                                            Color: FrameColor.White,
+                                            Bold: true
+                                        )
                                     )
                                 }
                             )
