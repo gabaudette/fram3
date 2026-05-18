@@ -1,10 +1,10 @@
 #nullable enable
-using System;
 using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
+using Fram3.UI.Styling;
 
 namespace Fram3.UI.Storybook.Stories.Content
 {
@@ -14,6 +14,7 @@ namespace Fram3.UI.Storybook.Stories.Content
 
         private sealed class TableStoryState : State<TableStory>
         {
+            // ReSharper disable once NotAccessedField.Local
             private string _lastSelected = "—";
 
             public override Element Build(BuildContext context)
@@ -43,12 +44,10 @@ namespace Fram3.UI.Storybook.Stories.Content
                             label: "Leaderboard",
                             content: BuildLeaderboard(),
                             theme
-                        ),
+                        )
                     }
                 };
             }
-
-            // --- Basic ---
 
             private sealed class Spell
             {
@@ -70,22 +69,21 @@ namespace Fram3.UI.Storybook.Stories.Content
                 new Spell("Ice Lance", "Conjuration", "4d8"),
                 new Spell("Lightning Bolt", "Evocation", "8d6"),
                 new Spell("Acid Arrow", "Conjuration", "4d4"),
-                new Spell("Magic Missile", "Evocation", "3d4"),
+                new Spell("Magic Missile", "Evocation", "3d4")
             };
 
             private Element BuildBasic() =>
                 new Table<Spell>(
                     columns: new[]
                     {
-                        new TableColumn<Spell>("Spell", r => r.Name, sortable: false),
-                        new TableColumn<Spell>("School", r => r.School, sortable: false),
-                        new TableColumn<Spell>("Damage", r => r.Damage, sortable: false, width: 100f),
+                        new TableColumn<Spell>(header: "Spell", cellText: spell => spell.Name, sortable: false),
+                        new TableColumn<Spell>(header: "School", cellText: spell => spell.School, sortable: false),
+                        new TableColumn<Spell>(header: "Damage", cellText: spell => spell.Damage, sortable: false,
+                            width: 100f)
                     },
                     rows: Spells(),
                     stripedRows: true
                 );
-
-            // --- Sortable ---
 
             private sealed class Item
             {
@@ -110,41 +108,59 @@ namespace Fram3.UI.Storybook.Stories.Content
                 new Item("Health Potion", "Consumable", 50, 1),
                 new Item("Elven Bow", "Weapon", 480, 3),
                 new Item("Mana Crystal", "Consumable", 200, 1),
-                new Item("Plate Helm", "Armor", 210, 7),
+                new Item("Plate Helm", "Armor", 210, 7)
             };
 
             private Element BuildSortable() =>
                 new Table<Item>(
                     columns: new[]
                     {
-                        new TableColumn<Item>("Name", r => r.Name),
-                        new TableColumn<Item>("Type", r => r.Type),
-                        new TableColumn<Item>("Value (g)", r => r.Value.ToString(), width: 100f),
-                        new TableColumn<Item>("Weight", r => r.Weight.ToString(), width: 80f),
+                        new TableColumn<Item>(
+                            header: "Name",
+                            cellText: item => item.Name
+                        ),
+                        new TableColumn<Item>(
+                            header: "Type",
+                            cellText: item => item.Type
+                        ),
+                        new TableColumn<Item>(
+                            header: "Value (g)",
+                            cellText: item => item.Value.ToString(),
+                            width: 100f
+                        ),
+                        new TableColumn<Item>(
+                            header: "Weight",
+                            cellText: item => item.Weight.ToString(),
+                            width: 80f
+                        )
                     },
                     rows: Inventory(),
                     stripedRows: true
                 );
 
-            // --- Selectable ---
-
             private Element BuildSelectable() =>
                 new Table<Item>(
                     columns: new[]
                     {
-                        new TableColumn<Item>("Name", r => r.Name),
-                        new TableColumn<Item>("Type", r => r.Type),
-                        new TableColumn<Item>("Value (g)", r => r.Value.ToString(), width: 100f),
+                        new TableColumn<Item>(
+                            header: "Name",
+                            cellText: item => item.Name
+                        ),
+                        new TableColumn<Item>(
+                            header: "Type",
+                            cellText: item => item.Type
+                        ),
+                        new TableColumn<Item>(
+                            header: "Value (g)",
+                            cellText: item => item.Value.ToString(),
+                            width: 100f
+                        )
                     },
                     rows: Inventory(),
-                    onRowSelected: row =>
-                    {
-                        SetState(() => _lastSelected = row.Name);
-                    },
+                    onRowSelected: row => { SetState(() => _lastSelected = row.Name); },
                     stripedRows: false
                 );
 
-            // --- Leaderboard ---
 
             private sealed class Player
             {
@@ -173,18 +189,37 @@ namespace Fram3.UI.Storybook.Stories.Content
                 new Player(5, "Duskfang", "Warlock", 6120, "8.8"),
                 new Player(6, "Torvik", "Paladin", 5430, "6.3"),
                 new Player(7, "Niara", "Druid", 4870, "7.0"),
-                new Player(8, "Caelyx", "Bard", 3950, "5.5"),
+                new Player(8, "Caelyx", "Bard", 3950, "5.5")
             };
 
             private Element BuildLeaderboard() =>
                 new Table<Player>(
                     columns: new[]
                     {
-                        new TableColumn<Player>("#", r => r.Rank.ToString(), sortable: false, width: 40f),
-                        new TableColumn<Player>("Player", r => r.Name, sortable: false),
-                        new TableColumn<Player>("Class", r => r.Class),
-                        new TableColumn<Player>("Score", r => r.Score.ToString()),
-                        new TableColumn<Player>("K/D", r => r.KD, sortable: false, width: 70f),
+                        new TableColumn<Player>(
+                            header: "#",
+                            cellText: player => player.Rank.ToString(),
+                            sortable: false,
+                            width: 40f
+                        ),
+                        new TableColumn<Player>(
+                            header: "Player",
+                            cellText: player => player.Name,
+                            sortable: false
+                        ),
+                        new TableColumn<Player>(
+                            header: "Class",
+                            cellText: player => player.Class
+                        ),
+                        new TableColumn<Player>(
+                            header: "Score",
+                            cellText: player => player.Score.ToString()),
+                        new TableColumn<Player>(
+                            header: "K/D",
+                            cellText: player => player.KD,
+                            sortable: false,
+                            width: 70f
+                        )
                     },
                     rows: Leaderboard(),
                     onRowSelected: _ => { },

@@ -263,12 +263,6 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.width = container.Width.Value;
                 native.style.flexShrink = 0f;
             }
-            else
-            {
-                native.style.flexGrow = 1f;
-                native.style.flexShrink = 1f;
-                native.style.alignSelf = Align.Stretch;
-            }
 
             if (container.Height.HasValue)
             {
@@ -393,6 +387,15 @@ namespace Fram3.UI.Rendering.Internal
         private static void ApplyExpandedLayout(Expanded expanded, VisualElement native)
         {
             native.style.flexGrow = expanded.Flex;
+
+            if (expanded.Padding.HasValue)
+            {
+                var insets = expanded.Padding.Value;
+                native.style.paddingTop = insets.Top;
+                native.style.paddingRight = insets.Right;
+                native.style.paddingBottom = insets.Bottom;
+                native.style.paddingLeft = insets.Left;
+            }
         }
 
         private static void ApplyDividerLayout(Divider divider, VisualElement native)

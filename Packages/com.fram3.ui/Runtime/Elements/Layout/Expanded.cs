@@ -1,5 +1,6 @@
 #nullable enable
 using Fram3.UI.Core;
+using Fram3.UI.Styling;
 
 namespace Fram3.UI.Elements.Layout
 {
@@ -17,13 +18,20 @@ namespace Fram3.UI.Elements.Layout
         public float Flex { get; }
 
         /// <summary>
+        /// Optional inner padding applied to the expanded container.
+        /// </summary>
+        public EdgeInsets? Padding { get; }
+
+        /// <summary>
         /// Creates an <see cref="Expanded"/> element.
         /// </summary>
         /// <param name="flex">The flex grow factor. Must be greater than zero. Defaults to 1.</param>
+        /// <param name="padding">Optional inner padding.</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
-        public Expanded(float flex = 1f, Key? key = null) : base(key)
+        public Expanded(float flex = 1f, EdgeInsets? padding = null, Key? key = null) : base(key)
         {
             Flex = flex;
+            Padding = padding;
         }
     }
 }

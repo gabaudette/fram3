@@ -177,6 +177,11 @@ namespace Fram3.UI.Elements.Content
             private Element BuildHeaderRow(IReadOnlyList<TableColumn<TRow>> columns, Styling.Theme theme)
             {
                 var cells = new List<Element>();
+                var cellPadding = EdgeInsets.Symmetric(
+                    vertical: theme.Spacing * 0.75f,
+                    horizontal: theme.Spacing
+                );
+
                 for (var i = 0; i < columns.Count; i++)
                 {
                     var col = columns[i];
@@ -188,48 +193,59 @@ namespace Fram3.UI.Elements.Content
                         sortIndicator = _sortAscending ? " ^" : " v";
                     }
 
-                    var headerCell = new Container(
-                        padding: EdgeInsets.Symmetric(
-                            vertical: theme.Spacing * 0.75f,
-                            horizontal: theme.Spacing
+                    var label = new Text(
+                        col.Header + sortIndicator,
+                        new TextStyle(
+                            FontSize: theme.FontSize,
+                            Color: col.Sortable ? theme.PrimaryColor : theme.PrimaryTextColor,
+                            Bold: true
                         )
-                    )
-                    {
-                        Child = new Text(
-                            col.Header + sortIndicator,
-                            new TextStyle(
-                                FontSize: theme.FontSize,
-                                Color: col.Sortable ? theme.PrimaryColor : theme.PrimaryTextColor,
-                                Bold: true
-                            )
-                        )
-                    };
-
-                    Element headerElement = col.Sortable
-                        ? new GestureDetector(
-                            child: headerCell,
-                            onTap: () => SetState(() =>
-                            {
-                                if (_sortColumnIndex == colIndex)
-                                {
-                                    _sortAscending = !_sortAscending;
-                                }
-                                else
-                                {
-                                    _sortColumnIndex = colIndex;
-                                    _sortAscending = true;
-                                }
-                            })
-                        )
-                        : headerCell;
+                    );
 
                     if (col.Width.HasValue)
                     {
-                        cells.Add(new Container(width: col.Width) { Child = headerElement });
+                        Element cellContent = col.Sortable
+                            ? new GestureDetector(
+                                child: label,
+                                onTap: () => SetState(() =>
+                                {
+                                    if (_sortColumnIndex == colIndex)
+                                        _sortAscending = !_sortAscending;
+                                    else
+                                    {
+                                        _sortColumnIndex = colIndex;
+                                        _sortAscending = true;
+                                    }
+                                })
+                            )
+                            : label;
+                        cells.Add(new Container(padding: cellPadding, width: col.Width) { Child = cellContent });
                     }
                     else
                     {
-                        cells.Add(new Expanded { Child = headerElement });
+                        if (col.Sortable)
+                        {
+                            cells.Add(new Expanded(padding: cellPadding)
+                            {
+                                Child = new GestureDetector(
+                                    child: label,
+                                    onTap: () => SetState(() =>
+                                    {
+                                        if (_sortColumnIndex == colIndex)
+                                            _sortAscending = !_sortAscending;
+                                        else
+                                        {
+                                            _sortColumnIndex = colIndex;
+                                            _sortAscending = true;
+                                        }
+                                    })
+                                )
+                            });
+                        }
+                        else
+                        {
+                            cells.Add(new Expanded(padding: cellPadding) { Child = label });
+                        }
                     }
                 }
 
@@ -269,30 +285,27 @@ namespace Fram3.UI.Elements.Content
                     bg = theme.SurfaceColor.WithAlpha(0f);
                 }
 
+                var cellPadding = EdgeInsets.Symmetric(
+                    vertical: theme.Spacing * 0.75f,
+                    horizontal: theme.Spacing
+                );
+
                 var cells = new List<Element>();
                 for (var i = 0; i < columns.Count; i++)
                 {
                     var col = columns[i];
-                    var cellContainer = new Container(
-                        padding: EdgeInsets.Symmetric(
-                            vertical: theme.Spacing * 0.75f,
-                            horizontal: theme.Spacing
-                        )
-                    )
-                    {
-                        Child = new Text(
-                            col.CellText(row),
-                            new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
-                        )
-                    };
+                    var label = new Text(
+                        col.CellText(row),
+                        new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
+                    );
 
                     if (col.Width.HasValue)
                     {
-                        cells.Add(new Container(width: col.Width) { Child = cellContainer });
+                        cells.Add(new Container(padding: cellPadding, width: col.Width) { Child = label });
                     }
                     else
                     {
-                        cells.Add(new Expanded { Child = cellContainer });
+                        cells.Add(new Expanded(padding: cellPadding) { Child = label });
                     }
                 }
 
