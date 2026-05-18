@@ -40,7 +40,10 @@ namespace Fram3.UI.Storybook.Stories
                         decoration: new BoxDecoration(
                             Color: theme.SurfaceColor,
                             BorderRadius: BorderRadius.All(theme.BorderRadius),
-                            Border: new Border(theme.SecondaryTextColor.WithAlpha(0.15f), 1f)
+                            Border: new Border(
+                                Color: theme.SecondaryTextColor.WithAlpha(0.15f),
+                                Width: 1f
+                            )
                         ),
                         padding: EdgeInsets.All(theme.Spacing * 2f)
                     )

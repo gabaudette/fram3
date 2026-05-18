@@ -1,6 +1,4 @@
 #nullable enable
-using System;
-using System.Collections.Generic;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
@@ -20,25 +18,26 @@ namespace Fram3.UI.Storybook.Stories.Content
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
+                
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]
                     {
                         StoryHelpers.Section(
                             label: "Basic",
-                            content: BuildBasic(theme),
+                            content: BuildBasic(),
                             theme
                         ),
                         SizedBox.FromSize(height: theme.Spacing * 3f),
                         StoryHelpers.Section(
                             label: "With Icons",
-                            content: BuildWithIcons(theme),
+                            content: BuildWithIcons(),
                             theme
                         ),
                         SizedBox.FromSize(height: theme.Spacing * 3f),
                         StoryHelpers.Section(
                             label: "Pre-expanded",
-                            content: BuildPreExpanded(theme),
+                            content: BuildPreExpanded(),
                             theme
                         ),
                         SizedBox.FromSize(height: theme.Spacing * 3f),
@@ -46,69 +45,116 @@ namespace Fram3.UI.Storybook.Stories.Content
                             label: "Game Example — Skill Tree",
                             content: BuildGameExample(theme),
                             theme
-                        ),
+                        )
                     }
                 };
             }
 
-            private static Element BuildBasic(Theme theme) =>
+            private static Element BuildBasic() =>
                 new TreeView(
                     nodes: new[]
                     {
-                        new TreeViewNode("Weapons", new[]
-                        {
-                            new TreeViewNode("Swords"),
-                            new TreeViewNode("Axes"),
-                            new TreeViewNode("Bows")
-                        }),
-                        new TreeViewNode("Armor", new[]
-                        {
-                            new TreeViewNode("Helmets"),
-                            new TreeViewNode("Chestplates"),
-                            new TreeViewNode("Boots")
-                        }),
-                        new TreeViewNode("Consumables")
+                        new TreeViewNode(
+                            label: "Weapons",
+                            children: new[]
+                            {
+                                new TreeViewNode(label: "Swords"),
+                                new TreeViewNode(label: "Axes"),
+                                new TreeViewNode(label: "Bows")
+                            }
+                        ),
+                        new TreeViewNode(
+                            label: "Armor",
+                            children: new[]
+                            {
+                                new TreeViewNode(label: "Helmets"),
+                                new TreeViewNode(label: "Chestplates"),
+                                new TreeViewNode(label: "Boots")
+                            }
+                        ),
+                        new TreeViewNode(label: "Consumables")
                     }
                 );
 
-            private static Element BuildWithIcons(Theme theme) =>
+            private static Element BuildWithIcons() =>
                 new TreeView(
                     nodes: new[]
                     {
-                        new TreeViewNode("Quests", new[]
-                        {
-                            new TreeViewNode("Into the Dark Forest", icon: "!"),
-                            new TreeViewNode("The Lost Artifact", icon: "!"),
-                            new TreeViewNode("Dragon's Lair", icon: "★")
-                        }, icon: "Q"),
-                        new TreeViewNode("Characters", new[]
-                        {
-                            new TreeViewNode("Warrior", icon: "W"),
-                            new TreeViewNode("Mage", icon: "M"),
-                            new TreeViewNode("Rogue", icon: "R")
-                        }, icon: "C"),
-                        new TreeViewNode("Settings", icon: "S")
+                        new TreeViewNode(
+                            label: "Quests",
+                            children: new[]
+                            {
+                                new TreeViewNode(
+                                    label: "Into the Dark Forest",
+                                    icon: "!"
+                                ),
+                                new TreeViewNode(
+                                    label: "The Lost Artifact",
+                                    icon: "!"
+                                ),
+                                new TreeViewNode(
+                                    label: "Dragon's Lair",
+                                    icon: "★"
+                                )
+                            },
+                            icon: "Q"
+                        ),
+                        new TreeViewNode(
+                            label: "Characters",
+                            children: new[]
+                            {
+                                new TreeViewNode(
+                                    label: "Warrior",
+                                    icon: "W"
+                                ),
+                                new TreeViewNode
+                                (
+                                    label: "Mage",
+                                    icon: "M"
+                                ),
+                                new TreeViewNode(
+                                    label: "Rogue",
+                                    icon: "R"
+                                )
+                            },
+                            icon: "C"
+                        ),
+                        new TreeViewNode(
+                            label: "Settings",
+                            icon: "S"
+                        )
                     },
                     indent: 24f
                 );
 
-            private static Element BuildPreExpanded(Theme theme) =>
+            private static Element BuildPreExpanded() =>
                 new TreeView(
                     nodes: new[]
                     {
-                        new TreeViewNode("World Map", new[]
-                        {
-                            new TreeViewNode("Ashenvale", new[]
+                        new TreeViewNode(
+                            label: "World Map",
+                            children: new[]
                             {
-                                new TreeViewNode("The Ruins"),
-                                new TreeViewNode("Moonwell Clearing")
-                            }, initiallyExpanded: true),
-                            new TreeViewNode("Ironforge Peaks", new[]
-                            {
-                                new TreeViewNode("Summit Pass"),
-                                new TreeViewNode("Miner's Camp")
-                            })
-                        }, initiallyExpanded: true)
+                                new TreeViewNode(
+                                    label: "Ashenvale",
+                                    children: new[]
+                                    {
+                                        new TreeViewNode(label: "The Ruins"),
+                                        new TreeViewNode(label: "Moonwell Clearing")
+                                    },
+                                    initiallyExpanded: true
+                                ),
+                                new TreeViewNode(
+                                    label: "Ironforge Peaks",
+                                    children: new[]
+                                    {
+                                        new TreeViewNode(label: "Summit Pass"),
+                                        new TreeViewNode(label: "Miner's Camp")
+                                    }
+                                )
+                            },
+                            initiallyExpanded: true
+                        )
                     }
                 );
 
@@ -116,25 +162,41 @@ namespace Fram3.UI.Storybook.Stories.Content
             {
                 var nodes = new[]
                 {
-                    new TreeViewNode("Combat", new[]
-                    {
-                        new TreeViewNode("Slash (Rank 1)"),
-                        new TreeViewNode("Power Strike (Rank 2)"),
-                        new TreeViewNode("Whirlwind (Rank 3)", new[]
+                    new TreeViewNode(
+                        label: "Combat",
+                        children: new[]
                         {
-                            new TreeViewNode("Bladestorm (Rank 4)")
-                        })
-                    }, icon: "⚔", initiallyExpanded: true),
-                    new TreeViewNode("Defence", new[]
-                    {
-                        new TreeViewNode("Shield Block (Rank 1)"),
-                        new TreeViewNode("Iron Skin (Rank 2)")
-                    }, icon: "🛡"),
-                    new TreeViewNode("Utility", new[]
-                    {
-                        new TreeViewNode("Sprint (Rank 1)"),
-                        new TreeViewNode("Rally (Rank 2)")
-                    }, icon: "✦")
+                            new TreeViewNode(label: "Slash (Rank 1)"),
+                            new TreeViewNode(label: "Power Strike (Rank 2)"),
+                            new TreeViewNode(
+                                label: "Whirlwind (Rank 3)",
+                                children: new[]
+                                {
+                                    new TreeViewNode(label: "Bladestorm (Rank 4)")
+                                }
+                            )
+                        },
+                        icon: "⚔",
+                        initiallyExpanded: true
+                    ),
+                    new TreeViewNode(
+                        label: "Defence",
+                        children: new[]
+                        {
+                            new TreeViewNode(label: "Shield Block (Rank 1)"),
+                            new TreeViewNode(label: "Iron Skin (Rank 2)")
+                        },
+                        icon: "🛡"
+                    ),
+                    new TreeViewNode(
+                        label: "Utility",
+                        children: new[]
+                        {
+                            new TreeViewNode(label: "Sprint (Rank 1)"),
+                            new TreeViewNode(label: "Rally (Rank 2)")
+                        },
+                        icon: "✦"
+                    )
                 };
 
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
