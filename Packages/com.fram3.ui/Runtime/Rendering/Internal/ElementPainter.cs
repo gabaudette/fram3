@@ -255,6 +255,7 @@ namespace Fram3.UI.Rendering.Internal
         private static Label CreateLabel(Text text)
         {
             var label = new Label(text.Content);
+            label.style.whiteSpace = WhiteSpace.Normal;
             PaintText(text, label);
             return label;
         }
