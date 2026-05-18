@@ -208,6 +208,30 @@ namespace Fram3.UI.Rendering.Internal
             native.style.flexDirection = FlexDirection.Column;
             native.style.justifyContent = MapMainAxis(column.MainAxisAlignment);
             native.style.alignItems = MapCrossAxis(column.CrossAxisAlignment);
+#if !FRAM3_PURE_TESTS && FRAM3_TABLE_DEBUG
+            var fired = false;
+            native.RegisterCallback<GeometryChangedEvent>(_ =>
+            {
+                if (fired) return;
+                fired = true;
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine($"[Fram3.Table.Debug] Column resolved w={native.resolvedStyle.width} h={native.resolvedStyle.height} children={native.childCount}");
+                for (var ci = 0; ci < native.childCount; ci++)
+                {
+                    var rowWrap = native[ci];
+                    sb.AppendLine($"  [row {ci}] {rowWrap.GetType().Name} x={rowWrap.layout.x} w={rowWrap.resolvedStyle.width} fg={rowWrap.style.flexGrow} fs={rowWrap.style.flexShrink} children={rowWrap.childCount}");
+                    var rowEl = rowWrap.childCount > 0 ? rowWrap[0] : null;
+                    if (rowEl == null) continue;
+                    sb.AppendLine($"    [Row] {rowEl.GetType().Name} x={rowEl.layout.x} w={rowEl.resolvedStyle.width} fd={rowEl.style.flexDirection} children={rowEl.childCount}");
+                    for (var cj = 0; cj < rowEl.childCount; cj++)
+                    {
+                        var cell = rowEl[cj];
+                        sb.AppendLine($"      [cell {cj}] {cell.GetType().Name} x={cell.layout.x} w={cell.resolvedStyle.width} fg={cell.style.flexGrow} fs={cell.style.flexShrink}");
+                    }
+                }
+                UnityEngine.Debug.Log(sb.ToString());
+            });
+#endif
         }
 
         private static void ApplyRowLayout(Row row, VisualElement native)
