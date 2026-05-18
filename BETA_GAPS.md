@@ -6,7 +6,6 @@ This document lists known missing elements, infrastructure gaps, and performance
 
 The following UI elements are not yet implemented:
 
-- **Stepper** - numeric input with increment/decrement buttons
 - **Rating** - star or icon-based rating input
 - **TreeView** - hierarchical expandable/collapsible list
 - **Table** - columnar data display with optional sorting and row selection
