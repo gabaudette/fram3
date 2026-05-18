@@ -71,7 +71,9 @@ namespace Fram3.UI.Storybook.Stories.Animation
                                     {
                                         Child = new Text(
                                             $"Opacity: {value:F2}",
-                                            style: new TextStyle(Color: FrameColor.White)
+                                            style: new TextStyle(
+                                                Color: FrameColor.White
+                                            )
                                         )
                                     };
                                 }
