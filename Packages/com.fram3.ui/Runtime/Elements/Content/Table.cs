@@ -116,35 +116,75 @@ namespace Fram3.UI.Elements.Content
             private int _sortColumnIndex = -1;
             private bool _sortAscending = true;
             private int _selectedRowIndex = -1;
+            private float _resolvedWidth = -1f;
 
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
                 var columns = Element!.Columns;
-                var rows = BuildSortedRows();
 
+                // Width not yet measured — render probe only.
+                if (_resolvedWidth <= 0f)
+                {
+                    return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = new Element[]
+                        {
+                            new WidthProbe(w => SetState(() => _resolvedWidth = w))
+                        }
+                    };
+                }
+
+                var colWidths = ComputeColumnWidths(columns, _resolvedWidth);
+                var rows = BuildSortedRows();
                 var tableRows = new List<Element>();
 
-                // Header row.
-                tableRows.Add(BuildHeaderRow(columns, theme));
-
-                // Divider beneath header.
+                tableRows.Add(BuildHeaderRow(columns, colWidths, theme));
                 tableRows.Add(new Divider(
                     axis: DividerAxis.Horizontal,
                     thickness: 1f,
                     color: theme.InputBorderColor
                 ));
 
-                // Data rows.
                 for (var i = 0; i < rows.Count; i++)
                 {
-                    tableRows.Add(BuildDataRow(rows[i].Original, rows[i].SortedIndex, i, columns, theme));
+                    tableRows.Add(BuildDataRow(rows[i].Original, rows[i].SortedIndex, i, columns, colWidths, theme));
                 }
 
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = tableRows.ToArray()
                 };
+            }
+
+            private static float[] ComputeColumnWidths(IReadOnlyList<TableColumn<TRow>> columns, float totalWidth)
+            {
+                var widths = new float[columns.Count];
+                var fixedTotal = 0f;
+                var expandedCount = 0;
+
+                for (var i = 0; i < columns.Count; i++)
+                {
+                    if (columns[i].Width.HasValue)
+                    {
+                        fixedTotal += columns[i].Width!.Value;
+                    }
+                    else
+                    {
+                        expandedCount++;
+                    }
+                }
+
+                var expandedWidth = expandedCount > 0
+                    ? MathF.Floor((totalWidth - fixedTotal) / expandedCount)
+                    : 0f;
+
+                for (var i = 0; i < columns.Count; i++)
+                {
+                    widths[i] = columns[i].Width ?? expandedWidth;
+                }
+
+                return widths;
             }
 
             private List<(TRow Original, int SortedIndex)> BuildSortedRows()
@@ -173,7 +213,11 @@ namespace Fram3.UI.Elements.Content
                 return result;
             }
 
-            private Element BuildHeaderRow(IReadOnlyList<TableColumn<TRow>> columns, Styling.Theme theme)
+            private Element BuildHeaderRow(
+                IReadOnlyList<TableColumn<TRow>> columns,
+                float[] colWidths,
+                Styling.Theme theme
+            )
             {
                 var cells = new List<Element>();
                 var cellPadding = EdgeInsets.Symmetric(
@@ -201,44 +245,23 @@ namespace Fram3.UI.Elements.Content
                         )
                     );
 
-                    if (col.Width.HasValue)
+                    Action? onTap = null;
+                    if (col.Sortable)
                     {
-                        Action? onTap = null;
-                        if (col.Sortable)
+                        var ci = colIndex;
+                        onTap = () => SetState(() =>
                         {
-                            var ci = colIndex;
-                            onTap = () => SetState(() =>
+                            if (_sortColumnIndex == ci)
+                                _sortAscending = !_sortAscending;
+                            else
                             {
-                                if (_sortColumnIndex == ci)
-                                    _sortAscending = !_sortAscending;
-                                else
-                                {
-                                    _sortColumnIndex = ci;
-                                    _sortAscending = true;
-                                }
-                            });
-                        }
-                        cells.Add(new Container(padding: cellPadding, width: col.Width, onTap: onTap) { Child = label });
+                                _sortColumnIndex = ci;
+                                _sortAscending = true;
+                            }
+                        });
                     }
-                    else
-                    {
-                        Action? onTap = null;
-                        if (col.Sortable)
-                        {
-                            var ci = colIndex;
-                            onTap = () => SetState(() =>
-                            {
-                                if (_sortColumnIndex == ci)
-                                    _sortAscending = !_sortAscending;
-                                else
-                                {
-                                    _sortColumnIndex = ci;
-                                    _sortAscending = true;
-                                }
-                            });
-                        }
-                        cells.Add(new Expanded(padding: cellPadding, onTap: onTap) { Child = label });
-                    }
+
+                    cells.Add(new Container(padding: cellPadding, width: colWidths[i], onTap: onTap) { Child = label });
                 }
 
                 return new Container(
@@ -257,6 +280,7 @@ namespace Fram3.UI.Elements.Content
                 int sortedIndex,
                 int displayIndex,
                 IReadOnlyList<TableColumn<TRow>> columns,
+                float[] colWidths,
                 Styling.Theme theme
             )
             {
@@ -285,20 +309,11 @@ namespace Fram3.UI.Elements.Content
                 var cells = new List<Element>();
                 for (var i = 0; i < columns.Count; i++)
                 {
-                    var col = columns[i];
                     var label = new Text(
-                        col.CellText(row),
+                        columns[i].CellText(row),
                         new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
                     );
-
-                    if (col.Width.HasValue)
-                    {
-                        cells.Add(new Container(padding: cellPadding, width: col.Width) { Child = label });
-                    }
-                    else
-                    {
-                        cells.Add(new Expanded(padding: cellPadding) { Child = label });
-                    }
+                    cells.Add(new Container(padding: cellPadding, width: colWidths[i]) { Child = label });
                 }
 
                 Action? onTap = null;

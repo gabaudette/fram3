@@ -163,6 +163,9 @@ namespace Fram3.UI.Rendering.Internal
                 case GestureDetector:
                     ApplyPassthroughLayout(native);
                     break;
+                case WidthProbe widthProbe:
+                    ApplyWidthProbeLayout(widthProbe, native);
+                    break;
                 case ThemeProvider themeProvider:
                     ApplyThemeProviderLayout(themeProvider, native);
                     break;
@@ -464,6 +467,21 @@ namespace Fram3.UI.Rendering.Internal
                     });
                 }
             }
+        }
+
+        private static void ApplyWidthProbeLayout(WidthProbe probe, VisualElement native)
+        {
+            native.style.height = 0f;
+            native.style.alignSelf = Align.Stretch;
+
+#if !FRAM3_PURE_TESTS
+            var onWidth = probe.OnWidth;
+            native.RegisterCallback<GeometryChangedEvent>(evt =>
+            {
+                var w = evt.newRect.width;
+                if (w > 0f) onWidth(w);
+            });
+#endif
         }
 
         private static void ApplyDividerLayout(Divider divider, VisualElement native)

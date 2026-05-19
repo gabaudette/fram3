@@ -403,11 +403,28 @@ namespace Fram3.UI.Tests.Elements.Content
             return native;
         }
 
+        private static Element BuildTableWithWidth<TRow>(
+            NodeExpander expander,
+            Node node,
+            float width = 500f
+        )
+        {
+            // Inject the resolved width into the private TableState field so Build()
+            // produces the full table tree rather than the width-probe-only placeholder.
+            var state = node.State!;
+            var field = state.GetType().GetField(
+                "_resolvedWidth",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance
+            );
+            field!.SetValue(state, width);
+            return ((State<Table<TRow>>)state).Build(node.Context);
+        }
+
         private static VisualElement GetHeaderRowNative(Element built)
         {
             var native = BuildNative(built);
             // built = Column > [headerContainer, divider, ...dataRows]
-            // headerContainer > Row > [cell0, cell1, cell2, ...]
+            // headerContainer > Row > [cell0, cell1, ...]
             var headerContainer = native.Children()[0];
             var row = headerContainer.Children()[0];
             return row;
@@ -418,15 +435,7 @@ namespace Fram3.UI.Tests.Elements.Content
             var native = BuildNative(built);
             // built = Column > [headerContainer, divider, dataRow0, dataRow1, ...]
             var dataRowWrapper = native.Children()[2 + rowIndex];
-            // dataRowWrapper is Container (no onRowSelected) or GestureDetector > Container
-            // either way first child is the Row
-            var possibleRow = dataRowWrapper.Children()[0];
-            if (possibleRow.childCount > 0 && possibleRow.Children()[0].childCount == 0)
-            {
-                // dataRowWrapper was a GestureDetector; its child is the Container, whose child is the Row
-                return possibleRow.Children()[0];
-            }
-            return possibleRow;
+            return dataRowWrapper.Children()[0];
         }
 
         [Test]
@@ -440,7 +449,7 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var row = GetHeaderRowNative(built);
             var cell = row.Children()[1];
@@ -459,7 +468,7 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var row = GetDataRowNative(built);
             var cell = row.Children()[1];
@@ -478,7 +487,7 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var row = GetHeaderRowNative(built);
             var cell = row.Children()[1];
@@ -497,7 +506,7 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var row = GetDataRowNative(built);
             var cell = row.Children()[1];
@@ -506,8 +515,9 @@ namespace Fram3.UI.Tests.Elements.Content
         }
 
         [Test]
-        public void HeaderRow_ExpandedColumn_FlexGrowIsOne()
+        public void HeaderRow_ExpandedColumn_HasExplicitWidth()
         {
+            // Total=500, fixed=80, expanded=2 cols, each gets floor((500-80)/2)=210
             var cols = new[]
             {
                 new TableColumn<Item>("Name", r => r.Name),
@@ -516,16 +526,16 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var row = GetHeaderRowNative(built);
             var cell = row.Children()[0];
 
-            Assert.That(cell.style.flexGrow, Is.EqualTo(1f).Within(0.001f));
+            Assert.That((float)cell.style.width, Is.EqualTo(210f).Within(0.001f));
         }
 
         [Test]
-        public void DataRow_ExpandedColumn_FlexGrowIsOne()
+        public void DataRow_ExpandedColumn_HasExplicitWidth()
         {
             var cols = new[]
             {
@@ -535,12 +545,12 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var row = GetDataRowNative(built);
             var cell = row.Children()[0];
 
-            Assert.That(cell.style.flexGrow, Is.EqualTo(1f).Within(0.001f));
+            Assert.That((float)cell.style.width, Is.EqualTo(210f).Within(0.001f));
         }
 
         [Test]
@@ -554,7 +564,7 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var headerRow = GetHeaderRowNative(built);
             var dataRow = GetDataRowNative(built);
@@ -564,7 +574,7 @@ namespace Fram3.UI.Tests.Elements.Content
         }
 
         [Test]
-        public void HeaderAndDataRow_ExpandedColumn_HaveSameFlexGrow()
+        public void HeaderAndDataRow_ExpandedColumn_HaveSameWidth()
         {
             var cols = new[]
             {
@@ -574,13 +584,13 @@ namespace Fram3.UI.Tests.Elements.Content
             };
             var expander = new NodeExpander(new RebuildScheduler());
             var node = expander.Mount(new Table<Item>(cols, ThreeRows()), null);
-            var built = ((State<Table<Item>>)node.State!).Build(node.Context);
+            var built = BuildTableWithWidth<Item>(expander, node, 500f);
 
             var headerRow = GetHeaderRowNative(built);
             var dataRow = GetDataRowNative(built);
 
-            Assert.That(headerRow.Children()[0].style.flexGrow,
-                Is.EqualTo(dataRow.Children()[0].style.flexGrow).Within(0.001f));
+            Assert.That((float)headerRow.Children()[0].style.width,
+                Is.EqualTo((float)dataRow.Children()[0].style.width).Within(0.001f));
         }
 #endif
     }
