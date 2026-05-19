@@ -14,11 +14,23 @@ namespace Fram3.UI.Rendering.Internal
             var uiScrollView = new UIScrollView(MapScrollMode(scrollView.ScrollDirection));
             ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
             ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
-            UnityEngine.Debug.Log($"[Fram3] CreateScrollView: ScrollbarWidth={theme.ScrollbarWidth} verticalScroller.style.width={uiScrollView.verticalScroller.style.width.value}");
+#if !FRAM3_PURE_TESTS
+            UnityEngine.Debug.Log($"[Fram3] CreateScrollView: ScrollbarWidth={theme.ScrollbarWidth} verticalScroller inline.width={uiScrollView.verticalScroller.style.width.value}");
+#endif
 
             uiScrollView.RegisterCallback<AttachToPanelEvent>(_ =>
-                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, theme)).ExecuteLater(1)
-            );
+            {
+#if !FRAM3_PURE_TESTS
+                UnityEngine.Debug.Log($"[Fram3] AttachToPanelEvent: verticalScroller inline.width={uiScrollView.verticalScroller.style.width.value} resolved={uiScrollView.verticalScroller.resolvedStyle.width}");
+#endif
+                uiScrollView.schedule.Execute(() =>
+                {
+#if !FRAM3_PURE_TESTS
+                    UnityEngine.Debug.Log($"[Fram3] schedule: verticalScroller inline.width={uiScrollView.verticalScroller.style.width.value} resolved={uiScrollView.verticalScroller.resolvedStyle.width}");
+#endif
+                    ApplyScrollbarThemeDecorations(uiScrollView, theme);
+                }).ExecuteLater(1);
+            });
 
             return uiScrollView;
         }
