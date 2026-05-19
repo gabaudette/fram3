@@ -56,7 +56,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
-                                BorderRadius: theme.BorderRadius
+                                BorderRadius: BorderRadius.All(theme.BorderRadius)
                             ),
                             padding: EdgeInsets.All(theme.Spacing * 2f)
                         )
@@ -99,7 +99,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
-                                BorderRadius: theme.BorderRadius
+                                BorderRadius: BorderRadius.All(theme.BorderRadius)
                             ),
                             padding: EdgeInsets.All(theme.Spacing * 2f)
                         )
@@ -142,7 +142,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
-                                BorderRadius: theme.BorderRadius
+                                BorderRadius: BorderRadius.All(theme.BorderRadius)
                             ),
                             padding: EdgeInsets.All(theme.Spacing * 2f)
                         )
