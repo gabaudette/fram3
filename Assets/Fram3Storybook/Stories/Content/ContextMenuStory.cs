@@ -15,8 +15,16 @@ namespace Fram3.UI.Storybook.Stories.Content
         private sealed class ContextMenuStoryState : State<ContextMenuStory>
         {
             private bool _showBasic;
+            private float _basicX;
+            private float _basicY;
+
             private bool _showGame;
+            private float _gameX;
+            private float _gameY;
+
             private bool _showDisabled;
+            private float _disabledX;
+            private float _disabledY;
 
             public override Element Build(BuildContext context)
             {
@@ -52,7 +60,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                 var items = new List<Element>
                 {
                     new GestureDetector(
-                        onSecondaryTap: (x, y) => SetState(() => _showBasic = true),
+                        onSecondaryTap: (x, y) => SetState(() => { _showBasic = true; _basicX = x; _basicY = y; }),
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
@@ -63,7 +71,9 @@ namespace Fram3.UI.Storybook.Stories.Content
                         {
                             Child = new Text(
                                 "Right-click anywhere in this box to open a context menu.",
-                                style: new TextStyle(Color: theme.PrimaryTextColor)
+                                style: new TextStyle(
+                                    Color: theme.PrimaryTextColor
+                                )
                             )
                         }
                     )
@@ -74,13 +84,21 @@ namespace Fram3.UI.Storybook.Stories.Content
                     items.Add(new ContextMenu(
                         items: new[]
                         {
-                            new ContextMenuItem("Copy", () => SetState(() => _showBasic = false)),
-                            new ContextMenuItem("Paste", () => SetState(() => _showBasic = false)),
-                            new ContextMenuItem("Delete", () => SetState(() => _showBasic = false))
+                            new ContextMenuItem(
+                                label: "Copy",
+                                onTap: () => SetState(() => _showBasic = false)
+                            ),
+                            new ContextMenuItem(
+                                label: "Paste",
+                                onTap: () => SetState(() => _showBasic = false)
+                            ),
+                            new ContextMenuItem(
+                                label: "Delete",
+                                onTap: () => SetState(() => _showBasic = false)
+                            )
                         },
-                        x: 100f,
-                        y: 80f,
-                        onDismiss: () => SetState(() => _showBasic = false)
+                        x: _basicX,
+                        y: _basicY,
                     ));
                 }
 
@@ -95,7 +113,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                 var items = new List<Element>
                 {
                     new GestureDetector(
-                        onSecondaryTap: (x, y) => SetState(() => _showDisabled = true),
+                        onSecondaryTap: (x, y) => SetState(() => { _showDisabled = true; _disabledX = x; _disabledY = y; }),
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
@@ -117,13 +135,21 @@ namespace Fram3.UI.Storybook.Stories.Content
                     items.Add(new ContextMenu(
                         items: new[]
                         {
-                            new ContextMenuItem("Edit", () => SetState(() => _showDisabled = false)),
-                            new ContextMenuItem("Export", () => { }, disabled: true),
-                            new ContextMenuItem("Close", () => SetState(() => _showDisabled = false))
+                            new ContextMenuItem(
+                                label: "Edit",
+                                onTap: () => SetState(() => _showDisabled = false)
+                            ),
+                            new ContextMenuItem(
+                                label: "Export",
+                                onTap: () => { }, disabled: true
+                            ),
+                            new ContextMenuItem(
+                                label: "Close",
+                                onTap: () => SetState(() => _showDisabled = false)
+                            )
                         },
-                        x: 100f,
-                        y: 80f,
-                        onDismiss: () => SetState(() => _showDisabled = false)
+                        x: _disabledX,
+                        y: _disabledY,
                     ));
                 }
 
@@ -138,7 +164,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                 var items = new List<Element>
                 {
                     new GestureDetector(
-                        onSecondaryTap: (x, y) => SetState(() => _showGame = true),
+                        onSecondaryTap: (x, y) => SetState(() => { _showGame = true; _gameX = x; _gameY = y; }),
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
@@ -160,15 +186,28 @@ namespace Fram3.UI.Storybook.Stories.Content
                     items.Add(new ContextMenu(
                         items: new[]
                         {
-                            new ContextMenuItem("Move", () => SetState(() => _showGame = false)),
-                            new ContextMenuItem("Attack", () => SetState(() => _showGame = false)),
-                            new ContextMenuItem("Use Item", () => SetState(() => _showGame = false)),
-                            new ContextMenuItem("Fortify", () => { }, disabled: true),
-                            new ContextMenuItem("End Turn", () => SetState(() => _showGame = false))
+                            new ContextMenuItem(
+                                label: "Move",
+                                onTap: () => SetState(() => _showGame = false)
+                            ),
+                            new ContextMenuItem(
+                                label: "Attack",
+                                onTap: () => SetState(() => _showGame = false)
+                            ),
+                            new ContextMenuItem(
+                                label: "Use Item",
+                                onTap: () => SetState(() => _showGame = false)
+                            ),
+                            new ContextMenuItem(
+                                label: "Fortify",
+                                onTap: () => { }, disabled: true),
+                            new ContextMenuItem(
+                                label: "End Turn",
+                                onTap: () => SetState(() => _showGame = false)
+                            )
                         },
-                        x: 120f,
-                        y: 100f,
-                        onDismiss: () => SetState(() => _showGame = false)
+                        x: _gameX,
+                        y: _gameY,
                     ));
                 }
 
