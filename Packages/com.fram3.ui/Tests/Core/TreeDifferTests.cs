@@ -167,5 +167,98 @@ namespace Fram3.UI.Tests.Core
             Assert.That(ops.Any(o => o.Kind == DiffOpKind.Remove), Is.True);
             Assert.That(ops.Any(o => o.Kind == DiffOpKind.Insert), Is.True);
         }
+
+        // -----------------------------------------------------------------------
+        // In-place detection (was O(n^2) HasUnmatchedBefore scan)
+        // -----------------------------------------------------------------------
+
+        [Test]
+        public void Diff_FirstNodeUnmatched_SecondNodeProducesMove()
+        {
+            // old: [A(SingleChild), B(Leaf)]   new: [B(Leaf)]
+            // A is unmatched (removed). B is at old index 1, new index 0.
+            // Because old index 1 != new index 0, it must be Move not Update.
+            var nodeA = MakeNode(new TestSingleChildElement { Child = new TestLeafElement("x") });
+            var nodeB = MakeNode(new TestLeafElement("b"));
+            var newB = new TestLeafElement("b2");
+
+            var ops = TreeDiffer.Diff(
+                new List<Node> { nodeA, nodeB },
+                new List<Element> { newB });
+
+            var nonRemove = ops.Where(o => o.Kind != DiffOpKind.Remove).ToList();
+            Assert.That(nonRemove.Count, Is.EqualTo(1));
+            Assert.That(nonRemove[0].Kind, Is.EqualTo(DiffOpKind.Move));
+            Assert.That(nonRemove[0].ExistingNode, Is.SameAs(nodeB));
+        }
+
+        [Test]
+        public void Diff_AllNodesInPlace_AllProduceUpdate()
+        {
+            // old: [A, B, C]   new: [A, B, C]  — all update, no moves
+            var nodeA = MakeNode(new TestLeafElement("a"));
+            var nodeB = MakeNode(new TestLeafElement("b"));
+            var nodeC = MakeNode(new TestLeafElement("c"));
+
+            var ops = TreeDiffer.Diff(
+                new List<Node> { nodeA, nodeB, nodeC },
+                new Element[] { new TestLeafElement("a2"), new TestLeafElement("b2"), new TestLeafElement("c2") });
+
+            Assert.That(ops.All(o => o.Kind == DiffOpKind.Update), Is.True);
+        }
+
+        [Test]
+        public void Diff_RemoveFromMiddle_RemainingNodesAreMoves()
+        {
+            // old: [A, B, C]   new: [A, C]
+            // A is in-place (Update). B is removed. C was at index 2, now at index 1 -> Move.
+            var nodeA = MakeNode(new TestLeafElement("a"));
+            var nodeB = MakeNode(new TestLeafElement("b"));
+            var nodeC = MakeNode(new TestSingleChildElement { Child = new TestLeafElement("x") });
+
+            var newElements = new Element[]
+            {
+                new TestLeafElement("a2"),
+                new TestSingleChildElement { Child = new TestLeafElement("y") }
+            };
+
+            var ops = TreeDiffer.Diff(
+                new List<Node> { nodeA, nodeB, nodeC },
+                newElements);
+
+            var updateOps = ops.Where(o => o.Kind == DiffOpKind.Update).ToList();
+            var moveOps = ops.Where(o => o.Kind == DiffOpKind.Move).ToList();
+            var removeOps = ops.Where(o => o.Kind == DiffOpKind.Remove).ToList();
+
+            Assert.That(updateOps.Count, Is.EqualTo(1));
+            Assert.That(updateOps[0].ExistingNode, Is.SameAs(nodeA));
+            Assert.That(moveOps.Count, Is.EqualTo(1));
+            Assert.That(moveOps[0].ExistingNode, Is.SameAs(nodeC));
+            Assert.That(removeOps.Count, Is.EqualTo(1));
+            Assert.That(removeOps[0].ExistingNode, Is.SameAs(nodeB));
+        }
+
+        [Test]
+        public void Diff_PrependElement_AllExistingNodesAreMovesOrUpdates()
+        {
+            // old: [A, B]   new: [X, A, B]
+            // X is Insert. A is at old 0, new 1 -> Move. B is at old 1, new 2 -> Move.
+            var nodeA = MakeNode(new TestLeafElement("a"));
+            var nodeB = MakeNode(new TestLeafElement("b"));
+
+            var newElements = new Element[]
+            {
+                new TestSingleChildElement { Child = new TestLeafElement("x") },
+                new TestLeafElement("a2"),
+                new TestLeafElement("b2")
+            };
+
+            var ops = TreeDiffer.Diff(
+                new List<Node> { nodeA, nodeB },
+                newElements);
+
+            Assert.That(ops.Any(o => o.Kind == DiffOpKind.Insert), Is.True);
+            Assert.That(ops.Where(o => o.Kind == DiffOpKind.Move).Count(), Is.EqualTo(2));
+        }
     }
 }
