@@ -46,6 +46,10 @@ namespace Fram3.UI.Rendering.Internal
             scroller.style.flexBasis = width;
             scroller.style.flexGrow = 0;
             scroller.style.flexShrink = 0;
+
+            scroller.slider.style.width = width;
+            scroller.slider.style.minWidth = width;
+            scroller.slider.style.maxWidth = width;
         }
 
         private static void ApplyScrollbarTheme(UIScrollView uiScrollView, Theme theme)
@@ -74,10 +78,16 @@ namespace Fram3.UI.Rendering.Internal
 
             foreach (var scrollContainer in scrollContainers)
             {
-                scrollContainer.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                scrollContainer.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                scrollContainer.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                scrollContainer.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                var borderWidth = theme.ScrollbarBorder ? theme.ScrollbarBorderWidth : 0f;
+                var borderColor = ToUnity(theme.ScrollbarBorderColor);
+                scrollContainer.style.borderTopWidth = borderWidth;
+                scrollContainer.style.borderRightWidth = borderWidth;
+                scrollContainer.style.borderBottomWidth = borderWidth;
+                scrollContainer.style.borderLeftWidth = borderWidth;
+                scrollContainer.style.borderTopColor = borderColor;
+                scrollContainer.style.borderRightColor = borderColor;
+                scrollContainer.style.borderBottomColor = borderColor;
+                scrollContainer.style.borderLeftColor = borderColor;
             }
 
             var lowButtons = container.Query<VisualElement>(className: "unity-scroller__low-button").ToList();
@@ -98,44 +108,52 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var scroller in container.Query<VisualElement>(className: "unity-scroller").ToList())
             {
                 scroller.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                scroller.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderTopWidth = 1f;
-                scroller.style.borderRightWidth = 1f;
-                scroller.style.borderBottomWidth = 1f;
-                scroller.style.borderLeftWidth = 1f;
+                var borderWidth = theme.ScrollbarBorder ? theme.ScrollbarBorderWidth : 0f;
+                var borderColor = ToUnity(theme.ScrollbarBorderColor);
+                scroller.style.borderTopWidth = borderWidth;
+                scroller.style.borderRightWidth = borderWidth;
+                scroller.style.borderBottomWidth = borderWidth;
+                scroller.style.borderLeftWidth = borderWidth;
+                scroller.style.borderTopColor = borderColor;
+                scroller.style.borderRightColor = borderColor;
+                scroller.style.borderBottomColor = borderColor;
+                scroller.style.borderLeftColor = borderColor;
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
-                scroller.style.overflow = Overflow.Visible;
             }
 
             foreach (var scrollerSlider in container.Query<VisualElement>(className: "unity-scroller__slider").ToList())
             {
-                scrollerSlider.style.overflow = Overflow.Visible;
+                var borderWidth = theme.ScrollbarBorder ? theme.ScrollbarBorderWidth : 0f;
+                var borderColor = ToUnity(theme.ScrollbarBorderColor);
                 scrollerSlider.style.marginTop = 0f;
                 scrollerSlider.style.marginBottom = 0f;
                 scrollerSlider.style.paddingTop = 0f;
                 scrollerSlider.style.paddingBottom = 0f;
-                scrollerSlider.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                scrollerSlider.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                scrollerSlider.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                scrollerSlider.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                scrollerSlider.style.borderTopWidth = borderWidth;
+                scrollerSlider.style.borderRightWidth = borderWidth;
+                scrollerSlider.style.borderBottomWidth = borderWidth;
+                scrollerSlider.style.borderLeftWidth = borderWidth;
+                scrollerSlider.style.borderTopColor = borderColor;
+                scrollerSlider.style.borderRightColor = borderColor;
+                scrollerSlider.style.borderBottomColor = borderColor;
+                scrollerSlider.style.borderLeftColor = borderColor;
             }
 
             foreach (var baseSlider in container.Query<VisualElement>(className: "unity-base-slider").ToList())
             {
-                baseSlider.style.overflow = Overflow.Visible;
                 baseSlider.style.marginTop = 0f;
                 baseSlider.style.marginBottom = 0f;
                 baseSlider.style.paddingTop = 0f;
                 baseSlider.style.paddingBottom = 0f;
+                baseSlider.style.borderTopWidth = 0f;
+                baseSlider.style.borderRightWidth = 0f;
+                baseSlider.style.borderBottomWidth = 0f;
+                baseSlider.style.borderLeftWidth = 0f;
             }
 
             foreach (var sliderInput in container.Query<VisualElement>(className: "unity-slider__input").ToList())
             {
-                sliderInput.style.overflow = Overflow.Visible;
                 sliderInput.style.marginTop = 0f;
                 sliderInput.style.marginBottom = 0f;
                 sliderInput.style.paddingTop = 0f;
@@ -153,7 +171,6 @@ namespace Fram3.UI.Rendering.Internal
 
             foreach (var dragContainer in dragContainers)
             {
-                dragContainer.style.overflow = Overflow.Visible;
                 dragContainer.style.marginTop = 0f;
                 dragContainer.style.marginBottom = 0f;
                 dragContainer.style.paddingTop = 0f;
@@ -163,6 +180,10 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
             {
                 tracker.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                tracker.style.borderTopWidth = 0f;
+                tracker.style.borderRightWidth = 0f;
+                tracker.style.borderBottomWidth = 0f;
+                tracker.style.borderLeftWidth = 0f;
             }
 
             foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())

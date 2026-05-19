@@ -450,6 +450,7 @@ namespace UnityEngine.UIElements
     public class Scroller : VisualElement
     {
         public StyleSheet style { get; } = new StyleSheet();
+        public Slider slider { get; } = new Slider();
     }
 
     /// Minimal stub for <c>UnityEngine.UIElements.ScrollView</c>.
