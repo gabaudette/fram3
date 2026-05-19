@@ -201,7 +201,7 @@ namespace Fram3.UI.Rendering.Internal
                     PaintProgressBar(progressBar, pb);
                     break;
                 case Elements.Content.ScrollView scrollView when native is UIScrollView sv:
-                    PaintScrollView(scrollView, sv);
+                    PaintScrollView(scrollView, sv, theme);
                     break;
                 case FrameImage image when native is Image img:
                     PaintImage(image, img);
@@ -221,7 +221,7 @@ namespace Fram3.UI.Rendering.Internal
 
                     if (element is IListViewDescriptor listView && native is ListView lv)
                     {
-                        PaintListView(listView, lv);
+                        PaintListView(listView, lv, theme);
                         break;
                     }
 

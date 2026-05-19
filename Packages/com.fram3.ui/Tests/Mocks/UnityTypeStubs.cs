@@ -110,6 +110,9 @@ namespace UnityEngine.UIElements
         public float? opacity;
         public DisplayStyle? display;
         public float? maxWidth;
+        public StyleLength minWidth;
+        public StyleLength minHeight;
+        public StyleLength maxHeight;
         public WhiteSpace? whiteSpace;
         public float? left;
         public float? top;

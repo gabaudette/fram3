@@ -348,7 +348,7 @@ namespace Fram3.UI.Rendering.Internal
             return listView;
         }
 
-        private static void PaintListView(IListViewDescriptor listViewDescriptor, ListView listView)
+        private static void PaintListView(IListViewDescriptor listViewDescriptor, ListView listView, Theme theme)
         {
             listView.fixedItemHeight = listViewDescriptor.ItemHeight;
             listView.selectionType = MapSelectionType(listViewDescriptor.SelectionMode);
@@ -357,19 +357,20 @@ namespace Fram3.UI.Rendering.Internal
             {
                 holder.Descriptor = listViewDescriptor;
 #if !FRAM3_PURE_TESTS
-                if (holder.IndexListCount == listViewDescriptor.ItemCount)
+                if (holder.IndexListCount != listViewDescriptor.ItemCount)
                 {
-                    return;
+                    holder.IndexListCount = listViewDescriptor.ItemCount;
+                    listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
                 }
 
-                holder.IndexListCount = listViewDescriptor.ItemCount;
-                listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
+                ApplyScrollbarTheme(listView, theme);
 #endif
             }
 #if !FRAM3_PURE_TESTS
             else
             {
                 listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
+                ApplyScrollbarTheme(listView, theme);
             }
 #endif
         }

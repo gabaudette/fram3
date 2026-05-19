@@ -64,6 +64,8 @@ namespace Fram3.UI.Rendering.Internal
                 scroller.style.paddingBottom = 0f;
                 scroller.style.overflow = Overflow.Visible;
                 scroller.style.width = theme.ScrollbarWidth;
+                scroller.style.minWidth = theme.ScrollbarWidth;
+                scroller.style.maxWidth = theme.ScrollbarWidth;
             }
 
             foreach (var scrollerSlider in container.Query<VisualElement>(className: "unity-scroller__slider").ToList())
@@ -138,9 +140,12 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView uiScrollView)
+        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView uiScrollView, Theme theme)
         {
             uiScrollView.mode = MapScrollMode(scrollView.ScrollDirection);
+#if !FRAM3_PURE_TESTS
+            ApplyScrollbarTheme(uiScrollView, theme);
+#endif
         }
 
         private static UIProgressBar CreateProgressBar(Elements.Content.ProgressBar progressBar, Theme theme)
