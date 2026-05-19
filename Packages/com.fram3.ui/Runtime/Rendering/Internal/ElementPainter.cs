@@ -211,7 +211,7 @@ namespace Fram3.UI.Rendering.Internal
                 default:
                     if (element is IGridElement gridElementPaint)
                     {
-                        RebuildNativeGrid(gridElementPaint, native, theme);
+                        PatchNativeGrid(gridElementPaint, native, theme);
                         break;
                     }
 
