@@ -60,6 +60,15 @@ namespace Fram3.UI.Styling
         /// <summary>Width in pixels of vertical scrollbars and height of horizontal scrollbars.</summary>
         public float ScrollbarWidth { get; init; }
 
+        /// <summary>Whether scrollbars render a visible border.</summary>
+        public bool ScrollbarBorder { get; init; }
+
+        /// <summary>Width in pixels of the scrollbar border. Only applied when <see cref="ScrollbarBorder"/> is true.</summary>
+        public float ScrollbarBorderWidth { get; init; }
+
+        /// <summary>Color of the scrollbar border. Only applied when <see cref="ScrollbarBorder"/> is true.</summary>
+        public FrameColor ScrollbarBorderColor { get; init; }
+
         /// <summary>
         /// A sensible light-theme set of default tokens. Use this as a starting point and override
         /// individual tokens with <c>with { ... }</c> syntax.
@@ -82,7 +91,10 @@ namespace Fram3.UI.Styling
             FontSizeLarge = 20f,
             BorderRadius = 4f,
             Spacing = 8f,
-            ScrollbarWidth = 8f
+            ScrollbarWidth = 8f,
+            ScrollbarBorder = true,
+            ScrollbarBorderWidth = 1f,
+            ScrollbarBorderColor = FrameColor.FromHex("#E0E0E0")
         };
     }
 }
