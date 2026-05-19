@@ -9,28 +9,31 @@ namespace Fram3.UI.Rendering.Internal
 {
     internal static partial class ElementPainter
     {
+        private sealed class ScrollViewThemeHolder
+        {
+            public Theme Theme;
+            public ScrollViewThemeHolder(Theme theme) { Theme = theme; }
+        }
+
         private static UIScrollView CreateScrollView(Elements.Content.ScrollView scrollView, Theme theme)
         {
             var uiScrollView = new UIScrollView(MapScrollMode(scrollView.ScrollDirection));
+            var holder = new ScrollViewThemeHolder(theme);
+            uiScrollView.userData = holder;
+
             ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
             ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+
 #if !FRAM3_PURE_TESTS
-            UnityEngine.Debug.Log($"[Fram3] CreateScrollView: ScrollbarWidth={theme.ScrollbarWidth} verticalScroller inline.width={uiScrollView.verticalScroller.style.width.value}");
+            uiScrollView.verticalScroller.RegisterCallback<GeometryChangedEvent>(_ =>
+                ApplyScrollerWidth(uiScrollView.verticalScroller, holder.Theme.ScrollbarWidth));
+            uiScrollView.horizontalScroller.RegisterCallback<GeometryChangedEvent>(_ =>
+                ApplyScrollerWidth(uiScrollView.horizontalScroller, holder.Theme.ScrollbarWidth));
 #endif
 
             uiScrollView.RegisterCallback<AttachToPanelEvent>(_ =>
-            {
-#if !FRAM3_PURE_TESTS
-                UnityEngine.Debug.Log($"[Fram3] AttachToPanelEvent: verticalScroller inline.width={uiScrollView.verticalScroller.style.width.value} resolved={uiScrollView.verticalScroller.resolvedStyle.width}");
-#endif
-                uiScrollView.schedule.Execute(() =>
-                {
-#if !FRAM3_PURE_TESTS
-                    UnityEngine.Debug.Log($"[Fram3] schedule: verticalScroller inline.width={uiScrollView.verticalScroller.style.width.value} resolved={uiScrollView.verticalScroller.resolvedStyle.width}");
-#endif
-                    ApplyScrollbarThemeDecorations(uiScrollView, theme);
-                }).ExecuteLater(1);
-            });
+                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, holder.Theme)).ExecuteLater(1)
+            );
 
             return uiScrollView;
         }
@@ -181,6 +184,8 @@ namespace Fram3.UI.Rendering.Internal
         {
             uiScrollView.mode = MapScrollMode(scrollView.ScrollDirection);
 #if !FRAM3_PURE_TESTS
+            if (uiScrollView.userData is ScrollViewThemeHolder holder)
+                holder.Theme = theme;
             ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
             ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
             if (uiScrollView.panel != null)
