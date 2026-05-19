@@ -47,7 +47,10 @@ namespace Fram3.UI.Elements.Layout
         {
             if (columnCount <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(columnCount), "Must be greater than zero.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(columnCount),
+                    "Must be greater than zero."
+                );
             }
 
             ColumnCount = columnCount;

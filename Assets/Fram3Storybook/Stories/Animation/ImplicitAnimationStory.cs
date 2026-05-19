@@ -63,7 +63,9 @@ namespace Fram3.UI.Storybook.Stories.Animation
                                         {
                                             Child = new Text(
                                                 $"{w:F0}px",
-                                                style: new TextStyle(Color: FrameColor.White)
+                                                style: new TextStyle(
+                                                    Color: FrameColor.White
+                                                )
                                             )
                                         }
                                     };

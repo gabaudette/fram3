@@ -1,7 +1,6 @@
 #nullable enable
 using System;
 using Fram3.UI.Core;
-using Fram3.UI.Styling;
 using StylingTheme = Fram3.UI.Styling.Theme;
 
 namespace Fram3.UI.Elements.Theme

@@ -82,41 +82,82 @@ namespace Fram3.UI.Elements.Content
 
             var contentRows = new List<Element>
             {
-                new Text(Title, new TextStyle(
-                    FontSize: theme.FontSize,
-                    Bold: true,
-                    Color: accentColor
-                ))
+                new Text(
+                    Title,
+                    style: new TextStyle(
+                        FontSize: theme.FontSize,
+                        Bold: true,
+                        Color: accentColor
+                    )
+                )
             };
 
             if (Message != null)
             {
                 contentRows.Add(SizedBox.FromSize(height: theme.Spacing * 0.5f));
-                contentRows.Add(new Text(Message, new TextStyle(
-                    FontSize: theme.FontSize,
-                    Color: theme.PrimaryTextColor
-                )));
+                contentRows.Add(
+                    new Text(
+                        Message,
+                        style: new TextStyle(
+                            FontSize: theme.FontSize,
+                            Color: theme.PrimaryTextColor
+                        )
+                    )
+                );
             }
 
-            if (Actions.Count > 0)
+            if (Actions.Count <= 0)
             {
-                contentRows.Add(SizedBox.FromSize(height: theme.Spacing));
-                var buttons = new List<Element>();
-                foreach (var action in Actions)
+                return new Container(
+                    decoration: new BoxDecoration(
+                        Color: accentColor.WithAlpha(0.08f),
+                        BorderRadius: BorderRadius.All(theme.BorderRadius),
+                        Border: new Border(accentColor, 1f)
+                    ),
+                    padding: EdgeInsets.All(theme.Spacing * 1.5f)
+                )
                 {
-                    if (buttons.Count > 0)
+                    Child = new Row(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
-                        buttons.Add(SizedBox.FromSize(width: theme.Spacing));
+                        Children = new Element[]
+                        {
+                            new Container(
+                                width: 3f,
+                                decoration: new BoxDecoration(
+                                    Color: accentColor,
+                                    BorderRadius: BorderRadius.All(theme.BorderRadius)
+                                )
+                            ),
+                            SizedBox.FromSize(width: theme.Spacing),
+                            new Expanded
+                            {
+                                Child = new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                                {
+                                    Children = contentRows.ToArray()
+                                }
+                            }
+                        }
                     }
+                };
+            }
 
-                    buttons.Add(new Button(action.Label, action.OnPressed));
+            contentRows.Add(SizedBox.FromSize(height: theme.Spacing));
+            var buttons = new List<Element>();
+
+            foreach (var action in Actions)
+            {
+                if (buttons.Count > 0)
+                {
+                    buttons.Add(SizedBox.FromSize(width: theme.Spacing));
                 }
 
-                contentRows.Add(new Row(crossAxisAlignment: CrossAxisAlignment.Center)
-                {
-                    Children = buttons.ToArray()
-                });
+                buttons.Add(new Button(action.Label, action.OnPressed));
             }
+
+            contentRows.Add(new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+            {
+                Children = buttons.ToArray()
+            });
 
             return new Container(
                 decoration: new BoxDecoration(

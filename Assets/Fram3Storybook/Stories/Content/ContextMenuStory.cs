@@ -60,7 +60,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                 var items = new List<Element>
                 {
                     new GestureDetector(
-                        onSecondaryTap: (x, y) => SetState(() => { _showBasic = true; _basicX = x; _basicY = y; }),
+                        onSecondaryTap: (x, y) => SetState(() =>
+                        {
+                            _showBasic = true;
+                            _basicX = x;
+                            _basicY = y;
+                        }),
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
@@ -114,7 +119,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                 var items = new List<Element>
                 {
                     new GestureDetector(
-                        onSecondaryTap: (x, y) => SetState(() => { _showDisabled = true; _disabledX = x; _disabledY = y; }),
+                        onSecondaryTap: (x, y) => SetState(() =>
+                        {
+                            _showDisabled = true;
+                            _disabledX = x;
+                            _disabledY = y;
+                        }),
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,
@@ -166,7 +176,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                 var items = new List<Element>
                 {
                     new GestureDetector(
-                        onSecondaryTap: (x, y) => SetState(() => { _showGame = true; _gameX = x; _gameY = y; }),
+                        onSecondaryTap: (x, y) => SetState(() =>
+                        {
+                            _showGame = true;
+                            _gameX = x;
+                            _gameY = y;
+                        }),
                         child: new Container(
                             decoration: new BoxDecoration(
                                 Color: theme.SurfaceColor,

@@ -75,11 +75,14 @@ namespace Fram3.UI.Elements.Content
                         onTap: callback,
                         child: new Padding(EdgeInsets.OnlyLeft(theme.Spacing * 0.5f))
                         {
-                            Child = new Text("x", new TextStyle(
-                                FontSize: theme.FontSizeSmall,
-                                Color: labelColor,
-                                Bold: true
-                            ))
+                            Child = new Text(
+                                "x",
+                                style: new TextStyle(
+                                    FontSize: theme.FontSizeSmall,
+                                    Color: labelColor,
+                                    Bold: true
+                                )
+                            )
                         }
                     );
                 }
@@ -95,10 +98,13 @@ namespace Fram3.UI.Elements.Content
                     }
                     : new Element[]
                     {
-                        new Text(Element.Label, new TextStyle(
-                            FontSize: theme.FontSizeSmall,
-                            Color: labelColor
-                        ))
+                        new Text(
+                            Element.Label,
+                            style: new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: labelColor
+                            )
+                        )
                     };
 
                 var chip = new Container(

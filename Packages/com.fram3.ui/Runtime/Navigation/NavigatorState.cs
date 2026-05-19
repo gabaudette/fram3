@@ -19,6 +19,7 @@ namespace Fram3.UI.Navigation
         {
             var initialRoute = Element!.InitialRoute;
             var builder = ResolveRoute(initialRoute, null);
+
             _stack.Add(BuildRoute(builder, null));
         }
 
@@ -50,6 +51,7 @@ namespace Fram3.UI.Navigation
             return new NavigatorScope(this, currentPage);
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private Func<BuildContext, Element> ResolveRoute(string routeName, object? arguments)
         {
             var routes = Element!.Routes;

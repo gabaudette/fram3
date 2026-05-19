@@ -33,11 +33,11 @@ namespace Fram3.UI.Storybook.Stories.Content
                 }
 
                 var currentPage = _page >= totalPages ? totalPages - 1 : _page;
-                
+
                 var pageStart = currentPage * PageSize;
-                
+
                 var pageEnd = Math.Min(pageStart + PageSize, filtered.Count);
-                
+
                 var pageItems = new List<Character>();
 
                 for (var i = pageStart; i < pageEnd; i++)

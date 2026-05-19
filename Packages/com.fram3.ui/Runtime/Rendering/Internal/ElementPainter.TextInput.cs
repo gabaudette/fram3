@@ -18,9 +18,9 @@ namespace Fram3.UI.Rendering.Internal
                     whiteSpace = WhiteSpace.Normal
                 }
             };
-            
+
             PaintText(text, label);
-            
+
             return label;
         }
 
@@ -129,6 +129,7 @@ namespace Fram3.UI.Rendering.Internal
             uiTextField.value = textField.Value;
             uiTextField.isReadOnly = textField.ReadOnly;
             uiTextField.multiline = textField.Multiline;
+            
             if (textField.Placeholder != null)
             {
                 uiTextField.textEdition.placeholder = textField.Placeholder;

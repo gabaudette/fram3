@@ -100,8 +100,16 @@ namespace Fram3.UI.Elements.Content
             Key? key = null
         ) : base(key)
         {
-            if (columns == null) throw new ArgumentNullException(nameof(columns));
-            if (columns.Count == 0) throw new ArgumentException("Columns must not be empty.", nameof(columns));
+            if (columns == null)
+            {
+                throw new ArgumentNullException(nameof(columns));
+            }
+
+            if (columns.Count == 0)
+            {
+                throw new ArgumentException("Columns must not be empty.", nameof(columns));
+            }
+
             Columns = columns;
             Rows = rows ?? throw new ArgumentNullException(nameof(rows));
             OnRowSelected = onRowSelected;
@@ -137,18 +145,28 @@ namespace Fram3.UI.Elements.Content
 
                 var colWidths = ComputeColumnWidths(columns, _resolvedWidth);
                 var rows = BuildSortedRows();
-                var tableRows = new List<Element>();
-
-                tableRows.Add(BuildHeaderRow(columns, colWidths, theme));
-                tableRows.Add(new Divider(
-                    axis: DividerAxis.Horizontal,
-                    thickness: 1f,
-                    color: theme.InputBorderColor
-                ));
+                var tableRows = new List<Element>
+                {
+                    BuildHeaderRow(columns, colWidths, theme),
+                    new Divider(
+                        axis: DividerAxis.Horizontal,
+                        thickness: 1f,
+                        color: theme.InputBorderColor
+                    )
+                };
 
                 for (var i = 0; i < rows.Count; i++)
                 {
-                    tableRows.Add(BuildDataRow(rows[i].Original, rows[i].SortedIndex, i, columns, colWidths, theme));
+                    tableRows.Add(
+                        BuildDataRow(
+                            row: rows[i].Original,
+                            sortedIndex: rows[i].SortedIndex,
+                            displayIndex: i,
+                            columns: columns,
+                            colWidths: colWidths,
+                            theme
+                        )
+                    );
                 }
 
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
@@ -163,11 +181,11 @@ namespace Fram3.UI.Elements.Content
                 var fixedTotal = 0f;
                 var expandedCount = 0;
 
-                for (var i = 0; i < columns.Count; i++)
+                foreach (var column in columns)
                 {
-                    if (columns[i].Width.HasValue)
+                    if (column.Width.HasValue)
                     {
-                        fixedTotal += columns[i].Width!.Value;
+                        fixedTotal += column.Width!.Value;
                     }
                     else
                     {
@@ -203,11 +221,16 @@ namespace Fram3.UI.Elements.Content
 
                 var col = Element.Columns[_sortColumnIndex];
                 var ascending = _sortAscending;
+
                 result.Sort((a, b) =>
                 {
-                    var cmp = string.Compare(col.CellText(a.Item1), col.CellText(b.Item1),
-                        StringComparison.OrdinalIgnoreCase);
-                    return ascending ? cmp : -cmp;
+                    var compare = string.Compare(
+                        col.CellText(a.Item1),
+                        col.CellText(b.Item1),
+                        StringComparison.OrdinalIgnoreCase
+                    );
+
+                    return ascending ? compare : -compare;
                 });
 
                 return result;
@@ -228,10 +251,9 @@ namespace Fram3.UI.Elements.Content
                 for (var i = 0; i < columns.Count; i++)
                 {
                     var col = columns[i];
-                    var colIndex = i;
 
                     var sortIndicator = "";
-                    if (_sortColumnIndex == colIndex)
+                    if (_sortColumnIndex == i)
                     {
                         sortIndicator = _sortAscending ? " ^" : " v";
                     }
@@ -248,20 +270,31 @@ namespace Fram3.UI.Elements.Content
                     Action? onTap = null;
                     if (col.Sortable)
                     {
-                        var ci = colIndex;
+                        var columnIndex = i;
                         onTap = () => SetState(() =>
                         {
-                            if (_sortColumnIndex == ci)
+                            if (_sortColumnIndex == columnIndex)
+                            {
                                 _sortAscending = !_sortAscending;
+                            }
                             else
                             {
-                                _sortColumnIndex = ci;
+                                _sortColumnIndex = columnIndex;
                                 _sortAscending = true;
                             }
                         });
                     }
 
-                    cells.Add(new Container(padding: cellPadding, width: colWidths[i], onTap: onTap) { Child = label });
+                    cells.Add(
+                        new Container(
+                            padding: cellPadding,
+                            width: colWidths[i],
+                            onTap: onTap
+                        )
+                        {
+                            Child = label
+                        }
+                    );
                 }
 
                 return new Container(
@@ -287,18 +320,18 @@ namespace Fram3.UI.Elements.Content
                 var isSelected = sortedIndex == _selectedRowIndex;
                 var isStripe = Element!.StripedRows && displayIndex % 2 == 1;
 
-                FrameColor bg;
+                FrameColor backGround;
                 if (isSelected)
                 {
-                    bg = theme.PrimaryColor.WithAlpha(0.18f);
+                    backGround = theme.PrimaryColor.WithAlpha(0.18f);
                 }
                 else if (isStripe)
                 {
-                    bg = theme.TrackColor.WithAlpha(0.4f);
+                    backGround = theme.TrackColor.WithAlpha(0.4f);
                 }
                 else
                 {
-                    bg = theme.SurfaceColor.WithAlpha(0f);
+                    backGround = theme.SurfaceColor.WithAlpha(0f);
                 }
 
                 var cellPadding = EdgeInsets.Symmetric(
@@ -313,25 +346,42 @@ namespace Fram3.UI.Elements.Content
                         columns[i].CellText(row),
                         new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryTextColor)
                     );
+
                     cells.Add(new Container(padding: cellPadding, width: colWidths[i]) { Child = label });
                 }
 
                 Action? onTap = null;
-                if (Element.OnRowSelected != null)
+                if (Element.OnRowSelected == null)
                 {
-                    var capturedRow = row;
-                    var capturedSortedIndex = sortedIndex;
-                    onTap = () => SetState(() =>
+                    return new Container(
+                        decoration: new BoxDecoration(
+                            Color: backGround
+                        ),
+                        onTap: onTap
+                    )
                     {
-                        _selectedRowIndex = _selectedRowIndex == capturedSortedIndex
-                            ? -1
-                            : capturedSortedIndex;
-                        Element.OnRowSelected?.Invoke(capturedRow);
-                    });
+                        Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
+                        {
+                            Children = cells.ToArray()
+                        }
+                    };
                 }
 
+                var capturedRow = row;
+                var capturedSortedIndex = sortedIndex;
+                onTap = () => SetState(() =>
+                {
+                    _selectedRowIndex = _selectedRowIndex == capturedSortedIndex
+                        ? -1
+                        : capturedSortedIndex;
+
+                    Element.OnRowSelected?.Invoke(capturedRow);
+                });
+
                 return new Container(
-                    decoration: new BoxDecoration(Color: bg),
+                    decoration: new BoxDecoration(
+                        Color: backGround
+                    ),
                     onTap: onTap
                 )
                 {

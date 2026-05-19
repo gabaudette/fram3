@@ -13,7 +13,10 @@ namespace Fram3.UI.Rendering.Internal
     /// </summary>
     internal sealed class RenderHandle
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         internal Node Node { get; }
+
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         internal VisualElement NativeElement { get; set; }
 
         internal RenderHandle(Node node, VisualElement nativeElement)

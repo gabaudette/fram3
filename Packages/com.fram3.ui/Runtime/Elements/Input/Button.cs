@@ -101,11 +101,14 @@ namespace Fram3.UI.Elements.Input
                     {
                         Child = new Center
                         {
-                            Child = new Text(Element.Label, new TextStyle(
-                                Color: textColor,
-                                FontSize: theme.FontSize,
-                                Bold: true
-                            ))
+                            Child = new Text(
+                                Element.Label,
+                                style: new TextStyle(
+                                    Color: textColor,
+                                    FontSize: theme.FontSize,
+                                    Bold: true
+                                )
+                            )
                         }
                     }
                 );

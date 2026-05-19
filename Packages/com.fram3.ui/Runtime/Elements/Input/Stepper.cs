@@ -63,9 +63,18 @@ namespace Fram3.UI.Elements.Input
             Key? key = null
         ) : base(key)
         {
-            if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step), "Step must be greater than zero.");
+            if (step <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(step),
+                    "Step must be greater than zero."
+                );
+            }
+
             if (min.HasValue && max.HasValue && min.Value > max.Value)
+            {
                 throw new ArgumentException("Min must not be greater than Max.");
+            }
 
             Value = value;
             OnChanged = onChanged;
@@ -86,13 +95,15 @@ namespace Fram3.UI.Elements.Input
             public override void DidUpdateElement(StatefulElement oldElement)
             {
                 var old = (Stepper)oldElement;
-                var el = Element!;
-                if (old.Value != el.Value ||
-                    old.Min != el.Min ||
-                    old.Max != el.Max ||
-                    old.Step != el.Step ||
-                    old.Label != el.Label ||
-                    (old.OnChanged == null) != (el.OnChanged == null))
+                var element = Element!;
+                if (
+                    old.Value != element.Value ||
+                    old.Min != element.Min ||
+                    old.Max != element.Max ||
+                    old.Step != element.Step ||
+                    old.Label != element.Label ||
+                    old.OnChanged == null != (element.OnChanged == null)
+                )
                 {
                     SetState(null);
                 }
@@ -101,30 +112,32 @@ namespace Fram3.UI.Elements.Input
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                var el = Element!;
-                var disabled = el.OnChanged == null;
+                var element = Element!;
+                var disabled = element.OnChanged == null;
 
-                var canDecrement = !disabled && (el.Min == null || el.Value - el.Step >= el.Min.Value);
-                var canIncrement = !disabled && (el.Max == null || el.Value + el.Step <= el.Max.Value);
+                var canDecrement = !disabled && (
+                    element.Min == null ||
+                    element.Value - element.Step >= element.Min.Value
+                );
 
-                void Decrement() => el.OnChanged!(Math.Max(
-                    el.Value - el.Step,
-                    el.Min ?? int.MinValue
-                ));
-
-                void Increment() => el.OnChanged!(Math.Min(
-                    el.Value + el.Step,
-                    el.Max ?? int.MaxValue
-                ));
+                var canIncrement = !disabled && (
+                    element.Max == null ||
+                    element.Value + element.Step <= element.Max.Value
+                );
 
                 var control = new Row(crossAxisAlignment: CrossAxisAlignment.Center)
                 {
                     Children = new Element[]
                     {
-                        BuildStepButton("-", canDecrement, _decrementHovered, Decrement,
-                            () => SetState(() => _decrementHovered = true),
-                            () => SetState(() => _decrementHovered = false),
-                            theme),
+                        BuildStepButton(
+                            symbol: "-",
+                            canAct: canDecrement,
+                            hovered: _decrementHovered,
+                            onPressed: Decrement,
+                            onEnter: () => SetState(() => _decrementHovered = true),
+                            onExit: () => SetState(() => _decrementHovered = false),
+                            theme
+                        ),
                         new Container(
                             width: theme.Spacing * 6f,
                             centerChild: true,
@@ -135,22 +148,27 @@ namespace Fram3.UI.Elements.Input
                         )
                         {
                             Child = new Text(
-                                el.Value.ToString(),
-                                new TextStyle(
+                                element.Value.ToString(),
+                                style: new TextStyle(
                                     FontSize: theme.FontSize,
                                     Color: disabled ? theme.DisabledTextColor : theme.PrimaryTextColor,
                                     Bold: true
                                 )
                             )
                         },
-                        BuildStepButton("+", canIncrement, _incrementHovered, Increment,
-                            () => SetState(() => _incrementHovered = true),
-                            () => SetState(() => _incrementHovered = false),
-                            theme),
+                        BuildStepButton(
+                            symbol: "+",
+                            canAct: canIncrement,
+                            hovered: _incrementHovered,
+                            onPressed: Increment,
+                            onEnter: () => SetState(() => _incrementHovered = true),
+                            onExit: () => SetState(() => _incrementHovered = false),
+                            theme
+                        )
                     }
                 };
 
-                if (el.Label == null)
+                if (element.Label == null)
                 {
                     return control;
                 }
@@ -159,14 +177,31 @@ namespace Fram3.UI.Elements.Input
                 {
                     Children = new Element[]
                     {
-                        new Text(el.Label, new TextStyle(
-                            FontSize: theme.FontSizeSmall,
-                            Color: disabled ? theme.DisabledTextColor : theme.SecondaryTextColor
-                        )),
+                        new Text(
+                            element.Label,
+                            style: new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: disabled ? theme.DisabledTextColor : theme.SecondaryTextColor
+                            )
+                        ),
                         SizedBox.FromSize(height: theme.Spacing * 0.5f),
-                        control,
+                        control
                     }
                 };
+
+                void Increment() => element.OnChanged!(
+                    Math.Min(
+                        element.Value + element.Step,
+                        element.Max ?? int.MaxValue
+                    )
+                );
+
+                void Decrement() => element.OnChanged!(
+                    Math.Max(
+                        element.Value - element.Step,
+                        element.Min ?? int.MinValue
+                    )
+                );
             }
 
             private static Element BuildStepButton(
@@ -216,11 +251,14 @@ namespace Fram3.UI.Elements.Input
                         )
                     )
                     {
-                        Child = new Text(symbol, new TextStyle(
-                            FontSize: theme.FontSize,
-                            Color: textColor,
-                            Bold: true
-                        ))
+                        Child = new Text(
+                            symbol,
+                            style: new TextStyle(
+                                FontSize: theme.FontSize,
+                                Color: textColor,
+                                Bold: true
+                            )
+                        )
                     }
                 );
             }

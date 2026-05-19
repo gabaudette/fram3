@@ -86,6 +86,7 @@ namespace Fram3.UI.Elements.State
                 }
 
                 _lastValue = newValue;
+                
                 SetStateIfMounted(null);
             }
 

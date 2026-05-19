@@ -188,6 +188,7 @@ namespace Fram3.UI.Rendering.Internal
             uiProgressBar.value = progressBar.Value;
             uiProgressBar.lowValue = progressBar.Min;
             uiProgressBar.highValue = progressBar.Max;
+
             if (progressBar.Title != null)
             {
                 uiProgressBar.title = progressBar.Title;
@@ -270,8 +271,10 @@ namespace Fram3.UI.Rendering.Internal
             };
 
             var pipHolder = BuildBadgePip(badge, theme);
+
             wrapper.userData = pipHolder;
             wrapper.RegisterCallback<AttachToPanelEvent>(_ => wrapper.Add(pipHolder.Pip));
+
             return wrapper;
         }
 
@@ -322,6 +325,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var countText = badge.Count > 99 ? "99+" : badge.Count.ToString()!;
+
             var pip = new VisualElement
             {
                 style =
@@ -361,6 +365,7 @@ namespace Fram3.UI.Rendering.Internal
             };
 
             pip.Add(label);
+
             return new BadgePipHolder(pip, label);
         }
 
@@ -388,11 +393,11 @@ namespace Fram3.UI.Rendering.Internal
         }
 
 #if !FRAM3_PURE_TESTS
-        private static void ApplyIconSource(Icon icon, Image img)
+        private static void ApplyIconSource(Icon icon, Image image)
         {
             if (icon.Source is VectorImage preloaded)
             {
-                img.vectorImage = preloaded;
+                image.vectorImage = preloaded;
                 return;
             }
 
@@ -401,7 +406,7 @@ namespace Fram3.UI.Rendering.Internal
                 var loaded = UnityEngine.Resources.Load<VectorImage>(icon.ResourcePath);
                 if (loaded != null)
                 {
-                    img.vectorImage = loaded;
+                    image.vectorImage = loaded;
                 }
 
                 return;
@@ -416,7 +421,7 @@ namespace Fram3.UI.Rendering.Internal
             var svgLoaded = UnityEditor.AssetDatabase.LoadAssetAtPath<VectorImage>(icon.SvgPath);
             if (svgLoaded != null)
             {
-                img.vectorImage = svgLoaded;
+                image.vectorImage = svgLoaded;
             }
 #endif
         }
@@ -483,21 +488,29 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             backdrop.Add(card);
+
             return backdrop;
         }
 
         internal static void PaintContextMenu(ContextMenu menu, VisualElement native, Theme theme)
         {
             // Reposition card on rebuild (x/y or items may have changed).
-            if (native.childCount == 0) return;
+            if (native.childCount == 0)
+            {
+                return;
+            }
+
             var card = native[0];
             card.style.left = menu.X;
             card.style.top = menu.Y;
             card.style.backgroundColor = ToUnity(theme.SurfaceColor);
 
             card.Clear();
+
             var onDismiss = menu.OnDismiss;
+
             card.RegisterCallback<PointerDownEvent>(evt => evt.StopPropagation());
+
             foreach (var item in menu.Items)
             {
                 card.Add(BuildContextMenuRow(item, theme, onDismiss));
@@ -533,25 +546,25 @@ namespace Fram3.UI.Rendering.Internal
 
             row.Add(label);
 
-            if (!item.Disabled)
+            if (item.Disabled)
             {
-                var onTap = item.OnTap;
-                row.RegisterCallback<PointerDownEvent>(_ =>
-                {
-                    onTap();
-                    onDismiss();
-                });
-
-                row.RegisterCallback<PointerEnterEvent>(_ =>
-                {
-                    row.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.1f));
-                });
-
-                row.RegisterCallback<PointerLeaveEvent>(_ =>
-                {
-                    row.style.backgroundColor = UnityEngine.Color.clear;
-                });
+                return row;
             }
+
+            var onTap = item.OnTap;
+
+            row.RegisterCallback<PointerDownEvent>(_ =>
+            {
+                onTap();
+                onDismiss();
+            });
+
+            row.RegisterCallback<PointerEnterEvent>(_ =>
+            {
+                row.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.1f));
+            });
+
+            row.RegisterCallback<PointerLeaveEvent>(_ => { row.style.backgroundColor = UnityEngine.Color.clear; });
 
             return row;
         }
@@ -600,15 +613,21 @@ namespace Fram3.UI.Rendering.Internal
             };
 
             if (panel.Width.HasValue)
+            {
                 root.style.width = panel.Width.Value;
+            }
+
             if (panel.Height.HasValue)
+            {
                 root.style.height = panel.Height.Value;
+            }
+
             if (panel.Resizable)
             {
                 root.style.minWidth = panel.MinWidth;
-                root.style.maxWidth = panel.MaxWidth < float.MaxValue ? (StyleLength)panel.MaxWidth : StyleKeyword.None;
+                root.style.maxWidth = panel.MaxWidth < float.MaxValue ? panel.MaxWidth : StyleKeyword.None;
                 root.style.minHeight = panel.MinHeight;
-                root.style.maxHeight = panel.MaxHeight < float.MaxValue ? (StyleLength)panel.MaxHeight : StyleKeyword.None;
+                root.style.maxHeight = panel.MaxHeight < float.MaxValue ? panel.MaxHeight : StyleKeyword.None;
             }
 
             root.userData = state;
@@ -628,26 +647,38 @@ namespace Fram3.UI.Rendering.Internal
             root.Add(body);
 
             if (panel.Resizable)
+            {
                 root.Add(BuildResizeGrip(panel, theme, root, state));
+            }
 
             return root;
         }
 
         internal static void PaintDraggablePanel(DraggablePanel panel, VisualElement native, Theme theme)
         {
-            if (native.userData is not DragState state) return;
+            if (native.userData is not DragState state)
+            {
+                return;
+            }
 
             native.style.backgroundColor = ToUnity(theme.SurfaceColor);
+
             if (panel.Width.HasValue)
+            {
                 native.style.width = panel.Width.Value;
+            }
+
             if (panel.Height.HasValue)
+            {
                 native.style.height = panel.Height.Value;
+            }
+
             if (panel.Resizable)
             {
                 native.style.minWidth = panel.MinWidth;
-                native.style.maxWidth = panel.MaxWidth < float.MaxValue ? (StyleLength)panel.MaxWidth : StyleKeyword.None;
+                native.style.maxWidth = panel.MaxWidth < float.MaxValue ? panel.MaxWidth : StyleKeyword.None;
                 native.style.minHeight = panel.MinHeight;
-                native.style.maxHeight = panel.MaxHeight < float.MaxValue ? (StyleLength)panel.MaxHeight : StyleKeyword.None;
+                native.style.maxHeight = panel.MaxHeight < float.MaxValue ? panel.MaxHeight : StyleKeyword.None;
             }
 
             if (native.childCount >= 1)
@@ -657,10 +688,16 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var hasGrip = native.childCount >= 3;
-            if (panel.Resizable && !hasGrip)
-                native.Add(BuildResizeGrip(panel, theme, native, state));
-            else if (!panel.Resizable && hasGrip)
-                native.RemoveAt(2);
+
+            switch (panel.Resizable)
+            {
+                case true when !hasGrip:
+                    native.Add(BuildResizeGrip(panel, theme, native, state));
+                    break;
+                case false when hasGrip:
+                    native.RemoveAt(2);
+                    break;
+            }
         }
 
         private static VisualElement BuildDragHandle(
@@ -696,6 +733,7 @@ namespace Fram3.UI.Rendering.Internal
                         unityFontStyleAndWeight = UnityEngine.FontStyle.Bold
                     }
                 };
+
                 handle.Add(title);
             }
             else
@@ -717,19 +755,26 @@ namespace Fram3.UI.Rendering.Internal
                         paddingRight = theme.Spacing * 0.5f
                     }
                 };
+
                 closeBtn.RegisterCallback<PointerDownEvent>(evt =>
-                {
-                    evt.StopPropagation();
-                    onClose();
-                });
+                    {
+                        evt.StopPropagation();
+                        onClose();
+                    }
+                );
+
                 closeBtn.RegisterCallback<PointerEnterEvent>(_ =>
-                {
-                    closeBtn.style.color = ToUnity(theme.PrimaryTextColor);
-                });
+                    {
+                        closeBtn.style.color = ToUnity(theme.PrimaryTextColor);
+                    }
+                );
+
                 closeBtn.RegisterCallback<PointerLeaveEvent>(_ =>
-                {
-                    closeBtn.style.color = ToUnity(theme.SecondaryTextColor);
-                });
+                    {
+                        closeBtn.style.color = ToUnity(theme.SecondaryTextColor);
+                    }
+                );
+
                 handle.Add(closeBtn);
             }
 
@@ -744,7 +789,11 @@ namespace Fram3.UI.Rendering.Internal
 
             handle.RegisterCallback<PointerMoveEvent>(evt =>
             {
-                if (!state.Dragging) return;
+                if (!state.Dragging)
+                {
+                    return;
+                }
+
                 state.X = evt.position.x - state.OffsetX;
                 state.Y = evt.position.y - state.OffsetY;
                 root.style.left = state.X;
@@ -767,7 +816,7 @@ namespace Fram3.UI.Rendering.Internal
             DragState state
         )
         {
-            var gripSize = 16f;
+            const float gripSize = 16f;
             var grip = new VisualElement
             {
                 style =
@@ -781,6 +830,7 @@ namespace Fram3.UI.Rendering.Internal
             };
 
             // Draw three diagonal lines as a classic resize grip.
+            // TODO: Fix this, the grip is like not in the right place and the lines are not perfectly diagonal
             for (var i = 0; i < 3; i++)
             {
                 var offset = i * 4f + 2f;
@@ -795,11 +845,14 @@ namespace Fram3.UI.Rendering.Internal
                         right = 0,
                         backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f)),
                         transformOrigin = new StyleTransformOrigin(
-                            new TransformOrigin(Length.Percent(100), Length.Percent(0))
+                            new TransformOrigin(
+                                Length.Percent(100), Length.Percent(0)
+                            )
                         ),
                         rotate = new StyleRotate(new Rotate(new Angle(45f, AngleUnit.Degree)))
                     }
                 };
+
                 grip.Add(line);
             }
 
@@ -816,9 +869,14 @@ namespace Fram3.UI.Rendering.Internal
 
             grip.RegisterCallback<PointerMoveEvent>(evt =>
             {
-                if (!state.Resizing) return;
+                if (!state.Resizing)
+                {
+                    return;
+                }
+
                 var newW = state.ResizeStartWidth + (evt.position.x - state.ResizeStartX);
                 var newH = state.ResizeStartHeight + (evt.position.y - state.ResizeStartY);
+
                 newW = System.Math.Clamp(newW, panel.MinWidth, panel.MaxWidth);
                 newH = System.Math.Clamp(newH, panel.MinHeight, panel.MaxHeight);
                 root.style.width = newW;
@@ -834,14 +892,19 @@ namespace Fram3.UI.Rendering.Internal
             grip.RegisterCallback<PointerEnterEvent>(_ =>
             {
                 foreach (var line in grip.Children())
+                {
                     line.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.6f));
+                }
             });
 
             grip.RegisterCallback<PointerLeaveEvent>(_ =>
-            {
-                foreach (var line in grip.Children())
-                    line.style.backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f));
-            });
+                {
+                    foreach (var line in grip.Children())
+                    {
+                        line.style.backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f));
+                    }
+                }
+            );
 
             return grip;
         }

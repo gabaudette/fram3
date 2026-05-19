@@ -90,8 +90,7 @@ namespace Fram3.UI.Elements.Content
             Key? key = null
         ) : base(key)
         {
-            if (child == null) throw new ArgumentNullException(nameof(child));
-            Child = child;
+            Child = child ?? throw new ArgumentNullException(nameof(child));
             Title = title;
             InitialX = initialX;
             InitialY = initialY;

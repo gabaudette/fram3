@@ -11,6 +11,7 @@ using UIScrollView = UnityEngine.UIElements.ScrollView;
 using UIProgressBar = UnityEngine.UIElements.ProgressBar;
 using UIFloatField = UnityEngine.UIElements.FloatField;
 using UIMinMaxSlider = UnityEngine.UIElements.MinMaxSlider;
+
 namespace Fram3.UI.Rendering.Internal
 {
     /// <summary>
@@ -102,6 +103,7 @@ namespace Fram3.UI.Rendering.Internal
                     var native = new VisualElement();
                     ApplyLayout(element, native, theme);
                     RegisterGestureCallbacks(element, native);
+                    
                     return native;
             }
         }
@@ -126,7 +128,9 @@ namespace Fram3.UI.Rendering.Internal
         {
 #if !FRAM3_PURE_TESTS
             if (parentElement is DraggablePanel && parentNative.childCount >= 2)
+            {
                 return parentNative[1];
+            }
 #endif
             return parentNative;
         }

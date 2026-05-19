@@ -130,14 +130,17 @@ namespace Fram3.UI.Elements.Content
                         Element.AnimationDuration,
                         Curves.EaseOut
                     );
+                    
                     _controllers[i].AddListener(_ => SetStateIfMounted(null));
                 }
 
-                if (Element.InitialIndex >= 0 && Element.InitialIndex < count)
+                if (Element.InitialIndex < 0 || Element.InitialIndex >= count)
                 {
-                    _expanded[Element.InitialIndex] = true;
-                    _controllers[Element.InitialIndex].Forward();
+                    return;
                 }
+
+                _expanded[Element.InitialIndex] = true;
+                _controllers[Element.InitialIndex].Forward();
             }
 
             public override void DidUpdateElement(StatefulElement oldElement)
@@ -183,9 +186,9 @@ namespace Fram3.UI.Elements.Content
 
             public override void Dispose()
             {
-                foreach (var c in _controllers)
+                foreach (var controller in _controllers)
                 {
-                    c.Dispose();
+                    controller.Dispose();
                 }
 
                 base.Dispose();
@@ -232,7 +235,7 @@ namespace Fram3.UI.Elements.Content
             {
                 var item = Element!.Items[index];
                 var controller = _controllers[index];
-                var progress = controller.Value;           // 0 = closed, 1 = open
+                var progress = controller.Value; // 0 = closed, 1 = open
                 var isExpanded = _expanded[index];
                 var captured = index;
 
@@ -335,11 +338,13 @@ namespace Fram3.UI.Elements.Content
 
                     for (var i = 0; i < _expanded.Length; i++)
                     {
-                        if (_expanded[i] && i != index)
+                        if (!_expanded[i] || i == index)
                         {
-                            _expanded[i] = false;
-                            _controllers[i].Reverse();
+                            continue;
                         }
+
+                        _expanded[i] = false;
+                        _controllers[i].Reverse();
                     }
 
                     if (wasOpen)

@@ -15,7 +15,7 @@ namespace Fram3.UI.Storybook.Stories.Layout
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]
@@ -137,7 +137,8 @@ namespace Fram3.UI.Storybook.Stories.Layout
                                     new Margin(
                                         margin: new EdgeInsets(80f, 0f, 0f, 60f),
                                         child: new Container(
-                                            width: 8f, height: 8f,
+                                            width: 8f,
+                                            height: 8f,
                                             decoration: new BoxDecoration(
                                                 Color: playerColor,
                                                 BorderRadius: BorderRadius.All(4f)

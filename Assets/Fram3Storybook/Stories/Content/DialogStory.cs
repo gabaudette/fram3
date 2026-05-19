@@ -21,7 +21,7 @@ namespace Fram3.UI.Storybook.Stories.Content
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]
@@ -96,7 +96,9 @@ namespace Fram3.UI.Storybook.Stories.Content
                             {
                                 new Text(
                                     "\"Into the Dark Forest\" will be removed from your quest log.",
-                                    style: new TextStyle(Color: theme.PrimaryTextColor)
+                                    style: new TextStyle(
+                                        Color: theme.PrimaryTextColor
+                                    )
                                 ),
                                 SizedBox.FromSize(height: theme.Spacing),
                                 new Text(

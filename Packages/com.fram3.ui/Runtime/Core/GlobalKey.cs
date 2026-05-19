@@ -48,8 +48,7 @@ namespace Fram3.UI.Core
 
         public override bool Equals(Key? other) => ReferenceEquals(this, other);
 
-        public override int GetHashCode() =>
-            System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
+        public override int GetHashCode() => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this);
     }
 
     /// <summary>

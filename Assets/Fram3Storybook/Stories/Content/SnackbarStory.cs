@@ -20,7 +20,7 @@ namespace Fram3.UI.Storybook.Stories.Content
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]

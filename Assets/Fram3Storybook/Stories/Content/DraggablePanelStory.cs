@@ -31,7 +31,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         {
                             StoryHelpers.Section(
                                 label: "Basic",
-                                content: BuildBasicControls(theme),
+                                content: BuildBasicControls(),
                                 theme
                             ),
                             SizedBox.FromSize(height: theme.Spacing * 3f),
@@ -43,7 +43,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                             SizedBox.FromSize(height: theme.Spacing * 3f),
                             StoryHelpers.Section(
                                 label: "Resizable",
-                                content: BuildResizableControls(theme),
+                                content: BuildResizableControls(),
                                 theme
                             )
                         }
@@ -59,7 +59,9 @@ namespace Fram3.UI.Storybook.Stories.Content
                             {
                                 new Text(
                                     "Drag the title bar to move this panel.",
-                                    style: new TextStyle(Color: theme.PrimaryTextColor)
+                                    style: new TextStyle(
+                                        Color: theme.PrimaryTextColor
+                                    )
                                 ),
                                 SizedBox.FromSize(height: theme.Spacing),
                                 new Text(
@@ -132,7 +134,9 @@ namespace Fram3.UI.Storybook.Stories.Content
                             {
                                 new Text(
                                     "Drag the corner grip to resize this panel.",
-                                    style: new TextStyle(Color: theme.PrimaryTextColor)
+                                    style: new TextStyle(
+                                        Color: theme.PrimaryTextColor
+                                    )
                                 ),
                                 SizedBox.FromSize(height: theme.Spacing),
                                 new Text(
@@ -164,7 +168,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                 };
             }
 
-            private Element BuildBasicControls(Theme theme)
+            private Element BuildBasicControls()
             {
                 return new Button(
                     label: _showBasic ? "Hide Panel" : "Show Panel",
@@ -191,7 +195,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                 };
             }
 
-            private Element BuildResizableControls(Theme theme)
+            private Element BuildResizableControls()
             {
                 return new Button(
                     label: _showResizable ? "Hide Resizable" : "Show Resizable",
@@ -205,8 +209,18 @@ namespace Fram3.UI.Storybook.Stories.Content
                 {
                     Children = new Element[]
                     {
-                        new Text(label, style: new TextStyle(Color: theme.SecondaryTextColor)),
-                        new Text(value, style: new TextStyle(Color: theme.PrimaryTextColor))
+                        new Text(
+                            label,
+                            style: new TextStyle(
+                                Color: theme.SecondaryTextColor
+                            )
+                        ),
+                        new Text(
+                            value,
+                            style: new TextStyle(
+                                Color: theme.PrimaryTextColor
+                            )
+                        )
                     }
                 };
             }
@@ -217,8 +231,18 @@ namespace Fram3.UI.Storybook.Stories.Content
                 {
                     Children = new Element[]
                     {
-                        new Text(name, style: new TextStyle(Color: theme.PrimaryTextColor)),
-                        new Text(qty, style: new TextStyle(Color: theme.SecondaryTextColor))
+                        new Text(
+                            name,
+                            style: new TextStyle(
+                                Color: theme.PrimaryTextColor
+                            )
+                        ),
+                        new Text(
+                            qty,
+                            style: new TextStyle(
+                                Color: theme.SecondaryTextColor
+                            )
+                        )
                     }
                 };
             }

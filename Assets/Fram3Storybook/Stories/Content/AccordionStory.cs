@@ -16,7 +16,7 @@ namespace Fram3.UI.Storybook.Stories.Content
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]
@@ -60,7 +60,8 @@ namespace Fram3.UI.Storybook.Stories.Content
                         new AccordionItem(
                             header: "How do themes work?",
                             content: new Text(
-                                "Elements pull colors, spacing, and typography from the active ThemeData via ThemeConsumer.Of.",
+                                "Elements pull colors, spacing, and typography from" +
+                                " the active ThemeData via ThemeConsumer.Of.",
                                 style: new TextStyle(
                                     FontSize: theme.FontSize,
                                     Color: theme.SecondaryTextColor

@@ -48,8 +48,16 @@ namespace Fram3.UI.Elements.Content
             Key? key = null
         ) : base(key)
         {
-            if (items == null) throw new ArgumentNullException(nameof(items));
-            if (items.Count == 0) throw new ArgumentException("Items must not be empty.", nameof(items));
+            if (items == null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+
+            if (items.Count == 0)
+            {
+                throw new ArgumentException("Items must not be empty.", nameof(items));
+            }
+
             Items = items;
             X = x;
             Y = y;

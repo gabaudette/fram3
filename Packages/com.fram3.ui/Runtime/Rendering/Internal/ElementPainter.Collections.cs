@@ -1,9 +1,9 @@
 #nullable enable
 using System.Collections.Generic;
-using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Styling;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Fram3.UI.Rendering.Internal
@@ -48,7 +48,9 @@ namespace Fram3.UI.Rendering.Internal
             if (container.userData is not GridState state)
             {
                 container.Clear();
+
                 BuildNativeGridRows(grid, container, theme);
+
                 container.userData = new GridState
                 {
                     ColumnCount = grid.ColumnCount,
@@ -56,22 +58,26 @@ namespace Fram3.UI.Rendering.Internal
                     RowSpacing = grid.RowSpacing,
                     ItemCount = grid.ItemCount
                 };
+
                 return;
             }
 
             var structureChanged =
                 grid.ColumnCount != state.ColumnCount ||
-                grid.ColumnSpacing != state.ColumnSpacing ||
-                grid.RowSpacing != state.RowSpacing;
+                !Mathf.Approximately(grid.ColumnSpacing, state.ColumnSpacing) ||
+                !Mathf.Approximately(grid.RowSpacing, state.RowSpacing);
 
             if (structureChanged)
             {
                 container.Clear();
+                
                 BuildNativeGridRows(grid, container, theme);
+                
                 state.ColumnCount = grid.ColumnCount;
                 state.ColumnSpacing = grid.ColumnSpacing;
                 state.RowSpacing = grid.RowSpacing;
                 state.ItemCount = grid.ItemCount;
+                
                 return;
             }
 
@@ -91,12 +97,15 @@ namespace Fram3.UI.Rendering.Internal
             while (oldRowCount > newRowCount)
             {
                 var lastRow = container[container.childCount - 1];
+
                 container.Remove(lastRow);
+
                 if (hasRowSpacing && oldRowCount > 1)
                 {
                     var spacer = container[container.childCount - 1];
                     container.Remove(spacer);
                 }
+
                 oldRowCount--;
             }
 
@@ -110,12 +119,20 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     // With columnSpacing each column after the first is preceded by a spacer.
                     var actualCellSlot = grid.ColumnSpacing > 0f ? c * 2 : c;
-                    if (actualCellSlot >= row.childCount) break;
+                    if (actualCellSlot >= row.childCount)
+                    {
+                        break;
+                    }
+
                     var cellVe = row[actualCellSlot];
                     var index = r * columnCount + c;
+
                     cellVe.Clear();
+
                     if (index < newItemCount)
+                    {
                         BuildNativeTree(grid.BuildItemAt(index), cellVe, theme);
+                    }
                 }
             }
 
@@ -140,7 +157,9 @@ namespace Fram3.UI.Rendering.Internal
                 for (var j = 0; j < columnCount; j++)
                 {
                     if (j > 0 && grid.ColumnSpacing > 0f)
+                    {
                         row.Add(new VisualElement { style = { width = grid.ColumnSpacing } });
+                    }
 
                     var cell = new VisualElement
                     {
@@ -155,7 +174,9 @@ namespace Fram3.UI.Rendering.Internal
 
                     var index = oldRowCount * columnCount + j;
                     if (index < newItemCount)
+                    {
                         BuildNativeTree(grid.BuildItemAt(index), cell, theme);
+                    }
 
                     row.Add(cell);
                 }
@@ -211,6 +232,7 @@ namespace Fram3.UI.Rendering.Internal
                                 width = columnSpacing
                             }
                         };
+
                         row.Add(spacer);
                     }
 
@@ -228,7 +250,11 @@ namespace Fram3.UI.Rendering.Internal
                     var index = i + j;
                     if (index < itemCount)
                     {
-                        BuildNativeTree(grid.BuildItemAt(index), cell, theme);
+                        BuildNativeTree(
+                            element: grid.BuildItemAt(index),
+                            parent: cell,
+                            theme
+                        );
                     }
 
                     row.Add(cell);
@@ -268,7 +294,7 @@ namespace Fram3.UI.Rendering.Internal
                 },
                 bindItem = (item, index) =>
                 {
-                    item.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                    item.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
                     if (item.userData == null)
                     {
                         item.userData = new object();
@@ -277,7 +303,7 @@ namespace Fram3.UI.Rendering.Internal
                         );
 
                         item.RegisterCallback<PointerLeaveEvent>(_ =>
-                            item.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f)
+                            item.style.backgroundColor = new Color(0f, 0f, 0f, 0f)
                         );
                     }
 
@@ -296,8 +322,9 @@ namespace Fram3.UI.Rendering.Internal
             listView.style.flexGrow = 1f;
             listView.style.flexShrink = 1f;
 
-            listView.RegisterCallback<AttachToPanelEvent>(_ =>
-                listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1));
+            listView.RegisterCallback<AttachToPanelEvent>(_ => listView.schedule.Execute(() =>
+                    ApplyScrollbarTheme(listView, theme)).ExecuteLater(1)
+            );
 
             if (listViewDescriptor.OnSelectionChangedUntyped == null)
             {
@@ -325,6 +352,7 @@ namespace Fram3.UI.Rendering.Internal
         {
             listView.fixedItemHeight = listViewDescriptor.ItemHeight;
             listView.selectionType = MapSelectionType(listViewDescriptor.SelectionMode);
+
             if (listView.userData is ListViewDescriptorHolder holder)
             {
                 holder.Descriptor = listViewDescriptor;

@@ -78,7 +78,7 @@ namespace Fram3.UI.Elements.Content
                     Shadow: Shadow.Ambient(FrameColor.FromRgba255(0, 0, 0, 30), 8f)
                 );
 
-            var children = new System.Collections.Generic.List<Element>();
+            var children = new List<Element>();
 
             if (Header != null)
             {
@@ -86,6 +86,7 @@ namespace Fram3.UI.Elements.Content
                 {
                     Child = Header
                 });
+                
                 children.Add(new Divider(color: theme.InputBorderColor));
             }
 
@@ -94,14 +95,24 @@ namespace Fram3.UI.Elements.Content
                 Child = Content
             });
 
-            if (Footer != null)
+            if (Footer == null)
             {
-                children.Add(new Divider(color: theme.InputBorderColor));
-                children.Add(new Container(padding: EdgeInsets.Symmetric(vertical: pad * 0.75f, horizontal: pad))
+                return new Container(
+                    decoration: decoration
+                )
                 {
-                    Child = Footer
-                });
+                    Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                    {
+                        Children = children.ToArray()
+                    }
+                };
             }
+
+            children.Add(new Divider(color: theme.InputBorderColor));
+            children.Add(new Container(padding: EdgeInsets.Symmetric(vertical: pad * 0.75f, horizontal: pad))
+            {
+                Child = Footer
+            });
 
             return new Container(
                 decoration: decoration

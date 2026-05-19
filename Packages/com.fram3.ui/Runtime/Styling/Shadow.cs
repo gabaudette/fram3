@@ -5,8 +5,12 @@ namespace Fram3.UI.Styling
     /// Describes a drop shadow cast by an element.
     /// </summary>
     /// <param name="Color">The color of the shadow.</param>
-    /// <param name="OffsetX">Horizontal offset of the shadow in logical pixels. Positive values move the shadow right.</param>
-    /// <param name="OffsetY">Vertical offset of the shadow in logical pixels. Positive values move the shadow down.</param>
+    /// <param name="OffsetX">
+    /// Horizontal offset of the shadow in logical pixels. Positive values move the shadow right.
+    /// </param>
+    /// <param name="OffsetY">
+    /// Vertical offset of the shadow in logical pixels. Positive values move the shadow down.
+    /// </param>
     /// <param name="BlurRadius">The blur radius in logical pixels. A value of 0 produces a sharp shadow.</param>
     public sealed record Shadow(FrameColor Color, float OffsetX, float OffsetY, float BlurRadius)
     {

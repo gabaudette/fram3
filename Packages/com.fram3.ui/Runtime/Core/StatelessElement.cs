@@ -38,6 +38,7 @@ namespace Fram3.UI.Core
         /// <param name="oldElement">The previous element description.</param>
         /// <param name="newElement">The incoming element description from the parent.</param>
         /// <returns><c>true</c> to rebuild; <c>false</c> to skip.</returns>
+        // ReSharper disable once UnusedParameter.Global
         public virtual bool ShouldRebuild(StatelessElement oldElement, StatelessElement newElement)
         {
             return true;

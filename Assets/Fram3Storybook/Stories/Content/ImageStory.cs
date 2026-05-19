@@ -16,9 +16,9 @@ namespace Fram3.UI.Storybook.Stories.Content
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 var texture = Resources.Load<Texture2D>("Images/sample");
-                
+
                 var sprite = Resources.Load<Sprite>("Images/sample-sprite");
 
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
@@ -106,7 +106,10 @@ namespace Fram3.UI.Storybook.Stories.Content
                         SizedBox.FromSize(height: 4f),
                         new Text(
                             "SVG icon loaded via svgPath",
-                            style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor)
+                            style: new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: theme.SecondaryTextColor
+                            )
                         )
                     }
                 };

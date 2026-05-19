@@ -76,10 +76,22 @@ namespace Fram3.UI.Storybook.Stories.Content
                 new Table<Spell>(
                     columns: new[]
                     {
-                        new TableColumn<Spell>(header: "Spell", cellText: spell => spell.Name, sortable: false),
-                        new TableColumn<Spell>(header: "School", cellText: spell => spell.School, sortable: false),
-                        new TableColumn<Spell>(header: "Damage", cellText: spell => spell.Damage, sortable: false,
-                            width: 100f)
+                        new TableColumn<Spell>(
+                            header: "Spell",
+                            cellText: spell => spell.Name,
+                            sortable: false
+                        ),
+                        new TableColumn<Spell>(
+                            header: "School",
+                            cellText: spell => spell.School,
+                            sortable: false
+                        ),
+                        new TableColumn<Spell>(
+                            header: "Damage",
+                            cellText: spell => spell.Damage,
+                            sortable: false,
+                            width: 100f
+                        )
                     },
                     rows: Spells(),
                     stripedRows: true

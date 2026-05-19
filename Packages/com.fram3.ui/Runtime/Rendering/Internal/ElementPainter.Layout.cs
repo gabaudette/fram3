@@ -368,7 +368,10 @@ namespace Fram3.UI.Rendering.Internal
             {
                 var border = decoration.Border;
                 var borderColor = new UnityEngine.Color(
-                    border.Color.R, border.Color.G, border.Color.B, border.Color.A
+                    border.Color.R,
+                    border.Color.G,
+                    border.Color.B,
+                    border.Color.A
                 );
 
                 native.style.borderTopWidth = border.Width;
@@ -404,6 +407,7 @@ namespace Fram3.UI.Rendering.Internal
             var shadowColor = new UnityEngine.Color(
                 shadow.Color.R, shadow.Color.G, shadow.Color.B, shadow.Color.A
             );
+
             native.style.textShadow = new TextShadow
             {
                 color = shadowColor,
@@ -426,20 +430,25 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.paddingLeft = insets.Left;
             }
 
-            if (expanded.OnTap != null)
+            if (expanded.OnTap == null)
             {
-                if (native.userData is Action)
+                return;
+            }
+
+            if (native.userData is Action)
+            {
+                native.userData = expanded.OnTap;
+            }
+            else
+            {
+                native.userData = expanded.OnTap;
+                native.RegisterCallback<PointerDownEvent>(_ =>
                 {
-                    native.userData = expanded.OnTap;
-                }
-                else
-                {
-                    native.userData = expanded.OnTap;
-                    native.RegisterCallback<PointerDownEvent>(_ =>
+                    if (native.userData is Action tap)
                     {
-                        if (native.userData is Action tap) tap();
-                    });
-                }
+                        tap();
+                    }
+                });
             }
         }
 
@@ -452,8 +461,11 @@ namespace Fram3.UI.Rendering.Internal
             var onWidth = probe.OnWidth;
             native.RegisterCallback<GeometryChangedEvent>(evt =>
             {
-                var w = evt.newRect.width;
-                if (w > 0f) onWidth(w);
+                var width = evt.newRect.width;
+                if (width > 0f)
+                {
+                    onWidth(width);
+                }
             });
 #endif
         }

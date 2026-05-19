@@ -76,7 +76,7 @@ namespace Fram3.UI.Elements.Animation
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new AnimationBuilderState();
 
-        private sealed class AnimationBuilderState : Fram3.UI.Core.State<AnimationBuilder>
+        private sealed class AnimationBuilderState : State<AnimationBuilder>
         {
             private const float DurationTolerance = 0.0001f;
             private AnimationController? _controller;
@@ -110,6 +110,7 @@ namespace Fram3.UI.Elements.Animation
                                  || _controller.Status == AnimationStatus.Reverse;
 
                 var previousStatus = _controller.Status;
+                
                 _controller.Dispose();
 
                 _controller = new AnimationController(Element.Duration, Element.Curve);

@@ -15,7 +15,7 @@ namespace Fram3.UI.Storybook.Stories.Layout
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]
@@ -43,7 +43,9 @@ namespace Fram3.UI.Storybook.Stories.Layout
                     Children = new Element[]
                     {
                         new Container(
-                            decoration: new BoxDecoration(Color: theme.PrimaryColor.WithAlpha(0.15f)),
+                            decoration: new BoxDecoration(
+                                Color: theme.PrimaryColor.WithAlpha(0.15f)
+                            ),
                             padding: EdgeInsets.All(8f)
                         )
                         {
@@ -56,7 +58,9 @@ namespace Fram3.UI.Storybook.Stories.Layout
                         },
                         SizedBox.FromSize(height: 4f),
                         new Container(
-                            decoration: new BoxDecoration(Color: theme.SecondaryColor.WithAlpha(0.15f)),
+                            decoration: new BoxDecoration(
+                                Color: theme.SecondaryColor.WithAlpha(0.15f)
+                            ),
                             padding: EdgeInsets.All(8f)
                         )
                         {
@@ -69,7 +73,9 @@ namespace Fram3.UI.Storybook.Stories.Layout
                         },
                         SizedBox.FromSize(height: 4f),
                         new Container(
-                            decoration: new BoxDecoration(Color: theme.ErrorColor.WithAlpha(0.15f)),
+                            decoration: new BoxDecoration(
+                                Color: theme.ErrorColor.WithAlpha(0.15f)
+                            ),
                             padding: EdgeInsets.All(8f)
                         )
                         {

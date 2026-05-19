@@ -70,7 +70,8 @@ namespace Fram3.UI.Rendering.Internal
                 };
 
                 toggle.RegisterValueChangedCallback(evt =>
-                    tick.style.visibility = evt.newValue ? Visibility.Visible : Visibility.Hidden);
+                    tick.style.visibility = evt.newValue ? Visibility.Visible : Visibility.Hidden
+                );
             });
 
             if (frameToggle.OnChanged == null)
@@ -138,6 +139,7 @@ namespace Fram3.UI.Rendering.Internal
                     painter2D.strokeColor = strokeColor;
                     painter2D.lineWidth = 2f;
                     painter2D.lineCap = LineCap.Round;
+
                     painter2D.BeginPath();
                     painter2D.MoveTo(new UnityEngine.Vector2(contentRectWidth * 0.15f, contentRectHeight * 0.5f));
                     painter2D.LineTo(new UnityEngine.Vector2(contentRectWidth * 0.4f, contentRectHeight * 0.75f));
@@ -146,9 +148,7 @@ namespace Fram3.UI.Rendering.Internal
                 };
 
                 toggle.RegisterValueChangedCallback(evt =>
-                    tick.style.visibility = evt.newValue
-                        ? Visibility.Visible
-                        : Visibility.Hidden
+                    tick.style.visibility = evt.newValue ? Visibility.Visible : Visibility.Hidden
                 );
             });
 
@@ -158,6 +158,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var callback = checkbox.OnChanged;
+            
             toggle.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return toggle;

@@ -1,5 +1,4 @@
 #nullable enable
-using System;
 using Fram3.UI.Core;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
@@ -45,7 +44,7 @@ namespace Fram3.UI.Elements.Content
 
         /// <summary>
         /// One or two characters shown as centered text when no image or icon is provided.
-        /// Typically the user's initials, e.g. <c>"AB"</c>.
+        /// Typically, the user's initials, e.g. <c>"AB"</c>.
         /// </summary>
         public string? Initials { get; }
 
@@ -137,45 +136,45 @@ namespace Fram3.UI.Elements.Content
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                var el = Element!;
-                var diameter = Diameter(el.Size, theme);
+                var element = Element!;
+                var diameter = Diameter(element.Size, theme);
                 var radius = diameter / 2f;
 
-                var hasImage = el.Source != null;
-                var hasIcon = el.IconSource != null || el.IconSvgPath != null;
-                var hasInitials = !string.IsNullOrEmpty(el.Initials);
+                var hasImage = element.Source != null;
+                var hasIcon = element.IconSource != null || element.IconSvgPath != null;
+                var hasInitials = !string.IsNullOrEmpty(element.Initials);
 
                 FrameColor bgColor;
                 Element inner;
 
                 if (hasImage)
                 {
-                    bgColor = el.BackgroundColor ?? theme.SurfaceColor;
+                    bgColor = element.BackgroundColor ?? theme.SurfaceColor;
                     inner = new FrameImage(
-                        source: el.Source,
+                        source: element.Source,
                         width: diameter,
                         height: diameter
                     );
                 }
                 else if (hasIcon)
                 {
-                    bgColor = el.BackgroundColor ?? theme.SurfaceColor;
+                    bgColor = element.BackgroundColor ?? theme.SurfaceColor;
                     var iconSize = diameter * 0.5f;
                     inner = new Icon(
-                        source: el.IconSource,
-                        svgPath: el.IconSvgPath,
+                        source: element.IconSource,
+                        svgPath: element.IconSvgPath,
                         width: iconSize,
                         height: iconSize
                     );
                 }
                 else if (hasInitials)
                 {
-                    bgColor = el.BackgroundColor ?? theme.PrimaryColor;
-                    var fgColor = el.ForegroundColor ?? theme.OnPrimaryColor;
+                    bgColor = element.BackgroundColor ?? theme.PrimaryColor;
+                    var fgColor = element.ForegroundColor ?? theme.OnPrimaryColor;
                     inner = new Text(
-                        el.Initials!,
-                        new TextStyle(
-                            FontSize: InitialsFontSize(el.Size, theme),
+                        element.Initials!,
+                        style: new TextStyle(
+                            FontSize: InitialsFontSize(element.Size, theme),
                             Bold: true,
                             Color: fgColor,
                             ResetPadding: true,
@@ -189,7 +188,7 @@ namespace Fram3.UI.Elements.Content
                 }
                 else
                 {
-                    bgColor = el.BackgroundColor ?? theme.SurfaceColor;
+                    bgColor = element.BackgroundColor ?? theme.SurfaceColor;
                     inner = SizedBox.FromSize();
                 }
 
@@ -200,7 +199,7 @@ namespace Fram3.UI.Elements.Content
                     decoration: new BoxDecoration(
                         Color: bgColor,
                         BorderRadius: BorderRadius.All(radius),
-                        Border: el.Ring
+                        Border: element.Ring
                     )
                 )
                 {

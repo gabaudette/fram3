@@ -18,7 +18,7 @@ namespace Fram3.UI.Storybook.Stories.Content
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]
@@ -176,10 +176,13 @@ namespace Fram3.UI.Storybook.Stories.Content
                 {
                     Child = new Center
                     {
-                        Child = new Text(label, new TextStyle(
-                            FontSize: theme.FontSizeSmall,
-                            Color: theme.PrimaryTextColor
-                        ))
+                        Child = new Text(
+                            label,
+                            style: new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: theme.PrimaryTextColor
+                            )
+                        )
                     }
                 };
 
@@ -188,7 +191,11 @@ namespace Fram3.UI.Storybook.Stories.Content
                     return slot;
                 }
 
-                return new Badge(slot, count: count, color: theme.SecondaryColor);
+                return new Badge(
+                    child: slot,
+                    count: count,
+                    color: theme.SecondaryColor
+                );
             }
         }
     }

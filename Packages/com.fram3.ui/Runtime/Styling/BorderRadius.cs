@@ -109,11 +109,11 @@ namespace Fram3.UI.Styling
 
         /// <inheritdoc />
         public override string ToString() =>
-            $"BorderRadius(" +
+            "BorderRadius(" +
             $"topLeft:{TopLeft}, " +
             $"topRight:{TopRight}," +
             $" bottomRight:{BottomRight}, " +
             $"bottomLeft:{BottomLeft}" +
-            $")";
+            ")";
     }
 }

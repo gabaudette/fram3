@@ -16,7 +16,7 @@ namespace Fram3.UI.Storybook.Stories.Layout
             public override Element Build(BuildContext context)
             {
                 var theme = ThemeConsumer.Of(context);
-                
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = new Element[]
@@ -48,7 +48,9 @@ namespace Fram3.UI.Storybook.Stories.Layout
                     {
                         Child = new Text(
                             label,
-                            style: new TextStyle(Color: theme.PrimaryTextColor)
+                            style: new TextStyle(
+                                Color: theme.PrimaryTextColor
+                            )
                         )
                     };
                 }

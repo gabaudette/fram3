@@ -133,6 +133,7 @@ namespace Fram3.UI.Animation
 
             var from = a ?? b!.Value;
             var to = b ?? a!.Value;
+
             return BorderRadius(from, to, t);
         }
 
@@ -230,6 +231,7 @@ namespace Fram3.UI.Animation
         public static TextStyle TextStyle(TextStyle a, TextStyle b, float t)
         {
             var useBSide = t >= 0.5f;
+
             return new TextStyle(
                 NullableFloat(a.FontSize, b.FontSize, t),
                 NullableColor(a.Color, b.Color, t),

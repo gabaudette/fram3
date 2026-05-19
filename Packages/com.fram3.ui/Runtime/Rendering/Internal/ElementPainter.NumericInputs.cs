@@ -222,17 +222,23 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
                 }
 
-                var textEl = intf.Q<VisualElement>(className: "unity-text-element");
-                if (textEl != null)
+                var textElement = intf.Q<VisualElement>(className: "unity-text-element");
+                if (textElement != null)
                 {
-                    textEl.style.color = ToUnity(theme.PrimaryTextColor);
+                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
             });
 
             intf.RegisterCallback<KeyDownEvent>(evt =>
             {
-                if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey,
-                        allowDecimal: false))
+                if (
+                    !IsAllowedNumericKey(
+                        evt.character,
+                        evt.keyCode,
+                        evt.ctrlKey || evt.commandKey,
+                        allowDecimal: false
+                    )
+                )
                 {
                     evt.StopImmediatePropagation();
                 }
@@ -290,10 +296,10 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
                 }
 
-                var textEl = uiFloatField.Q<VisualElement>(className: "unity-text-element");
-                if (textEl != null)
+                var textElement = uiFloatField.Q<VisualElement>(className: "unity-text-element");
+                if (textElement != null)
                 {
-                    textEl.style.color = ToUnity(theme.PrimaryTextColor);
+                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
             });
 
@@ -467,6 +473,7 @@ namespace Fram3.UI.Rendering.Internal
             slider.lowValue = frameSlider.Min;
             slider.highValue = frameSlider.Max;
             slider.value = frameSlider.Value;
+
             if (frameSlider.Label != null)
             {
                 slider.label = frameSlider.Label;

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Fram3.UI.Core;
 
 namespace Fram3.UI.Core.Internal
 {
@@ -66,9 +65,12 @@ namespace Fram3.UI.Core.Internal
             }
 
             _adapter?.OnUnmounting(node);
+            
             UnmountChildren(node);
+            
             DisposeState(node);
             RemoveInheritedDependencies(node);
+            
             node.ClearChildren();
         }
 
@@ -79,7 +81,9 @@ namespace Fram3.UI.Core.Internal
         internal void Rebuild(Node node)
         {
             var newChildren = ResolveChildren(node);
+            
             TreePatcher.Patch(node, newChildren, this);
+            
             node.IsDirty = false;
             _adapter?.OnRebuilt(node);
         }
@@ -179,6 +183,7 @@ namespace Fram3.UI.Core.Internal
         {
             node.IsFaulted = true;
             Debug.WriteLine($"[fram3] Unhandled exception in Build() for {node.Element.GetType().Name}: {ex}");
+            
             return new Element[] { new ErrorPlaceholder(ex) };
         }
 

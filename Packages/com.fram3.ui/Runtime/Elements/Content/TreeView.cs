@@ -87,7 +87,11 @@ namespace Fram3.UI.Elements.Content
             Key? key = null
         ) : base(key)
         {
-            if (indent < 0f) throw new ArgumentOutOfRangeException(nameof(indent), "Indent must be non-negative.");
+            if (indent < 0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(indent), "Indent must be non-negative.");
+            }
+
             Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
             OnNodeTap = onNodeTap;
             Indent = indent;
@@ -115,6 +119,7 @@ namespace Fram3.UI.Elements.Content
                     {
                         _expanded.Add(path);
                     }
+
                     if (node.HasChildren)
                     {
                         CollectInitialExpanded(node.Children, path);
@@ -126,7 +131,15 @@ namespace Fram3.UI.Elements.Content
             {
                 var theme = ThemeConsumer.Of(context);
                 var rows = new List<Element>();
-                BuildNodes(Element!.Nodes, "", 0, rows, theme);
+
+                BuildNodes(
+                    nodes: Element!.Nodes,
+                    prefix: "",
+                    depth: 0,
+                    rows,
+                    theme
+                );
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = rows.ToArray()
@@ -146,14 +159,26 @@ namespace Fram3.UI.Elements.Content
                     var node = nodes[i];
                     var path = $"{prefix}/{i}:{node.Label}";
                     var isExpanded = _expanded.Contains(path);
-                    var capturedPath = path;
-                    var capturedNode = node;
 
-                    rows.Add(BuildRow(capturedNode, capturedPath, depth, isExpanded, theme));
+                    rows.Add(
+                        BuildRow(
+                            node,
+                            path,
+                            depth,
+                            isExpanded,
+                            theme
+                        )
+                    );
 
                     if (node.HasChildren && isExpanded)
                     {
-                        BuildNodes(node.Children, path, depth + 1, rows, theme);
+                        BuildNodes(
+                            nodes: node.Children,
+                            prefix: path,
+                            depth + 1,
+                            rows,
+                            theme
+                        );
                     }
                 }
             }
@@ -178,19 +203,29 @@ namespace Fram3.UI.Elements.Content
                 // Leaf nodes get an invisible placeholder to keep label alignment consistent.
                 if (node.HasChildren)
                 {
-                    var capturedPath = path;
-                    rowChildren.Add(new Text(
-                        isExpanded ? "v" : ">",
-                        new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryColor, Bold: true)
-                    ));
+                    rowChildren.Add(
+                        new Text(
+                            isExpanded ? "v" : ">",
+                            style: new TextStyle(
+                                FontSize: theme.FontSize,
+                                Color: theme.PrimaryColor,
+                                Bold: true
+                            )
+                        )
+                    );
                 }
                 else
                 {
                     // Invisible placeholder — same character width keeps labels aligned.
-                    rowChildren.Add(new Text(
-                        "v",
-                        new TextStyle(FontSize: theme.FontSize, Color: theme.PrimaryColor.WithAlpha(0f))
-                    ));
+                    rowChildren.Add(
+                        new Text(
+                            "v",
+                            style: new TextStyle(
+                                FontSize: theme.FontSize,
+                                Color: theme.PrimaryColor.WithAlpha(0f)
+                            )
+                        )
+                    );
                 }
 
                 // Fixed gap between chevron and label (or icon).
@@ -199,19 +234,32 @@ namespace Fram3.UI.Elements.Content
                 // Optional icon.
                 if (node.Icon != null)
                 {
-                    rowChildren.Add(new Text(
-                        node.Icon,
-                        new TextStyle(FontSize: theme.FontSize, Color: theme.SecondaryTextColor)
-                    ));
-                    rowChildren.Add(SizedBox.FromSize(width: theme.Spacing * 0.5f));
+                    rowChildren.Add(
+                        new Text(
+                            node.Icon,
+                            style: new TextStyle(
+                                FontSize: theme.FontSize,
+                                Color: theme.SecondaryTextColor
+                            )
+                        )
+                    );
+
+                    rowChildren.Add(
+                        SizedBox.FromSize(width: theme.Spacing * 0.5f)
+                    );
                 }
 
                 // Label.
-                rowChildren.Add(new Text(node.Label, new TextStyle(
-                    FontSize: theme.FontSize,
-                    Color: theme.PrimaryTextColor,
-                    Bold: node.HasChildren
-                )));
+                rowChildren.Add(
+                    new Text(
+                        node.Label,
+                        style: new TextStyle(
+                            FontSize: theme.FontSize,
+                            Color: theme.PrimaryTextColor,
+                            Bold: node.HasChildren
+                        )
+                    )
+                );
 
                 var rowContent = new Container(
                     padding: EdgeInsets.Symmetric(
@@ -232,10 +280,10 @@ namespace Fram3.UI.Elements.Content
                     var capturedPath = path;
                     onTap = () => SetState(() =>
                     {
-                        if (_expanded.Contains(capturedPath))
+                        if (!_expanded.Add(capturedPath))
+                        {
                             _expanded.Remove(capturedPath);
-                        else
-                            _expanded.Add(capturedPath);
+                        }
                     });
                 }
                 else if (Element!.OnNodeTap != null)
