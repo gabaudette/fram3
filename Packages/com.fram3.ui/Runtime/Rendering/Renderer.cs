@@ -163,7 +163,7 @@ namespace Fram3.UI.Rendering
             {
                 foreach (var child in node.Children)
                 {
-                    if (child.Element is Modal or ContextMenu)
+                    if (child.Element is IRootAttachedElement)
                     {
                         continue;
                     }
@@ -173,7 +173,8 @@ namespace Fram3.UI.Rendering
                         continue;
                     }
 
-                    native.Add(childHandle.NativeElement);
+                    var slot = ElementPainter.GetChildSlot(node.Element, native);
+                    slot.Add(childHandle.NativeElement);
 
                     if (node.Element is Stack)
                     {
@@ -257,7 +258,7 @@ namespace Fram3.UI.Rendering
 
             private void AttachToParent(Node node, VisualElement native)
             {
-                if (node.Element is Modal or ContextMenu)
+                if (node.Element is IRootAttachedElement)
                 {
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD

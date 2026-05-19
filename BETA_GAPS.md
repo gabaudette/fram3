@@ -4,9 +4,7 @@ This document lists known missing elements, infrastructure gaps, and performance
 
 ## Missing Elements
 
-The following UI elements are not yet implemented:
-
-- **DraggablePanel** - resizable and draggable floating panel that attaches to the root container like Modal; will require the same `AttachChildrenToNative` skip treatment, likely via a shared `IRootAttached` marker interface
+No elements are currently outstanding for the beta release.
 
 ## Missing Infrastructure
 

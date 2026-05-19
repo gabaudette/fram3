@@ -61,6 +61,8 @@ namespace Fram3.UI.Rendering.Internal
 #if !FRAM3_PURE_TESTS
                 case ContextMenu contextMenu:
                     return CreateContextMenu(contextMenu, theme);
+                case DraggablePanel draggablePanel:
+                    return CreateDraggablePanel(draggablePanel, theme);
 #endif
                 case FrameToggle toggle:
                     return CreateToggle(toggle, theme);
@@ -115,6 +117,21 @@ namespace Fram3.UI.Rendering.Internal
         }
 
         /// <summary>
+        /// Returns the slot that a framework child should be added to for a given
+        /// parent element. For most elements this is the parent native itself.
+        /// For <see cref="DraggablePanel"/> the child goes into the body container
+        /// at index 1, not the root panel native.
+        /// </summary>
+        internal static VisualElement GetChildSlot(Element parentElement, VisualElement parentNative)
+        {
+#if !FRAM3_PURE_TESTS
+            if (parentElement is DraggablePanel && parentNative.childCount >= 2)
+                return parentNative[1];
+#endif
+            return parentNative;
+        }
+
+        /// <summary>
         /// Updates an existing native <see cref="VisualElement"/> to reflect the latest
         /// property values from the given element description.
         /// </summary>
@@ -153,6 +170,9 @@ namespace Fram3.UI.Rendering.Internal
 #if !FRAM3_PURE_TESTS
                 case ContextMenu contextMenu:
                     PaintContextMenu(contextMenu, native, theme);
+                    break;
+                case DraggablePanel draggablePanel:
+                    PaintDraggablePanel(draggablePanel, native, theme);
                     break;
 #endif
                 case FrameToggle toggle when native is Toggle tgl:
