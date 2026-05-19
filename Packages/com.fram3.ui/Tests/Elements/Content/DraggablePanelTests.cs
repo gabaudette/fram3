@@ -93,6 +93,22 @@ namespace Fram3.UI.Tests.Elements.Content
         }
 
         [Test]
+        public void Constructor_DefaultHeight_IsNull()
+        {
+            var panel = new DraggablePanel(Body());
+
+            Assert.That(panel.Height, Is.Null);
+        }
+
+        [Test]
+        public void Constructor_StoresHeight()
+        {
+            var panel = new DraggablePanel(Body(), height: 400f);
+
+            Assert.That(panel.Height, Is.EqualTo(400f));
+        }
+
+        [Test]
         public void Constructor_DefaultOnClose_IsNull()
         {
             var panel = new DraggablePanel(Body());
@@ -107,6 +123,86 @@ namespace Fram3.UI.Tests.Elements.Content
             var panel = new DraggablePanel(Body(), onClose: cb);
 
             Assert.That(panel.OnClose, Is.SameAs(cb));
+        }
+
+        [Test]
+        public void Constructor_DefaultResizable_IsFalse()
+        {
+            var panel = new DraggablePanel(Body());
+
+            Assert.That(panel.Resizable, Is.False);
+        }
+
+        [Test]
+        public void Constructor_StoresResizable_True()
+        {
+            var panel = new DraggablePanel(Body(), resizable: true);
+
+            Assert.That(panel.Resizable, Is.True);
+        }
+
+        [Test]
+        public void Constructor_DefaultMinWidth()
+        {
+            var panel = new DraggablePanel(Body());
+
+            Assert.That(panel.MinWidth, Is.EqualTo(120f));
+        }
+
+        [Test]
+        public void Constructor_StoresMinWidth()
+        {
+            var panel = new DraggablePanel(Body(), minWidth: 200f);
+
+            Assert.That(panel.MinWidth, Is.EqualTo(200f));
+        }
+
+        [Test]
+        public void Constructor_DefaultMaxWidth_IsUnbounded()
+        {
+            var panel = new DraggablePanel(Body());
+
+            Assert.That(panel.MaxWidth, Is.EqualTo(float.MaxValue));
+        }
+
+        [Test]
+        public void Constructor_StoresMaxWidth()
+        {
+            var panel = new DraggablePanel(Body(), maxWidth: 800f);
+
+            Assert.That(panel.MaxWidth, Is.EqualTo(800f));
+        }
+
+        [Test]
+        public void Constructor_DefaultMinHeight()
+        {
+            var panel = new DraggablePanel(Body());
+
+            Assert.That(panel.MinHeight, Is.EqualTo(80f));
+        }
+
+        [Test]
+        public void Constructor_StoresMinHeight()
+        {
+            var panel = new DraggablePanel(Body(), minHeight: 150f);
+
+            Assert.That(panel.MinHeight, Is.EqualTo(150f));
+        }
+
+        [Test]
+        public void Constructor_DefaultMaxHeight_IsUnbounded()
+        {
+            var panel = new DraggablePanel(Body());
+
+            Assert.That(panel.MaxHeight, Is.EqualTo(float.MaxValue));
+        }
+
+        [Test]
+        public void Constructor_StoresMaxHeight()
+        {
+            var panel = new DraggablePanel(Body(), maxHeight: 600f);
+
+            Assert.That(panel.MaxHeight, Is.EqualTo(600f));
         }
 
         [Test]

@@ -563,6 +563,11 @@ namespace Fram3.UI.Rendering.Internal
             public bool Dragging;
             public float OffsetX;
             public float OffsetY;
+            public bool Resizing;
+            public float ResizeStartX;
+            public float ResizeStartY;
+            public float ResizeStartWidth;
+            public float ResizeStartHeight;
         }
 
         internal static VisualElement CreateDraggablePanel(DraggablePanel panel, Theme theme)
@@ -589,25 +594,31 @@ namespace Fram3.UI.Rendering.Internal
                     borderRightColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
                     borderBottomColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
                     borderLeftColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
-                    minWidth = 200f,
+                    minWidth = panel.Resizable ? panel.MinWidth : 120f,
                     overflow = Overflow.Hidden
                 }
             };
 
             if (panel.Width.HasValue)
-            {
                 root.style.width = panel.Width.Value;
+            if (panel.Height.HasValue)
+                root.style.height = panel.Height.Value;
+            if (panel.Resizable)
+            {
+                root.style.minWidth = panel.MinWidth;
+                root.style.maxWidth = panel.MaxWidth < float.MaxValue ? (StyleLength)panel.MaxWidth : StyleKeyword.None;
+                root.style.minHeight = panel.MinHeight;
+                root.style.maxHeight = panel.MaxHeight < float.MaxValue ? (StyleLength)panel.MaxHeight : StyleKeyword.None;
             }
 
             root.userData = state;
-
-            var handle = BuildDragHandle(panel, theme, root, state);
-            root.Add(handle);
+            root.Add(BuildDragHandle(panel, theme, root, state));
 
             var body = new VisualElement
             {
                 style =
                 {
+                    flexGrow = 1f,
                     paddingTop = theme.Spacing,
                     paddingBottom = theme.Spacing,
                     paddingLeft = theme.Spacing,
@@ -615,6 +626,9 @@ namespace Fram3.UI.Rendering.Internal
                 }
             };
             root.Add(body);
+
+            if (panel.Resizable)
+                root.Add(BuildResizeGrip(panel, theme, root, state));
 
             return root;
         }
@@ -626,12 +640,27 @@ namespace Fram3.UI.Rendering.Internal
             native.style.backgroundColor = ToUnity(theme.SurfaceColor);
             if (panel.Width.HasValue)
                 native.style.width = panel.Width.Value;
+            if (panel.Height.HasValue)
+                native.style.height = panel.Height.Value;
+            if (panel.Resizable)
+            {
+                native.style.minWidth = panel.MinWidth;
+                native.style.maxWidth = panel.MaxWidth < float.MaxValue ? (StyleLength)panel.MaxWidth : StyleKeyword.None;
+                native.style.minHeight = panel.MinHeight;
+                native.style.maxHeight = panel.MaxHeight < float.MaxValue ? (StyleLength)panel.MaxHeight : StyleKeyword.None;
+            }
 
             if (native.childCount >= 1)
             {
                 native.RemoveAt(0);
                 native.Insert(0, BuildDragHandle(panel, theme, native, state));
             }
+
+            var hasGrip = native.childCount >= 3;
+            if (panel.Resizable && !hasGrip)
+                native.Add(BuildResizeGrip(panel, theme, native, state));
+            else if (!panel.Resizable && hasGrip)
+                native.RemoveAt(2);
         }
 
         private static VisualElement BuildDragHandle(
@@ -729,6 +758,92 @@ namespace Fram3.UI.Rendering.Internal
             });
 
             return handle;
+        }
+
+        private static VisualElement BuildResizeGrip(
+            DraggablePanel panel,
+            Theme theme,
+            VisualElement root,
+            DragState state
+        )
+        {
+            var gripSize = 16f;
+            var grip = new VisualElement
+            {
+                style =
+                {
+                    alignSelf = Align.FlexEnd,
+                    width = gripSize,
+                    height = gripSize,
+                    marginRight = 2f,
+                    marginBottom = 2f
+                }
+            };
+
+            // Draw three diagonal lines as a classic resize grip.
+            for (var i = 0; i < 3; i++)
+            {
+                var offset = i * 4f + 2f;
+                var line = new VisualElement
+                {
+                    style =
+                    {
+                        position = Position.Absolute,
+                        width = gripSize - offset,
+                        height = 1f,
+                        bottom = offset,
+                        right = 0,
+                        backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f)),
+                        transformOrigin = new StyleTransformOrigin(
+                            new TransformOrigin(Length.Percent(100), Length.Percent(0))
+                        ),
+                        rotate = new StyleRotate(new Rotate(new Angle(45f, AngleUnit.Degree)))
+                    }
+                };
+                grip.Add(line);
+            }
+
+            grip.RegisterCallback<PointerDownEvent>(evt =>
+            {
+                state.Resizing = true;
+                state.ResizeStartX = evt.position.x;
+                state.ResizeStartY = evt.position.y;
+                state.ResizeStartWidth = root.resolvedStyle.width;
+                state.ResizeStartHeight = root.resolvedStyle.height;
+                grip.CapturePointer(evt.pointerId);
+                evt.StopPropagation();
+            });
+
+            grip.RegisterCallback<PointerMoveEvent>(evt =>
+            {
+                if (!state.Resizing) return;
+                var newW = state.ResizeStartWidth + (evt.position.x - state.ResizeStartX);
+                var newH = state.ResizeStartHeight + (evt.position.y - state.ResizeStartY);
+                newW = System.Math.Clamp(newW, panel.MinWidth, panel.MaxWidth);
+                newH = System.Math.Clamp(newH, panel.MinHeight, panel.MaxHeight);
+                root.style.width = newW;
+                root.style.height = newH;
+            });
+
+            grip.RegisterCallback<PointerUpEvent>(evt =>
+            {
+                state.Resizing = false;
+                grip.ReleasePointer(evt.pointerId);
+            });
+
+            grip.RegisterCallback<PointerEnterEvent>(_ =>
+            {
+                foreach (var line in grip.Children())
+                    line.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.6f));
+            });
+
+            grip.RegisterCallback<PointerLeaveEvent>(_ =>
+            {
+                foreach (var line in grip.Children())
+                    line.style.backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f));
+            });
+
+            return grip;
         }
 #endif
     }

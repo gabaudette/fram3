@@ -17,6 +17,7 @@ namespace Fram3.UI.Storybook.Stories.Content
             private bool _showBasic;
             private bool _showStats;
             private bool _showInventory;
+            private bool _showResizable;
 
             public override Element Build(BuildContext context)
             {
@@ -37,6 +38,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                             StoryHelpers.Section(
                                 label: "Game Example — Floating Panels",
                                 content: BuildGameControls(theme),
+                                theme
+                            ),
+                            SizedBox.FromSize(height: theme.Spacing * 3f),
+                            StoryHelpers.Section(
+                                label: "Resizable",
+                                content: BuildResizableControls(theme),
                                 theme
                             )
                         }
@@ -116,6 +123,41 @@ namespace Fram3.UI.Storybook.Stories.Content
                     ));
                 }
 
+                if (_showResizable)
+                {
+                    children.Add(new DraggablePanel(
+                        child: new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
+                        {
+                            Children = new Element[]
+                            {
+                                new Text(
+                                    "Drag the corner grip to resize this panel.",
+                                    style: new TextStyle(Color: theme.PrimaryTextColor)
+                                ),
+                                SizedBox.FromSize(height: theme.Spacing),
+                                new Text(
+                                    "Min 200 x 120  |  Max 600 x 500",
+                                    style: new TextStyle(
+                                        FontSize: theme.FontSizeSmall,
+                                        Color: theme.SecondaryTextColor
+                                    )
+                                )
+                            }
+                        },
+                        initialX: 180f,
+                        initialY: 300f,
+                        title: "Resizable Panel",
+                        width: 320f,
+                        height: 200f,
+                        resizable: true,
+                        minWidth: 200f,
+                        maxWidth: 600f,
+                        minHeight: 120f,
+                        maxHeight: 500f,
+                        onClose: () => SetState(() => _showResizable = false)
+                    ));
+                }
+
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
                     Children = children.ToArray()
@@ -147,6 +189,14 @@ namespace Fram3.UI.Storybook.Stories.Content
                         )
                     }
                 };
+            }
+
+            private Element BuildResizableControls(Theme theme)
+            {
+                return new Button(
+                    label: _showResizable ? "Hide Resizable" : "Show Resizable",
+                    onPressed: () => SetState(() => _showResizable = !_showResizable)
+                );
             }
 
             private static Element BuildStatRow(string label, string value, Theme theme)
