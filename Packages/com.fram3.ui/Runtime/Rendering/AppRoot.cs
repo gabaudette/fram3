@@ -1,5 +1,5 @@
 #nullable enable
-#if !FRAM3_PURE_TESTS
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
 using UnityEngine;
 using UnityEngine.UIElements;
 
