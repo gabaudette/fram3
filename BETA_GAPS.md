@@ -12,5 +12,4 @@ No elements are currently outstanding for the beta release.
 
 ## Known Performance Limitations
 
-- **RebuildNativeGrid full clear/rebuild** - on every parent rebuild, the native grid is fully cleared and recreated from scratch rather than diffed; this causes visible flicker and O(n) native allocations on any parent state change
 - **Unkeyed child diffing is O(n^2)** - `TreePatcher` matches old and new children by element type scan without keys; adding or removing items in the middle of a list causes worst-case quadratic patching

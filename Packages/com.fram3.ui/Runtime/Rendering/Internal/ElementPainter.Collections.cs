@@ -10,6 +10,14 @@ namespace Fram3.UI.Rendering.Internal
 {
     internal static partial class ElementPainter
     {
+        private sealed class GridState
+        {
+            public int ColumnCount;
+            public float ColumnSpacing;
+            public float RowSpacing;
+            public int ItemCount;
+        }
+
         private static VisualElement CreateGrid(IGridElement grid, Theme theme)
         {
             var container = new VisualElement
@@ -24,14 +32,139 @@ namespace Fram3.UI.Rendering.Internal
             };
 
             BuildNativeGridRows(grid, container, theme);
+            container.userData = new GridState
+            {
+                ColumnCount = grid.ColumnCount,
+                ColumnSpacing = grid.ColumnSpacing,
+                RowSpacing = grid.RowSpacing,
+                ItemCount = grid.ItemCount
+            };
 
             return container;
         }
 
-        private static void RebuildNativeGrid(IGridElement grid, VisualElement container, Theme theme)
+        private static void PatchNativeGrid(IGridElement grid, VisualElement container, Theme theme)
         {
-            container.Clear();
-            BuildNativeGridRows(grid, container, theme);
+            if (container.userData is not GridState state)
+            {
+                container.Clear();
+                BuildNativeGridRows(grid, container, theme);
+                container.userData = new GridState
+                {
+                    ColumnCount = grid.ColumnCount,
+                    ColumnSpacing = grid.ColumnSpacing,
+                    RowSpacing = grid.RowSpacing,
+                    ItemCount = grid.ItemCount
+                };
+                return;
+            }
+
+            var structureChanged =
+                grid.ColumnCount != state.ColumnCount ||
+                grid.ColumnSpacing != state.ColumnSpacing ||
+                grid.RowSpacing != state.RowSpacing;
+
+            if (structureChanged)
+            {
+                container.Clear();
+                BuildNativeGridRows(grid, container, theme);
+                state.ColumnCount = grid.ColumnCount;
+                state.ColumnSpacing = grid.ColumnSpacing;
+                state.RowSpacing = grid.RowSpacing;
+                state.ItemCount = grid.ItemCount;
+                return;
+            }
+
+            var oldItemCount = state.ItemCount;
+            var newItemCount = grid.ItemCount;
+            var columnCount = grid.ColumnCount;
+            var hasRowSpacing = grid.RowSpacing > 0f;
+
+            // Each row occupies one native child slot. When rowSpacing > 0, a spacer
+            // precedes each row after the first, so each additional row costs 2 slots.
+            // Slot layout (rowSpacing > 0): [row0, spacer, row1, spacer, row2, ...]
+            // Slot layout (rowSpacing == 0): [row0, row1, row2, ...]
+            var oldRowCount = oldItemCount == 0 ? 0 : (oldItemCount + columnCount - 1) / columnCount;
+            var newRowCount = newItemCount == 0 ? 0 : (newItemCount + columnCount - 1) / columnCount;
+
+            // Remove excess trailing rows (and their preceding spacers).
+            while (oldRowCount > newRowCount)
+            {
+                var lastRow = container[container.childCount - 1];
+                container.Remove(lastRow);
+                if (hasRowSpacing && oldRowCount > 1)
+                {
+                    var spacer = container[container.childCount - 1];
+                    container.Remove(spacer);
+                }
+                oldRowCount--;
+            }
+
+            // Repaint existing cells in-place.
+            var repaintRowCount = System.Math.Min(oldRowCount, newRowCount);
+            for (var r = 0; r < repaintRowCount; r++)
+            {
+                var rowSlot = hasRowSpacing ? r * 2 : r;
+                var row = container[rowSlot];
+                for (var c = 0; c < columnCount; c++)
+                {
+                    // With columnSpacing each column after the first is preceded by a spacer.
+                    var actualCellSlot = grid.ColumnSpacing > 0f ? c * 2 : c;
+                    if (actualCellSlot >= row.childCount) break;
+                    var cellVe = row[actualCellSlot];
+                    var index = r * columnCount + c;
+                    cellVe.Clear();
+                    if (index < newItemCount)
+                        BuildNativeTree(grid.BuildItemAt(index), cellVe, theme);
+                }
+            }
+
+            // Append new trailing rows.
+            while (oldRowCount < newRowCount)
+            {
+                if (hasRowSpacing && oldRowCount > 0)
+                {
+                    container.Add(new VisualElement { style = { height = grid.RowSpacing } });
+                }
+
+                var row = new VisualElement
+                {
+                    style =
+                    {
+                        flexDirection = FlexDirection.Row,
+                        alignSelf = Align.Stretch,
+                        alignItems = Align.Stretch
+                    }
+                };
+
+                for (var j = 0; j < columnCount; j++)
+                {
+                    if (j > 0 && grid.ColumnSpacing > 0f)
+                        row.Add(new VisualElement { style = { width = grid.ColumnSpacing } });
+
+                    var cell = new VisualElement
+                    {
+                        style =
+                        {
+                            flexGrow = 1f,
+                            flexShrink = 1f,
+                            flexBasis = new StyleLength(new Length(0, LengthUnit.Percent)),
+                            alignSelf = Align.Stretch
+                        }
+                    };
+
+                    var index = oldRowCount * columnCount + j;
+                    if (index < newItemCount)
+                        BuildNativeTree(grid.BuildItemAt(index), cell, theme);
+
+                    row.Add(cell);
+                }
+
+                container.Add(row);
+                oldRowCount++;
+            }
+
+            state.ItemCount = newItemCount;
         }
 
         private static void BuildNativeGridRows(IGridElement grid, VisualElement container, Theme theme)
