@@ -363,14 +363,16 @@ namespace Fram3.UI.Rendering.Internal
                     listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
                 }
 
-                listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1);
+                if (listView.panel != null)
+                    listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1);
 #endif
             }
 #if !FRAM3_PURE_TESTS
             else
             {
                 listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
-                listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1);
+                if (listView.panel != null)
+                    listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1);
             }
 #endif
         }

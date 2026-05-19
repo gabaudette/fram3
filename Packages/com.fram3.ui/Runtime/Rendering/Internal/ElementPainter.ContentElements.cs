@@ -12,11 +12,12 @@ namespace Fram3.UI.Rendering.Internal
         private static UIScrollView CreateScrollView(Elements.Content.ScrollView scrollView, Theme theme)
         {
             var uiScrollView = new UIScrollView(MapScrollMode(scrollView.ScrollDirection));
+            ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
+            ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
 
             uiScrollView.RegisterCallback<AttachToPanelEvent>(_ =>
-                uiScrollView.schedule.Execute(() => ApplyScrollbarTheme(uiScrollView, theme)).ExecuteLater(1)
+                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, theme)).ExecuteLater(1)
             );
-
 
             return uiScrollView;
         }
@@ -32,7 +33,7 @@ namespace Fram3.UI.Rendering.Internal
         {
             ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
             ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
-            ApplyScrollbarTheme((VisualElement)uiScrollView, theme);
+            ApplyScrollbarThemeDecorations((VisualElement)uiScrollView, theme);
         }
 
         private static void ApplyScrollbarTheme(VisualElement container, Theme theme)
@@ -43,6 +44,11 @@ namespace Fram3.UI.Rendering.Internal
                 ApplyScrollerWidth(sv.horizontalScroller, theme.ScrollbarWidth);
             }
 
+            ApplyScrollbarThemeDecorations(container, theme);
+        }
+
+        private static void ApplyScrollbarThemeDecorations(VisualElement container, Theme theme)
+        {
             var scrollContainers = container.Query<VisualElement>(
                 className: "unity-scroll-view__content-and-vertical-scroll-container"
             ).ToList();
@@ -162,7 +168,10 @@ namespace Fram3.UI.Rendering.Internal
         {
             uiScrollView.mode = MapScrollMode(scrollView.ScrollDirection);
 #if !FRAM3_PURE_TESTS
-            uiScrollView.schedule.Execute(() => ApplyScrollbarTheme(uiScrollView, theme)).ExecuteLater(1);
+            ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
+            ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+            if (uiScrollView.panel != null)
+                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, theme)).ExecuteLater(1);
 #endif
         }
 
