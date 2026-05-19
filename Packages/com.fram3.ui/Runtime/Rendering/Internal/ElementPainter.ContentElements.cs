@@ -651,8 +651,7 @@ namespace Fram3.UI.Rendering.Internal
                     paddingBottom = theme.Spacing * 0.75f,
                     paddingLeft = theme.Spacing,
                     paddingRight = theme.Spacing * 0.5f,
-                    backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.08f)),
-                    cursor = new StyleCursor(new Cursor { defaultCursorId = 4 })
+                    backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.08f))
                 }
             };
 
