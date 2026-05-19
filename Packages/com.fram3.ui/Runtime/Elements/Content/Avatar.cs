@@ -11,6 +11,8 @@ namespace Fram3.UI.Elements.Content
     /// The pixel value of each step is derived from the active theme's
     /// <c>Spacing</c> token at render time.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     public enum AvatarSize
     {
         /// <summary>Small avatar — 4× theme spacing (32 px at default spacing).</summary>

@@ -13,6 +13,8 @@ namespace Fram3.UI.Elements.Content
     /// The visual severity of an <see cref="Alert"/>, which controls the accent color
     /// applied to the left border and title.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     public enum AlertSeverity
     {
         /// <summary>Informational message. Uses the theme's primary color.</summary>

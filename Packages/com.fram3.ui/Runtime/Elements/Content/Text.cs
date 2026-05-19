@@ -8,6 +8,8 @@ namespace Fram3.UI.Elements.Content
     /// Displays a string of text with an optional <see cref="TextStyle"/>.
     /// This is a leaf element that maps directly to a UIToolkit <c>Label</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class Text : LeafElement
     {
         /// <summary>The text content to display.</summary>

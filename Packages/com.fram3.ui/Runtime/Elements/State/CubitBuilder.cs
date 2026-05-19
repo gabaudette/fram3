@@ -9,6 +9,8 @@ namespace Fram3.UI.Elements.State
     /// Rebuilds its subtree whenever the state of the nearest ancestor
     /// <see cref="Provider{T}"/>-provided <typeparamref name="TCubit"/> changes.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="TCubit">
     /// The concrete <see cref="Cubit{TState}"/> type to listen to.
     /// Must be provided by a <see cref="Provider{T}"/> ancestor in the tree.

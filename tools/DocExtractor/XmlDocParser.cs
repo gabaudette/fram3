@@ -32,6 +32,9 @@ namespace DocExtractor
                 var memberName = ExtractMemberName(fullName, kind);
                 var summary = NormalizeText(member.Element("summary"));
                 var returns = NormalizeText(member.Element("returns"));
+                var since = NormalizeText(member.Element("since"));
+                var status = NormalizeText(member.Element("status"));
+                if (string.IsNullOrWhiteSpace(status)) { status = "live"; }
 
                 var paramDocs = member.Elements("param")
                     .Select(p => new ParamDoc(
@@ -39,7 +42,7 @@ namespace DocExtractor
                         NormalizeText(p)))
                     .ToList();
 
-                entries.Add(new DocEntry(nameAttr, kind, typeName, memberName, summary, paramDocs, returns));
+                entries.Add(new DocEntry(nameAttr, kind, typeName, memberName, summary, paramDocs, returns, since, status));
             }
 
             return entries;

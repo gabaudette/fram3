@@ -16,6 +16,8 @@ namespace Fram3.UI.Elements.Animation
     /// <see cref="AnimationController.Reverse"/> from within the builder or from a
     /// gesture handler to start playback.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class AnimationBuilder : StatefulElement
     {
         /// <summary>

@@ -8,6 +8,8 @@ namespace Fram3.UI.Elements.Input
     /// A dual-handle range slider for selecting a minimum and maximum value within a fixed range.
     /// Maps to UIToolkit's <c>MinMaxSlider</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class MinMaxSlider : LeafElement
     {
         /// <summary>The current low (minimum) handle value.</summary>

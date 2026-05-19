@@ -13,6 +13,8 @@ namespace Fram3.UI.Elements.Content
     /// and optional footer. Maps to a <c>VisualElement</c> with a <c>SurfaceColor</c>
     /// background, rounded corners, and a subtle ambient shadow.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     public sealed class Card : StatelessElement
     {
         /// <summary>

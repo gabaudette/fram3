@@ -8,6 +8,8 @@ namespace Fram3.UI.Elements.Layout
     /// Lays out its children in a horizontal sequence.
     /// Maps to a UIToolkit <c>VisualElement</c> with <c>FlexDirection.Row</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class Row : MultiChildElement
     {
         /// <summary>

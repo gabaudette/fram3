@@ -7,6 +7,8 @@ namespace Fram3.UI.Elements.Input
     /// <summary>
     /// A single-line or multi-line text input field. Maps to a UIToolkit <c>TextField</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class TextField : LeafElement
     {
         /// <summary>The current text value displayed in the field.</summary>

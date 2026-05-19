@@ -19,6 +19,8 @@ namespace Fram3.UI.Elements.Animation
     /// When any target value changes, the controller restarts from the current
     /// interpolated snapshot.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class ImplicitAnimation : StatefulElement
     {
         /// <summary>

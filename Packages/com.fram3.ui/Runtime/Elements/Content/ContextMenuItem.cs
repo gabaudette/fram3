@@ -6,6 +6,8 @@ namespace Fram3.UI.Elements.Content
     /// <summary>
     /// A single entry in a <see cref="ContextMenu"/>.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     public sealed class ContextMenuItem
     {
         /// <summary>The label displayed for this menu item.</summary>

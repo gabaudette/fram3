@@ -12,6 +12,8 @@ namespace Fram3.UI.Elements.Content
     /// Typically used on inventory slots, ability icons, minimap markers, and avatar thumbnails
     /// to communicate notifications, item quantity, or status.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     public sealed class Badge : SingleChildElement
     {
         /// <summary>
