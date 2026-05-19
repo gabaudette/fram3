@@ -14,6 +14,7 @@ namespace Fram3.UI.Rendering.Internal
             var uiScrollView = new UIScrollView(MapScrollMode(scrollView.ScrollDirection));
             ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
             ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+            UnityEngine.Debug.Log($"[Fram3] CreateScrollView: ScrollbarWidth={theme.ScrollbarWidth} verticalScroller.style.width={uiScrollView.verticalScroller.style.width.value}");
 
             uiScrollView.RegisterCallback<AttachToPanelEvent>(_ =>
                 uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, theme)).ExecuteLater(1)
