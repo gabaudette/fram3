@@ -99,6 +99,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         },
                         x: _basicX,
                         y: _basicY,
+                        onDismiss: () => SetState(() => _showBasic = false)
                     ));
                 }
 
@@ -150,6 +151,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         },
                         x: _disabledX,
                         y: _disabledY,
+                        onDismiss: () => SetState(() => _showDisabled = false)
                     ));
                 }
 
@@ -208,6 +210,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         },
                         x: _gameX,
                         y: _gameY,
+                        onDismiss: () => SetState(() => _showGame = false)
                     ));
                 }
 
