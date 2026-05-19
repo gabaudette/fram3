@@ -22,9 +22,8 @@ namespace Fram3.UI.Storybook.Stories.Content
             {
                 var theme = ThemeConsumer.Of(context);
 
-                var panels = new List<Element>();
-
-                panels.Add(
+                var children = new List<Element>
+                {
                     new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                     {
                         Children = new Element[]
@@ -42,11 +41,11 @@ namespace Fram3.UI.Storybook.Stories.Content
                             )
                         }
                     }
-                );
+                };
 
                 if (_showBasic)
                 {
-                    panels.Add(new DraggablePanel(
+                    children.Add(new DraggablePanel(
                         child: new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                         {
                             Children = new Element[]
@@ -75,7 +74,7 @@ namespace Fram3.UI.Storybook.Stories.Content
 
                 if (_showStats)
                 {
-                    panels.Add(new DraggablePanel(
+                    children.Add(new DraggablePanel(
                         child: new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                         {
                             Children = new Element[]
@@ -97,7 +96,7 @@ namespace Fram3.UI.Storybook.Stories.Content
 
                 if (_showInventory)
                 {
-                    panels.Add(new DraggablePanel(
+                    children.Add(new DraggablePanel(
                         child: new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                         {
                             Children = new Element[]
@@ -117,9 +116,9 @@ namespace Fram3.UI.Storybook.Stories.Content
                     ));
                 }
 
-                return new Stack
+                return new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)
                 {
-                    Children = panels.ToArray()
+                    Children = children.ToArray()
                 };
             }
 
