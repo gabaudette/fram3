@@ -793,6 +793,11 @@ namespace UnityEngine
         {
             return Math.Clamp(value, min, max);
         }
+
+        public static bool Approximately(float a, float b)
+        {
+            return Math.Abs(b - a) < Math.Max(1E-6f * Math.Max(Math.Abs(a), Math.Abs(b)), float.Epsilon * 8f);
+        }
     }
 
     public enum KeyCode
@@ -995,6 +1000,8 @@ namespace UnityEngine
         public static float Lerp(float a, float b, float t) => a + (b - a) * System.Math.Clamp(t, 0f, 1f);
         public static float Clamp01(float v) => System.Math.Clamp(v, 0f, 1f);
         public static float Clamp(float v, float min, float max) => System.Math.Clamp(v, min, max);
+        public static bool Approximately(float a, float b)
+            => System.Math.Abs(b - a) < System.Math.Max(1E-6f * System.Math.Max(System.Math.Abs(a), System.Math.Abs(b)), float.Epsilon * 8f);
     }
 
     public static class Time

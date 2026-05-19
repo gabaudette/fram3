@@ -63,6 +63,7 @@ namespace Fram3.UI.Rendering.Internal
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
                 scroller.style.overflow = Overflow.Visible;
+                scroller.style.width = theme.ScrollbarWidth;
             }
 
             foreach (var scrollerSlider in container.Query<VisualElement>(className: "unity-scroller__slider").ToList())
