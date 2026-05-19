@@ -58,6 +58,10 @@ namespace Fram3.UI.Rendering.Internal
                     return CreateRadioGroup(radioGroup, theme);
                 case Modal modal:
                     return CreateModal(modal);
+#if !FRAM3_PURE_TESTS
+                case ContextMenu contextMenu:
+                    return CreateContextMenu(contextMenu, theme);
+#endif
                 case FrameToggle toggle:
                     return CreateToggle(toggle, theme);
                 case IntField intField:
@@ -146,6 +150,11 @@ namespace Fram3.UI.Rendering.Internal
                 case Modal:
                     PaintModal(native);
                     break;
+#if !FRAM3_PURE_TESTS
+                case ContextMenu contextMenu:
+                    PaintContextMenu(contextMenu, native, theme);
+                    break;
+#endif
                 case FrameToggle toggle when native is Toggle tgl:
                     PaintToggle(toggle, tgl);
                     break;
@@ -205,6 +214,7 @@ namespace Fram3.UI.Rendering.Internal
                         holder.OnLongPress = updatedGesture.OnLongPress;
                         holder.OnPointerEnter = updatedGesture.OnPointerEnter;
                         holder.OnPointerExit = updatedGesture.OnPointerExit;
+                        holder.OnSecondaryTap = updatedGesture.OnSecondaryTap;
                     }
 
                     ApplyLayout(element, native, theme);

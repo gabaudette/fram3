@@ -24,6 +24,7 @@ namespace Fram3.UI.Rendering.Internal
             public Action? OnLongPress;
             public Action? OnPointerEnter;
             public Action? OnPointerExit;
+            public Action<float, float>? OnSecondaryTap;
             public IVisualElementScheduledItem? LongPressSchedule;
         }
 
@@ -40,12 +41,21 @@ namespace Fram3.UI.Rendering.Internal
                 OnDoubleTap = gesture.OnDoubleTap,
                 OnLongPress = gesture.OnLongPress,
                 OnPointerEnter = gesture.OnPointerEnter,
-                OnPointerExit = gesture.OnPointerExit
+                OnPointerExit = gesture.OnPointerExit,
+                OnSecondaryTap = gesture.OnSecondaryTap
             };
             native.userData = holder;
 
             native.RegisterCallback<PointerDownEvent>(evt =>
             {
+#if !FRAM3_PURE_TESTS
+                if (evt.button == 1)
+                {
+                    holder.OnSecondaryTap?.Invoke(evt.position.x, evt.position.y);
+                    return;
+                }
+#endif
+
                 if (evt.clickCount == 2)
                 {
                     holder.LongPressSchedule?.Pause();
@@ -211,42 +221,6 @@ namespace Fram3.UI.Rendering.Internal
             native.style.flexDirection = FlexDirection.Column;
             native.style.justifyContent = MapMainAxis(column.MainAxisAlignment);
             native.style.alignItems = MapCrossAxis(column.CrossAxisAlignment);
-#if !FRAM3_PURE_TESTS && FRAM3_TABLE_DEBUG
-            var fired = false;
-            native.RegisterCallback<GeometryChangedEvent>(_ =>
-            {
-                if (fired) return;
-                fired = true;
-                var sb = new System.Text.StringBuilder();
-                sb.AppendLine($"[Fram3.Table.Debug] Column resolved w={native.resolvedStyle.width} h={native.resolvedStyle.height} children={native.childCount}");
-                for (var ci = 0; ci < native.childCount; ci++)
-                {
-                    var l1 = native[ci];
-                    sb.AppendLine($"  [L1 {ci}] {l1.GetType().Name} x={l1.layout.x} w={l1.resolvedStyle.width} fg={l1.style.flexGrow} fs={l1.style.flexShrink} fd={l1.style.flexDirection} n={l1.childCount}");
-                    for (var cj = 0; cj < l1.childCount; cj++)
-                    {
-                        var l2 = l1[cj];
-                        sb.AppendLine($"    [L2 {cj}] {l2.GetType().Name} x={l2.layout.x} w={l2.resolvedStyle.width} fg={l2.style.flexGrow} fs={l2.style.flexShrink} fd={l2.style.flexDirection} n={l2.childCount}");
-                        for (var ck = 0; ck < l2.childCount; ck++)
-                        {
-                            var l3 = l2[ck];
-                            sb.AppendLine($"      [L3 {ck}] {l3.GetType().Name} x={l3.layout.x} w={l3.resolvedStyle.width} fg={l3.style.flexGrow} fs={l3.style.flexShrink} fd={l3.style.flexDirection} n={l3.childCount}");
-                            for (var cl = 0; cl < l3.childCount; cl++)
-                            {
-                                var l4 = l3[cl];
-                                sb.AppendLine($"        [L4 {cl}] {l4.GetType().Name} x={l4.layout.x} w={l4.resolvedStyle.width} fg={l4.style.flexGrow} fs={l4.style.flexShrink} fd={l4.style.flexDirection} n={l4.childCount}");
-                                for (var cm = 0; cm < l4.childCount; cm++)
-                                {
-                                    var l5 = l4[cm];
-                                    sb.AppendLine($"          [L5 {cm}] {l5.GetType().Name} x={l5.layout.x} w={l5.resolvedStyle.width} fg={l5.style.flexGrow} fs={l5.style.flexShrink} fd={l5.style.flexDirection} n={l5.childCount}");
-                                }
-                            }
-                        }
-                    }
-                }
-                UnityEngine.Debug.Log(sb.ToString());
-            });
-#endif
         }
 
         private static void ApplyRowLayout(Row row, VisualElement native)

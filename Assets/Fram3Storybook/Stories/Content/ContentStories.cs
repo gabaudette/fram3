@@ -48,6 +48,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                     build: () => new ChipStory()
                 ),
                 new Story(
+                    name: "ContextMenu",
+                    description: "A floating menu anchored at an (x, y) position, opened on right-click." +
+                                 " Supports enabled and disabled items and a backdrop-tap dismiss.",
+                    build: () => new ContextMenuStory()
+                ),
+                new Story(
                     name: "Dialog",
                     description: "A modal overlay dialog with a title, optional body content, and action buttons. " +
                                  "Centered on a dimmed backdrop. Toggled by mounting or unmounting the element.",

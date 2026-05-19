@@ -426,5 +426,135 @@ namespace Fram3.UI.Rendering.Internal
             return new SpinnerElement(spinner);
         }
 #endif
+
+#if !FRAM3_PURE_TESTS
+        internal static VisualElement CreateContextMenu(ContextMenu menu, Theme theme)
+        {
+            // Full-screen transparent backdrop that dismisses on click.
+            var backdrop = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    top = 0,
+                    left = 0,
+                    right = 0,
+                    bottom = 0
+                }
+            };
+
+            var onDismiss = menu.OnDismiss;
+            backdrop.RegisterCallback<PointerDownEvent>(_ => onDismiss());
+
+            // Menu card positioned at (X, Y).
+            var card = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = menu.X,
+                    top = menu.Y,
+                    backgroundColor = ToUnity(theme.SurfaceColor),
+                    borderTopLeftRadius = theme.BorderRadius,
+                    borderTopRightRadius = theme.BorderRadius,
+                    borderBottomLeftRadius = theme.BorderRadius,
+                    borderBottomRightRadius = theme.BorderRadius,
+                    borderTopWidth = 1f,
+                    borderRightWidth = 1f,
+                    borderBottomWidth = 1f,
+                    borderLeftWidth = 1f,
+                    borderTopColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    borderRightColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    borderBottomColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    borderLeftColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    paddingTop = theme.Spacing * 0.5f,
+                    paddingBottom = theme.Spacing * 0.5f,
+                    minWidth = 160f,
+                    overflow = Overflow.Hidden
+                }
+            };
+
+            // Stop backdrop dismissal when clicking inside the card.
+            card.RegisterCallback<PointerDownEvent>(evt => evt.StopPropagation());
+
+            foreach (var item in menu.Items)
+            {
+                card.Add(BuildContextMenuRow(item, theme, onDismiss));
+            }
+
+            backdrop.Add(card);
+            return backdrop;
+        }
+
+        internal static void PaintContextMenu(ContextMenu menu, VisualElement native, Theme theme)
+        {
+            // Reposition card on rebuild (x/y or items may have changed).
+            if (native.childCount == 0) return;
+            var card = native[0];
+            card.style.left = menu.X;
+            card.style.top = menu.Y;
+            card.style.backgroundColor = ToUnity(theme.SurfaceColor);
+
+            card.Clear();
+            var onDismiss = menu.OnDismiss;
+            card.RegisterCallback<PointerDownEvent>(evt => evt.StopPropagation());
+            foreach (var item in menu.Items)
+            {
+                card.Add(BuildContextMenuRow(item, theme, onDismiss));
+            }
+        }
+
+        private static VisualElement BuildContextMenuRow(ContextMenuItem item, Theme theme, System.Action onDismiss)
+        {
+            var row = new VisualElement
+            {
+                style =
+                {
+                    flexDirection = FlexDirection.Row,
+                    alignItems = Align.Center,
+                    paddingTop = theme.Spacing * 0.6f,
+                    paddingBottom = theme.Spacing * 0.6f,
+                    paddingLeft = theme.Spacing,
+                    paddingRight = theme.Spacing * 1.5f,
+                    opacity = item.Disabled ? 0.38f : 1f
+                }
+            };
+
+            var label = new Label(item.Label)
+            {
+                style =
+                {
+                    fontSize = theme.FontSize,
+                    color = ToUnity(theme.PrimaryTextColor),
+                    unityFontStyleAndWeight = UnityEngine.FontStyle.Normal,
+                    flexGrow = 1f
+                }
+            };
+
+            row.Add(label);
+
+            if (!item.Disabled)
+            {
+                var onTap = item.OnTap;
+                row.RegisterCallback<PointerDownEvent>(_ =>
+                {
+                    onTap();
+                    onDismiss();
+                });
+
+                row.RegisterCallback<PointerEnterEvent>(_ =>
+                {
+                    row.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.1f));
+                });
+
+                row.RegisterCallback<PointerLeaveEvent>(_ =>
+                {
+                    row.style.backgroundColor = UnityEngine.Color.clear;
+                });
+            }
+
+            return row;
+        }
+#endif
     }
 }

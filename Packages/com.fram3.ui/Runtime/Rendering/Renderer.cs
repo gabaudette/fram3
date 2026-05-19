@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fram3.UI.Animation;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
+using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
@@ -162,7 +163,7 @@ namespace Fram3.UI.Rendering
             {
                 foreach (var child in node.Children)
                 {
-                    if (child.Element is Modal)
+                    if (child.Element is Modal or ContextMenu)
                     {
                         continue;
                     }
@@ -256,13 +257,16 @@ namespace Fram3.UI.Rendering
 
             private void AttachToParent(Node node, VisualElement native)
             {
-                if (node.Element is Modal)
+                if (node.Element is Modal or ContextMenu)
                 {
                     _rootContainer?.Add(native);
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
                     native.BringToFront();
-                    native.schedule.Execute(() => SyncModalSizeToRoot(native));
-                    _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
+                    if (node.Element is Modal)
+                    {
+                        native.schedule.Execute(() => SyncModalSizeToRoot(native));
+                        _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
+                    }
 #endif
                     return;
                 }
