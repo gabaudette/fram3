@@ -24,6 +24,7 @@ namespace Fram3.UI.Rendering.Internal
             public Action? OnLongPress;
             public Action? OnPointerEnter;
             public Action? OnPointerExit;
+            public Action<float, float>? OnSecondaryTap;
             public IVisualElementScheduledItem? LongPressSchedule;
         }
 
@@ -40,12 +41,21 @@ namespace Fram3.UI.Rendering.Internal
                 OnDoubleTap = gesture.OnDoubleTap,
                 OnLongPress = gesture.OnLongPress,
                 OnPointerEnter = gesture.OnPointerEnter,
-                OnPointerExit = gesture.OnPointerExit
+                OnPointerExit = gesture.OnPointerExit,
+                OnSecondaryTap = gesture.OnSecondaryTap
             };
             native.userData = holder;
 
             native.RegisterCallback<PointerDownEvent>(evt =>
             {
+#if !FRAM3_PURE_TESTS
+                if (evt.button == 1)
+                {
+                    holder.OnSecondaryTap?.Invoke(evt.position.x, evt.position.y);
+                    return;
+                }
+#endif
+
                 if (evt.clickCount == 2)
                 {
                     holder.LongPressSchedule?.Pause();
