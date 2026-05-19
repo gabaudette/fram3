@@ -26,7 +26,12 @@ namespace Fram3.UI.Rendering.Internal
 
 #if !FRAM3_PURE_TESTS
             uiScrollView.verticalScroller.RegisterCallback<GeometryChangedEvent>(_ =>
-                ApplyScrollerWidth(uiScrollView.verticalScroller, holder.Theme.ScrollbarWidth));
+            {
+                var w = holder.Theme.ScrollbarWidth;
+                UnityEngine.Debug.Log($"[Fram3] GeometryChanged vertical: inline={uiScrollView.verticalScroller.style.width.value} resolved={uiScrollView.verticalScroller.resolvedStyle.width} setting={w}");
+                ApplyScrollerWidth(uiScrollView.verticalScroller, w);
+                UnityEngine.Debug.Log($"[Fram3] GeometryChanged vertical AFTER: inline={uiScrollView.verticalScroller.style.width.value} resolved={uiScrollView.verticalScroller.resolvedStyle.width}");
+            });
             uiScrollView.horizontalScroller.RegisterCallback<GeometryChangedEvent>(_ =>
                 ApplyScrollerWidth(uiScrollView.horizontalScroller, holder.Theme.ScrollbarWidth));
 #endif
