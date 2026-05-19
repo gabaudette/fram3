@@ -17,11 +17,32 @@ namespace Fram3.UI.Rendering.Internal
                 uiScrollView.schedule.Execute(() => ApplyScrollbarTheme(uiScrollView, theme)).ExecuteLater(1)
             );
 
+
             return uiScrollView;
+        }
+
+        private static void ApplyScrollerWidth(Scroller scroller, float width)
+        {
+            scroller.style.width = width;
+            scroller.style.minWidth = width;
+            scroller.style.maxWidth = width;
+        }
+
+        private static void ApplyScrollbarTheme(UIScrollView uiScrollView, Theme theme)
+        {
+            ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
+            ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+            ApplyScrollbarTheme((VisualElement)uiScrollView, theme);
         }
 
         private static void ApplyScrollbarTheme(VisualElement container, Theme theme)
         {
+            foreach (var sv in container.Query<UIScrollView>().ToList())
+            {
+                ApplyScrollerWidth(sv.verticalScroller, theme.ScrollbarWidth);
+                ApplyScrollerWidth(sv.horizontalScroller, theme.ScrollbarWidth);
+            }
+
             var scrollContainers = container.Query<VisualElement>(
                 className: "unity-scroll-view__content-and-vertical-scroll-container"
             ).ToList();
@@ -63,9 +84,6 @@ namespace Fram3.UI.Rendering.Internal
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
                 scroller.style.overflow = Overflow.Visible;
-                scroller.style.width = theme.ScrollbarWidth;
-                scroller.style.minWidth = theme.ScrollbarWidth;
-                scroller.style.maxWidth = theme.ScrollbarWidth;
             }
 
             foreach (var scrollerSlider in container.Query<VisualElement>(className: "unity-scroller__slider").ToList())
@@ -144,7 +162,7 @@ namespace Fram3.UI.Rendering.Internal
         {
             uiScrollView.mode = MapScrollMode(scrollView.ScrollDirection);
 #if !FRAM3_PURE_TESTS
-            ApplyScrollbarTheme(uiScrollView, theme);
+            uiScrollView.schedule.Execute(() => ApplyScrollbarTheme(uiScrollView, theme)).ExecuteLater(1);
 #endif
         }
 

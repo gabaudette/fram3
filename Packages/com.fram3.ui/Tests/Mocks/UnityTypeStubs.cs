@@ -447,17 +447,24 @@ namespace UnityEngine.UIElements
     }
 
     /// <summary>
-    /// Minimal stub for <c>UnityEngine.UIElements.ScrollView</c>.
-    /// </summary>
-    public class ScrollView : VisualElement
+    public class Scroller : VisualElement
     {
-        public ScrollViewMode mode { get; set; }
-
-        public ScrollView(ScrollViewMode mode = ScrollViewMode.Vertical)
-        {
-            this.mode = mode;
-        }
+        public StyleSheet style { get; } = new StyleSheet();
     }
+
+    /// Minimal stub for <c>UnityEngine.UIElements.ScrollView</c>.
+     /// </summary>
+     public class ScrollView : VisualElement
+     {
+         public ScrollViewMode mode { get; set; }
+         public Scroller verticalScroller { get; } = new Scroller();
+         public Scroller horizontalScroller { get; } = new Scroller();
+
+         public ScrollView(ScrollViewMode mode = ScrollViewMode.Vertical)
+         {
+             this.mode = mode;
+         }
+     }
 
     public enum ScrollViewMode
     {
