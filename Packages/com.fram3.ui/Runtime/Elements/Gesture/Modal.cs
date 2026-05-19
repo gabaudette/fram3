@@ -9,7 +9,7 @@ namespace Fram3.UI.Elements.Gesture
     /// Visibility is controlled by the caller mounting or unmounting this element.
     /// Maps to a UIToolkit <c>VisualElement</c> with absolute positioning.
     /// </summary>
-    public sealed class Modal : SingleChildElement
+    public sealed class Modal : SingleChildElement, IRootAttachedElement
     {
         /// <summary>
         /// Callback invoked when the user requests dismissal of the modal,

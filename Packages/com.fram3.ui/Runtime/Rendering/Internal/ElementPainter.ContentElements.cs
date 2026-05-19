@@ -555,6 +555,182 @@ namespace Fram3.UI.Rendering.Internal
 
             return row;
         }
+
+        private sealed class DragState
+        {
+            public float X;
+            public float Y;
+            public bool Dragging;
+            public float OffsetX;
+            public float OffsetY;
+        }
+
+        internal static VisualElement CreateDraggablePanel(DraggablePanel panel, Theme theme)
+        {
+            var state = new DragState { X = panel.InitialX, Y = panel.InitialY };
+
+            var root = new VisualElement
+            {
+                style =
+                {
+                    position = Position.Absolute,
+                    left = state.X,
+                    top = state.Y,
+                    backgroundColor = ToUnity(theme.SurfaceColor),
+                    borderTopLeftRadius = theme.BorderRadius,
+                    borderTopRightRadius = theme.BorderRadius,
+                    borderBottomLeftRadius = theme.BorderRadius,
+                    borderBottomRightRadius = theme.BorderRadius,
+                    borderTopWidth = 1f,
+                    borderRightWidth = 1f,
+                    borderBottomWidth = 1f,
+                    borderLeftWidth = 1f,
+                    borderTopColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    borderRightColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    borderBottomColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    borderLeftColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.2f)),
+                    minWidth = 200f,
+                    overflow = Overflow.Hidden
+                }
+            };
+
+            if (panel.Width.HasValue)
+            {
+                root.style.width = panel.Width.Value;
+            }
+
+            root.userData = state;
+
+            var handle = BuildDragHandle(panel, theme, root, state);
+            root.Add(handle);
+
+            var body = new VisualElement
+            {
+                style =
+                {
+                    paddingTop = theme.Spacing,
+                    paddingBottom = theme.Spacing,
+                    paddingLeft = theme.Spacing,
+                    paddingRight = theme.Spacing
+                }
+            };
+            root.Add(body);
+
+            return root;
+        }
+
+        internal static void PaintDraggablePanel(DraggablePanel panel, VisualElement native, Theme theme)
+        {
+            if (native.userData is not DragState state) return;
+
+            native.style.backgroundColor = ToUnity(theme.SurfaceColor);
+            if (panel.Width.HasValue)
+                native.style.width = panel.Width.Value;
+
+            if (native.childCount >= 1)
+            {
+                native.RemoveAt(0);
+                native.Insert(0, BuildDragHandle(panel, theme, native, state));
+            }
+        }
+
+        private static VisualElement BuildDragHandle(
+            DraggablePanel panel,
+            Theme theme,
+            VisualElement root,
+            DragState state
+        )
+        {
+            var handle = new VisualElement
+            {
+                style =
+                {
+                    flexDirection = FlexDirection.Row,
+                    alignItems = Align.Center,
+                    paddingTop = theme.Spacing * 0.75f,
+                    paddingBottom = theme.Spacing * 0.75f,
+                    paddingLeft = theme.Spacing,
+                    paddingRight = theme.Spacing * 0.5f,
+                    backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.08f)),
+                    cursor = new StyleCursor(new Cursor { defaultCursorId = 4 })
+                }
+            };
+
+            if (!string.IsNullOrEmpty(panel.Title))
+            {
+                var title = new Label(panel.Title)
+                {
+                    style =
+                    {
+                        flexGrow = 1f,
+                        fontSize = theme.FontSize,
+                        color = ToUnity(theme.PrimaryTextColor),
+                        unityFontStyleAndWeight = UnityEngine.FontStyle.Bold
+                    }
+                };
+                handle.Add(title);
+            }
+            else
+            {
+                var spacer = new VisualElement { style = { flexGrow = 1f } };
+                handle.Add(spacer);
+            }
+
+            if (panel.OnClose != null)
+            {
+                var onClose = panel.OnClose;
+                var closeBtn = new Label("✕")
+                {
+                    style =
+                    {
+                        fontSize = theme.FontSize,
+                        color = ToUnity(theme.SecondaryTextColor),
+                        paddingLeft = theme.Spacing * 0.5f,
+                        paddingRight = theme.Spacing * 0.5f
+                    }
+                };
+                closeBtn.RegisterCallback<PointerDownEvent>(evt =>
+                {
+                    evt.StopPropagation();
+                    onClose();
+                });
+                closeBtn.RegisterCallback<PointerEnterEvent>(_ =>
+                {
+                    closeBtn.style.color = ToUnity(theme.PrimaryTextColor);
+                });
+                closeBtn.RegisterCallback<PointerLeaveEvent>(_ =>
+                {
+                    closeBtn.style.color = ToUnity(theme.SecondaryTextColor);
+                });
+                handle.Add(closeBtn);
+            }
+
+            handle.RegisterCallback<PointerDownEvent>(evt =>
+            {
+                state.Dragging = true;
+                state.OffsetX = evt.position.x - state.X;
+                state.OffsetY = evt.position.y - state.Y;
+                handle.CapturePointer(evt.pointerId);
+                evt.StopPropagation();
+            });
+
+            handle.RegisterCallback<PointerMoveEvent>(evt =>
+            {
+                if (!state.Dragging) return;
+                state.X = evt.position.x - state.OffsetX;
+                state.Y = evt.position.y - state.OffsetY;
+                root.style.left = state.X;
+                root.style.top = state.Y;
+            });
+
+            handle.RegisterCallback<PointerUpEvent>(evt =>
+            {
+                state.Dragging = false;
+                handle.ReleasePointer(evt.pointerId);
+            });
+
+            return handle;
+        }
 #endif
     }
 }

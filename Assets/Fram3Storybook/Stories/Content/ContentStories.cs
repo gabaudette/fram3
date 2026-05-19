@@ -60,6 +60,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                     build: () => new DialogStory()
                 ),
                 new Story(
+                    name: "DraggablePanel",
+                    description: "A floating panel that can be freely dragged within the root container." +
+                                 " Supports an optional title bar, close button, and fixed width.",
+                    build: () => new DraggablePanelStory()
+                ),
+                new Story(
                     name: "Images & Icons",
                     description: "Displays a Texture2D and Sprite loaded via Resources.Load," +
                                  " and an SVG icon loaded via svgPath.",

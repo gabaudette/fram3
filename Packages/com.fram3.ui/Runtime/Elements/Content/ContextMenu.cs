@@ -12,7 +12,7 @@ namespace Fram3.UI.Elements.Content
     /// positioning at <see cref="X"/>, <see cref="Y"/>.
     /// Tapping any item or the backdrop dismisses the menu via <see cref="OnDismiss"/>.
     /// </summary>
-    public sealed class ContextMenu : Element
+    public sealed class ContextMenu : Element, IRootAttachedElement
     {
         /// <summary>The menu items to display. Must not be null or empty.</summary>
         public IReadOnlyList<ContextMenuItem> Items { get; }
