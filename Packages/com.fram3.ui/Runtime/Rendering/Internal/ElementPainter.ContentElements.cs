@@ -9,18 +9,64 @@ namespace Fram3.UI.Rendering.Internal
 {
     internal static partial class ElementPainter
     {
+        private sealed class ScrollViewThemeHolder
+        {
+            public Theme Theme;
+            public ScrollViewThemeHolder(Theme theme) { Theme = theme; }
+        }
+
         private static UIScrollView CreateScrollView(Elements.Content.ScrollView scrollView, Theme theme)
         {
             var uiScrollView = new UIScrollView(MapScrollMode(scrollView.ScrollDirection));
+            var holder = new ScrollViewThemeHolder(theme);
+            uiScrollView.userData = holder;
+
+            ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
+            ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+
+#if !FRAM3_PURE_TESTS
+            uiScrollView.verticalScroller.RegisterCallback<GeometryChangedEvent>(_ =>
+                ApplyScrollerWidth(uiScrollView.verticalScroller, holder.Theme.ScrollbarWidth));
+            uiScrollView.horizontalScroller.RegisterCallback<GeometryChangedEvent>(_ =>
+                ApplyScrollerWidth(uiScrollView.horizontalScroller, holder.Theme.ScrollbarWidth));
+#endif
 
             uiScrollView.RegisterCallback<AttachToPanelEvent>(_ =>
-                uiScrollView.schedule.Execute(() => ApplyScrollbarTheme(uiScrollView, theme)).ExecuteLater(1)
+                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, holder.Theme)).ExecuteLater(1)
             );
 
             return uiScrollView;
         }
 
+        private static void ApplyScrollerWidth(Scroller scroller, float width)
+        {
+            scroller.style.width = width;
+            scroller.style.minWidth = width;
+            scroller.style.maxWidth = width;
+            scroller.style.flexBasis = width;
+            scroller.style.flexGrow = 0;
+            scroller.style.flexShrink = 0;
+        }
+
+        private static void ApplyScrollbarTheme(UIScrollView uiScrollView, Theme theme)
+        {
+            ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
+            ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+            ApplyScrollbarThemeDecorations((VisualElement)uiScrollView, theme);
+        }
+
         private static void ApplyScrollbarTheme(VisualElement container, Theme theme)
+        {
+            foreach (var sv in container.Query<UIScrollView>().ToList())
+            {
+                ApplyScrollerWidth(sv.verticalScroller, theme.ScrollbarWidth);
+                ApplyScrollerWidth(sv.horizontalScroller, theme.ScrollbarWidth);
+            }
+
+            ApplyScrollbarThemeDecorations(container, theme);
+        }
+
+        private static void ApplyScrollbarThemeDecorations(VisualElement container, Theme theme)
         {
             var scrollContainers = container.Query<VisualElement>(
                 className: "unity-scroll-view__content-and-vertical-scroll-container"
@@ -137,9 +183,17 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView uiScrollView)
+        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView uiScrollView, Theme theme)
         {
             uiScrollView.mode = MapScrollMode(scrollView.ScrollDirection);
+#if !FRAM3_PURE_TESTS
+            if (uiScrollView.userData is ScrollViewThemeHolder holder)
+                holder.Theme = theme;
+            ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
+            ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+            if (uiScrollView.panel != null)
+                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, theme)).ExecuteLater(1);
+#endif
         }
 
         private static UIProgressBar CreateProgressBar(Elements.Content.ProgressBar progressBar, Theme theme)

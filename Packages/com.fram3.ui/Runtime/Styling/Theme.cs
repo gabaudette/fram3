@@ -57,6 +57,9 @@ namespace Fram3.UI.Styling
         /// <summary>Base spacing unit in pixels used for padding and gaps between elements.</summary>
         public float Spacing { get; init; }
 
+        /// <summary>Width in pixels of vertical scrollbars and height of horizontal scrollbars.</summary>
+        public float ScrollbarWidth { get; init; }
+
         /// <summary>
         /// A sensible light-theme set of default tokens. Use this as a starting point and override
         /// individual tokens with <c>with { ... }</c> syntax.
@@ -78,7 +81,8 @@ namespace Fram3.UI.Styling
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
             BorderRadius = 4f,
-            Spacing = 8f
+            Spacing = 8f,
+            ScrollbarWidth = 8f
         };
     }
 }

@@ -44,6 +44,20 @@ namespace Fram3.UI.Tests.Styling
         }
 
         [Test]
+        public void Default_HasPositiveScrollbarWidth()
+        {
+            Assert.That(Theme.Default.ScrollbarWidth, Is.GreaterThan(0f));
+        }
+
+        [Test]
+        public void WithSyntax_OverridesScrollbarWidth()
+        {
+            var custom = Theme.Default with { ScrollbarWidth = 12f };
+
+            Assert.That(custom.ScrollbarWidth, Is.EqualTo(12f).Within(0.0001f));
+        }
+
+        [Test]
         public void WithSyntax_OverridesFontSize()
         {
             var custom = Theme.Default with { FontSize = 18f };
