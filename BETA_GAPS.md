@@ -12,4 +12,4 @@ No elements are currently outstanding for the beta release.
 
 ## Known Performance Limitations
 
-- **Unkeyed child diffing is O(n^2)** - `TreePatcher` matches old and new children by element type scan without keys; adding or removing items in the middle of a list causes worst-case quadratic patching
+No performance limitations are currently outstanding for the beta release.
