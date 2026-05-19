@@ -10,7 +10,9 @@ namespace Fram3.UI.Elements.State
     /// <c>context.GetInherited&lt;Provider&lt;T&gt;&gt;().Value</c> or by using
     /// <see cref="Consumer{T}"/> / <see cref="Selector{TCubit,TState,TValue}"/>.
     /// </summary>
-    /// <typeparam name="T">The type of value to provide. May be any type.</typeparam>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
+    /// <typeparam name="T">The type of value to provide. Maybe any type.</typeparam>
     /// <remarks>
     /// When the parent rebuilds and supplies a new <see cref="Provider{T}"/> carrying a
     /// different value, all descendants that depend on this provider are automatically

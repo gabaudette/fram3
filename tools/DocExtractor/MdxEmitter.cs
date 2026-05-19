@@ -54,6 +54,11 @@ namespace DocExtractor
             sb.AppendLine("---");
             sb.AppendLine($"title: {simpleName}");
             sb.AppendLine($"description: \"{EscapeYaml(EscapeMdx(typeEntry.Summary))}\"");
+            if (!string.IsNullOrWhiteSpace(typeEntry.Since))
+            {
+                sb.AppendLine($"since: \"{typeEntry.Since}\"");
+            }
+            sb.AppendLine($"status: \"{typeEntry.Status}\"");
             sb.AppendLine("---");
             sb.AppendLine();
             sb.AppendLine($"# {simpleName}");

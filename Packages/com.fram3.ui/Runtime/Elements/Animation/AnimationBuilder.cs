@@ -16,6 +16,8 @@ namespace Fram3.UI.Elements.Animation
     /// <see cref="AnimationController.Reverse"/> from within the builder or from a
     /// gesture handler to start playback.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class AnimationBuilder : StatefulElement
     {
         /// <summary>
@@ -76,7 +78,7 @@ namespace Fram3.UI.Elements.Animation
         /// <inheritdoc/>
         public override Fram3.UI.Core.State CreateState() => new AnimationBuilderState();
 
-        private sealed class AnimationBuilderState : Fram3.UI.Core.State<AnimationBuilder>
+        private sealed class AnimationBuilderState : State<AnimationBuilder>
         {
             private const float DurationTolerance = 0.0001f;
             private AnimationController? _controller;
@@ -110,6 +112,7 @@ namespace Fram3.UI.Elements.Animation
                                  || _controller.Status == AnimationStatus.Reverse;
 
                 var previousStatus = _controller.Status;
+                
                 _controller.Dispose();
 
                 _controller = new AnimationController(Element.Duration, Element.Curve);
@@ -136,7 +139,7 @@ namespace Fram3.UI.Elements.Animation
 
             private void OnTick(float value)
             {
-                SetState(null);
+                SetStateIfMounted(null);
             }
         }
     }

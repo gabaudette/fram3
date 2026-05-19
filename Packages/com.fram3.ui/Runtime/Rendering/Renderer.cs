@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Fram3.UI.Animation;
 using Fram3.UI.Core;
 using Fram3.UI.Core.Internal;
+using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Rendering.Internal;
@@ -152,7 +153,9 @@ namespace Fram3.UI.Rendering
             {
                 var native = CreateNativeElement(node);
                 var handle = new RenderHandle(node, native);
+
                 _handles[node] = handle;
+
                 AttachChildrenToNative(node, native);
                 AttachToParent(node, native);
             }
@@ -161,12 +164,18 @@ namespace Fram3.UI.Rendering
             {
                 foreach (var child in node.Children)
                 {
+                    if (child.Element is IRootAttachedElement)
+                    {
+                        continue;
+                    }
+
                     if (!_handles.TryGetValue(child, out var childHandle))
                     {
                         continue;
                     }
 
-                    native.Add(childHandle.NativeElement);
+                    var slot = ElementPainter.GetChildSlot(node.Element, native);
+                    slot.Add(childHandle.NativeElement);
 
                     if (node.Element is Stack)
                     {
@@ -183,6 +192,7 @@ namespace Fram3.UI.Rendering
                 }
 
                 handle.NativeElement.RemoveFromHierarchy();
+
                 _handles.Remove(node);
                 _themeCache.Remove(node);
             }
@@ -245,11 +255,29 @@ namespace Fram3.UI.Rendering
                 }
 
                 _themeCache[node] = Theme.Default;
+
                 return Theme.Default;
             }
 
             private void AttachToParent(Node node, VisualElement native)
             {
+                if (node.Element is IRootAttachedElement)
+                {
+                    _rootContainer?.Add(native);
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+                    native.BringToFront();
+
+                    if (node.Element is not Modal)
+                    {
+                        return;
+                    }
+
+                    native.schedule.Execute(() => SyncModalSizeToRoot(native));
+                    _rootContainer?.RegisterCallback<GeometryChangedEvent>(_ => SyncModalSizeToRoot(native));
+#endif
+                    return;
+                }
+
                 if (node.Parent == null)
                 {
                     _rootContainer?.Add(native);
@@ -268,6 +296,27 @@ namespace Fram3.UI.Rendering
                     ElementPainter.ApplyAsStackChild(native);
                 }
             }
+
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            private void SyncModalSizeToRoot(VisualElement modal)
+            {
+                if (_rootContainer == null)
+                {
+                    return;
+                }
+
+                var w = _rootContainer.resolvedStyle.width;
+                var h = _rootContainer.resolvedStyle.height;
+
+                if (float.IsNaN(w) || float.IsNaN(h))
+                {
+                    return;
+                }
+
+                modal.style.width = w;
+                modal.style.height = h;
+            }
+#endif
         }
     }
 }

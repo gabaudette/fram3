@@ -25,6 +25,11 @@ namespace Fram3.UI.Styling
     /// SDF font asset used for rendering. Null inherits from the parent.
     /// Maps to <c>style.unityFontDefinition</c> via <c>FontDefinition.FromSDFFont</c>.
     /// </param>
+    /// <param name="ResetPadding">
+    /// When true, zeroes out the UIToolkit Label's built-in padding and margin.
+    /// Use when the label is inside a flex container that handles its own centering,
+    /// to prevent intrinsic Label padding from offsetting the visual result.
+    /// </param>
     public sealed record TextStyle(
         float? FontSize = null,
         FrameColor? Color = null,
@@ -33,6 +38,7 @@ namespace Fram3.UI.Styling
         bool Underline = false,
         float LetterSpacing = 0f,
         float? LineHeight = null,
+        bool ResetPadding = false,
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
         TextAnchor? TextAlign = null,
         FontAsset? FontAsset = null

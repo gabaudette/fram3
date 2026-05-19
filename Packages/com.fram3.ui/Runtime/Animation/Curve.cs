@@ -36,7 +36,7 @@ namespace Fram3.UI.Animation
         /// </summary>
         public static readonly Curve ElasticOut = t =>
         {
-            const float c4 = (2f * MathF.PI) / 3f;
+            const float c4 = 2f * MathF.PI / 3f;
             return t switch
             {
                 <= 0f => 0f,

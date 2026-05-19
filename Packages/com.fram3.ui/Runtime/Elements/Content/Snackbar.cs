@@ -5,6 +5,7 @@ using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
+using UnityEngine;
 #if !FRAM3_PURE_TESTS
 using Fram3.UI.Animation;
 #endif
@@ -17,6 +18,8 @@ namespace Fram3.UI.Elements.Content
     /// After <see cref="Duration"/> seconds the snackbar hides itself and invokes
     /// <see cref="OnDismiss"/> so the caller can remove it from the tree.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class Snackbar : StatefulElement
     {
         /// <summary>The message text displayed in the snackbar.</summary>
@@ -96,12 +99,14 @@ namespace Fram3.UI.Elements.Content
             {
                 base.DidUpdateElement(previous);
                 var prev = (Snackbar)previous;
-                if (prev.Duration != Element!.Duration || prev.Message != Element.Message)
+                if (Mathf.Approximately(prev.Duration, Element!.Duration) && prev.Message == Element.Message)
                 {
-                    StopTimer();
-                    SetState(() => _visible = true);
-                    StartTimer();
+                    return;
                 }
+
+                StopTimer();
+                SetState(() => _visible = true);
+                StartTimer();
             }
 
             public override void Dispose()
@@ -130,12 +135,15 @@ namespace Fram3.UI.Elements.Content
 #if !FRAM3_PURE_TESTS
             private void OnTick(float value)
             {
-                if (_timer?.Status == AnimationStatus.Completed)
+                if (_timer?.Status != AnimationStatus.Completed)
                 {
-                    StopTimer();
-                    SetState(() => _visible = false);
-                    Element?.OnDismiss?.Invoke();
+                    return;
                 }
+
+                StopTimer();
+                SetState(() => _visible = false);
+
+                Element?.OnDismiss?.Invoke();
             }
 #endif
 
@@ -196,7 +204,10 @@ namespace Fram3.UI.Elements.Content
                         Color: bg,
                         BorderRadius: BorderRadius.All(theme.BorderRadius)
                     ),
-                    padding: EdgeInsets.Symmetric(horizontal: theme.Spacing * 2f, vertical: theme.Spacing * 1.5f)
+                    padding: EdgeInsets.Symmetric(
+                        horizontal: theme.Spacing * 2f,
+                        vertical: theme.Spacing * 1.5f
+                    )
                 )
                 {
                     Child = new Row(crossAxisAlignment: CrossAxisAlignment.Center)

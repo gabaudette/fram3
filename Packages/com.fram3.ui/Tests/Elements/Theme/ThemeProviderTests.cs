@@ -155,7 +155,7 @@ namespace Fram3.UI.Tests.Elements.Theme
 
         private sealed class TestInheritedElement : InheritedElement
         {
-            public TestInheritedElement(Element child) : base(null)
+            public TestInheritedElement(Element child)
             {
                 Child = child;
             }

@@ -73,7 +73,7 @@ namespace Fram3.UI.Tests.Integration
         {
             // When the host rebuilds with the same provider value, UpdateShouldNotify
             // returns false so no additional dirty notifications are sent to registered
-            // dependents. However the descendant consumer is still re-expanded once via
+            // dependents. However, the descendant consumer is still re-expanded once via
             // the normal tree-expansion path triggered by the host rebuild.
             var providerState = new ProviderHostState<string>("v1");
             var host = new TestStatefulElement(() => providerState);

@@ -9,6 +9,8 @@ namespace Fram3.UI.Elements.Input
     /// Semantically distinct from <see cref="FrameToggle"/>, which is a general
     /// on/off switch. Maps to a UIToolkit <c>Toggle</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class Checkbox : LeafElement
     {
         /// <summary>The current checked state of the checkbox.</summary>

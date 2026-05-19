@@ -29,7 +29,14 @@ namespace Fram3.UI.Core.Internal
             IReadOnlyList<Element> newElements)
         {
             var ops = new List<DiffOp>();
-            var matched = new bool[oldNodes.Count];
+
+            // unmatchedOldIndices tracks old-node indices that have not yet been
+            // claimed by a new element. Using a SortedSet allows O(log n) remove
+            // and O(1) Min access, making the in-place check O(log n) per element
+            // instead of the previous O(n) linear scan.
+            var unmatchedOldIndices = new SortedSet<int>();
+            for (var i = 0; i < oldNodes.Count; i++)
+                unmatchedOldIndices.Add(i);
 
             var keyedOldNodes = BuildKeyedIndex(oldNodes);
             var positionalOldByType = BuildPositionalIndex(oldNodes);
@@ -39,7 +46,7 @@ namespace Fram3.UI.Core.Internal
                 var newElement = newElements[newIndex];
                 var candidate = FindMatch(
                     newElement,
-                    matched,
+                    unmatchedOldIndices,
                     keyedOldNodes,
                     positionalOldByType,
                     out var oldIndex
@@ -51,8 +58,14 @@ namespace Fram3.UI.Core.Internal
                 }
                 else
                 {
-                    matched[oldIndex] = true;
-                    var isInPlace = oldIndex == newIndex && !HasUnmatchedBefore(matched, oldIndex);
+                    // A node is in-place when its old index equals the new index and
+                    // no old node with a smaller index is still unmatched (which would
+                    // shift this node's effective position). Check before removing so
+                    // that SortedSet.Min reflects all still-unmatched indices.
+                    var isInPlace = oldIndex == newIndex &&
+                                    unmatchedOldIndices.Min == oldIndex;
+
+                    unmatchedOldIndices.Remove(oldIndex);
 
                     ops.Add(
                         isInPlace
@@ -62,7 +75,7 @@ namespace Fram3.UI.Core.Internal
                 }
             }
 
-            AppendRemoveOps(oldNodes, matched, ops);
+            AppendRemoveOps(oldNodes, unmatchedOldIndices, ops);
 
             return ops;
         }
@@ -112,27 +125,28 @@ namespace Fram3.UI.Core.Internal
 
         private static Node? FindMatch(
             Element newElement,
-            bool[] matched,
+            SortedSet<int> unmatchedOldIndices,
             Dictionary<Key, (Node node, int index)> keyedOldNodes,
             Dictionary<Type, Queue<(Node node, int index)>> positionalOldByType,
             out int oldIndex
         )
         {
             return newElement.Key != null
-                ? FindKeyedMatch(newElement, matched, keyedOldNodes, out oldIndex)
-                : FindPositionalMatch(newElement, matched, positionalOldByType, out oldIndex);
+                ? FindKeyedMatch(newElement, unmatchedOldIndices, keyedOldNodes, out oldIndex)
+                : FindPositionalMatch(newElement, unmatchedOldIndices, positionalOldByType, out oldIndex);
         }
 
         private static Node? FindKeyedMatch(
             Element newElement,
-            bool[] matched,
+            SortedSet<int> unmatchedOldIndices,
             Dictionary<Key, (Node node, int index)> keyedOldNodes,
             out int oldIndex
         )
         {
             if (newElement.Key != null && keyedOldNodes.TryGetValue(newElement.Key, out var entry))
             {
-                if (!matched[entry.index] && Element.CanUpdate(entry.node.Element, newElement))
+                if (unmatchedOldIndices.Contains(entry.index) &&
+                    Element.CanUpdate(entry.node.Element, newElement))
                 {
                     oldIndex = entry.index;
                     return entry.node;
@@ -145,7 +159,7 @@ namespace Fram3.UI.Core.Internal
 
         private static Node? FindPositionalMatch(
             Element newElement,
-            bool[] matched,
+            SortedSet<int> unmatchedOldIndices,
             Dictionary<Type, Queue<(Node node, int index)>> positionalOldByType,
             out int oldIndex
         )
@@ -156,7 +170,7 @@ namespace Fram3.UI.Core.Internal
                 while (queue.Count > 0)
                 {
                     var (node, index) = queue.Peek();
-                    if (matched[index])
+                    if (!unmatchedOldIndices.Contains(index))
                     {
                         queue.Dequeue();
                         continue;
@@ -178,31 +192,15 @@ namespace Fram3.UI.Core.Internal
             return null;
         }
 
-        private static bool HasUnmatchedBefore(bool[] matched, int index)
-        {
-            for (var i = 0; i < index; i++)
-            {
-                if (!matched[i])
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         private static void AppendRemoveOps(
             IReadOnlyList<Node> oldNodes,
-            bool[] matched,
+            SortedSet<int> unmatchedOldIndices,
             List<DiffOp> ops
         )
         {
-            for (var i = 0; i < oldNodes.Count; i++)
+            foreach (var i in unmatchedOldIndices)
             {
-                if (!matched[i])
-                {
-                    ops.Insert(0, DiffOp.Remove(oldNodes[i]));
-                }
+                ops.Insert(0, DiffOp.Remove(oldNodes[i]));
             }
         }
     }

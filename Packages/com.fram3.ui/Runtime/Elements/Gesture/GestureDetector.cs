@@ -8,6 +8,8 @@ namespace Fram3.UI.Elements.Gesture
     /// A transparent wrapper that detects pointer gestures on its child subtree.
     /// Maps to a plain UIToolkit <c>VisualElement</c> with registered pointer event callbacks.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class GestureDetector : SingleChildElement
     {
         /// <summary>
@@ -36,6 +38,14 @@ namespace Fram3.UI.Elements.Gesture
         public Action? OnPointerExit { get; }
 
         /// <summary>
+        /// Callback invoked when the user right-clicks (secondary button down) inside this
+        /// element's bounds. Receives the pointer position in root-container logical pixels
+        /// as <c>(x, y)</c>. Use this to open a <see cref="Fram3.UI.Elements.Content.ContextMenu"/>
+        /// at the reported coordinates.
+        /// </summary>
+        public Action<float, float>? OnSecondaryTap { get; }
+
+        /// <summary>
         /// Creates a <see cref="GestureDetector"/> element.
         /// </summary>
         /// <param name="child">The child element whose area is monitored for gestures.</param>
@@ -44,6 +54,7 @@ namespace Fram3.UI.Elements.Gesture
         /// <param name="onLongPress">Callback invoked when the pointer is held for 500 ms.</param>
         /// <param name="onPointerEnter">Callback invoked when the pointer enters.</param>
         /// <param name="onPointerExit">Callback invoked when the pointer exits.</param>
+        /// <param name="onSecondaryTap">Callback invoked on right-click; receives root-space (x, y).</param>
         /// <param name="key">An optional key for reconciliation identity.</param>
         public GestureDetector(
             Element child,
@@ -52,6 +63,7 @@ namespace Fram3.UI.Elements.Gesture
             Action? onLongPress = null,
             Action? onPointerEnter = null,
             Action? onPointerExit = null,
+            Action<float, float>? onSecondaryTap = null,
             Key? key = null
         ) : base(key)
         {
@@ -61,6 +73,7 @@ namespace Fram3.UI.Elements.Gesture
             OnLongPress = onLongPress;
             OnPointerEnter = onPointerEnter;
             OnPointerExit = onPointerExit;
+            OnSecondaryTap = onSecondaryTap;
         }
     }
 }

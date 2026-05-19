@@ -1,5 +1,5 @@
 #nullable enable
-#if FRAM3_PURE_TESTS
+#if FRAM3_PURE_TESTS || FRAM3_DOC_BUILD
 using System;
 using System.Collections.Generic;
 
@@ -110,6 +110,9 @@ namespace UnityEngine.UIElements
         public float? opacity;
         public DisplayStyle? display;
         public float? maxWidth;
+        public StyleLength minWidth;
+        public StyleLength minHeight;
+        public StyleLength maxHeight;
         public WhiteSpace? whiteSpace;
         public float? left;
         public float? top;
@@ -444,17 +447,24 @@ namespace UnityEngine.UIElements
     }
 
     /// <summary>
-    /// Minimal stub for <c>UnityEngine.UIElements.ScrollView</c>.
-    /// </summary>
-    public class ScrollView : VisualElement
+    public class Scroller : VisualElement
     {
-        public ScrollViewMode mode { get; set; }
-
-        public ScrollView(ScrollViewMode mode = ScrollViewMode.Vertical)
-        {
-            this.mode = mode;
-        }
+        public StyleSheet style { get; } = new StyleSheet();
     }
+
+    /// Minimal stub for <c>UnityEngine.UIElements.ScrollView</c>.
+     /// </summary>
+     public class ScrollView : VisualElement
+     {
+         public ScrollViewMode mode { get; set; }
+         public Scroller verticalScroller { get; } = new Scroller();
+         public Scroller horizontalScroller { get; } = new Scroller();
+
+         public ScrollView(ScrollViewMode mode = ScrollViewMode.Vertical)
+         {
+             this.mode = mode;
+         }
+     }
 
     public enum ScrollViewMode
     {
@@ -793,6 +803,11 @@ namespace UnityEngine
         {
             return Math.Clamp(value, min, max);
         }
+
+        public static bool Approximately(float a, float b)
+        {
+            return Math.Abs(b - a) < Math.Max(1E-6f * Math.Max(Math.Abs(a), Math.Abs(b)), float.Epsilon * 8f);
+        }
     }
 
     public enum KeyCode
@@ -816,7 +831,7 @@ namespace UnityEngine
 }
 #endif
 
-#if FRAM3_DOC_BUILD
+#if FRAM3_DOC_BUILD_REMOVED_MERGED_ABOVE
 using System;
 
 namespace UnityEngine.UIElements
@@ -995,6 +1010,8 @@ namespace UnityEngine
         public static float Lerp(float a, float b, float t) => a + (b - a) * System.Math.Clamp(t, 0f, 1f);
         public static float Clamp01(float v) => System.Math.Clamp(v, 0f, 1f);
         public static float Clamp(float v, float min, float max) => System.Math.Clamp(v, min, max);
+        public static bool Approximately(float a, float b)
+            => System.Math.Abs(b - a) < System.Math.Max(1E-6f * System.Math.Max(System.Math.Abs(a), System.Math.Abs(b)), float.Epsilon * 8f);
     }
 
     public static class Time
@@ -1039,6 +1056,42 @@ namespace UnityEngine
 }
 
 namespace UnityEngine.SceneManagement
+{
+    public enum LoadSceneMode { Single, Additive }
+
+    public static class SceneManager
+    {
+        public static UnityEngine.AsyncOperation? LoadSceneAsync(string sceneName, LoadSceneMode mode) => null;
+    }
+}
+
+namespace Fram3.UI.Navigation.Internal
+{
+    internal sealed class UnitySceneAdapter : ISceneAdapter
+    {
+        public Navigation.SceneOperation LoadAsync(string sceneName) => new Navigation.SceneOperation();
+    }
+}
+
+namespace Fram3.UI.Rendering.Internal
+{
+    internal static class ElementPainter
+    {
+        public static UnityEngine.UIElements.VisualElement CreateNative(Core.Element element, Styling.Theme theme)
+            => new UnityEngine.UIElements.VisualElement();
+
+        public static void Paint(Core.Element element, UnityEngine.UIElements.VisualElement native, Styling.Theme theme) { }
+
+        public static void ApplyAsStackChild(UnityEngine.UIElements.VisualElement native) { }
+
+        public static UnityEngine.UIElements.VisualElement? GetChildSlot(Core.Element element, UnityEngine.UIElements.VisualElement native)
+            => native;
+    }
+}
+#endif
+
+#if FRAM3_DOC_BUILD_SKIP
+namespace UnityEngine.UIElements
 {
     public enum LoadSceneMode { Single, Additive }
 

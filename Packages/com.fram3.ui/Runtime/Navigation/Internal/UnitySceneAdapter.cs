@@ -12,7 +12,9 @@ namespace Fram3.UI.Navigation.Internal
         {
             var operation = new SceneOperation();
             var driver = new GameObject("Fram3.SceneLoadDriver").AddComponent<SceneLoadDriver>();
+            
             driver.Run(SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single)!, operation);
+            
             return operation;
         }
 
@@ -32,6 +34,7 @@ namespace Fram3.UI.Navigation.Internal
                 }
 
                 Destroy(gameObject);
+                
                 operation.Complete();
             }
         }

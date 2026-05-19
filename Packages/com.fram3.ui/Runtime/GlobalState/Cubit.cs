@@ -55,6 +55,7 @@ namespace Fram3.UI.GlobalState
         public void AddListener(Action<TState> listener)
         {
             ThrowIfDisposed();
+            
             if (listener is null)
             {
                 throw new ArgumentNullException(nameof(listener));
@@ -73,6 +74,7 @@ namespace Fram3.UI.GlobalState
         public void RemoveListener(Action<TState> listener)
         {
             ThrowIfDisposed();
+            
             if (listener is null)
             {
                 throw new ArgumentNullException(nameof(listener));
@@ -93,6 +95,7 @@ namespace Fram3.UI.GlobalState
 
             _disposed = true;
             _listeners.Clear();
+            
             OnDispose();
         }
 
@@ -115,12 +118,14 @@ namespace Fram3.UI.GlobalState
         protected void Emit(TState newState)
         {
             ThrowIfDisposed();
+            
             if (EqualityComparer<TState>.Default.Equals(_state, newState))
             {
                 return;
             }
 
             _state = newState;
+            
             NotifyListeners(newState);
         }
 

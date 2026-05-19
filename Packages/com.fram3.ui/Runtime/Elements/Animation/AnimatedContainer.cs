@@ -16,6 +16,8 @@ namespace Fram3.UI.Elements.Animation
     /// This is a convenience wrapper over <see cref="ImplicitAnimation"/> for the
     /// common case of animating container decoration, size, and padding.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class AnimatedContainer : StatelessElement
     {
         private const string KeyDecoration = "decoration";

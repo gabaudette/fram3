@@ -49,7 +49,12 @@ namespace Fram3.UI.Styling
         /// <param name="horizontal">Inset applied to the left and right edges.</param>
         /// <returns>An <see cref="EdgeInsets"/> with symmetric vertical and horizontal values.</returns>
         public static EdgeInsets Symmetric(float vertical, float horizontal) =>
-            new(vertical, horizontal, vertical, horizontal);
+            new(
+                vertical,
+                horizontal,
+                vertical,
+                horizontal
+            );
 
         /// <summary>
         /// Creates insets with only the top edge set; all other edges are zero.
@@ -95,14 +100,15 @@ namespace Fram3.UI.Styling
         /// <inheritdoc />
         public override int GetHashCode() => HashCode.Combine(Top, Right, Bottom, Left);
 
+        // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
         public static bool operator ==(EdgeInsets left, EdgeInsets right) => left.Equals(right);
 
+        // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
         public static bool operator !=(EdgeInsets left, EdgeInsets right) => !left.Equals(right);
 
         /// <inheritdoc />
-        public override string ToString() =>
-            $"EdgeInsets(top:{Top}, right:{Right}, bottom:{Bottom}, left:{Left})";
+        public override string ToString() => $"EdgeInsets(top:{Top}, right:{Right}, bottom:{Bottom}, left:{Left})";
     }
 }

@@ -88,6 +88,7 @@ namespace Fram3.UI.Styling
                 var r = (byte)((value >> 16) & 0xFF);
                 var g = (byte)((value >> 8) & 0xFF);
                 var b = (byte)(value & 0xFF);
+
                 return FromRgba255(r, g, b);
             }
             else
@@ -96,6 +97,7 @@ namespace Fram3.UI.Styling
                 var g = (byte)((value >> 16) & 0xFF);
                 var b = (byte)((value >> 8) & 0xFF);
                 var a = (byte)(value & 0xFF);
+
                 return FromRgba255(r, g, b, a);
             }
         }
@@ -126,8 +128,10 @@ namespace Fram3.UI.Styling
         public static FrameColor Blue => new(0f, 0f, 1f);
 
         /// <inheritdoc />
-        public bool Equals(FrameColor other) =>
-            R.Equals(other.R) && G.Equals(other.G) && B.Equals(other.B) && A.Equals(other.A);
+        public bool Equals(FrameColor other) => R.Equals(other.R) &&
+                                                G.Equals(other.G) &&
+                                                B.Equals(other.B) &&
+                                                A.Equals(other.A);
 
         /// <inheritdoc />
         public override bool Equals(object? obj) => obj is FrameColor other && Equals(other);

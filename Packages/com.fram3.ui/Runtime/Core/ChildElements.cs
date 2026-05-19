@@ -90,6 +90,7 @@ namespace Fram3.UI.Core
                 }
 
                 ValidateNoNullChildren(value);
+                
                 _children = value;
             }
         }

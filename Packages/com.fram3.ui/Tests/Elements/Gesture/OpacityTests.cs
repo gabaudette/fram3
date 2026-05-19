@@ -13,10 +13,6 @@ namespace Fram3.UI.Tests.Elements.Gesture
     [TestFixture]
     internal sealed class OpacityTests
     {
-        // -----------------------------------------------------------------------
-        // Constructor
-        // -----------------------------------------------------------------------
-
         [Test]
         public void Constructor_SetsValue()
         {
@@ -74,10 +70,6 @@ namespace Fram3.UI.Tests.Elements.Gesture
 
             Assert.That(element.GetChildren(), Has.Count.EqualTo(1));
         }
-
-        // -----------------------------------------------------------------------
-        // Painter -- CreateNative
-        // -----------------------------------------------------------------------
 
         [Test]
         public void CreateNative_FOpacity_ReturnsVisualElement()

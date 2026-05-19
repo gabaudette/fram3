@@ -51,6 +51,7 @@ namespace Fram3.UI.GlobalState
             }
 
             var next = _reducer(State, action);
+            
             Emit(next);
         }
     }

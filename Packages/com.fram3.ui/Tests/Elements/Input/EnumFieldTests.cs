@@ -87,10 +87,6 @@ namespace Fram3.UI.Tests.Elements.Input
             Assert.That(element.GetChildren(), Is.Empty);
         }
 
-        // -----------------------------------------------------------------------
-        // Painter -- CreateNative
-        // -----------------------------------------------------------------------
-
         [Test]
         public void CreateNative_FEnumField_ReturnsEnumField()
         {

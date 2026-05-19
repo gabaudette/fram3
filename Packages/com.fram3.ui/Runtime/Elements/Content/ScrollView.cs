@@ -8,6 +8,8 @@ namespace Fram3.UI.Elements.Content
     /// <c>ScrollView</c> native element. The child scrolls vertically by default;
     /// use <see cref="ScrollDirection"/> to change the scroll axis.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class ScrollView : SingleChildElement
     {
         /// <summary>

@@ -27,5 +27,21 @@ namespace Fram3.UI.Core
         /// </param>
         /// <returns>An element describing the UI subtree.</returns>
         public abstract Element Build(BuildContext context);
+
+        /// <summary>
+        /// Called by the framework before rebuilding this element when its parent
+        /// rebuilds. Return <c>false</c> to skip the rebuild and keep the existing
+        /// subtree. Return <c>true</c> (the default) to rebuild as normal.
+        /// Override this to avoid rebuilding when the new element description is
+        /// equivalent to the previous one.
+        /// </summary>
+        /// <param name="oldElement">The previous element description.</param>
+        /// <param name="newElement">The incoming element description from the parent.</param>
+        /// <returns><c>true</c> to rebuild; <c>false</c> to skip.</returns>
+        // ReSharper disable once UnusedParameter.Global
+        public virtual bool ShouldRebuild(StatelessElement oldElement, StatelessElement newElement)
+        {
+            return true;
+        }
     }
 }

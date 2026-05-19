@@ -34,7 +34,9 @@ namespace Fram3.UI.Navigation
         public override bool UpdateShouldNotify(InheritedElement oldElement)
         {
             return oldElement is not NavigatorScope old
-                   || !ReferenceEquals(Navigator, old.Navigator);
+                   || !ReferenceEquals(
+                       Navigator, old.Navigator
+                   );
         }
     }
 }

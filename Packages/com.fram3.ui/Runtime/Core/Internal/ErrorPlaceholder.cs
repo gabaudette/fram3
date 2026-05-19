@@ -15,7 +15,7 @@ namespace Fram3.UI.Core.Internal
     {
         private readonly Exception _exception;
 
-        internal ErrorPlaceholder(Exception exception) : base(null)
+        internal ErrorPlaceholder(Exception exception)
         {
             _exception = exception;
         }

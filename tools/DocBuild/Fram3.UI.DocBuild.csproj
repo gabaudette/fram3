@@ -20,8 +20,17 @@
   <!-- Exclude internal Unity-heavy implementation files that produce no public API docs -->
   <ItemGroup>
     <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.BooleanInputs.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.Collections.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.ContentElements.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.Layout.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.NumericInputs.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/ElementPainter.TextInput.cs" />
     <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Internal/SpinnerElement.cs" />
     <Compile Remove="../../Packages/com.fram3.ui/Runtime/Navigation/Internal/UnitySceneAdapter.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Rendering/Renderer.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/GlobalState/PlayerPrefsAdapter.cs" />
+    <Compile Remove="../../Packages/com.fram3.ui/Runtime/Navigation/SceneNavigator.cs" />
   </ItemGroup>
 
   <!-- Unity type stubs for the doc build -->

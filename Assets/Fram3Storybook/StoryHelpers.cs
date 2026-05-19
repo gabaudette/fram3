@@ -15,7 +15,7 @@ namespace Fram3.UI.Storybook.Stories
                 Children = new Element[]
                 {
                     new Expanded { Child = content },
-                    SizedBox.Expand(),
+                    SizedBox.Expand()
                 }
             };
         }
@@ -26,24 +26,30 @@ namespace Fram3.UI.Storybook.Stories
             {
                 Children = new Element[]
                 {
-                    new Text(label.ToUpperInvariant(), new TextStyle(
-                        FontSize: theme.FontSizeSmall,
-                        Bold: true,
-                        Color: theme.SecondaryColor,
-                        LetterSpacing: 1.5f
-                    )),
+                    new Text(
+                        label.ToUpperInvariant(),
+                        style: new TextStyle(
+                            FontSize: theme.FontSizeSmall,
+                            Bold: true,
+                            Color: theme.SecondaryColor,
+                            LetterSpacing: 1.5f
+                        )
+                    ),
                     SizedBox.FromSize(height: theme.Spacing),
                     new Container(
                         decoration: new BoxDecoration(
                             Color: theme.SurfaceColor,
                             BorderRadius: BorderRadius.All(theme.BorderRadius),
-                            Border: new Border(theme.SecondaryTextColor.WithAlpha(0.15f), 1f)
+                            Border: new Border(
+                                Color: theme.SecondaryTextColor.WithAlpha(0.15f),
+                                Width: 1f
+                            )
                         ),
                         padding: EdgeInsets.All(theme.Spacing * 2f)
                     )
                     {
                         Child = content
-                    },
+                    }
                 }
             };
         }

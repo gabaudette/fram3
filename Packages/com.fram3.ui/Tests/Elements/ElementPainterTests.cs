@@ -224,7 +224,7 @@ namespace Fram3.UI.Tests.Elements
         [Test]
         public void Paint_FScrollView_UpdatesMode()
         {
-            var original = new ScrollView() { Child = new Text("x") };
+            var original = new ScrollView { Child = new Text("x") };
             var native = (UIScrollView)ElementPainter.CreateNative(original, StylingTheme.Default);
 
             var updated = new ScrollView(ScrollDirection.Horizontal) { Child = new Text("x") };
@@ -518,6 +518,165 @@ namespace Fram3.UI.Tests.Elements
             ElementPainter.ApplyAsStackChild(native);
 
             Assert.That(native.style.position, Is.EqualTo(Position.Absolute));
+        }
+
+        // -----------------------------------------------------------------------
+        // PatchNativeGrid
+        // -----------------------------------------------------------------------
+
+        private static Grid<int> MakeGrid(int columnCount, int itemCount,
+            float colSpacing = 0f, float rowSpacing = 0f)
+        {
+            var items = new int[itemCount];
+            for (var i = 0; i < itemCount; i++) items[i] = i;
+            return new Grid<int>(
+                columnCount: columnCount,
+                items: items,
+                itemBuilder: i => new Text(i.ToString()),
+                columnSpacing: colSpacing,
+                rowSpacing: rowSpacing
+            );
+        }
+
+        [Test]
+        public void CreateNative_Grid_StoresGridStateInUserData()
+        {
+            var grid = MakeGrid(columnCount: 2, itemCount: 4);
+
+            var native = ElementPainter.CreateNative(grid, StylingTheme.Default);
+
+            Assert.That(native.userData, Is.Not.Null);
+        }
+
+        [Test]
+        public void CreateNative_Grid_CorrectRowCount()
+        {
+            // 4 items, 2 columns -> 2 rows
+            var grid = MakeGrid(columnCount: 2, itemCount: 4);
+
+            var native = ElementPainter.CreateNative(grid, StylingTheme.Default);
+
+            Assert.That(native.childCount, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Paint_Grid_SameStructure_DoesNotClearContainer()
+        {
+            var grid = MakeGrid(columnCount: 2, itemCount: 4);
+            var native = ElementPainter.CreateNative(grid, StylingTheme.Default);
+            var firstRow = native[0];
+
+            // Paint with same column count and item count
+            ElementPainter.Paint(grid, native, StylingTheme.Default);
+
+            Assert.That(native[0], Is.SameAs(firstRow), "Row VisualElement should be reused");
+        }
+
+        [Test]
+        public void Paint_Grid_ItemCountIncreases_AppendsRows()
+        {
+            var grid2 = MakeGrid(columnCount: 2, itemCount: 2);
+            var native = ElementPainter.CreateNative(grid2, StylingTheme.Default);
+            Assert.That(native.childCount, Is.EqualTo(1));
+
+            var grid4 = MakeGrid(columnCount: 2, itemCount: 4);
+            ElementPainter.Paint(grid4, native, StylingTheme.Default);
+
+            Assert.That(native.childCount, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Paint_Grid_ItemCountDecreases_RemovesRows()
+        {
+            var grid4 = MakeGrid(columnCount: 2, itemCount: 4);
+            var native = ElementPainter.CreateNative(grid4, StylingTheme.Default);
+            Assert.That(native.childCount, Is.EqualTo(2));
+
+            var grid2 = MakeGrid(columnCount: 2, itemCount: 2);
+            ElementPainter.Paint(grid2, native, StylingTheme.Default);
+
+            Assert.That(native.childCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Paint_Grid_ColumnCountChanges_RebuildsContainer()
+        {
+            var grid2 = MakeGrid(columnCount: 2, itemCount: 4);
+            var native = ElementPainter.CreateNative(grid2, StylingTheme.Default);
+            var firstRow = native[0];
+
+            var grid4 = MakeGrid(columnCount: 4, itemCount: 4);
+            ElementPainter.Paint(grid4, native, StylingTheme.Default);
+
+            Assert.That(native[0], Is.Not.SameAs(firstRow), "Column change should trigger full rebuild");
+        }
+
+        [Test]
+        public void Paint_Grid_RowSpacingChanges_RebuildsContainer()
+        {
+            var gridNoSpacing = MakeGrid(columnCount: 2, itemCount: 4);
+            var native = ElementPainter.CreateNative(gridNoSpacing, StylingTheme.Default);
+            var firstRow = native[0];
+
+            var gridSpacing = MakeGrid(columnCount: 2, itemCount: 4, rowSpacing: 8f);
+            ElementPainter.Paint(gridSpacing, native, StylingTheme.Default);
+
+            Assert.That(native[0], Is.Not.SameAs(firstRow), "RowSpacing change should trigger full rebuild");
+        }
+
+        [Test]
+        public void Paint_Grid_ZeroItems_EmptyContainer()
+        {
+            var grid2 = MakeGrid(columnCount: 2, itemCount: 2);
+            var native = ElementPainter.CreateNative(grid2, StylingTheme.Default);
+
+            var grid0 = MakeGrid(columnCount: 2, itemCount: 0);
+            ElementPainter.Paint(grid0, native, StylingTheme.Default);
+
+            Assert.That(native.childCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Paint_Grid_ZeroToNonZero_AddsRows()
+        {
+            var grid0 = MakeGrid(columnCount: 2, itemCount: 0);
+            var native = ElementPainter.CreateNative(grid0, StylingTheme.Default);
+            Assert.That(native.childCount, Is.EqualTo(0));
+
+            var grid4 = MakeGrid(columnCount: 2, itemCount: 4);
+            ElementPainter.Paint(grid4, native, StylingTheme.Default);
+
+            Assert.That(native.childCount, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Paint_Grid_WithRowSpacing_ItemCountIncreases_AddsRowAndSpacer()
+        {
+            // 2 items, 2 cols, 1 row -> childCount = 1
+            var grid2 = MakeGrid(columnCount: 2, itemCount: 2, rowSpacing: 4f);
+            var native = ElementPainter.CreateNative(grid2, StylingTheme.Default);
+            Assert.That(native.childCount, Is.EqualTo(1));
+
+            // 4 items, 2 cols, 2 rows -> childCount = 3 (row + spacer + row)
+            var grid4 = MakeGrid(columnCount: 2, itemCount: 4, rowSpacing: 4f);
+            ElementPainter.Paint(grid4, native, StylingTheme.Default);
+
+            Assert.That(native.childCount, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void Paint_Grid_WithRowSpacing_ItemCountDecreases_RemovesRowAndSpacer()
+        {
+            // 4 items, 2 cols, rowSpacing -> childCount = 3
+            var grid4 = MakeGrid(columnCount: 2, itemCount: 4, rowSpacing: 4f);
+            var native = ElementPainter.CreateNative(grid4, StylingTheme.Default);
+            Assert.That(native.childCount, Is.EqualTo(3));
+
+            // 2 items -> childCount = 1
+            var grid2 = MakeGrid(columnCount: 2, itemCount: 2, rowSpacing: 4f);
+            ElementPainter.Paint(grid2, native, StylingTheme.Default);
+
+            Assert.That(native.childCount, Is.EqualTo(1));
         }
 #endif
     }

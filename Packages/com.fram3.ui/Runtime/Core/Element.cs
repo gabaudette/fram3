@@ -57,8 +57,10 @@ namespace Fram3.UI.Core
 
             var isSameType = oldElement.GetType() == newElement.GetType();
             var bothUnkeyed = oldElement.Key == null && newElement.Key == null;
-            var bothKeyedAndEqual =
-                oldElement.Key != null && newElement.Key != null && oldElement.Key == newElement.Key;
+
+            var bothKeyedAndEqual = oldElement.Key != null &&
+                                    newElement.Key != null &&
+                                    oldElement.Key == newElement.Key;
 
             return isSameType && (bothUnkeyed || bothKeyedAndEqual);
         }

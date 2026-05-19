@@ -3,6 +3,8 @@ name: Sync Docs
 on:
   push:
     branches: [ main ]
+    tags: [ '[0-9]*.[0-9]*.[0-9]*' ]
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -56,11 +58,11 @@ jobs:
         with:
           token: ${{ secrets.DOCS_REPO_PAT }}
           path: fram3-docs
-          commit-message: "chore: sync API reference from fram3@${{ github.sha }}"
-          branch: "sync/api-${{ github.sha }}"
-          title: "chore: sync API reference"
+          commit-message: "chore: sync API reference from fram3@${{ github.ref_name }}"
+          branch: "sync/api-${{ github.ref_name }}"
+          title: "chore: sync API reference (${{ github.ref_name }})"
           body: |
-            Auto-generated from `gabaudette/fram3@${{ github.sha }}`.
+            Auto-generated from `gabaudette/fram3@${{ github.ref_name }}` (${{ github.sha }}).
 
             This PR was opened by the `sync-docs` workflow. Review and merge when ready.
           delete-branch: true

@@ -1,7 +1,6 @@
 #nullable enable
 using System;
 using Fram3.UI.Core;
-using Fram3.UI.Styling;
 using StylingTheme = Fram3.UI.Styling.Theme;
 
 namespace Fram3.UI.Elements.Theme
@@ -12,6 +11,8 @@ namespace Fram3.UI.Elements.Theme
     /// When the parent rebuilds with a different <see cref="StylingTheme"/> instance, all
     /// dependents are automatically scheduled for a rebuild.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class ThemeProvider : InheritedElement
     {
         /// <summary>The theme made available to descendants.</summary>

@@ -14,6 +14,7 @@ namespace Fram3.UI.GlobalState
     /// <typeparam name="TState">
     /// The type of state to persist. Must be serializable by <c>Newtonsoft.Json</c>.
     /// </typeparam>
+    // ReSharper disable once UnusedType.Global
     public sealed class PlayerPrefsAdapter<TState> : IPersistenceAdapter<TState>
     {
         private readonly string _key;
@@ -51,7 +52,9 @@ namespace Fram3.UI.GlobalState
             }
 
             var json = PlayerPrefs.GetString(_key);
+            
             state = JsonConvert.DeserializeObject<TState>(json)!;
+            
             return true;
         }
     }

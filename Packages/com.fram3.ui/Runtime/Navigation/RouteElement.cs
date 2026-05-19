@@ -18,6 +18,7 @@ namespace Fram3.UI.Navigation
         /// Available via <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>
         /// but more commonly passed through application-level state.
         /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         internal object? Arguments { get; }
 
         internal RouteElement(

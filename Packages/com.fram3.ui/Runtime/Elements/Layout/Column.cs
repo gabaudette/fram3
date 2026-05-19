@@ -1,5 +1,4 @@
 #nullable enable
-using System;
 using Fram3.UI.Core;
 using Fram3.UI.Styling;
 
@@ -9,6 +8,8 @@ namespace Fram3.UI.Elements.Layout
     /// Lays out its children in a vertical sequence.
     /// Maps to a UIToolkit <c>VisualElement</c> with <c>FlexDirection.Column</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class Column : MultiChildElement
     {
         /// <summary>

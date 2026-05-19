@@ -10,6 +10,8 @@ namespace Fram3.UI.Elements.Input
     /// Only one option can be selected at a time.
     /// Maps to a UIToolkit <c>RadioButtonGroup</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class RadioGroup : LeafElement
     {
         /// <summary>The list of option labels displayed as radio buttons.</summary>

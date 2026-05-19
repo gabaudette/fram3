@@ -44,6 +44,18 @@ namespace Fram3.UI.Core
         }
 
         /// <summary>
+        /// Called once after the first build has completed and the element has been
+        /// painted to the native layer. Override this to perform work that requires
+        /// the element to be present in the rendered tree, such as measuring layout,
+        /// starting animations, or imperatively focusing an input.
+        /// Calling <see cref="SetState"/> or <see cref="SetStateIfMounted"/> here is
+        /// safe and will schedule a single additional rebuild.
+        /// </summary>
+        public virtual void DidMount()
+        {
+        }
+
+        /// <summary>
         /// Describes the UI subtree for the associated stateful element.
         /// Called by the framework whenever this state is marked dirty.
         /// </summary>
@@ -95,6 +107,28 @@ namespace Fram3.UI.Core
                     "SetState called on an unmounted state. " +
                     "This can happen if SetState is called after Dispose."
                 );
+            }
+
+            action?.Invoke();
+            _node?.MarkDirty();
+        }
+
+        /// <summary>
+        /// Schedules a rebuild of the subtree rooted at this state's element,
+        /// but only if the state is currently mounted. Does nothing when the state
+        /// has been unmounted. Use this instead of <see cref="SetState"/> in
+        /// async callbacks or event handlers where the state may have been disposed
+        /// before the callback fires.
+        /// </summary>
+        /// <param name="action">
+        /// An action that mutates the state. Executed synchronously before
+        /// the rebuild is scheduled. Not invoked when the state is unmounted.
+        /// </param>
+        public void SetStateIfMounted(Action? action)
+        {
+            if (!Mounted)
+            {
+                return;
             }
 
             action?.Invoke();
