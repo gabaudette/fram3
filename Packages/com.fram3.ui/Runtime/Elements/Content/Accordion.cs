@@ -16,7 +16,6 @@ namespace Fram3.UI.Elements.Content
     /// A single item in an <see cref="Accordion"/>. Contains a header label and a content
     /// element that is shown when the item is expanded.
     /// </summary>
-    /// <since>2.0.0-beta.2</since>
     /// <status>live</status>
     public sealed class AccordionItem
     {

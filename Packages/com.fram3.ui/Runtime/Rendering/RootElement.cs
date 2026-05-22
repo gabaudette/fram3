@@ -4,6 +4,7 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Rendering
 {
     /// <summary>
+    /// <status>live</status>
     /// A synthetic single-child element that serves as the invisible root of every
     /// framework tree. <see cref="Renderer"/> wraps the user-supplied root element
     /// inside an <see cref="RootElement"/> so the reconciler always has a stable

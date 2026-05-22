@@ -10,7 +10,6 @@ namespace Fram3.UI.Elements.Layout
     /// When used with a child, it constrains the child to those dimensions.
     /// When used without a child, it acts as a fixed-size empty space.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public sealed class SizedBox : SingleChildElement
     {

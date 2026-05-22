@@ -9,7 +9,6 @@ namespace Fram3.UI.Elements.Layout
     /// Applies an outer margin to its single child by the given <see cref="EdgeInsets"/>.
     /// Maps to margin applied directly to the child's containing <c>VisualElement</c>.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public sealed class Margin : SingleChildElement
     {

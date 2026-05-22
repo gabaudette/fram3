@@ -14,7 +14,6 @@ namespace Fram3.UI.Elements.Content
     /// edge; tapping it invokes the callback so the caller can remove the chip from the tree.
     /// Colors default to a tinted surface derived from the active theme's primary color.
     /// </summary>
-    /// <since>2.0.0-beta.2</since>
     /// <status>live</status>
     public sealed class Chip : StatefulElement
     {

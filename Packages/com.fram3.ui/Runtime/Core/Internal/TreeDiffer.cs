@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Produces a minimal list of <see cref="DiffOp"/> operations that transform an
     /// existing list of child <see cref="Node"/>s to reflect a new list of child
     /// <see cref="Element"/>s. The algorithm prioritizes keyed matching, then falls

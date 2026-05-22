@@ -12,7 +12,6 @@ namespace Fram3.UI.Elements.Content
     /// can be declared in files that are compiled without Unity.
     /// </para>
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public sealed class FrameImage : LeafElement
     {

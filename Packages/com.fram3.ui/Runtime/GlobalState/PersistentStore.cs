@@ -4,6 +4,7 @@ using System;
 namespace Fram3.UI.GlobalState
 {
     /// <summary>
+    /// <status>live</status>
     /// A reactive state store that automatically persists its state across scene reloads
     /// using a pluggable <see cref="IPersistenceAdapter{TState}"/>.
     /// On first access the previously persisted state is restored; every subsequent

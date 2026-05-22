@@ -2,6 +2,7 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Controls how children are aligned along the cross axis of a
     /// <c>Column</c> (horizontal) or <c>Row</c> (vertical).
     /// Maps to UIToolkit <c>Align</c> values.

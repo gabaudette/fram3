@@ -13,7 +13,6 @@ namespace Fram3.UI.Elements.Input
     /// A tappable button with a text label. Renders using theme-aware primitives.
     /// Supports hover and disabled visual states.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public sealed class Button : StatefulElement
     {

@@ -8,7 +8,6 @@ namespace Fram3.UI.Elements.Input
     /// Non-generic view of an <see cref="EnumField{T}"/> used by the painter to create
     /// and update the native <c>EnumField</c> without knowing the concrete enum type.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     internal interface IEnumFieldDescriptor
     {

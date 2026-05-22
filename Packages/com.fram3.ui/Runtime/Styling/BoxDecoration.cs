@@ -2,6 +2,7 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes the visual decoration of a box, including background color, border, corner radii, and shadow.
     /// Used with container elements such as <c>Container</c>.
     /// </summary>

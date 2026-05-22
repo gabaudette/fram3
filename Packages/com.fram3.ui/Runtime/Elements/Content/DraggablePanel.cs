@@ -11,7 +11,6 @@ namespace Fram3.UI.Elements.Content
     /// position and size updates mutate native styles directly without triggering a
     /// framework rebuild.
     /// </summary>
-    /// <since>2.0.0-beta.2</since>
     /// <status>live</status>
     public sealed class DraggablePanel : SingleChildElement, IRootAttachedElement
     {

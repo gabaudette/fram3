@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Represents the instantiation of an Element in the live element tree.
     /// Nodes are the mutable, long-lived counterparts to immutable Element descriptions.
     /// They track parent-child relationships, manage lifecycle state, and serve as the

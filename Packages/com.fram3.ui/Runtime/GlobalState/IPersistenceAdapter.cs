@@ -2,6 +2,7 @@
 namespace Fram3.UI.GlobalState
 {
     /// <summary>
+    /// <status>live</status>
     /// Abstracts the persistence mechanism used by <see cref="PersistentStore{TState}"/>.
     /// Implement this interface to provide a custom storage back-end.
     /// A default PlayerPrefs implementation is provided by

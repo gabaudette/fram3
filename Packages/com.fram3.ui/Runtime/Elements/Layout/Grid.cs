@@ -10,7 +10,6 @@ namespace Fram3.UI.Elements.Layout
     /// Rendered as a leaf element: the painter builds the native UIToolkit VE subtree
     /// directly, using explicit flex properties to guarantee equal-width columns.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public sealed class Grid<T> : LeafElement, IGridElement
     {

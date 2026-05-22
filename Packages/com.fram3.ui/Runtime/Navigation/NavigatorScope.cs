@@ -4,6 +4,7 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// An inherited element that carries a <see cref="NavigatorHandle"/> through the element
     /// tree. Descendants retrieve it with
     /// <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>.

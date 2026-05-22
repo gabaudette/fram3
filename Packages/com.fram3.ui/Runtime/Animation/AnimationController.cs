@@ -6,6 +6,7 @@ using Fram3.UI.Rendering;
 namespace Fram3.UI.Animation
 {
     /// <summary>
+    /// <status>live</status>
     /// A time-driven animation controller that progresses from 0 to 1 (or 1 to 0)
     /// over a configurable duration. The controller applies an easing curve to the
     /// raw linear progress before notifying listeners.

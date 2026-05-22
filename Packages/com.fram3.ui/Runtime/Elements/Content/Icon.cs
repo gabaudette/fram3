@@ -14,7 +14,6 @@ namespace Fram3.UI.Elements.Content
     /// then <see cref="ResourcePath"/>, then <see cref="SvgPath"/>.
     /// </para>
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public sealed class Icon : LeafElement
     {

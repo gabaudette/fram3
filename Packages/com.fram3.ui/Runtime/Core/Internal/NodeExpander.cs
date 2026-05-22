@@ -6,6 +6,7 @@ using System.Diagnostics;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Mounts, unmounts, and expands <see cref="Node"/>s from <see cref="Element"/>
     /// descriptions. Expanding a node means recursively building the subtree beneath it:
     /// for stateless elements by calling <c>Build</c>, for stateful elements by invoking

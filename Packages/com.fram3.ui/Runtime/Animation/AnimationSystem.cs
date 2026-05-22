@@ -5,6 +5,7 @@ using Fram3.UI.Rendering;
 namespace Fram3.UI.Animation
 {
     /// <summary>
+    /// <status>live</status>
     /// Global registry that tracks all live <see cref="AnimationController"/> instances
     /// and advances them each frame. <see cref="Renderer"/> calls <see cref="Tick"/> once
     /// per frame before flushing the rebuild scheduler.

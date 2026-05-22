@@ -11,7 +11,6 @@ namespace Fram3.UI.Elements.Content
     /// <summary>
     /// Defines a single column in a <see cref="Table{TRow}"/>.
     /// </summary>
-    /// <since>2.0.0-beta.2</since>
     /// <status>live</status>
     /// <typeparam name="TRow">The row data type.</typeparam>
     public sealed class TableColumn<TRow>

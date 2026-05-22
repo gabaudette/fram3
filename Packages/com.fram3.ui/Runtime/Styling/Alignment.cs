@@ -4,6 +4,7 @@ using System;
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes a 2D alignment position within a container.
     /// Values range from -1 (start) to 1 (end) on each axis, with 0 representing the center.
     /// </summary>

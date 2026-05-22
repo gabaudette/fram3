@@ -5,6 +5,7 @@ using Fram3.UI.Core.Internal;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// A handle to the location of an element in the element tree.
     /// Provides access to ancestor elements and framework services
     /// from within a Build method. Each element in the tree receives

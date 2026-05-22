@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// Base class for elements that contain exactly one child element.
     /// Use this for wrapper elements that add behavior or styling around
     /// a single child, such as padding, alignment, or opacity.

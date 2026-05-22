@@ -6,6 +6,7 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// A stack-based in-scene navigator. Maintains a stack of named routes and renders the
     /// topmost route as its content. Descendants can push and pop routes by retrieving the
     /// <see cref="NavigatorHandle"/> via

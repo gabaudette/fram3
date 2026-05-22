@@ -6,6 +6,7 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// Holds the mutable navigation stack for an <see cref="Navigator"/>.
     /// Exposes push and pop operations that trigger a rebuild of the navigator subtree.
     /// Obtain an instance via <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>.
