@@ -3,6 +3,7 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// An immutable set of design tokens that define the visual language of the application.
     /// Pass a theme through the tree with <c>ThemeProvider</c> and read it in any descendant
     /// with <c>ThemeConsumer.Of(context)</c>.

@@ -13,7 +13,6 @@ namespace Fram3.UI.Elements.Input
     /// A numeric input composed of a decrement button, a value label, and an increment button.
     /// Supports optional min/max clamping, a configurable step, and a disabled state.
     /// </summary>
-    /// <since>2.0.0-beta.2</since>
     /// <status>live</status>
     public sealed class Stepper : StatefulElement
     {

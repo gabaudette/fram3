@@ -2,6 +2,7 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes a drop shadow cast by an element.
     /// </summary>
     /// <param name="Color">The color of the shadow.</param>

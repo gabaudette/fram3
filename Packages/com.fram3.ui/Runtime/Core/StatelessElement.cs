@@ -2,6 +2,7 @@
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// An element that composes other elements but holds no mutable state.
     /// Override the Build method to describe the UI subtree this element represents.
     /// The framework calls Build whenever the parent rebuilds, and the returned

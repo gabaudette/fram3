@@ -2,6 +2,7 @@
 namespace Fram3.UI.Navigation.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Abstraction over Unity's scene loading API, allowing test code to substitute
     /// a controllable stub in place of the real <c>SceneManager</c>.
     /// </summary>

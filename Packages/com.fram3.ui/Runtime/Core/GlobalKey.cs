@@ -5,6 +5,7 @@ using Fram3.UI.Core.Internal;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// A key that provides a stable handle to a mounted node, allowing imperative
     /// access to its <see cref="BuildContext"/> and <see cref="State"/> from anywhere
     /// in the application. Only one element with a given <see cref="GlobalKey"/> may

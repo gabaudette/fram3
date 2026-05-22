@@ -5,6 +5,7 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// Internal stateless element that evaluates a route builder function.
     /// Created by <see cref="NavigatorState"/> each time a route is pushed or the initial
     /// route is mounted. Not intended for direct use.

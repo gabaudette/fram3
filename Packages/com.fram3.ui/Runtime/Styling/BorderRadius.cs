@@ -4,6 +4,7 @@ using System;
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes the corner radii of a rounded rectangle.
     /// Each corner radius is a non-negative value in logical pixels.
     /// </summary>

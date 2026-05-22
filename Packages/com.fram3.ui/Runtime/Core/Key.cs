@@ -4,6 +4,7 @@ using System;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// Controls how one element replaces another in the element tree.
     /// Elements with matching runtime types and keys are updated in place
     /// during reconciliation rather than being torn down and recreated.

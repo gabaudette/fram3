@@ -5,6 +5,7 @@ using Fram3.UI.Elements.Animation;
 namespace Fram3.UI.Animation
 {
     /// <summary>
+    /// <status>live</status>
     /// An easing function that maps a normalized linear progress value in [0, 1]
     /// to a curved output value. The input and output are both conventionally in
     /// [0, 1], though overshoot curves may return values outside that range.

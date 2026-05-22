@@ -7,6 +7,7 @@ using Fram3.UI.Styling;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// A fallback element rendered in place of a subtree whose Build method threw an exception.
     /// Displays the exception type and message inside a red-bordered box.
     /// This is an internal framework type not intended for direct use.

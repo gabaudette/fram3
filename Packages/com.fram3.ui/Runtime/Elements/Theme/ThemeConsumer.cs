@@ -8,7 +8,6 @@ namespace Fram3.UI.Elements.Theme
     /// Provides access to the nearest <see cref="ThemeProvider"/> in the element tree.
     /// When no provider is found, <see cref="StylingTheme.Default"/> is returned.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public static class ThemeConsumer
     {

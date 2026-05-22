@@ -3,6 +3,7 @@
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// An element that propagates data down the element tree, accessible to descendants
     /// via <see cref="BuildContext.GetInherited{T}"/> or
     /// <see cref="BuildContext.FindInherited{T}"/>.

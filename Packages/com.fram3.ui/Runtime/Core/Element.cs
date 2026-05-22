@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// The base class for all Fram3 UI descriptions.
     /// An Element is an immutable configuration object that describes a piece of user interface.
     /// Elements are lightweight and intended to be recreated on every build cycle.

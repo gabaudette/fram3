@@ -12,6 +12,7 @@ namespace Fram3.UI.Core.Internal
     }
 
     /// <summary>
+    /// <status>live</status>
     /// Represents a single patch operation produced by the tree differ.
     /// Operations are applied in order by TreePatcher to transform the
     /// existing Node child list to match a new Element child list.

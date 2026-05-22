@@ -6,6 +6,7 @@ using Fram3.UI.Elements.State;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// Holds a single observable value and notifies listeners when it changes.
     /// Use this to share reactive state between parts of the UI that are not
     /// directly related in the element tree. Pair with

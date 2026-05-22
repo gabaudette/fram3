@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Fram3.UI.GlobalState
 {
     /// <summary>
+    /// <status>live</status>
     /// A reactive state machine that owns a single immutable state value
     /// and notifies listeners whenever that state changes.
     /// Subclass <see cref="Cubit{TState}"/> and add methods that call

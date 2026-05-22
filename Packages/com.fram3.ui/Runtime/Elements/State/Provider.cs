@@ -10,7 +10,6 @@ namespace Fram3.UI.Elements.State
     /// <c>context.GetInherited&lt;Provider&lt;T&gt;&gt;().Value</c> or by using
     /// <see cref="Consumer{T}"/> / <see cref="Selector{TCubit,TState,TValue}"/>.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     /// <typeparam name="T">The type of value to provide. Maybe any type.</typeparam>
     /// <remarks>

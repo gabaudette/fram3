@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Applies a list of <see cref="DiffOp"/> operations produced by <see cref="TreeDiffer"/>
     /// to the child list of an <see cref="Node"/>. The patcher delegates to
     /// <see cref="NodeExpander"/> for mounting and unmounting subtrees and updates

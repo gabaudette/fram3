@@ -7,6 +7,7 @@ using UnityEngine.TextCore.Text;
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes the visual style of a text label, including font size, color, weight, decoration,
     /// alignment, and font asset.
     /// </summary>

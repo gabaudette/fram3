@@ -2,6 +2,7 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes a uniform border with a color and width applied to all four sides of an element.
     /// </summary>
     /// <param name="Color">The color of the border.</param>

@@ -2,6 +2,7 @@
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// An element that has mutable state persisted across rebuilds.
     /// The framework creates the state object once via CreateState,
     /// and preserves it even when the element description is recreated.

@@ -11,7 +11,6 @@ namespace Fram3.UI.Elements.Content
     /// Maps to an <c>SpinnerElement</c> native visual that draws the arc using
     /// UIToolkit's <c>MeshGenerationContext</c>.
     /// </summary>
-    /// <since>2.0.0-beta.1</since>
     /// <status>live</status>
     public sealed class Spinner : LeafElement
     {

@@ -5,6 +5,7 @@ using Fram3.UI.Core.Internal;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// Holds the mutable state for a StatefulElement.
     /// State objects are created once and persist across rebuilds of their
     /// associated element. Use SetState to mutate state and trigger a rebuild

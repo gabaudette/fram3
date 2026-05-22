@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Collects nodes marked dirty via <see cref="State.SetState"/> and flushes
     /// them in ascending depth order during a single reconciliation pass. Processing
     /// ancestors before descendants avoids redundant rebuilds: if a parent is rebuilt
