@@ -10,6 +10,8 @@ namespace Fram3.UI.Rendering
     /// anchor node at depth zero whose native counterpart is the UIToolkit container
     /// passed to <see cref="Renderer.Mount"/>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <remarks>
     /// You do not instantiate this type directly. Pass your root element to
     /// <see cref="Renderer.Mount"/> and the renderer creates the wrapping root

@@ -8,6 +8,8 @@ namespace Fram3.UI.GlobalState
     /// and mutates it exclusively through a pure reducer function
     /// that maps the current state and a dispatched <see cref="FrameAction"/> to a new state.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="TState">
     /// The type that represents the application state held by this store.
     /// Value equality is used to suppress redundant rebuilds.

@@ -11,6 +11,8 @@ namespace Fram3.UI.Animation
     /// Use <see cref="Get{T}"/> inside the builder delegate to read the
     /// current animated value for a given key.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class ImplicitAnimationSnapshot
     {
         private readonly IReadOnlyDictionary<string, object> _values;

@@ -8,6 +8,8 @@ namespace Fram3.UI.Core
     /// Elements with matching runtime types and keys are updated in place
     /// during reconciliation rather than being torn down and recreated.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public abstract class Key : IEquatable<Key>
     {
         /// <summary>

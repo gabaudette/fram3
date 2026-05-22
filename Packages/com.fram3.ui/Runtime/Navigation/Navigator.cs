@@ -11,6 +11,8 @@ namespace Fram3.UI.Navigation
     /// <see cref="NavigatorHandle"/> via
     /// <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <remarks>
     /// Routes are declared as a dictionary mapping route names to builder functions.
     /// The builder receives the <see cref="BuildContext"/> at the time the route is built

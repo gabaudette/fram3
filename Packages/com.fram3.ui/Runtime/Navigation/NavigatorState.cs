@@ -10,6 +10,8 @@ namespace Fram3.UI.Navigation
     /// Exposes push and pop operations that trigger a rebuild of the navigator subtree.
     /// Obtain an instance via <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class NavigatorState : State<Navigator>, NavigatorHandle
     {
         private readonly List<Element> _stack = new List<Element>();

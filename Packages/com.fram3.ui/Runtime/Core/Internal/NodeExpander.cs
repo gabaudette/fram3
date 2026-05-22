@@ -13,6 +13,8 @@ namespace Fram3.UI.Core.Internal
     /// children. Unmounting a node recursively disposes state and clears child references.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class NodeExpander
     {

@@ -16,6 +16,8 @@ namespace Fram3.UI.Animation
     /// <see cref="AnimationSystem"/> automatically and is ticked once per frame by
     /// <see cref="Renderer.Tick"/>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class AnimationController : IDisposable
     {
         private readonly List<Action<float>> _listeners = new();

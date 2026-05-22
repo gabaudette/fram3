@@ -13,6 +13,8 @@ namespace Fram3.UI.GlobalState
     /// to rebuild UI subtrees in response to state changes, or expose via
     /// <see cref="Fram3.UI.Elements.State.Provider{T}"/> for tree-wide access.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="TState">
     /// The type that represents the state of this cubit.
     /// Value equality is used to suppress rebuilds when the new state is

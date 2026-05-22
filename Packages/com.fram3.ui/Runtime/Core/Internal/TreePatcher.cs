@@ -11,6 +11,8 @@ namespace Fram3.UI.Core.Internal
     /// element references on existing nodes.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal static class TreePatcher
     {
         /// <summary>

@@ -11,6 +11,8 @@ namespace Fram3.UI.Core
     /// The framework uses elements as blueprints to create and update the actual
     /// rendered UI through the reconciliation process.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <remarks>
     /// Do not subclass <see cref="Element"/> directly. Extend one of the provided archetypes:
     /// <see cref="StatelessElement"/> for composition without state,

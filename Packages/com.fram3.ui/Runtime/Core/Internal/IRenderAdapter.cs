@@ -7,6 +7,8 @@ namespace Fram3.UI.Core.Internal
     /// Implement this interface inside the framework assembly; it is not part of the
     /// public API because it references the internal <see cref="Node"/> type.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal interface IRenderAdapter
     {
         /// <summary>

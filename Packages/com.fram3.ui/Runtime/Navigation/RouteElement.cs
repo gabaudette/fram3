@@ -9,6 +9,8 @@ namespace Fram3.UI.Navigation
     /// Created by <see cref="NavigatorState"/> each time a route is pushed or the initial
     /// route is mounted. Not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal sealed class RouteElement : StatelessElement
     {
         private readonly Func<BuildContext, Element> _builder;

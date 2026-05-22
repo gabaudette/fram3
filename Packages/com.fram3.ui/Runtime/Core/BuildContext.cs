@@ -11,6 +11,8 @@ namespace Fram3.UI.Core
     /// its own build context, which can be used to look up inherited
     /// data or access navigation and state management facilities.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public class BuildContext
     {
         internal BuildContext(Node node)

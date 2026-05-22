@@ -9,6 +9,8 @@ namespace Fram3.UI.GlobalState
     /// On first access the previously persisted state is restored; every subsequent
     /// <see cref="Cubit{TState}.Emit"/> call that changes the state persists the new state.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="TState">
     /// The type of state held by this store. Must be serialisable by the adapter.
     /// </typeparam>

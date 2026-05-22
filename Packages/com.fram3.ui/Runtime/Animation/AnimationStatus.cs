@@ -4,6 +4,8 @@ namespace Fram3.UI.Animation
     /// <summary>
     /// Describes the current playback state of an <see cref="AnimationController"/>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public enum AnimationStatus
     {
         /// <summary>The animation is not running and the progress is at the beginning.</summary>

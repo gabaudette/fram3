@@ -12,6 +12,8 @@ namespace Fram3.UI.Core
     /// <see cref="ValueListenableBuilder{T}"/> to rebuild a subtree whenever
     /// the value changes.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="T">The type of value held by this notifier.</typeparam>
     public sealed class ValueNotifier<T> : IDisposable
     {

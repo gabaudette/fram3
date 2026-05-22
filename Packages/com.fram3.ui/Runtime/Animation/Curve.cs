@@ -9,6 +9,8 @@ namespace Fram3.UI.Animation
     /// to a curved output value. The input and output are both conventionally in
     /// [0, 1], though overshoot curves may return values outside that range.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public delegate float Curve(float t);
 
     /// <summary>
