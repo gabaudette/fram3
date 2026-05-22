@@ -64,6 +64,8 @@ namespace Fram3.UI.Elements.Content
     /// cycles ascending/descending sort on that column. Clicking a row fires
     /// <see cref="OnRowSelected"/> with the original row value.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     /// <typeparam name="TRow">The row data type.</typeparam>
     public sealed class Table<TRow> : StatefulElement
     {
