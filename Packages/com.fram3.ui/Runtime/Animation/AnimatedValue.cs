@@ -10,6 +10,8 @@ namespace Fram3.UI.Animation
     /// Used by <see cref="ImplicitAnimationSnapshot"/> internally to store and interpolate
     /// heterogeneous animated values without knowing their concrete types.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public interface IAnimatedValue
     {
         /// <summary>

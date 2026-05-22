@@ -4,6 +4,8 @@ namespace Fram3.UI
     /// <summary>
     /// Contains assembly-level metadata for the Fram3.UI runtime.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public static class Fram3Info
     {
         /// <summary>

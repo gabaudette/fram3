@@ -9,6 +9,8 @@ namespace Fram3.UI.Core
     /// Use this for wrapper elements that add behavior or styling around
     /// a single child, such as padding, alignment, or opacity.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public abstract class SingleChildElement : Element
     {
         private readonly Element? _child;

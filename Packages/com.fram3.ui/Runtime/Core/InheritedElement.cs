@@ -11,6 +11,8 @@ namespace Fram3.UI.Core
     /// automatically scheduled for a rebuild -- but only when
     /// <see cref="UpdateShouldNotify"/> returns <c>true</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <remarks>
     /// Subclass <see cref="InheritedElement"/> and expose the data you want to share
     /// as properties. Override <see cref="UpdateShouldNotify"/> to suppress rebuilds

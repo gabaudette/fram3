@@ -11,6 +11,8 @@ namespace Fram3.UI.Core.Internal
     /// it re-expands its entire subtree, making any enqueued descendant rebuild moot.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class RebuildScheduler
     {

@@ -7,6 +7,8 @@ namespace Fram3.UI.Styling
     /// Pass a theme through the tree with <c>ThemeProvider</c> and read it in any descendant
     /// with <c>ThemeConsumer.Of(context)</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed record Theme
     {
         /// <summary>The primary brand color, used for prominent interactive elements.</summary>

@@ -10,6 +10,8 @@ namespace Fram3.UI.Core
     /// associated element. Use SetState to mutate state and trigger a rebuild
     /// of the subtree rooted at the associated element.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public abstract class State
     {
         private Node? _node;

@@ -10,6 +10,8 @@ namespace Fram3.UI.Animation
     /// position <c>t</c> in [0, 1]. Values of <c>t</c> outside [0, 1] are valid
     /// and produce extrapolation.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public static class Lerp
     {
         /// <summary>

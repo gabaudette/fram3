@@ -10,6 +10,8 @@ namespace Fram3.UI.Core
     /// in the application. Only one element with a given <see cref="GlobalKey"/> may
     /// exist in the tree at a time.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     public class GlobalKey : Key
     {
         private static readonly Dictionary<GlobalKey, Node> Registry = new();

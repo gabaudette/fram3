@@ -9,6 +9,8 @@ namespace Fram3.UI.Animation
     /// and advances them each frame. <see cref="Renderer"/> calls <see cref="Tick"/> once
     /// per frame before flushing the rebuild scheduler.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public static class AnimationSystem
     {
         private static readonly List<AnimationController> _controllers = new();

@@ -7,6 +7,8 @@ namespace Fram3.UI.Styling
     /// Describes the corner radii of a rounded rectangle.
     /// Each corner radius is a non-negative value in logical pixels.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public readonly struct BorderRadius : IEquatable<BorderRadius>
     {
         /// <summary>Radius of the top-left corner.</summary>

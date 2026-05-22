@@ -8,6 +8,8 @@ namespace Fram3.UI.Core
     /// Use this when a piece of UI needs to track information that changes
     /// over time, such as user input, animation progress, or toggle state.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public abstract class StatefulElement : Element
     {
         /// <summary>
