@@ -36,6 +36,10 @@ namespace Fram3.UI.Rendering.Internal
                 checkmark.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                checkmark.style.borderTopLeftRadius = theme.BorderRadius;
+                checkmark.style.borderTopRightRadius = theme.BorderRadius;
+                checkmark.style.borderBottomLeftRadius = theme.BorderRadius;
+                checkmark.style.borderBottomRightRadius = theme.BorderRadius;
 
                 var tick = new VisualElement
                 {
@@ -113,6 +117,10 @@ namespace Fram3.UI.Rendering.Internal
                 checkmark.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                checkmark.style.borderTopLeftRadius = theme.BorderRadius;
+                checkmark.style.borderTopRightRadius = theme.BorderRadius;
+                checkmark.style.borderBottomLeftRadius = theme.BorderRadius;
+                checkmark.style.borderBottomRightRadius = theme.BorderRadius;
 
                 var tick = new VisualElement
                 {

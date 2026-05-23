@@ -48,6 +48,10 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderRightColor = ToUnity(theme.InputBorderColor);
                     input.style.borderBottomColor = ToUnity(theme.InputBorderColor);
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    input.style.borderTopLeftRadius = theme.BorderRadius;
+                    input.style.borderTopRightRadius = theme.BorderRadius;
+                    input.style.borderBottomLeftRadius = theme.BorderRadius;
+                    input.style.borderBottomRightRadius = theme.BorderRadius;
                     input.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
@@ -93,6 +97,10 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderRightColor = ToUnity(theme.InputBorderColor);
                     input.style.borderBottomColor = ToUnity(theme.InputBorderColor);
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    input.style.borderTopLeftRadius = theme.BorderRadius;
+                    input.style.borderTopRightRadius = theme.BorderRadius;
+                    input.style.borderBottomLeftRadius = theme.BorderRadius;
+                    input.style.borderBottomRightRadius = theme.BorderRadius;
                     input.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
