@@ -17,7 +17,7 @@ namespace Fram3.UI.GlobalState
     /// </typeparam>
     /// <remarks>
     /// Inside Unity use the <c>PersistentStore.PlayerPrefs</c> factory method to obtain
-    /// a store backed by <c>UnityEngine.PlayerPrefs</c> and <c>System.Text.Json</c>.
+    /// a store backed by <c>UnityEngine.PlayerPrefs</c> and <c>UnityEngine.JsonUtility</c>.
     /// Outside Unity, or in tests, inject a custom <see cref="IPersistenceAdapter{TState}"/>.
     /// </remarks>
     public class PersistentStore<TState> : Cubit<TState>

@@ -1,7 +1,6 @@
 #nullable enable
 #if !FRAM3_PURE_TESTS
 using System;
-using System.Text.Json;
 using UnityEngine;
 
 namespace Fram3.UI.GlobalState
@@ -12,9 +11,9 @@ namespace Fram3.UI.GlobalState
     /// fits comfortably in a string (settings, preferences, small session data).
     /// </summary>
     /// <typeparam name="TState">
-    /// The type of state to persist. Must be serializable by <c>System.Text.Json</c>.
-    /// Public properties are serialized by default; use <c>JsonIncludeAttribute</c>
-    /// on non-public members that also need to be persisted.
+    /// The type of state to persist. Must be serializable by <c>UnityEngine.JsonUtility</c>.
+    /// The state type must be marked with <c>[Serializable]</c> and use public fields
+    /// or properties backed by serializable fields.
     /// </typeparam>
     // ReSharper disable once UnusedType.Global
     public sealed class PlayerPrefsAdapter<TState> : IPersistenceAdapter<TState>
@@ -39,7 +38,7 @@ namespace Fram3.UI.GlobalState
         /// <inheritdoc/>
         public void Save(TState state)
         {
-            var json = JsonSerializer.Serialize(state);
+            var json = JsonUtility.ToJson(state);
             PlayerPrefs.SetString(_key, json);
             PlayerPrefs.Save();
         }
@@ -54,7 +53,7 @@ namespace Fram3.UI.GlobalState
             }
 
             var json = PlayerPrefs.GetString(_key);
-            state = JsonSerializer.Deserialize<TState>(json)!;
+            state = JsonUtility.FromJson<TState>(json)!;
             return true;
         }
     }
