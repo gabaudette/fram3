@@ -906,13 +906,17 @@ namespace Fram3.UI.Rendering.Internal
                 painter.lineWidth = 1.5f;
                 painter.lineCap = LineCap.Round;
 
+                // Inset endpoints by the line width so round caps don't bleed
+                // past the grip bounds into the panel's rounded corner.
+                const float inset = 1.5f;
+
                 // Three parallel diagonal lines stepping away from the bottom-right corner.
                 for (var i = 1; i <= 3; i++)
                 {
                     var offset = i * 4f;
                     painter.BeginPath();
-                    painter.MoveTo(new UnityEngine.Vector2(w, h - offset));
-                    painter.LineTo(new UnityEngine.Vector2(w - offset, h));
+                    painter.MoveTo(new UnityEngine.Vector2(w - inset, h - offset));
+                    painter.LineTo(new UnityEngine.Vector2(w - offset, h - inset));
                     painter.Stroke();
                 }
             };
