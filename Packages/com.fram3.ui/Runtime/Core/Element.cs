@@ -5,12 +5,15 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// The base class for all Fram3 UI descriptions.
     /// An Element is an immutable configuration object that describes a piece of user interface.
     /// Elements are lightweight and intended to be recreated on every build cycle.
     /// The framework uses elements as blueprints to create and update the actual
     /// rendered UI through the reconciliation process.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <remarks>
     /// Do not subclass <see cref="Element"/> directly. Extend one of the provided archetypes:
     /// <see cref="StatelessElement"/> for composition without state,

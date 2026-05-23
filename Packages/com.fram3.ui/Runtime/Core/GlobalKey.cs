@@ -5,11 +5,14 @@ using Fram3.UI.Core.Internal;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// A key that provides a stable handle to a mounted node, allowing imperative
     /// access to its <see cref="BuildContext"/> and <see cref="State"/> from anywhere
     /// in the application. Only one element with a given <see cref="GlobalKey"/> may
     /// exist in the tree at a time.
     /// </summary>
+    /// <since>2.0.0-beta.2</since>
+    /// <status>live</status>
     public class GlobalKey : Key
     {
         private static readonly Dictionary<GlobalKey, Node> Registry = new();

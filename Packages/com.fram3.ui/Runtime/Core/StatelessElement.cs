@@ -2,11 +2,14 @@
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// An element that composes other elements but holds no mutable state.
     /// Override the Build method to describe the UI subtree this element represents.
     /// The framework calls Build whenever the parent rebuilds, and the returned
     /// element tree is reconciled against the previous output.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public abstract class StatelessElement : Element
     {
         /// <summary>

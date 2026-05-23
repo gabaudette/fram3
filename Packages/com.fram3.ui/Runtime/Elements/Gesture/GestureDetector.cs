@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Gesture
     /// A transparent wrapper that detects pointer gestures on its child subtree.
     /// Maps to a plain UIToolkit <c>VisualElement</c> with registered pointer event callbacks.
     /// </summary>
+    /// <status>live</status>
     public sealed class GestureDetector : SingleChildElement
     {
         /// <summary>

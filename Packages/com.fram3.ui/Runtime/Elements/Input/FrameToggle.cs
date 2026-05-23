@@ -7,6 +7,7 @@ namespace Fram3.UI.Elements.Input
     /// <summary>
     /// A boolean toggle (checkbox). Maps to a UIToolkit <c>Toggle</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class FrameToggle : LeafElement
     {
         /// <summary>The current checked state of the toggle.</summary>

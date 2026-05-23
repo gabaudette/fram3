@@ -12,11 +12,14 @@ namespace Fram3.UI.Core.Internal
     }
 
     /// <summary>
+    /// <status>live</status>
     /// Represents a single patch operation produced by the tree differ.
     /// Operations are applied in order by TreePatcher to transform the
     /// existing Node child list to match a new Element child list.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal sealed class DiffOp
     {
         private DiffOp()

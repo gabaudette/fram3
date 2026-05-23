@@ -12,7 +12,11 @@ namespace Fram3.UI.Rendering.Internal
         private sealed class ScrollViewThemeHolder
         {
             public Theme Theme;
-            public ScrollViewThemeHolder(Theme theme) { Theme = theme; }
+
+            public ScrollViewThemeHolder(Theme theme)
+            {
+                Theme = theme;
+            }
         }
 
         private static UIScrollView CreateScrollView(Elements.Content.ScrollView scrollView, Theme theme)
@@ -32,7 +36,8 @@ namespace Fram3.UI.Rendering.Internal
 #endif
 
             uiScrollView.RegisterCallback<AttachToPanelEvent>(_ =>
-                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, holder.Theme)).ExecuteLater(1)
+                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, holder.Theme))
+                    .ExecuteLater(1)
             );
 
             return uiScrollView;
@@ -50,13 +55,6 @@ namespace Fram3.UI.Rendering.Internal
             scroller.slider.style.width = width;
             scroller.slider.style.minWidth = width;
             scroller.slider.style.maxWidth = width;
-        }
-
-        private static void ApplyScrollbarTheme(UIScrollView uiScrollView, Theme theme)
-        {
-            ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
-            ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
-            ApplyScrollbarThemeDecorations((VisualElement)uiScrollView, theme);
         }
 
         private static void ApplyScrollbarTheme(VisualElement container, Theme theme)
@@ -204,16 +202,25 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView uiScrollView, Theme theme)
+        private static void PaintScrollView(Elements.Content.ScrollView scrollView, UIScrollView uiScrollView,
+            Theme theme)
         {
             uiScrollView.mode = MapScrollMode(scrollView.ScrollDirection);
 #if !FRAM3_PURE_TESTS
             if (uiScrollView.userData is ScrollViewThemeHolder holder)
+            {
                 holder.Theme = theme;
+            }
+
             ApplyScrollerWidth(uiScrollView.verticalScroller, theme.ScrollbarWidth);
             ApplyScrollerWidth(uiScrollView.horizontalScroller, theme.ScrollbarWidth);
+
             if (uiScrollView.panel != null)
-                uiScrollView.schedule.Execute(() => ApplyScrollbarThemeDecorations(uiScrollView, theme)).ExecuteLater(1);
+            {
+                uiScrollView.schedule.Execute(() =>
+                    ApplyScrollbarThemeDecorations(uiScrollView, theme)
+                ).ExecuteLater(1);
+            }
 #endif
         }
 
@@ -273,6 +280,7 @@ namespace Fram3.UI.Rendering.Internal
         private static Image CreateImage(FrameImage frameImage)
         {
             var image = new Image();
+
             ApplyImageDimensions(frameImage.Width, frameImage.Height, image);
 #if !FRAM3_PURE_TESTS
             switch (frameImage.Source)
@@ -892,44 +900,59 @@ namespace Fram3.UI.Rendering.Internal
         )
         {
             const float gripSize = 16f;
+
+            var normalColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.5f));
+            var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.7f));
+            var currentColor = normalColor;
+
             var grip = new VisualElement
             {
                 style =
                 {
-                    alignSelf = Align.FlexEnd,
+                    position = Position.Absolute,
+                    bottom = 0,
+                    right = 0,
                     width = gripSize,
-                    height = gripSize,
-                    marginRight = 2f,
-                    marginBottom = 2f
+                    height = gripSize
                 }
             };
 
-            // Draw three diagonal lines as a classic resize grip.
-            // TODO: Fix this, the grip is like not in the right place and the lines are not perfectly diagonal
-            for (var i = 0; i < 3; i++)
+            grip.generateVisualContent += ctx =>
             {
-                var offset = i * 4f + 2f;
-                var line = new VisualElement
-                {
-                    style =
-                    {
-                        position = Position.Absolute,
-                        width = gripSize - offset,
-                        height = 1f,
-                        bottom = offset,
-                        right = 0,
-                        backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f)),
-                        transformOrigin = new StyleTransformOrigin(
-                            new TransformOrigin(
-                                Length.Percent(100), Length.Percent(0)
-                            )
-                        ),
-                        rotate = new StyleRotate(new Rotate(new Angle(45f, AngleUnit.Degree)))
-                    }
-                };
+                var painter = ctx.painter2D;
+                var w = ctx.visualElement.contentRect.width;
+                var h = ctx.visualElement.contentRect.height;
 
-                grip.Add(line);
-            }
+                painter.strokeColor = currentColor;
+                painter.lineWidth = 1.5f;
+                painter.lineCap = LineCap.Round;
+
+                // Inset endpoints by the line width so round caps don't bleed
+                // past the grip bounds into the panel's rounded corner.
+                const float inset = 1.5f;
+
+                // Three parallel diagonal lines stepping away from the bottom-right corner.
+                for (var i = 1; i <= 3; i++)
+                {
+                    var offset = i * 4f;
+                    painter.BeginPath();
+                    painter.MoveTo(new UnityEngine.Vector2(w - inset, h - offset));
+                    painter.LineTo(new UnityEngine.Vector2(w - offset, h - inset));
+                    painter.Stroke();
+                }
+            };
+
+            grip.RegisterCallback<PointerEnterEvent>(_ =>
+            {
+                currentColor = hoverColor;
+                grip.MarkDirtyRepaint();
+            });
+
+            grip.RegisterCallback<PointerLeaveEvent>(_ =>
+            {
+                currentColor = normalColor;
+                grip.MarkDirtyRepaint();
+            });
 
             grip.RegisterCallback<PointerDownEvent>(evt =>
             {
@@ -963,23 +986,6 @@ namespace Fram3.UI.Rendering.Internal
                 state.Resizing = false;
                 grip.ReleasePointer(evt.pointerId);
             });
-
-            grip.RegisterCallback<PointerEnterEvent>(_ =>
-            {
-                foreach (var line in grip.Children())
-                {
-                    line.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.6f));
-                }
-            });
-
-            grip.RegisterCallback<PointerLeaveEvent>(_ =>
-                {
-                    foreach (var line in grip.Children())
-                    {
-                        line.style.backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f));
-                    }
-                }
-            );
 
             return grip;
         }

@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Layout
     /// Lays out its children in a vertical sequence.
     /// Maps to a UIToolkit <c>VisualElement</c> with <c>FlexDirection.Column</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class Column : MultiChildElement
     {
         /// <summary>

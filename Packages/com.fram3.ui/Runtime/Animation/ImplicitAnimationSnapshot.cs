@@ -6,11 +6,14 @@ using Fram3.UI.Elements.Animation;
 namespace Fram3.UI.Animation
 {
     /// <summary>
+    /// <status>live</status>
     /// An immutable snapshot of the current interpolated values produced by
     /// <see cref="ImplicitAnimation"/> on each animation tick.
     /// Use <see cref="Get{T}"/> inside the builder delegate to read the
     /// current animated value for a given key.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class ImplicitAnimationSnapshot
     {
         private readonly IReadOnlyDictionary<string, object> _values;

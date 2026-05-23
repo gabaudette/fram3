@@ -6,6 +6,7 @@ using System.Diagnostics;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Mounts, unmounts, and expands <see cref="Node"/>s from <see cref="Element"/>
     /// descriptions. Expanding a node means recursively building the subtree beneath it:
     /// for stateless elements by calling <c>Build</c>, for stateful elements by invoking
@@ -13,6 +14,8 @@ namespace Fram3.UI.Core.Internal
     /// children. Unmounting a node recursively disposes state and clears child references.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class NodeExpander
     {

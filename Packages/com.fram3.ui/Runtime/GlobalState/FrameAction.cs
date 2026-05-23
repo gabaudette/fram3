@@ -3,10 +3,13 @@
 namespace Fram3.UI.GlobalState
 {
     /// <summary>
+    /// <status>live</status>
     /// Marker base class for all actions dispatched to an <see cref="Store{TState}"/>.
     /// Subclass this to create strongly-typed action types that your reducer can
     /// pattern-match on.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <example>
     /// <code>
     /// public sealed class IncrementAction : FrameAction { }

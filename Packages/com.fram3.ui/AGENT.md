@@ -447,7 +447,7 @@ store.Dispatch(new IncrementAction());
 var store = new PersistentStore<AppState>(
     initialState: new AppState(),
     reducer: MyReducer,
-    adapter: new PlayerPrefsAdapter<AppState>("app_state")  // Unity only; uses Newtonsoft JSON
+    adapter: new PlayerPrefsAdapter<AppState>("app_state")  // Unity only; uses JsonUtility — TState must be [Serializable]
 );
 ```
 

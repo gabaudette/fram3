@@ -16,6 +16,7 @@ namespace Fram3.UI.Elements.Content
     /// invokes <see cref="OnDismiss"/> when <see cref="BarrierDismissible"/> is true.
     /// Visibility is controlled by the caller mounting or unmounting this element.
     /// </summary>
+    /// <status>live</status>
     public sealed class Dialog : StatelessElement
     {
         /// <summary>The heading text displayed at the top of the dialog panel.</summary>

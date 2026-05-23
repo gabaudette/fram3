@@ -13,6 +13,7 @@ namespace Fram3.UI.Elements.Content
     /// A single node in a <see cref="TreeView"/> hierarchy.
     /// A node with no children is a leaf; a node with children can be expanded or collapsed.
     /// </summary>
+    /// <status>live</status>
     public sealed class TreeViewNode
     {
         /// <summary>The label displayed for this node.</summary>

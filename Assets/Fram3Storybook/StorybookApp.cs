@@ -225,9 +225,9 @@ namespace Fram3.UI.Storybook
                     for (var storyIndex = 0; storyIndex < chapter.Stories.Count; storyIndex++)
                     {
                         var story = chapter.Stories[storyIndex];
-                        
+
                         var capturedStoryIndex = storyIndex;
-                        
+
                         var isSelected = _selectedChapter == capturedChapterIndex &&
                                          _selectedStory == capturedStoryIndex;
 
@@ -346,7 +346,7 @@ namespace Fram3.UI.Storybook
                         Children = new Element[]
                         {
                             BuildStoryCardAccent(story, chapter, theme),
-                            
+
                             new Padding(EdgeInsets.All(theme.Spacing * 3f))
                             {
                                 Child = new Column(crossAxisAlignment: CrossAxisAlignment.Stretch)

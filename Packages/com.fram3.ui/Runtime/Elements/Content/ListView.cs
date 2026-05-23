@@ -9,6 +9,7 @@ namespace Fram3.UI.Elements.Content
     /// Non-generic view of an <see cref="ListView{T}"/> used by the painter to access
     /// item data and builder logic without knowing the concrete item type.
     /// </summary>
+    /// <status>live</status>
     internal interface IListViewDescriptor
     {
         int ItemCount { get; }

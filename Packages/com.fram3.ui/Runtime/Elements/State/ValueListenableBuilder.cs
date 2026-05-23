@@ -11,6 +11,7 @@ namespace Fram3.UI.Elements.State
     /// value into an element tree. The subtree is rebuilt automatically each time
     /// the notifier emits a new value.
     /// </summary>
+    /// <status>live</status>
     /// <typeparam name="T">The type of value held by the notifier.</typeparam>
     public sealed class ValueListenableBuilder<T> : StatefulElement
     {

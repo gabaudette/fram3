@@ -7,6 +7,7 @@ namespace Fram3.UI.Elements.Input
     /// <summary>
     /// A numeric range slider. Maps to a UIToolkit <c>Slider</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class FrameSlider : LeafElement
     {
         /// <summary>The current value of the slider.</summary>

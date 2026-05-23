@@ -5,8 +5,11 @@ using System.Globalization;
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// An immutable RGBA color with each channel normalized to the range [0, 1].
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public readonly struct FrameColor : IEquatable<FrameColor>
     {
         /// <summary>Red channel in the range [0, 1].</summary>

@@ -7,9 +7,12 @@ using UnityEngine.TextCore.Text;
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes the visual style of a text label, including font size, color, weight, decoration,
     /// alignment, and font asset.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <param name="FontSize">The font size in logical pixels. Null inherits from the parent.</param>
     /// <param name="Color">The text color. Null inherits from the parent.</param>
     /// <param name="Bold">Whether the text is bold.</param>

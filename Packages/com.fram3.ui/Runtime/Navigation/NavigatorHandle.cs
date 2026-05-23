@@ -2,9 +2,12 @@
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// Provides imperative navigation operations to descendants in the element tree.
     /// Obtain an instance via <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public interface NavigatorHandle
     {
         /// <summary>

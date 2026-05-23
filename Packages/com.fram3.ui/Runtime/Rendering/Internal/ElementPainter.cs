@@ -101,9 +101,10 @@ namespace Fram3.UI.Rendering.Internal
                     }
 
                     var native = new VisualElement();
+
                     ApplyLayout(element, native, theme);
                     RegisterGestureCallbacks(element, native);
-                    
+
                     return native;
             }
         }

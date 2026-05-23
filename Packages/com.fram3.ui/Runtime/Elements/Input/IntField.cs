@@ -7,6 +7,7 @@ namespace Fram3.UI.Elements.Input
     /// <summary>
     /// An integer number input field. Maps to UIToolkit's <c>IntegerField</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class IntField : LeafElement
     {
         /// <summary>The current integer value.</summary>

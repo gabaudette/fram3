@@ -1,5 +1,5 @@
 #nullable enable
-#if FRAM3_PURE_TESTS
+#if FRAM3_PURE_TESTS || FRAM3_DOC_BUILD
 using System;
 using System.Collections.Generic;
 
@@ -832,7 +832,7 @@ namespace UnityEngine
 }
 #endif
 
-#if FRAM3_DOC_BUILD
+#if FRAM3_DOC_BUILD_REMOVED_MERGED_ABOVE
 using System;
 
 namespace UnityEngine.UIElements
@@ -1057,6 +1057,42 @@ namespace UnityEngine
 }
 
 namespace UnityEngine.SceneManagement
+{
+    public enum LoadSceneMode { Single, Additive }
+
+    public static class SceneManager
+    {
+        public static UnityEngine.AsyncOperation? LoadSceneAsync(string sceneName, LoadSceneMode mode) => null;
+    }
+}
+
+namespace Fram3.UI.Navigation.Internal
+{
+    internal sealed class UnitySceneAdapter : ISceneAdapter
+    {
+        public Navigation.SceneOperation LoadAsync(string sceneName) => new Navigation.SceneOperation();
+    }
+}
+
+namespace Fram3.UI.Rendering.Internal
+{
+    internal static class ElementPainter
+    {
+        public static UnityEngine.UIElements.VisualElement CreateNative(Core.Element element, Styling.Theme theme)
+            => new UnityEngine.UIElements.VisualElement();
+
+        public static void Paint(Core.Element element, UnityEngine.UIElements.VisualElement native, Styling.Theme theme) { }
+
+        public static void ApplyAsStackChild(UnityEngine.UIElements.VisualElement native) { }
+
+        public static UnityEngine.UIElements.VisualElement? GetChildSlot(Core.Element element, UnityEngine.UIElements.VisualElement native)
+            => native;
+    }
+}
+#endif
+
+#if FRAM3_DOC_BUILD_SKIP
+namespace UnityEngine.UIElements
 {
     public enum LoadSceneMode { Single, Additive }
 

@@ -7,6 +7,7 @@ namespace Fram3.UI.Elements.Content
     /// Displays a read-only progress bar. Maps to UIToolkit's native
     /// <c>ProgressBar</c> element.
     /// </summary>
+    /// <status>live</status>
     public sealed class ProgressBar : LeafElement
     {
         /// <summary>

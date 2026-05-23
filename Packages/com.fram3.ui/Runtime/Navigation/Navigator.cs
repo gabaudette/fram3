@@ -6,11 +6,14 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// A stack-based in-scene navigator. Maintains a stack of named routes and renders the
     /// topmost route as its content. Descendants can push and pop routes by retrieving the
     /// <see cref="NavigatorHandle"/> via
     /// <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <remarks>
     /// Routes are declared as a dictionary mapping route names to builder functions.
     /// The builder receives the <see cref="BuildContext"/> at the time the route is built

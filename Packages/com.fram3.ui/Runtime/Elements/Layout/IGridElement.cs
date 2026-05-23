@@ -4,9 +4,12 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Elements.Layout
 {
     /// <summary>
+    /// <status>live</status>
     /// Non-generic view of a <see cref="Grid{T}"/> used by the painter to build
     /// the native UIToolkit VE subtree without knowing the concrete item type.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal interface IGridElement
     {
         int ColumnCount { get; }

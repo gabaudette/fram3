@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.State
     /// Reads the value from the nearest ancestor <see cref="Provider{T}"/> and passes it
     /// to a builder function. Rebuilds whenever that value changes.
     /// </summary>
+    /// <status>live</status>
     /// <typeparam name="T">The type of value to consume from the nearest provider.</typeparam>
     public sealed class Consumer<T> : StatelessElement
     {

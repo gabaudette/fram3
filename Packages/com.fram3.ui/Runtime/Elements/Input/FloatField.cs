@@ -7,6 +7,7 @@ namespace Fram3.UI.Elements.Input
     /// <summary>
     /// A floating-point number input field. Maps to UIToolkit's <c>FloatField</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class FloatField : LeafElement
     {
         /// <summary>The current float value.</summary>

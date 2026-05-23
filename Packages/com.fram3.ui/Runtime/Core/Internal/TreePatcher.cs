@@ -5,12 +5,15 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Applies a list of <see cref="DiffOp"/> operations produced by <see cref="TreeDiffer"/>
     /// to the child list of an <see cref="Node"/>. The patcher delegates to
     /// <see cref="NodeExpander"/> for mounting and unmounting subtrees and updates
     /// element references on existing nodes.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal static class TreePatcher
     {
         /// <summary>

@@ -11,6 +11,8 @@ namespace DocExtractor
         public string Summary { get; }
         public IReadOnlyList<ParamDoc> Params { get; }
         public string Returns { get; }
+        public string Since { get; }
+        public string Status { get; }
 
         public DocEntry(
             string memberId,
@@ -19,7 +21,9 @@ namespace DocExtractor
             string memberName,
             string summary,
             IReadOnlyList<ParamDoc> @params,
-            string returns)
+            string returns,
+            string since = "",
+            string status = "live")
         {
             MemberId = memberId;
             MemberKind = memberKind;
@@ -28,6 +32,8 @@ namespace DocExtractor
             Summary = summary;
             Params = @params;
             Returns = returns;
+            Since = since;
+            Status = status;
         }
     }
 

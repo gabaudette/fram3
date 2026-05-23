@@ -13,6 +13,7 @@ namespace Fram3.UI.Elements.State
     /// <see cref="CubitBuilder{TCubit,TState}"/> when only a small slice of the state
     /// drives a given piece of UI.
     /// </summary>
+    /// <status>live</status>
     /// <typeparam name="TCubit">
     /// The concrete <see cref="Cubit{TState}"/> type to listen to.
     /// Must be provided by a <see cref="Provider{T}"/> ancestor in the tree.

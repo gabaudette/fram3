@@ -2,8 +2,11 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes a uniform border with a color and width applied to all four sides of an element.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <param name="Color">The color of the border.</param>
     /// <param name="Width">The width of the border in logical pixels.</param>
     public sealed record Border(FrameColor Color, float Width)

@@ -9,6 +9,7 @@ namespace Fram3.UI.Elements.Input
     /// but masks the entered characters. Maps to a UIToolkit <c>TextField</c> with
     /// <c>isPasswordField = true</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class PasswordField : LeafElement
     {
         /// <summary>The current text value of the password field.</summary>

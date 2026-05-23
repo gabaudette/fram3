@@ -4,10 +4,13 @@ using Fram3.UI.Core;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// An inherited element that carries a <see cref="NavigatorHandle"/> through the element
     /// tree. Descendants retrieve it with
     /// <c>context.GetInherited&lt;NavigatorScope&gt;().Navigator</c>.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class NavigatorScope : InheritedElement
     {
         /// <summary>The navigator handle available to descendants.</summary>

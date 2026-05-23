@@ -5,6 +5,7 @@ using Fram3.UI.Navigation.Internal;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// Provides static methods for navigating between Unity scenes.
     /// Use <see cref="GoTo"/> to replace the current scene asynchronously.
     /// </summary>

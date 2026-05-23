@@ -5,12 +5,15 @@ using Fram3.UI.Core.Internal;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// A handle to the location of an element in the element tree.
     /// Provides access to ancestor elements and framework services
     /// from within a Build method. Each element in the tree receives
     /// its own build context, which can be used to look up inherited
     /// data or access navigation and state management facilities.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public class BuildContext
     {
         internal BuildContext(Node node)

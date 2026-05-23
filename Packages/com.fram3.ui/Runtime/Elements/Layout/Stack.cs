@@ -9,6 +9,7 @@ namespace Fram3.UI.Elements.Layout
     /// Maps to a UIToolkit <c>VisualElement</c> with <c>position: absolute</c>
     /// applied to each child.
     /// </summary>
+    /// <status>live</status>
     public sealed class Stack : MultiChildElement
     {
         /// <summary>

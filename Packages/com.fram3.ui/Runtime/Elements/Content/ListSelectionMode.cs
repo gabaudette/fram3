@@ -3,8 +3,11 @@
 namespace Fram3.UI.Elements.Content
 {
     /// <summary>
+    /// <status>live</status>
     /// Specifies how items in an <see cref="ListView{T}"/> may be selected.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public enum ListSelectionMode
     {
         /// <summary>No items can be selected.</summary>

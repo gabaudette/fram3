@@ -5,10 +5,13 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// Base class for elements that contain exactly one child element.
     /// Use this for wrapper elements that add behavior or styling around
     /// a single child, such as padding, alignment, or opacity.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public abstract class SingleChildElement : Element
     {
         private readonly Element? _child;

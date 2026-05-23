@@ -5,12 +5,15 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Represents the instantiation of an Element in the live element tree.
     /// Nodes are the mutable, long-lived counterparts to immutable Element descriptions.
     /// They track parent-child relationships, manage lifecycle state, and serve as the
     /// bridge between the declarative element descriptions and the rendered output.
     /// This is an internal framework type not intended for direct use by end users.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal class Node
     {
         private readonly List<Node> _children = new();

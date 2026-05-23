@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Content
     /// Describes a single tab in an <see cref="TabView"/>.
     /// Contains the tab's label and the content element displayed when the tab is active.
     /// </summary>
+    /// <status>live</status>
     public sealed class Tab
     {
         /// <summary>The text label displayed in the tab bar.</summary>

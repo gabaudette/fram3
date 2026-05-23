@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Input
     /// <summary>
     /// A dropdown selection control. Maps to a UIToolkit <c>DropdownField</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class Dropdown : LeafElement
     {
         /// <summary>The list of string options shown in the dropdown.</summary>

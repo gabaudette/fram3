@@ -2,10 +2,13 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Controls how children are aligned along the cross axis of a
     /// <c>Column</c> (horizontal) or <c>Row</c> (vertical).
     /// Maps to UIToolkit <c>Align</c> values.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public enum CrossAxisAlignment
     {
         /// <summary>Align children toward the start of the cross axis.</summary>

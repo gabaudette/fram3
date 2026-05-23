@@ -5,11 +5,14 @@ using Fram3.UI.Core.Internal;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// Holds the mutable state for a StatefulElement.
     /// State objects are created once and persist across rebuilds of their
     /// associated element. Use SetState to mutate state and trigger a rebuild
     /// of the subtree rooted at the associated element.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public abstract class State
     {
         private Node? _node;

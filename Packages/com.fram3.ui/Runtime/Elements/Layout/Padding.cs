@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Layout
     /// Insets its single child by the given <see cref="EdgeInsets"/>.
     /// Maps to padding applied directly to the child's containing <c>VisualElement</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class Padding : SingleChildElement
     {
         /// <summary>The amount of padding to apply on each edge.</summary>

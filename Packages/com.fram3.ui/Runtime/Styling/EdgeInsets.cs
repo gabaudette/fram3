@@ -4,8 +4,11 @@ using System;
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes insets along the four edges of a rectangle, used for padding and margins.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public readonly struct EdgeInsets : IEquatable<EdgeInsets>
     {
         /// <summary>Inset from the top edge.</summary>

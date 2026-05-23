@@ -4,17 +4,20 @@ using System;
 namespace Fram3.UI.GlobalState
 {
     /// <summary>
+    /// <status>live</status>
     /// A reactive state store that automatically persists its state across scene reloads
     /// using a pluggable <see cref="IPersistenceAdapter{TState}"/>.
     /// On first access the previously persisted state is restored; every subsequent
     /// <see cref="Cubit{TState}.Emit"/> call that changes the state persists the new state.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="TState">
     /// The type of state held by this store. Must be serialisable by the adapter.
     /// </typeparam>
     /// <remarks>
     /// Inside Unity use the <c>PersistentStore.PlayerPrefs</c> factory method to obtain
-    /// a store backed by <c>UnityEngine.PlayerPrefs</c> and <c>System.Text.Json</c>.
+    /// a store backed by <c>UnityEngine.PlayerPrefs</c> and <c>UnityEngine.JsonUtility</c>.
     /// Outside Unity, or in tests, inject a custom <see cref="IPersistenceAdapter{TState}"/>.
     /// </remarks>
     public class PersistentStore<TState> : Cubit<TState>

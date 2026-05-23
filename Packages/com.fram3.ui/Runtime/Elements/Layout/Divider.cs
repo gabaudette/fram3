@@ -9,6 +9,7 @@ namespace Fram3.UI.Elements.Layout
     /// Maps to a UIToolkit <c>VisualElement</c> with a fixed thickness,
     /// a background color, and an optional margin.
     /// </summary>
+    /// <status>live</status>
     public sealed class Divider : LeafElement
     {
         /// <summary>

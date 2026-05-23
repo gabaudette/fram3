@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace Fram3.UI.GlobalState
 {
     /// <summary>
+    /// <status>live</status>
     /// A reactive state machine that owns a single immutable state value
     /// and notifies listeners whenever that state changes.
     /// Subclass <see cref="Cubit{TState}"/> and add methods that call
@@ -13,6 +14,8 @@ namespace Fram3.UI.GlobalState
     /// to rebuild UI subtrees in response to state changes, or expose via
     /// <see cref="Fram3.UI.Elements.State.Provider{T}"/> for tree-wide access.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="TState">
     /// The type that represents the state of this cubit.
     /// Value equality is used to suppress rebuilds when the new state is

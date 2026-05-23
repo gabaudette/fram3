@@ -9,6 +9,7 @@ namespace Fram3.UI.Elements.Layout
     /// <see cref="OnWidth"/> with the resolved pixel width whenever layout changes.
     /// Use this to measure available width before committing to explicit column widths.
     /// </summary>
+    /// <status>live</status>
     public sealed class WidthProbe : Element
     {
         /// <summary>

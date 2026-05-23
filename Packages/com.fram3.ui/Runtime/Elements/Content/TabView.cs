@@ -12,6 +12,7 @@ namespace Fram3.UI.Elements.Content
     /// The tab bar is built from existing framework elements (<see cref="Row"/>,
     /// <see cref="Button"/>, <see cref="Column"/>); no native UIToolkit tab control is used.
     /// </summary>
+    /// <status>live</status>
     public sealed class TabView : StatefulElement
     {
         /// <summary>The list of tabs. Must not be null or empty.</summary>

@@ -12,6 +12,7 @@ namespace Fram3.UI.Elements.Layout
     /// decoration, size constraints, and padding applied directly to its style.
     /// When used without a child, it renders as a styled box with no content.
     /// </summary>
+    /// <status>live</status>
     public sealed class Container : SingleChildElement
     {
         /// <summary>

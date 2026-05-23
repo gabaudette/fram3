@@ -6,12 +6,15 @@ using Fram3.UI.Elements.State;
 namespace Fram3.UI.Core
 {
     /// <summary>
+    /// <status>live</status>
     /// Holds a single observable value and notifies listeners when it changes.
     /// Use this to share reactive state between parts of the UI that are not
     /// directly related in the element tree. Pair with
     /// <see cref="ValueListenableBuilder{T}"/> to rebuild a subtree whenever
     /// the value changes.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <typeparam name="T">The type of value held by this notifier.</typeparam>
     public sealed class ValueNotifier<T> : IDisposable
     {

@@ -5,12 +5,15 @@ using System.Collections.Generic;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Produces a minimal list of <see cref="DiffOp"/> operations that transform an
     /// existing list of child <see cref="Node"/>s to reflect a new list of child
     /// <see cref="Element"/>s. The algorithm prioritizes keyed matching, then falls
     /// back to positional matching for unkeyed elements of the same type.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     internal static class TreeDiffer
     {
         /// <summary>

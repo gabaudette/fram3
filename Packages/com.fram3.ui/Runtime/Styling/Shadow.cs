@@ -2,8 +2,11 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Describes a drop shadow cast by an element.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     /// <param name="Color">The color of the shadow.</param>
     /// <param name="OffsetX">
     /// Horizontal offset of the shadow in logical pixels. Positive values move the shadow right.

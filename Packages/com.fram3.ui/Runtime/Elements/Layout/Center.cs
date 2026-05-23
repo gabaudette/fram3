@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Layout
     /// available space. Maps to a UIToolkit <c>VisualElement</c> with
     /// <c>alignItems: center</c> and <c>justifyContent: center</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class Center : SingleChildElement
     {
         /// <summary>

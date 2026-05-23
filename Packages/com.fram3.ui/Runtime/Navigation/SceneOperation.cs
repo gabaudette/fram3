@@ -4,10 +4,13 @@ using System;
 namespace Fram3.UI.Navigation
 {
     /// <summary>
+    /// <status>live</status>
     /// Represents an in-progress or completed scene load initiated by
     /// <see cref="SceneNavigator.GoTo"/>. Poll <see cref="Progress"/> each frame or
     /// subscribe to <see cref="Completed"/> to react when the scene is fully loaded.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public sealed class SceneOperation
     {
         /// <summary>

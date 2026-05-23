@@ -5,12 +5,15 @@ using System.Runtime.CompilerServices;
 namespace Fram3.UI.Core.Internal
 {
     /// <summary>
+    /// <status>live</status>
     /// Collects nodes marked dirty via <see cref="State.SetState"/> and flushes
     /// them in ascending depth order during a single reconciliation pass. Processing
     /// ancestors before descendants avoids redundant rebuilds: if a parent is rebuilt
     /// it re-expands its entire subtree, making any enqueued descendant rebuild moot.
     /// This is an internal framework type not intended for direct use.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class RebuildScheduler
     {

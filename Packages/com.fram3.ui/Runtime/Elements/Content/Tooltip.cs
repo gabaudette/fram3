@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Content
     /// over the child, the tooltip is displayed. Maps to UIToolkit's
     /// <c>VisualElement.tooltip</c> property set on the child's native element.
     /// </summary>
+    /// <status>live</status>
     public sealed class Tooltip : SingleChildElement
     {
         /// <summary>

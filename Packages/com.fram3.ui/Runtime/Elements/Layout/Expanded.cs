@@ -10,6 +10,7 @@ namespace Fram3.UI.Elements.Layout
     /// parent flex container, proportional to its <see cref="Flex"/> factor.
     /// Maps to UIToolkit's <c>flexGrow</c> style property.
     /// </summary>
+    /// <status>live</status>
     public sealed class Expanded : SingleChildElement
     {
         /// <summary>

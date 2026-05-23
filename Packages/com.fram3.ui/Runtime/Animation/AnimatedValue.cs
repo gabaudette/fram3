@@ -6,10 +6,13 @@ using Fram3.UI.Elements.Animation;
 namespace Fram3.UI.Animation
 {
     /// <summary>
+    /// <status>live</status>
     /// Non-generic interface implemented by all <see cref="AnimatedValue{T}"/> instances.
     /// Used by <see cref="ImplicitAnimationSnapshot"/> internally to store and interpolate
     /// heterogeneous animated values without knowing their concrete types.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public interface IAnimatedValue
     {
         /// <summary>

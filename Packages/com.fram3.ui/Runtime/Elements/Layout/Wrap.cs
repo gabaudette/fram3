@@ -9,6 +9,7 @@ namespace Fram3.UI.Elements.Layout
     /// Maps to a UIToolkit <c>VisualElement</c> with <c>FlexDirection.Row</c> and
     /// <c>FlexWrap.Wrap</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class Wrap : MultiChildElement
     {
         /// <summary>

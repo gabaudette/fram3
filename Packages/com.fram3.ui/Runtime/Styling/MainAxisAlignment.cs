@@ -2,10 +2,13 @@
 namespace Fram3.UI.Styling
 {
     /// <summary>
+    /// <status>live</status>
     /// Controls how children are distributed along the main axis of a
     /// <c>Column</c> (vertical) or <c>Row</c> (horizontal).
     /// Maps to UIToolkit <c>Justify</c> values.
     /// </summary>
+    /// <since>2.0.0-beta.1</since>
+    /// <status>live</status>
     public enum MainAxisAlignment
     {
         /// <summary>Pack children toward the start of the main axis.</summary>

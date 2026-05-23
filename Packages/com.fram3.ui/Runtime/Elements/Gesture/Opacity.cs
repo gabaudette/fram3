@@ -8,6 +8,7 @@ namespace Fram3.UI.Elements.Gesture
     /// Applies a uniform opacity to its child element.
     /// Maps to UIToolkit's <c>opacity</c> style property on a <c>VisualElement</c>.
     /// </summary>
+    /// <status>live</status>
     public sealed class Opacity : SingleChildElement
     {
         /// <summary>

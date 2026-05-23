@@ -18,6 +18,7 @@ namespace Fram3.UI.Elements.Content
     /// After <see cref="Duration"/> seconds the snackbar hides itself and invokes
     /// <see cref="OnDismiss"/> so the caller can remove it from the tree.
     /// </summary>
+    /// <status>live</status>
     public sealed class Snackbar : StatefulElement
     {
         /// <summary>The message text displayed in the snackbar.</summary>
