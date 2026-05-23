@@ -37,6 +37,7 @@ namespace Fram3.UI.Rendering.Internal
                 var tracker = slider.Q<VisualElement>(className: "unity-base-slider__tracker");
                 if (tracker != null)
                 {
+                    tracker.style.backgroundImage = default;
                     tracker.style.backgroundColor = ToUnity(theme.TrackColor);
                     tracker.style.borderTopLeftRadius = theme.BorderRadius;
                     tracker.style.borderTopRightRadius = theme.BorderRadius;
@@ -47,6 +48,7 @@ namespace Fram3.UI.Rendering.Internal
                 var fill = slider.Q<VisualElement>(className: "unity-base-slider__fill");
                 if (fill != null)
                 {
+                    fill.style.backgroundImage = default;
                     fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     fill.style.borderTopLeftRadius = theme.BorderRadius;
                     fill.style.borderTopRightRadius = theme.BorderRadius;
@@ -60,6 +62,7 @@ namespace Fram3.UI.Rendering.Internal
                     return;
                 }
 
+                dragger.style.backgroundImage = default;
                 dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
@@ -116,90 +119,86 @@ namespace Fram3.UI.Rendering.Internal
                 }
             });
 
-            // Registered outside AttachToPanelEvent to avoid stacking a new listener on every
-            // re-attach. TrickleDown ensures we fire before DropdownField's internal handler,
-            // which stops the event before it bubbles.
-            dropdownField.RegisterCallback<PointerDownEvent>(_ =>
+            // PointerUpEvent fires after Unity's internal PointerDown handler has already opened the
+            // popup, so the popup exists in the visual tree by the time our callback runs.
+            // Registered outside AttachToPanelEvent to avoid stacking a new listener on re-attach.
+            dropdownField.RegisterCallback<PointerUpEvent>(_ =>
             {
-                // ExecuteLater(16) gives the popup one frame to be created before we style it.
-                dropdownField.schedule.Execute(() =>
+                var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
+                    className: "unity-base-dropdown"
+                );
+
+                if (popup == null)
                 {
-                    var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
-                        className: "unity-base-dropdown"
-                    );
+                    return;
+                }
 
-                    if (popup == null)
+                popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                popup.style.borderTopWidth = 0f;
+                popup.style.borderRightWidth = 0f;
+                popup.style.borderBottomWidth = 0f;
+                popup.style.borderLeftWidth = 0f;
+
+                var containerOuter = popup.Q<VisualElement>(
+                    className: "unity-base-dropdown__container-outer"
+                );
+
+                var containerInner = popup.Q<VisualElement>(
+                    className: "unity-base-dropdown__container-inner"
+                );
+
+                var inner = containerOuter ?? containerInner ?? popup;
+
+                inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
+                inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
+                inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
+                inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                inner.style.borderTopWidth = 1f;
+                inner.style.borderRightWidth = 1f;
+                inner.style.borderBottomWidth = 1f;
+                inner.style.borderLeftWidth = 1f;
+                inner.style.borderTopLeftRadius = theme.BorderRadius;
+                inner.style.borderTopRightRadius = theme.BorderRadius;
+                inner.style.borderBottomLeftRadius = theme.BorderRadius;
+                inner.style.borderBottomRightRadius = theme.BorderRadius;
+
+                if (containerOuter != null && containerInner != null)
+                {
+                    containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                    containerInner.style.borderTopWidth = 0f;
+                    containerInner.style.borderRightWidth = 0f;
+                    containerInner.style.borderBottomWidth = 0f;
+                    containerInner.style.borderLeftWidth = 0f;
+                }
+
+                var dropdownItems = popup.Query<VisualElement>(
+                    className: "unity-base-dropdown__item"
+                ).ToList();
+
+                foreach (var dropdownItem in dropdownItems)
+                {
+                    dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
+                    dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
+
+                    var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
+                    if (checkmark != null)
                     {
-                        return;
+                        checkmark.style.visibility = Visibility.Hidden;
                     }
 
-                    popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                    popup.style.borderTopWidth = 0f;
-                    popup.style.borderRightWidth = 0f;
-                    popup.style.borderBottomWidth = 0f;
-                    popup.style.borderLeftWidth = 0f;
+                    var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
+                    var surfaceColor = ToUnity(theme.SurfaceColor);
 
-                    var containerOuter = popup.Q<VisualElement>(
-                        className: "unity-base-dropdown__container-outer"
+                    dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
+                        dropdownItem.style.backgroundColor = hoverColor
                     );
 
-                    var containerInner = popup.Q<VisualElement>(
-                        className: "unity-base-dropdown__container-inner"
+                    dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
+                        dropdownItem.style.backgroundColor = surfaceColor
                     );
-
-                    var inner = containerOuter ?? containerInner ?? popup;
-
-                    inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                    inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderTopWidth = 1f;
-                    inner.style.borderRightWidth = 1f;
-                    inner.style.borderBottomWidth = 1f;
-                    inner.style.borderLeftWidth = 1f;
-                    inner.style.borderTopLeftRadius = theme.BorderRadius;
-                    inner.style.borderTopRightRadius = theme.BorderRadius;
-                    inner.style.borderBottomLeftRadius = theme.BorderRadius;
-                    inner.style.borderBottomRightRadius = theme.BorderRadius;
-
-                    if (containerOuter != null && containerInner != null)
-                    {
-                        containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                        containerInner.style.borderTopWidth = 0f;
-                        containerInner.style.borderRightWidth = 0f;
-                        containerInner.style.borderBottomWidth = 0f;
-                        containerInner.style.borderLeftWidth = 0f;
-                    }
-
-                    var dropdownItems = popup.Query<VisualElement>(
-                        className: "unity-base-dropdown__item"
-                    ).ToList();
-
-                    foreach (var dropdownItem in dropdownItems)
-                    {
-                        dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
-                        dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
-
-                        var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
-                        if (checkmark != null)
-                        {
-                            checkmark.style.visibility = Visibility.Hidden;
-                        }
-
-                        var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
-                        var surfaceColor = ToUnity(theme.SurfaceColor);
-
-                        dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
-                            dropdownItem.style.backgroundColor = hoverColor
-                        );
-
-                        dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
-                            dropdownItem.style.backgroundColor = surfaceColor
-                        );
-                    }
-                }).ExecuteLater(16);
-            }, TrickleDown.TrickleDown);
+                }
+            });
 
             if (dropdown.OnChanged == null)
             {
@@ -386,6 +385,7 @@ namespace Fram3.UI.Rendering.Internal
                 var tracker = newMinMaxSlider.Q<VisualElement>(className: "unity-min-max-slider__tracker");
                 if (tracker != null)
                 {
+                    tracker.style.backgroundImage = default;
                     tracker.style.backgroundColor = ToUnity(theme.TrackColor);
                     tracker.style.borderTopLeftRadius = theme.BorderRadius;
                     tracker.style.borderTopRightRadius = theme.BorderRadius;
@@ -396,6 +396,7 @@ namespace Fram3.UI.Rendering.Internal
                 var fill = newMinMaxSlider.Q<VisualElement>(className: "unity-min-max-slider__dragger");
                 if (fill != null)
                 {
+                    fill.style.backgroundImage = default;
                     fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     fill.style.opacity = 0.4f;
                     fill.style.borderTopLeftRadius = theme.BorderRadius;
@@ -404,39 +405,45 @@ namespace Fram3.UI.Rendering.Internal
                     fill.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
-                var lowDraggers = newMinMaxSlider.Query<VisualElement>(
-                    className: "unity-min-max-slider__dragger-low"
-                ).ToList();
-
-                foreach (var dragger in lowDraggers)
+                // Defer handle styling one frame — Unity may finish internal layout after attach.
+                newMinMaxSlider.schedule.Execute(() =>
                 {
-                    dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
-                    dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
-                    dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
-                    dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
-                }
+                    var lowDraggers = newMinMaxSlider.Query<VisualElement>(
+                        className: "unity-min-max-slider__dragger-low"
+                    ).ToList();
 
-                var highDraggers = newMinMaxSlider
-                    .Query<VisualElement>(className: "unity-min-max-slider__dragger-high")
-                    .ToList();
+                    foreach (var dragger in lowDraggers)
+                    {
+                        dragger.style.backgroundImage = default;
+                        dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                        dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                        dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                        dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                    }
 
-                foreach (var dragger in highDraggers)
-                {
-                    dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
-                    dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
-                    dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
-                    dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
-                }
+                    var highDraggers = newMinMaxSlider
+                        .Query<VisualElement>(className: "unity-min-max-slider__dragger-high")
+                        .ToList();
+
+                    foreach (var dragger in highDraggers)
+                    {
+                        dragger.style.backgroundImage = default;
+                        dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                        dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                        dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                        dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                        dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                    }
+                }).ExecuteLater(0);
             });
 
             if (minMaxSlider.OnChanged == null)
