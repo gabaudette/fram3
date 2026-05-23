@@ -38,12 +38,20 @@ namespace Fram3.UI.Rendering.Internal
                 if (tracker != null)
                 {
                     tracker.style.backgroundColor = ToUnity(theme.TrackColor);
+                    tracker.style.borderTopLeftRadius = theme.BorderRadius;
+                    tracker.style.borderTopRightRadius = theme.BorderRadius;
+                    tracker.style.borderBottomLeftRadius = theme.BorderRadius;
+                    tracker.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
                 var fill = slider.Q<VisualElement>(className: "unity-base-slider__fill");
                 if (fill != null)
                 {
                     fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                    fill.style.borderTopLeftRadius = theme.BorderRadius;
+                    fill.style.borderTopRightRadius = theme.BorderRadius;
+                    fill.style.borderBottomLeftRadius = theme.BorderRadius;
+                    fill.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
                 var dragger = slider.Q<VisualElement>(className: "unity-base-slider__dragger");
@@ -57,10 +65,10 @@ namespace Fram3.UI.Rendering.Internal
                 dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderTopLeftRadius = theme.BorderRadius;
-                dragger.style.borderTopRightRadius = theme.BorderRadius;
-                dragger.style.borderBottomLeftRadius = theme.BorderRadius;
-                dragger.style.borderBottomRightRadius = theme.BorderRadius;
+                dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
             });
 
             if (frameSlider.OnChanged == null)
@@ -379,6 +387,10 @@ namespace Fram3.UI.Rendering.Internal
                 if (tracker != null)
                 {
                     tracker.style.backgroundColor = ToUnity(theme.TrackColor);
+                    tracker.style.borderTopLeftRadius = theme.BorderRadius;
+                    tracker.style.borderTopRightRadius = theme.BorderRadius;
+                    tracker.style.borderBottomLeftRadius = theme.BorderRadius;
+                    tracker.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
                 var fill = newMinMaxSlider.Q<VisualElement>(className: "unity-min-max-slider__dragger");
@@ -403,10 +415,10 @@ namespace Fram3.UI.Rendering.Internal
                     dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopLeftRadius = theme.BorderRadius;
-                    dragger.style.borderTopRightRadius = theme.BorderRadius;
-                    dragger.style.borderBottomLeftRadius = theme.BorderRadius;
-                    dragger.style.borderBottomRightRadius = theme.BorderRadius;
+                    dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
                 }
 
                 var highDraggers = newMinMaxSlider
@@ -420,10 +432,10 @@ namespace Fram3.UI.Rendering.Internal
                     dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopLeftRadius = theme.BorderRadius;
-                    dragger.style.borderTopRightRadius = theme.BorderRadius;
-                    dragger.style.borderBottomLeftRadius = theme.BorderRadius;
-                    dragger.style.borderBottomRightRadius = theme.BorderRadius;
+                    dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
                 }
             });
 
