@@ -97,7 +97,7 @@ namespace Fram3.UI.Styling
             ScrollbarWidth = 8f,
             ScrollbarBorder = true,
             ScrollbarBorderWidth = 1f,
-            ScrollbarBorderColor = FrameColor.FromHex("#E0E0E0")
+            ScrollbarBorderColor = FrameColor.FromHex("#E0E0E1")
         };
     }
 }
