@@ -879,44 +879,59 @@ namespace Fram3.UI.Rendering.Internal
         )
         {
             const float gripSize = 16f;
+
+            var normalColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.5f));
+            var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.7f));
+            var currentColor = normalColor;
+
             var grip = new VisualElement
             {
                 style =
                 {
-                    alignSelf = Align.FlexEnd,
+                    position = Position.Absolute,
+                    bottom = 0,
+                    right = 0,
                     width = gripSize,
-                    height = gripSize,
-                    marginRight = 2f,
-                    marginBottom = 2f
+                    height = gripSize
                 }
             };
 
-            // Draw three diagonal lines as a classic resize grip.
-            // TODO: Fix this, the grip is like not in the right place and the lines are not perfectly diagonal
-            for (var i = 0; i < 3; i++)
+            grip.generateVisualContent += ctx =>
             {
-                var offset = i * 4f + 2f;
-                var line = new VisualElement
-                {
-                    style =
-                    {
-                        position = Position.Absolute,
-                        width = gripSize - offset,
-                        height = 1f,
-                        bottom = offset,
-                        right = 0,
-                        backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f)),
-                        transformOrigin = new StyleTransformOrigin(
-                            new TransformOrigin(
-                                Length.Percent(100), Length.Percent(0)
-                            )
-                        ),
-                        rotate = new StyleRotate(new Rotate(new Angle(45f, AngleUnit.Degree)))
-                    }
-                };
+                var painter = ctx.painter2D;
+                var w = ctx.visualElement.contentRect.width;
+                var h = ctx.visualElement.contentRect.height;
 
-                grip.Add(line);
-            }
+                painter.strokeColor = currentColor;
+                painter.lineWidth = 1.5f;
+                painter.lineCap = LineCap.Round;
+
+                // Inset endpoints by the line width so round caps don't bleed
+                // past the grip bounds into the panel's rounded corner.
+                const float inset = 1.5f;
+
+                // Three parallel diagonal lines stepping away from the bottom-right corner.
+                for (var i = 1; i <= 3; i++)
+                {
+                    var offset = i * 4f;
+                    painter.BeginPath();
+                    painter.MoveTo(new UnityEngine.Vector2(w - inset, h - offset));
+                    painter.LineTo(new UnityEngine.Vector2(w - offset, h - inset));
+                    painter.Stroke();
+                }
+            };
+
+            grip.RegisterCallback<PointerEnterEvent>(_ =>
+            {
+                currentColor = hoverColor;
+                grip.MarkDirtyRepaint();
+            });
+
+            grip.RegisterCallback<PointerLeaveEvent>(_ =>
+            {
+                currentColor = normalColor;
+                grip.MarkDirtyRepaint();
+            });
 
             grip.RegisterCallback<PointerDownEvent>(evt =>
             {
@@ -950,23 +965,6 @@ namespace Fram3.UI.Rendering.Internal
                 state.Resizing = false;
                 grip.ReleasePointer(evt.pointerId);
             });
-
-            grip.RegisterCallback<PointerEnterEvent>(_ =>
-            {
-                foreach (var line in grip.Children())
-                {
-                    line.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.6f));
-                }
-            });
-
-            grip.RegisterCallback<PointerLeaveEvent>(_ =>
-                {
-                    foreach (var line in grip.Children())
-                    {
-                        line.style.backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f));
-                    }
-                }
-            );
 
             return grip;
         }
