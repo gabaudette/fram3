@@ -67,6 +67,7 @@ namespace Fram3.UI.Storybook
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
             BorderRadius = 8f,
+            SliderDraggerRadius = 50f,
             Spacing = 8f
         };
 

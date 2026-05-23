@@ -664,6 +664,7 @@ namespace UnityEngine.UIElements
     public interface IVisualElementScheduledItem : IScheduledItem
     {
         IVisualElementScheduledItem StartingIn(long delayMs);
+        IVisualElementScheduledItem Every(long durationMs);
         void Pause();
     }
 
@@ -683,6 +684,7 @@ namespace UnityEngine.UIElements
         {
             public void ExecuteLater(long delayMs) { }
             public IVisualElementScheduledItem StartingIn(long delayMs) => this;
+            public IVisualElementScheduledItem Every(long durationMs) => this;
             public void Pause() { }
         }
 

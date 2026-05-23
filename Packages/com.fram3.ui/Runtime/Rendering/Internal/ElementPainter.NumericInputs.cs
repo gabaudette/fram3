@@ -56,22 +56,37 @@ namespace Fram3.UI.Rendering.Internal
                     fill.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
+                // Unity 6 splits the dragger into __dragger (interaction) and __dragger-border (visual).
+                // Both need styling for the themed thumb to show correctly.
                 var dragger = slider.Q<VisualElement>(className: "unity-base-slider__dragger");
-                if (dragger == null)
+                if (dragger != null)
                 {
-                    return;
+                    dragger.style.backgroundImage = default;
+                    dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
                 }
 
-                dragger.style.backgroundImage = default;
-                dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
-                dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
-                dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
-                dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                var draggerBorder = slider.Q<VisualElement>(className: "unity-base-slider__dragger-border");
+                if (draggerBorder != null)
+                {
+                    draggerBorder.style.backgroundImage = default;
+                    draggerBorder.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                    draggerBorder.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                    draggerBorder.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                    draggerBorder.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                    draggerBorder.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                    draggerBorder.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                    draggerBorder.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                    draggerBorder.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                    draggerBorder.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                }
             });
 
             if (frameSlider.OnChanged == null)
@@ -119,86 +134,97 @@ namespace Fram3.UI.Rendering.Internal
                 }
             });
 
-            // PointerUpEvent fires after Unity's internal PointerDown handler has already opened the
-            // popup, so the popup exists in the visual tree by the time our callback runs.
-            // Registered outside AttachToPanelEvent to avoid stacking a new listener on re-attach.
-            dropdownField.RegisterCallback<PointerUpEvent>(_ =>
+            // Unity's DropdownField calls schedule.Execute(ShowMenu) on PointerDown — the popup
+            // is created asynchronously on the next panel update, not immediately. We poll every
+            // 16 ms until the popup appears in the visual tree, then style it once and stop.
+            // The poller reference is kept so rapid re-clicks cancel the previous poll.
+            IVisualElementScheduledItem? dropdownPoller = null;
+
+            dropdownField.RegisterCallback<PointerDownEvent>(_ =>
             {
-                var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
-                    className: "unity-base-dropdown"
-                );
-
-                if (popup == null)
+                dropdownPoller?.Pause();
+                var attempts = 0;
+                dropdownPoller = dropdownField.schedule.Execute(() =>
                 {
-                    return;
-                }
+                    var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
+                        className: "unity-base-dropdown"
+                    );
 
-                popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                popup.style.borderTopWidth = 0f;
-                popup.style.borderRightWidth = 0f;
-                popup.style.borderBottomWidth = 0f;
-                popup.style.borderLeftWidth = 0f;
-
-                var containerOuter = popup.Q<VisualElement>(
-                    className: "unity-base-dropdown__container-outer"
-                );
-
-                var containerInner = popup.Q<VisualElement>(
-                    className: "unity-base-dropdown__container-inner"
-                );
-
-                var inner = containerOuter ?? containerInner ?? popup;
-
-                inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                inner.style.borderTopWidth = 1f;
-                inner.style.borderRightWidth = 1f;
-                inner.style.borderBottomWidth = 1f;
-                inner.style.borderLeftWidth = 1f;
-                inner.style.borderTopLeftRadius = theme.BorderRadius;
-                inner.style.borderTopRightRadius = theme.BorderRadius;
-                inner.style.borderBottomLeftRadius = theme.BorderRadius;
-                inner.style.borderBottomRightRadius = theme.BorderRadius;
-
-                if (containerOuter != null && containerInner != null)
-                {
-                    containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                    containerInner.style.borderTopWidth = 0f;
-                    containerInner.style.borderRightWidth = 0f;
-                    containerInner.style.borderBottomWidth = 0f;
-                    containerInner.style.borderLeftWidth = 0f;
-                }
-
-                var dropdownItems = popup.Query<VisualElement>(
-                    className: "unity-base-dropdown__item"
-                ).ToList();
-
-                foreach (var dropdownItem in dropdownItems)
-                {
-                    dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
-                    dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
-
-                    var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
-                    if (checkmark != null)
+                    if (popup == null)
                     {
-                        checkmark.style.visibility = Visibility.Hidden;
+                        if (++attempts >= 10) dropdownPoller?.Pause();
+                        return;
                     }
 
-                    var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
-                    var surfaceColor = ToUnity(theme.SurfaceColor);
+                    dropdownPoller?.Pause();
 
-                    dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
-                        dropdownItem.style.backgroundColor = hoverColor
+                    popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                    popup.style.borderTopWidth = 0f;
+                    popup.style.borderRightWidth = 0f;
+                    popup.style.borderBottomWidth = 0f;
+                    popup.style.borderLeftWidth = 0f;
+
+                    var containerOuter = popup.Q<VisualElement>(
+                        className: "unity-base-dropdown__container-outer"
                     );
 
-                    dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
-                        dropdownItem.style.backgroundColor = surfaceColor
+                    var containerInner = popup.Q<VisualElement>(
+                        className: "unity-base-dropdown__container-inner"
                     );
-                }
-            });
+
+                    var inner = containerOuter ?? containerInner ?? popup;
+
+                    inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                    inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderTopWidth = 1f;
+                    inner.style.borderRightWidth = 1f;
+                    inner.style.borderBottomWidth = 1f;
+                    inner.style.borderLeftWidth = 1f;
+                    inner.style.borderTopLeftRadius = theme.BorderRadius;
+                    inner.style.borderTopRightRadius = theme.BorderRadius;
+                    inner.style.borderBottomLeftRadius = theme.BorderRadius;
+                    inner.style.borderBottomRightRadius = theme.BorderRadius;
+
+                    if (containerOuter != null && containerInner != null)
+                    {
+                        containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                        containerInner.style.borderTopWidth = 0f;
+                        containerInner.style.borderRightWidth = 0f;
+                        containerInner.style.borderBottomWidth = 0f;
+                        containerInner.style.borderLeftWidth = 0f;
+                    }
+
+                    var dropdownItems = popup.Query<VisualElement>(
+                        className: "unity-base-dropdown__item"
+                    ).ToList();
+
+                    foreach (var dropdownItem in dropdownItems)
+                    {
+                        dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
+                        dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
+
+                        var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
+                        if (checkmark != null)
+                        {
+                            checkmark.style.visibility = Visibility.Hidden;
+                        }
+
+                        var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
+                        var surfaceColor = ToUnity(theme.SurfaceColor);
+
+                        dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
+                            dropdownItem.style.backgroundColor = hoverColor
+                        );
+
+                        dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
+                            dropdownItem.style.backgroundColor = surfaceColor
+                        );
+                    }
+                }).Every(16);
+            }, TrickleDown.TrickleDown);
 
             if (dropdown.OnChanged == null)
             {
@@ -405,43 +431,44 @@ namespace Fram3.UI.Rendering.Internal
                     fill.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
-                // Defer handle styling one frame — Unity may finish internal layout after attach.
+                // Unity 6 renamed dragger-low/dragger-high to min-thumb/max-thumb.
+                // Deferred one frame in case Unity finishes internal layout after attach.
                 newMinMaxSlider.schedule.Execute(() =>
                 {
-                    var lowDraggers = newMinMaxSlider.Query<VisualElement>(
-                        className: "unity-min-max-slider__dragger-low"
+                    var minThumbs = newMinMaxSlider.Query<VisualElement>(
+                        className: "unity-min-max-slider__min-thumb"
                     ).ToList();
 
-                    foreach (var dragger in lowDraggers)
+                    foreach (var thumb in minThumbs)
                     {
-                        dragger.style.backgroundImage = default;
-                        dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
-                        dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
-                        dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
-                        dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                        thumb.style.backgroundImage = default;
+                        thumb.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomRightRadius = theme.SliderDraggerRadius;
                     }
 
-                    var highDraggers = newMinMaxSlider
-                        .Query<VisualElement>(className: "unity-min-max-slider__dragger-high")
+                    var maxThumbs = newMinMaxSlider
+                        .Query<VisualElement>(className: "unity-min-max-slider__max-thumb")
                         .ToList();
 
-                    foreach (var dragger in highDraggers)
+                    foreach (var thumb in maxThumbs)
                     {
-                        dragger.style.backgroundImage = default;
-                        dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                        dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
-                        dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
-                        dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
-                        dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                        thumb.style.backgroundImage = default;
+                        thumb.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomRightRadius = theme.SliderDraggerRadius;
                     }
                 }).ExecuteLater(0);
             });
