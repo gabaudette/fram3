@@ -92,7 +92,7 @@ namespace Fram3.UI.Styling
             FontSize = 14f,
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
-            BorderRadius = 4f,
+            BorderRadius = 1f,
             Spacing = 8f,
             ScrollbarWidth = 8f,
             ScrollbarBorder = true,

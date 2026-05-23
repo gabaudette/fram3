@@ -106,88 +106,92 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textEl.style.color = ToUnity(theme.PrimaryTextColor);
                 }
-
-                dropdownField.RegisterCallback<PointerDownEvent>(_ =>
-                {
-                    dropdownField.schedule.Execute(() =>
-                    {
-                        var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
-                            className: "unity-base-dropdown"
-                        );
-
-                        if (popup == null)
-                        {
-                            return;
-                        }
-
-                        popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                        popup.style.borderTopWidth = 0f;
-                        popup.style.borderRightWidth = 0f;
-                        popup.style.borderBottomWidth = 0f;
-                        popup.style.borderLeftWidth = 0f;
-
-                        var containerOuter = popup.Q<VisualElement>(
-                            className: "unity-base-dropdown__container-outer"
-                        );
-
-                        var containerInner = popup.Q<VisualElement>(
-                            className: "unity-base-dropdown__container-inner"
-                        );
-
-                        var inner = containerOuter ?? containerInner ?? popup;
-
-                        inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                        inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                        inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                        inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                        inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                        inner.style.borderTopWidth = 1f;
-                        inner.style.borderRightWidth = 1f;
-                        inner.style.borderBottomWidth = 1f;
-                        inner.style.borderLeftWidth = 1f;
-                        inner.style.borderTopLeftRadius = theme.BorderRadius;
-                        inner.style.borderTopRightRadius = theme.BorderRadius;
-                        inner.style.borderBottomLeftRadius = theme.BorderRadius;
-                        inner.style.borderBottomRightRadius = theme.BorderRadius;
-
-                        if (containerOuter != null && containerInner != null)
-                        {
-                            containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                            containerInner.style.borderTopWidth = 0f;
-                            containerInner.style.borderRightWidth = 0f;
-                            containerInner.style.borderBottomWidth = 0f;
-                            containerInner.style.borderLeftWidth = 0f;
-                        }
-
-                        var dropdownItems = popup.Query<VisualElement>(
-                            className: "unity-base-dropdown__item"
-                        ).ToList();
-
-                        foreach (var dropdownItem in dropdownItems)
-                        {
-                            dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
-                            dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
-
-                            var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
-                            if (checkmark != null)
-                            {
-                                checkmark.style.visibility = Visibility.Hidden;
-                            }
-
-                            var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
-                            var surfaceColor = ToUnity(theme.SurfaceColor);
-
-                            dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
-                                dropdownItem.style.backgroundColor = hoverColor
-                            );
-
-                            dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
-                                dropdownItem.style.backgroundColor = surfaceColor
-                            );
-                        }
-                    }).ExecuteLater(1);
-                });
             });
+
+            // Registered outside AttachToPanelEvent to avoid stacking a new listener on every
+            // re-attach. TrickleDown ensures we fire before DropdownField's internal handler,
+            // which stops the event before it bubbles.
+            dropdownField.RegisterCallback<PointerDownEvent>(_ =>
+            {
+                // ExecuteLater(16) gives the popup one frame to be created before we style it.
+                dropdownField.schedule.Execute(() =>
+                {
+                    var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
+                        className: "unity-base-dropdown"
+                    );
+
+                    if (popup == null)
+                    {
+                        return;
+                    }
+
+                    popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                    popup.style.borderTopWidth = 0f;
+                    popup.style.borderRightWidth = 0f;
+                    popup.style.borderBottomWidth = 0f;
+                    popup.style.borderLeftWidth = 0f;
+
+                    var containerOuter = popup.Q<VisualElement>(
+                        className: "unity-base-dropdown__container-outer"
+                    );
+
+                    var containerInner = popup.Q<VisualElement>(
+                        className: "unity-base-dropdown__container-inner"
+                    );
+
+                    var inner = containerOuter ?? containerInner ?? popup;
+
+                    inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                    inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    inner.style.borderTopWidth = 1f;
+                    inner.style.borderRightWidth = 1f;
+                    inner.style.borderBottomWidth = 1f;
+                    inner.style.borderLeftWidth = 1f;
+                    inner.style.borderTopLeftRadius = theme.BorderRadius;
+                    inner.style.borderTopRightRadius = theme.BorderRadius;
+                    inner.style.borderBottomLeftRadius = theme.BorderRadius;
+                    inner.style.borderBottomRightRadius = theme.BorderRadius;
+
+                    if (containerOuter != null && containerInner != null)
+                    {
+                        containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                        containerInner.style.borderTopWidth = 0f;
+                        containerInner.style.borderRightWidth = 0f;
+                        containerInner.style.borderBottomWidth = 0f;
+                        containerInner.style.borderLeftWidth = 0f;
+                    }
+
+                    var dropdownItems = popup.Query<VisualElement>(
+                        className: "unity-base-dropdown__item"
+                    ).ToList();
+
+                    foreach (var dropdownItem in dropdownItems)
+                    {
+                        dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
+                        dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
+
+                        var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
+                        if (checkmark != null)
+                        {
+                            checkmark.style.visibility = Visibility.Hidden;
+                        }
+
+                        var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
+                        var surfaceColor = ToUnity(theme.SurfaceColor);
+
+                        dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
+                            dropdownItem.style.backgroundColor = hoverColor
+                        );
+
+                        dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
+                            dropdownItem.style.backgroundColor = surfaceColor
+                        );
+                    }
+                }).ExecuteLater(16);
+            }, TrickleDown.TrickleDown);
 
             if (dropdown.OnChanged == null)
             {
