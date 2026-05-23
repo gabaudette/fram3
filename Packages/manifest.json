@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.fram3.ui": "file:com.fram3.ui",
+    "com.gamelovers.mcp-unity": "https://github.com/CoderGamester/mcp-unity.git",
     "com.unity.2d.animation": "13.0.4",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",

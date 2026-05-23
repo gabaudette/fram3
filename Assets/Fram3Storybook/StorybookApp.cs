@@ -62,6 +62,7 @@ namespace Fram3.UI.Storybook
             InputBorderColor = FrameColor.FromHex("#1F2436"),
             TrackColor = FrameColor.FromHex("#1A1F30"),
             ScrollbarWidth = 4f,
+            ScrollbarBorder = false,
             FontSize = 14f,
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
