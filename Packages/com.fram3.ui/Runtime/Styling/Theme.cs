@@ -57,6 +57,9 @@ namespace Fram3.UI.Styling
         /// <summary>Corner radius in pixels applied to buttons, cards, and input fields.</summary>
         public float BorderRadius { get; init; }
 
+        /// <summary>Corner radius in pixels applied to slider and min-max slider dragger handles.</summary>
+        public float SliderDraggerRadius { get; init; }
+
         /// <summary>Base spacing unit in pixels used for padding and gaps between elements.</summary>
         public float Spacing { get; init; }
 
@@ -92,7 +95,8 @@ namespace Fram3.UI.Styling
             FontSize = 14f,
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
-            BorderRadius = 4f,
+            BorderRadius = 1f,
+            SliderDraggerRadius = 50f,
             Spacing = 8f,
             ScrollbarWidth = 8f,
             ScrollbarBorder = true,

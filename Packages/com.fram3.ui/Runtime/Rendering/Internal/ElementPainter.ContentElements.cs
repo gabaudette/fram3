@@ -187,10 +187,10 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
             {
                 dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderTopLeftRadius = 4f;
-                dragger.style.borderTopRightRadius = 4f;
-                dragger.style.borderBottomLeftRadius = 4f;
-                dragger.style.borderBottomRightRadius = 4f;
+                dragger.style.borderTopLeftRadius = theme.BorderRadius;
+                dragger.style.borderTopRightRadius = theme.BorderRadius;
+                dragger.style.borderBottomLeftRadius = theme.BorderRadius;
+                dragger.style.borderBottomRightRadius = theme.BorderRadius;
                 dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);

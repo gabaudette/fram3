@@ -158,6 +158,14 @@ namespace UnityEngine.UIElements
         None
     }
 
+    public enum StyleKeyword
+    {
+        Undefined,
+        None,
+        Auto,
+        Initial
+    }
+
     public enum WhiteSpace
     {
         Normal,
@@ -235,6 +243,7 @@ namespace UnityEngine.UIElements
         public VisualElement this[int index] => _children[index];
         public string tooltip { get; set; } = string.Empty;
         public object? userData { get; set; }
+        public PickingMode pickingMode { get; set; }
         public IVisualElementScheduler schedule { get; } = new VisualElementScheduler();
         public IPanel? panel { get; set; }
         public event Action<MeshGenerationContext> generateVisualContent = delegate { };
@@ -249,6 +258,12 @@ namespace UnityEngine.UIElements
         {
             child._parent = this;
             _children.Add(child);
+        }
+
+        public void Insert(int index, VisualElement child)
+        {
+            child._parent = this;
+            _children.Insert(index, child);
         }
 
         public void Clear()
@@ -313,7 +328,6 @@ namespace UnityEngine.UIElements
     public class Label : VisualElement
     {
         public string text { get; set; }
-        public PickingMode pickingMode { get; set; }
 
         public Label(string text = "")
         {
@@ -664,6 +678,7 @@ namespace UnityEngine.UIElements
     public interface IVisualElementScheduledItem : IScheduledItem
     {
         IVisualElementScheduledItem StartingIn(long delayMs);
+        IVisualElementScheduledItem Every(long durationMs);
         void Pause();
     }
 
@@ -683,6 +698,7 @@ namespace UnityEngine.UIElements
         {
             public void ExecuteLater(long delayMs) { }
             public IVisualElementScheduledItem StartingIn(long delayMs) => this;
+            public IVisualElementScheduledItem Every(long durationMs) => this;
             public void Pause() { }
         }
 
@@ -694,17 +710,22 @@ namespace UnityEngine.UIElements
     public sealed class Painter2D
     {
         public UnityEngine.Color strokeColor { get; set; }
+        public UnityEngine.Color fillColor { get; set; }
         public float lineWidth { get; set; }
         public LineCap lineCap { get; set; }
         public void BeginPath() { }
         public void MoveTo(UnityEngine.Vector2 pos) { }
         public void LineTo(UnityEngine.Vector2 pos) { }
+        public void ArcTo(UnityEngine.Vector2 p1, UnityEngine.Vector2 p2, float radius) { }
+        public void ClosePath() { }
         public void Stroke() { }
+        public void Fill() { }
     }
 
     public sealed class MeshGenerationContext
     {
         public Painter2D painter2D => new Painter2D();
+        public VisualElement visualElement { get; } = new VisualElement();
     }
 
     public struct Rect
@@ -809,6 +830,9 @@ namespace UnityEngine
         {
             return Math.Abs(b - a) < Math.Max(1E-6f * Math.Max(Math.Abs(a), Math.Abs(b)), float.Epsilon * 8f);
         }
+
+        public static float Min(float a, float b) => Math.Min(a, b);
+        public static float Min(float a, float b, float c) => Math.Min(a, Math.Min(b, c));
     }
 
     public enum KeyCode
@@ -860,6 +884,7 @@ namespace UnityEngine.UIElements
         public int childCount => 0;
         public VisualElement this[int index] => throw new System.IndexOutOfRangeException();
         public string tooltip { get; set; } = string.Empty;
+        public PickingMode pickingMode { get; set; }
         public void Add(VisualElement child) { }
         public void Clear() { }
         public void Remove(VisualElement child) { }
@@ -948,18 +973,23 @@ namespace UnityEngine.UIElements
     public sealed class MeshGenerationContext
     {
         public Painter2D painter2D => new Painter2D();
+        public VisualElement visualElement { get; } = new VisualElement();
     }
 
     public sealed class Painter2D
     {
         public UnityEngine.Color strokeColor { get; set; }
+        public UnityEngine.Color fillColor { get; set; }
         public float lineWidth { get; set; }
         public LineCap lineCap { get; set; }
         public void BeginPath() { }
         public void MoveTo(UnityEngine.Vector2 pos) { }
         public void LineTo(UnityEngine.Vector2 pos) { }
         public void Arc(UnityEngine.Vector2 center, float radius, float startAngle, float endAngle) { }
+        public void ArcTo(UnityEngine.Vector2 p1, UnityEngine.Vector2 p2, float radius) { }
+        public void ClosePath() { }
         public void Stroke() { }
+        public void Fill() { }
     }
 
     public sealed class UIDocument
