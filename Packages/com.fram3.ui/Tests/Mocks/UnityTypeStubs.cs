@@ -235,6 +235,7 @@ namespace UnityEngine.UIElements
         public VisualElement this[int index] => _children[index];
         public string tooltip { get; set; } = string.Empty;
         public object? userData { get; set; }
+        public PickingMode pickingMode { get; set; }
         public IVisualElementScheduler schedule { get; } = new VisualElementScheduler();
         public IPanel? panel { get; set; }
         public event Action<MeshGenerationContext> generateVisualContent = delegate { };
@@ -313,7 +314,6 @@ namespace UnityEngine.UIElements
     public class Label : VisualElement
     {
         public string text { get; set; }
-        public PickingMode pickingMode { get; set; }
 
         public Label(string text = "")
         {
@@ -701,12 +701,15 @@ namespace UnityEngine.UIElements
         public void BeginPath() { }
         public void MoveTo(UnityEngine.Vector2 pos) { }
         public void LineTo(UnityEngine.Vector2 pos) { }
+        public void ArcTo(UnityEngine.Vector2 p1, UnityEngine.Vector2 p2, float radius) { }
+        public void ClosePath() { }
         public void Stroke() { }
     }
 
     public sealed class MeshGenerationContext
     {
         public Painter2D painter2D => new Painter2D();
+        public VisualElement visualElement { get; } = new VisualElement();
     }
 
     public struct Rect
@@ -862,6 +865,7 @@ namespace UnityEngine.UIElements
         public int childCount => 0;
         public VisualElement this[int index] => throw new System.IndexOutOfRangeException();
         public string tooltip { get; set; } = string.Empty;
+        public PickingMode pickingMode { get; set; }
         public void Add(VisualElement child) { }
         public void Clear() { }
         public void Remove(VisualElement child) { }
@@ -950,6 +954,7 @@ namespace UnityEngine.UIElements
     public sealed class MeshGenerationContext
     {
         public Painter2D painter2D => new Painter2D();
+        public VisualElement visualElement { get; } = new VisualElement();
     }
 
     public sealed class Painter2D
@@ -961,6 +966,8 @@ namespace UnityEngine.UIElements
         public void MoveTo(UnityEngine.Vector2 pos) { }
         public void LineTo(UnityEngine.Vector2 pos) { }
         public void Arc(UnityEngine.Vector2 center, float radius, float startAngle, float endAngle) { }
+        public void ArcTo(UnityEngine.Vector2 p1, UnityEngine.Vector2 p2, float radius) { }
+        public void ClosePath() { }
         public void Stroke() { }
     }
 

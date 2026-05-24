@@ -175,18 +175,6 @@ namespace Fram3.UI.Rendering.Internal
                     var inner = containerOuter ?? containerInner ?? popup;
 
                     inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                    inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderTopWidth = 1f;
-                    inner.style.borderRightWidth = 1f;
-                    inner.style.borderBottomWidth = 1f;
-                    inner.style.borderLeftWidth = 1f;
-                    inner.style.borderTopLeftRadius = theme.BorderRadius;
-                    inner.style.borderTopRightRadius = theme.BorderRadius;
-                    inner.style.borderBottomLeftRadius = theme.BorderRadius;
-                    inner.style.borderBottomRightRadius = theme.BorderRadius;
 
                     if (containerOuter != null && containerInner != null)
                     {
@@ -196,6 +184,42 @@ namespace Fram3.UI.Rendering.Internal
                         containerInner.style.borderBottomWidth = 0f;
                         containerInner.style.borderLeftWidth = 0f;
                     }
+
+                    // Unity 6 USS uses !important on border/radius for the dropdown popup,
+                    // which overrides inline C# styles. Draw the border via painter2D on an
+                    // absolute overlay child to bypass CSS entirely.
+                    var borderColor = ToUnity(theme.InputBorderColor);
+                    var radius = theme.BorderRadius;
+                    var borderOverlay = new VisualElement { pickingMode = PickingMode.Ignore };
+                    borderOverlay.style.position = Position.Absolute;
+                    borderOverlay.style.left = 0;
+                    borderOverlay.style.top = 0;
+                    borderOverlay.style.right = 0;
+                    borderOverlay.style.bottom = 0;
+                    borderOverlay.generateVisualContent += ctx =>
+                    {
+                        var p = ctx.painter2D;
+                        var r = ctx.visualElement.contentRect;
+                        const float inset = 0.5f;
+                        float x = r.x + inset, y = r.y + inset;
+                        float w = r.width - inset * 2, h = r.height - inset * 2;
+                        float rad = radius;
+                        p.strokeColor = borderColor;
+                        p.lineWidth = 1f;
+                        p.BeginPath();
+                        p.MoveTo(new UnityEngine.Vector2(x + rad, y));
+                        p.LineTo(new UnityEngine.Vector2(x + w - rad, y));
+                        p.ArcTo(new UnityEngine.Vector2(x + w, y), new UnityEngine.Vector2(x + w, y + rad), rad);
+                        p.LineTo(new UnityEngine.Vector2(x + w, y + h - rad));
+                        p.ArcTo(new UnityEngine.Vector2(x + w, y + h), new UnityEngine.Vector2(x + w - rad, y + h), rad);
+                        p.LineTo(new UnityEngine.Vector2(x + rad, y + h));
+                        p.ArcTo(new UnityEngine.Vector2(x, y + h), new UnityEngine.Vector2(x, y + h - rad), rad);
+                        p.LineTo(new UnityEngine.Vector2(x, y + rad));
+                        p.ArcTo(new UnityEngine.Vector2(x, y), new UnityEngine.Vector2(x + rad, y), rad);
+                        p.ClosePath();
+                        p.Stroke();
+                    };
+                    inner.Add(borderOverlay);
 
                     var dropdownItems = popup.Query<VisualElement>(
                         className: "unity-base-dropdown__item"
