@@ -158,6 +158,14 @@ namespace UnityEngine.UIElements
         None
     }
 
+    public enum StyleKeyword
+    {
+        Undefined,
+        None,
+        Auto,
+        Initial
+    }
+
     public enum WhiteSpace
     {
         Normal,

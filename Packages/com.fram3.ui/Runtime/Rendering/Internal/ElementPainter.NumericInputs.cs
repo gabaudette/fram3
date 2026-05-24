@@ -37,7 +37,7 @@ namespace Fram3.UI.Rendering.Internal
                 var tracker = slider.Q<VisualElement>(className: "unity-base-slider__tracker");
                 if (tracker != null)
                 {
-                    tracker.style.backgroundImage = default;
+                    tracker.style.backgroundImage = StyleKeyword.None;
                     tracker.style.backgroundColor = ToUnity(theme.TrackColor);
                     tracker.style.borderTopLeftRadius = theme.BorderRadius;
                     tracker.style.borderTopRightRadius = theme.BorderRadius;
@@ -48,7 +48,7 @@ namespace Fram3.UI.Rendering.Internal
                 var fill = slider.Q<VisualElement>(className: "unity-base-slider__fill");
                 if (fill != null)
                 {
-                    fill.style.backgroundImage = default;
+                    fill.style.backgroundImage = StyleKeyword.None;
                     fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     fill.style.borderTopLeftRadius = theme.BorderRadius;
                     fill.style.borderTopRightRadius = theme.BorderRadius;
@@ -61,7 +61,7 @@ namespace Fram3.UI.Rendering.Internal
                 var dragger = slider.Q<VisualElement>(className: "unity-base-slider__dragger");
                 if (dragger != null)
                 {
-                    dragger.style.backgroundImage = default;
+                    dragger.style.backgroundImage = StyleKeyword.None;
                     dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
                     dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
@@ -76,7 +76,7 @@ namespace Fram3.UI.Rendering.Internal
                 var draggerBorder = slider.Q<VisualElement>(className: "unity-base-slider__dragger-border");
                 if (draggerBorder != null)
                 {
-                    draggerBorder.style.backgroundImage = default;
+                    draggerBorder.style.backgroundImage = StyleKeyword.None;
                     draggerBorder.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     draggerBorder.style.borderTopColor = ToUnity(theme.PrimaryColor);
                     draggerBorder.style.borderRightColor = ToUnity(theme.PrimaryColor);
@@ -419,7 +419,7 @@ namespace Fram3.UI.Rendering.Internal
                 var tracker = newMinMaxSlider.Q<VisualElement>(className: "unity-min-max-slider__tracker");
                 if (tracker != null)
                 {
-                    tracker.style.backgroundImage = default;
+                    tracker.style.backgroundImage = StyleKeyword.None;
                     tracker.style.backgroundColor = ToUnity(theme.TrackColor);
                     tracker.style.borderTopLeftRadius = theme.BorderRadius;
                     tracker.style.borderTopRightRadius = theme.BorderRadius;
@@ -430,7 +430,7 @@ namespace Fram3.UI.Rendering.Internal
                 var fill = newMinMaxSlider.Q<VisualElement>(className: "unity-min-max-slider__dragger");
                 if (fill != null)
                 {
-                    fill.style.backgroundImage = default;
+                    fill.style.backgroundImage = StyleKeyword.None;
                     fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     fill.style.opacity = 0.4f;
                     fill.style.borderTopLeftRadius = theme.BorderRadius;
@@ -449,7 +449,7 @@ namespace Fram3.UI.Rendering.Internal
 
                     foreach (var thumb in minThumbs)
                     {
-                        thumb.style.backgroundImage = default;
+                        thumb.style.backgroundImage = StyleKeyword.None;
                         thumb.style.backgroundColor = ToUnity(theme.PrimaryColor);
                         thumb.style.borderTopColor = ToUnity(theme.PrimaryColor);
                         thumb.style.borderRightColor = ToUnity(theme.PrimaryColor);
@@ -467,7 +467,7 @@ namespace Fram3.UI.Rendering.Internal
 
                     foreach (var thumb in maxThumbs)
                     {
-                        thumb.style.backgroundImage = default;
+                        thumb.style.backgroundImage = StyleKeyword.None;
                         thumb.style.backgroundColor = ToUnity(theme.PrimaryColor);
                         thumb.style.borderTopColor = ToUnity(theme.PrimaryColor);
                         thumb.style.borderRightColor = ToUnity(theme.PrimaryColor);
