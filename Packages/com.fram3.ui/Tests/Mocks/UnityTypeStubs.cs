@@ -260,6 +260,12 @@ namespace UnityEngine.UIElements
             _children.Add(child);
         }
 
+        public void Insert(int index, VisualElement child)
+        {
+            child._parent = this;
+            _children.Insert(index, child);
+        }
+
         public void Clear()
         {
             foreach (var child in _children)

@@ -39,19 +39,27 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     dragContainer.style.backgroundImage = StyleKeyword.None;
                     dragContainer.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
-                    var dragContainerColor = ToUnity(theme.TrackColor);
-                    var dragContainerRadius = theme.BorderRadius;
-                    dragContainer.generateVisualContent += ctx => PaintRoundedFill(ctx, dragContainerColor, dragContainerRadius);
+
+                    // Attach a custom child with no USS class names so no !important rules apply.
+                    // Inserted at index 0 so it renders behind all Unity-managed children.
+                    var trackBg = new VisualElement { pickingMode = PickingMode.Ignore };
+                    trackBg.style.position = Position.Absolute;
+                    trackBg.style.left = 0;
+                    trackBg.style.top = 0;
+                    trackBg.style.right = 0;
+                    trackBg.style.bottom = 0;
+                    var trackBgColor = ToUnity(theme.TrackColor);
+                    var trackBgRadius = theme.BorderRadius;
+                    trackBg.generateVisualContent += ctx => PaintRoundedFill(ctx, trackBgColor, trackBgRadius);
+                    dragContainer.Insert(0, trackBg);
                 }
 
                 var tracker = slider.Q<VisualElement>(className: "unity-base-slider__tracker");
                 if (tracker != null)
                 {
+                    // Clear the tracker's own background so the trackBg child shows through.
                     tracker.style.backgroundImage = StyleKeyword.None;
                     tracker.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
-                    var trackColor = ToUnity(theme.TrackColor);
-                    var trackRadius = theme.BorderRadius;
-                    tracker.generateVisualContent += ctx => PaintRoundedFill(ctx, trackColor, trackRadius);
                 }
 
                 var fill = slider.Q<VisualElement>(className: "unity-base-slider__fill");
