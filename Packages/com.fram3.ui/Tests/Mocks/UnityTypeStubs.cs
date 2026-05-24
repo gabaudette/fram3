@@ -704,6 +704,7 @@ namespace UnityEngine.UIElements
     public sealed class Painter2D
     {
         public UnityEngine.Color strokeColor { get; set; }
+        public UnityEngine.Color fillColor { get; set; }
         public float lineWidth { get; set; }
         public LineCap lineCap { get; set; }
         public void BeginPath() { }
@@ -712,6 +713,7 @@ namespace UnityEngine.UIElements
         public void ArcTo(UnityEngine.Vector2 p1, UnityEngine.Vector2 p2, float radius) { }
         public void ClosePath() { }
         public void Stroke() { }
+        public void Fill() { }
     }
 
     public sealed class MeshGenerationContext
@@ -822,6 +824,9 @@ namespace UnityEngine
         {
             return Math.Abs(b - a) < Math.Max(1E-6f * Math.Max(Math.Abs(a), Math.Abs(b)), float.Epsilon * 8f);
         }
+
+        public static float Min(float a, float b) => Math.Min(a, b);
+        public static float Min(float a, float b, float c) => Math.Min(a, Math.Min(b, c));
     }
 
     public enum KeyCode
@@ -968,6 +973,7 @@ namespace UnityEngine.UIElements
     public sealed class Painter2D
     {
         public UnityEngine.Color strokeColor { get; set; }
+        public UnityEngine.Color fillColor { get; set; }
         public float lineWidth { get; set; }
         public LineCap lineCap { get; set; }
         public void BeginPath() { }
@@ -977,6 +983,7 @@ namespace UnityEngine.UIElements
         public void ArcTo(UnityEngine.Vector2 p1, UnityEngine.Vector2 p2, float radius) { }
         public void ClosePath() { }
         public void Stroke() { }
+        public void Fill() { }
     }
 
     public sealed class UIDocument

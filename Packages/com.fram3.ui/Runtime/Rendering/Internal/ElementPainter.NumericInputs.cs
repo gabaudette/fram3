@@ -38,22 +38,20 @@ namespace Fram3.UI.Rendering.Internal
                 if (tracker != null)
                 {
                     tracker.style.backgroundImage = StyleKeyword.None;
-                    tracker.style.backgroundColor = ToUnity(theme.TrackColor);
-                    tracker.style.borderTopLeftRadius = theme.BorderRadius;
-                    tracker.style.borderTopRightRadius = theme.BorderRadius;
-                    tracker.style.borderBottomLeftRadius = theme.BorderRadius;
-                    tracker.style.borderBottomRightRadius = theme.BorderRadius;
+                    tracker.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
+                    var trackColor = ToUnity(theme.TrackColor);
+                    var trackRadius = theme.BorderRadius;
+                    tracker.generateVisualContent += ctx => PaintRoundedFill(ctx, trackColor, trackRadius);
                 }
 
                 var fill = slider.Q<VisualElement>(className: "unity-base-slider__fill");
                 if (fill != null)
                 {
                     fill.style.backgroundImage = StyleKeyword.None;
-                    fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                    fill.style.borderTopLeftRadius = theme.BorderRadius;
-                    fill.style.borderTopRightRadius = theme.BorderRadius;
-                    fill.style.borderBottomLeftRadius = theme.BorderRadius;
-                    fill.style.borderBottomRightRadius = theme.BorderRadius;
+                    fill.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
+                    var fillColor = ToUnity(theme.PrimaryColor);
+                    var fillRadius = theme.BorderRadius;
+                    fill.generateVisualContent += ctx => PaintRoundedFill(ctx, fillColor, fillRadius);
                 }
 
                 // Unity 6 splits the dragger into __dragger (interaction) and __dragger-border (visual).
@@ -591,6 +589,28 @@ namespace Fram3.UI.Rendering.Internal
                 UnityEngine.KeyCode.Tab => true,
                 _ => false
             };
+        }
+
+        // Draws a filled rounded rectangle using painter2D, bypassing USS !important overrides.
+        private static void PaintRoundedFill(MeshGenerationContext ctx, UnityEngine.Color color, float radius)
+        {
+            var p = ctx.painter2D;
+            var r = ctx.visualElement.contentRect;
+            float x = r.x, y = r.y, w = r.width, h = r.height;
+            float rad = UnityEngine.Mathf.Min(radius, w / 2f, h / 2f);
+            p.fillColor = color;
+            p.BeginPath();
+            p.MoveTo(new UnityEngine.Vector2(x + rad, y));
+            p.LineTo(new UnityEngine.Vector2(x + w - rad, y));
+            p.ArcTo(new UnityEngine.Vector2(x + w, y), new UnityEngine.Vector2(x + w, y + rad), rad);
+            p.LineTo(new UnityEngine.Vector2(x + w, y + h - rad));
+            p.ArcTo(new UnityEngine.Vector2(x + w, y + h), new UnityEngine.Vector2(x + w - rad, y + h), rad);
+            p.LineTo(new UnityEngine.Vector2(x + rad, y + h));
+            p.ArcTo(new UnityEngine.Vector2(x, y + h), new UnityEngine.Vector2(x, y + h - rad), rad);
+            p.LineTo(new UnityEngine.Vector2(x, y + rad));
+            p.ArcTo(new UnityEngine.Vector2(x, y), new UnityEngine.Vector2(x + rad, y), rad);
+            p.ClosePath();
+            p.Fill();
         }
     }
 }
