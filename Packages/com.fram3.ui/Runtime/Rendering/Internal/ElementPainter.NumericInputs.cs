@@ -39,6 +39,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     dragContainer.style.backgroundImage = StyleKeyword.None;
                     dragContainer.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
+                    var dragContainerColor = ToUnity(theme.TrackColor);
+                    var dragContainerRadius = theme.BorderRadius;
+                    dragContainer.generateVisualContent += ctx => PaintRoundedFill(ctx, dragContainerColor, dragContainerRadius);
                 }
 
                 var tracker = slider.Q<VisualElement>(className: "unity-base-slider__tracker");
