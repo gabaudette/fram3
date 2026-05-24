@@ -34,6 +34,13 @@ namespace Fram3.UI.Rendering.Internal
                     label.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
+                var dragContainer = slider.Q<VisualElement>(className: "unity-base-slider__drag-container");
+                if (dragContainer != null)
+                {
+                    dragContainer.style.backgroundImage = StyleKeyword.None;
+                    dragContainer.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
+                }
+
                 var tracker = slider.Q<VisualElement>(className: "unity-base-slider__tracker");
                 if (tracker != null)
                 {
