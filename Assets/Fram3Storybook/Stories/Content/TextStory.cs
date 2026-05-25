@@ -4,6 +4,7 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
+using TMPro;
 using FontAsset = UnityEngine.TextCore.Text.FontAsset;
 
 namespace Fram3.UI.Storybook.Stories.Content
@@ -84,7 +85,7 @@ namespace Fram3.UI.Storybook.Stories.Content
             private static Element BuildFontFamilies(Theme theme)
             {
                 FontAsset? primaryFont = theme.FontFamily;
-                FontAsset? displayFont = StorybookApp.DisplayFont;
+                TMP_FontAsset? displayFont = StorybookApp.DisplayFont;
 
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
                 {
