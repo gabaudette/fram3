@@ -4,7 +4,7 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
-using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace Fram3.UI.Storybook.Stories.Content
 {
@@ -83,8 +83,8 @@ namespace Fram3.UI.Storybook.Stories.Content
 
             private static Element BuildFontFamilies(Theme theme)
             {
-                Font? primaryFont = theme.FontFamily;
-                Font? displayFont = StorybookApp.DisplayFont;
+                FontAsset? primaryFont = theme.FontFamily;
+                FontAsset? displayFont = StorybookApp.DisplayFont;
 
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
                 {
@@ -136,7 +136,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                         new Text("Inherits theme font",
                             style: new TextStyle(Color: theme.PrimaryTextColor)),
                         new Text("Spot override — display font",
-                            style: new TextStyle(Color: theme.PrimaryColor, Font: displayFont)),
+                            style: new TextStyle(Color: theme.PrimaryColor, FontAsset: displayFont)),
                         new Text("Back to theme font",
                             style: new TextStyle(Color: theme.PrimaryTextColor))
                     }

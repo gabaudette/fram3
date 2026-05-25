@@ -195,10 +195,10 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.unityTextAlign = style.TextAlign.Value;
             }
 
-            var effectiveFont = style.Font ?? theme?.FontFamily;
+            var effectiveFont = style.FontAsset ?? theme?.FontFamily;
             if (effectiveFont != null)
             {
-                native.style.unityFontDefinition = FontDefinition.FromFont(effectiveFont);
+                native.style.unityFontDefinition = FontDefinition.FromSDFFont(effectiveFont);
             }
 #endif
         }

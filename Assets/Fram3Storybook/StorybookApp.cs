@@ -15,6 +15,7 @@ using Fram3.UI.Storybook.Stories.Navigation;
 using Fram3.UI.Storybook.Stories.States;
 using Fram3.UI.Styling;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace Fram3.UI.Storybook
 {
@@ -53,7 +54,7 @@ namespace Fram3.UI.Storybook
         /// Font set on the StorybookRunner's DisplayFont inspector field.
         /// Exposed here so stories can reference it for spot-override demos.
         /// </summary>
-        internal static Font? DisplayFont { get; private set; }
+        internal static FontAsset? DisplayFont { get; private set; }
 
         private static readonly Theme StorybookBaseTheme = new Theme
         {
@@ -80,10 +81,12 @@ namespace Fram3.UI.Storybook
 
         public static Element Create()
         {
-            var primaryFont = Resources.Load<Font>("Nunito-Regular");
-            DisplayFont = Resources.Load<Font>("PlayfairDisplay-Regular");
-            var theme = primaryFont != null
-                ? StorybookBaseTheme with { FontFamily = primaryFont }
+            var primaryRaw = Resources.Load<Font>("Nunito-Regular");
+            var displayRaw = Resources.Load<Font>("PlayfairDisplay-Regular");
+            var primaryAsset = primaryRaw != null ? FontAsset.CreateFontAsset(primaryRaw) : null;
+            DisplayFont = displayRaw != null ? FontAsset.CreateFontAsset(displayRaw) : null;
+            var theme = primaryAsset != null
+                ? StorybookBaseTheme with { FontFamily = primaryAsset }
                 : StorybookBaseTheme;
             return new ThemeProvider(theme, new StorybookApp());
         }

@@ -1,6 +1,6 @@
 #nullable enable
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
-using UnityEngine;
+using UnityEngine.TextCore.Text;
 #endif
 
 namespace Fram3.UI.Styling
@@ -83,7 +83,7 @@ namespace Fram3.UI.Styling
         /// Null uses Unity's default font. Can be overridden per-element via <see cref="TextStyle.FontAsset"/>.
         /// </summary>
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
-        public Font? FontFamily { get; init; }
+        public FontAsset? FontFamily { get; init; }
 #else
         public object? FontFamily { get; init; }
 #endif

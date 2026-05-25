@@ -1,6 +1,7 @@
 #nullable enable
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 #endif
 
 namespace Fram3.UI.Styling
@@ -23,9 +24,9 @@ namespace Fram3.UI.Styling
     /// Horizontal and vertical text alignment within the label bounds.
     /// Null inherits from the parent. Maps to <c>style.unityTextAlign</c>.
     /// </param>
-    /// <param name="Font">
-    /// Font used for rendering. Null falls back to <see cref="Theme.FontFamily"/>, then Unity's default.
-    /// Maps to <c>style.unityFont</c>.
+    /// <param name="FontAsset">
+    /// SDF font asset for rendering. Null falls back to <see cref="Theme.FontFamily"/>, then Unity's default.
+    /// Maps to <c>style.unityFontDefinition</c> via <c>FontDefinition.FromSDFFont</c>.
     /// </param>
     /// <param name="ResetPadding">
     /// When true, zeroes out the UIToolkit Label's built-in padding and margin.
@@ -43,10 +44,10 @@ namespace Fram3.UI.Styling
         bool ResetPadding = false,
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
         TextAnchor? TextAlign = null,
-        Font? Font = null
+        FontAsset? FontAsset = null
 #else
         int? TextAlign = null,
-        object? Font = null
+        object? FontAsset = null
 #endif
     )
     {
