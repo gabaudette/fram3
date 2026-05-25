@@ -296,6 +296,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
+
+                intf.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+                intf.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
 
             intf.RegisterCallback<KeyDownEvent>(evt =>
@@ -374,6 +377,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
+
+                uiFloatField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+                uiFloatField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
 
             uiFloatField.RegisterCallback<KeyDownEvent>(evt =>

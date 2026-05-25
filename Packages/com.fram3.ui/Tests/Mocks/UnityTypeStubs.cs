@@ -359,6 +359,15 @@ namespace UnityEngine.UIElements
     }
 
     /// <summary>
+    /// Stub for <c>UnityEngine.UIElements.ITextSelection</c>.
+    /// </summary>
+    public sealed class TextSelectionStub
+    {
+        public Color cursorColor { get; set; }
+        public Color selectionColor { get; set; }
+    }
+
+    /// <summary>
     /// Minimal stub for <c>UnityEngine.UIElements.TextField</c>.
     /// </summary>
     public class TextField : VisualElement
@@ -368,6 +377,7 @@ namespace UnityEngine.UIElements
         public bool multiline { get; set; }
         public bool isPasswordField { get; set; }
         public TextEditionStub textEdition { get; } = new TextEditionStub();
+        public TextSelectionStub textSelection { get; } = new TextSelectionStub();
 
         public void RegisterValueChangedCallback(EventCallback<ChangeEvent<string>> callback)
         {
@@ -495,6 +505,7 @@ namespace UnityEngine.UIElements
     {
         public int value { get; set; }
         public string? label { get; set; }
+        public TextSelectionStub textSelection { get; } = new TextSelectionStub();
 
         public void RegisterValueChangedCallback(EventCallback<ChangeEvent<int>> callback)
         {
@@ -515,6 +526,7 @@ namespace UnityEngine.UIElements
     {
         public float value { get; set; }
         public string? label { get; set; }
+        public TextSelectionStub textSelection { get; } = new TextSelectionStub();
 
         public void RegisterValueChangedCallback(EventCallback<ChangeEvent<float>> callback)
         {

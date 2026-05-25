@@ -60,6 +60,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
+
+                textField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+                textField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
 
             if (passwordField.OnChanged == null)
@@ -109,6 +112,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
+
+                uiTextField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+                uiTextField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
 
             if (textField.OnChanged == null)
