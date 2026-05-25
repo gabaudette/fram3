@@ -2,7 +2,8 @@
   "name": "Fram3.UI.Storybook",
   "rootNamespace": "Fram3.UI.Storybook",
   "references": [
-    "Fram3.UI"
+    "Fram3.UI",
+    "Unity.TextMeshPro"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
