@@ -270,6 +270,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             ApplyCaretColors(intf, theme);
+            intf.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(intf, theme));
 
             intf.RegisterCallback<AttachToPanelEvent>(_ =>
             {
@@ -297,7 +298,6 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
-                    textElement.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(intf, theme));
                 }
             });
 
@@ -352,6 +352,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             ApplyCaretColors(uiFloatField, theme);
+            uiFloatField.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiFloatField, theme));
 
             uiFloatField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
@@ -379,7 +380,6 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
-                    textElement.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiFloatField, theme));
                 }
             });
 

@@ -39,6 +39,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             ApplyCaretColors(textField, theme);
+            textField.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(textField, theme));
 
             textField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
@@ -61,7 +62,6 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
-                    textElement.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(textField, theme));
                 }
             });
 
@@ -93,6 +93,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             ApplyCaretColors(uiTextField, theme);
+            uiTextField.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiTextField, theme));
 
             uiTextField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
@@ -115,7 +116,6 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
-                    textElement.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiTextField, theme));
                 }
             });
 
