@@ -15,7 +15,7 @@ using Fram3.UI.Storybook.Stories.Navigation;
 using Fram3.UI.Storybook.Stories.States;
 using Fram3.UI.Styling;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
+using FontAsset = UnityEngine.TextCore.Text.FontAsset;
 
 namespace Fram3.UI.Storybook
 {
@@ -83,8 +83,8 @@ namespace Fram3.UI.Storybook
         {
             var primaryRaw = Resources.Load<Font>("Nunito-Regular");
             var displayRaw = Resources.Load<Font>("PlayfairDisplay-Regular");
-            var primaryAsset = primaryRaw != null ? FontAsset.CreateFontAsset(primaryRaw) : null;
-            DisplayFont = displayRaw != null ? FontAsset.CreateFontAsset(displayRaw) : null;
+            var primaryAsset = primaryRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(primaryRaw) : null;
+            DisplayFont = displayRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(displayRaw) : null;
             var theme = primaryAsset != null
                 ? StorybookBaseTheme with { FontFamily = primaryAsset }
                 : StorybookBaseTheme;

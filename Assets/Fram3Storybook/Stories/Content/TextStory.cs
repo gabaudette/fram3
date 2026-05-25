@@ -4,7 +4,7 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
-using UnityEngine.TextCore.Text;
+using FontAsset = UnityEngine.TextCore.Text.FontAsset;
 
 namespace Fram3.UI.Storybook.Stories.Content
 {
