@@ -639,6 +639,8 @@ namespace Fram3.UI.Rendering.Internal
             p.Fill();
         }
 
+#pragma warning disable CS0618
+        // No public runtime API exists for --unity-cursor-color; deprecated setter is the only option.
         private static void ApplyCaretColors(IntegerField field, Theme theme)
         {
             field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
@@ -650,5 +652,6 @@ namespace Fram3.UI.Rendering.Internal
             field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
             field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
         }
+#pragma warning restore CS0618
     }
 }

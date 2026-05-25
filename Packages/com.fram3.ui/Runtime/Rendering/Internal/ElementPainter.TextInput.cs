@@ -213,11 +213,14 @@ namespace Fram3.UI.Rendering.Internal
 #endif
         }
 
+#pragma warning disable CS0618
         private static void ApplyCaretColors(UITextField textField, Theme theme)
         {
+            // No public runtime API exists for --unity-cursor-color; deprecated setter is the only option.
             textField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
             textField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
         }
+#pragma warning restore CS0618
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)
         {
