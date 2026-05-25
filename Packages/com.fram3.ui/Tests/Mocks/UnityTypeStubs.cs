@@ -361,6 +361,9 @@ namespace UnityEngine.UIElements
     /// <summary>Stub for UIToolkit FocusInEvent.</summary>
     public sealed class FocusInEvent { }
 
+    /// <summary>Stub for UIToolkit CustomStyleResolvedEvent.</summary>
+    public sealed class CustomStyleResolvedEvent { }
+
     /// <summary>
     /// Stub for <c>UnityEngine.UIElements.ITextSelection</c>.
     /// </summary>

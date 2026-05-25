@@ -61,6 +61,7 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+                    textElement.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(textField, theme));
                 }
             });
 
@@ -114,6 +115,7 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+                    textElement.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiTextField, theme));
                 }
             });
 
