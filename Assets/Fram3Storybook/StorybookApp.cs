@@ -78,9 +78,10 @@ namespace Fram3.UI.Storybook
             Spacing = 8f
         };
 
-        public static Element Create(Font? primaryFont = null, Font? displayFont = null)
+        public static Element Create()
         {
-            DisplayFont = displayFont;
+            var primaryFont = Resources.Load<Font>("Nunito");
+            DisplayFont = Resources.Load<Font>("PlayfairDisplay");
             var theme = primaryFont != null
                 ? StorybookBaseTheme with { FontFamily = primaryFont }
                 : StorybookBaseTheme;
