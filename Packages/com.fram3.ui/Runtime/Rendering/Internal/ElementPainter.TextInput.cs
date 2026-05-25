@@ -68,7 +68,9 @@ namespace Fram3.UI.Rendering.Internal
                 }
             });
 
-            textField.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(textField, theme));
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(textField, theme);
+#endif
 
             if (passwordField.OnChanged == null)
             {
@@ -125,7 +127,9 @@ namespace Fram3.UI.Rendering.Internal
                 }
             });
 
-            uiTextField.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(uiTextField, theme));
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(uiTextField, theme);
+#endif
 
             if (textField.OnChanged == null)
             {
@@ -235,6 +239,40 @@ namespace Fram3.UI.Rendering.Internal
             typeof(TextElement).GetField("m_CursorWidth", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                 ?.SetValue(textElement, width);
         }
+
+        private static void RegisterCaretBlink(UITextField textField, Theme theme)
+        {
+            IVisualElementScheduledItem blinkItem = null;
+            bool caretVisible = true;
+
+            textField.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                ApplyCaretColors(textField, theme);
+                if (blinkItem == null)
+                {
+                    blinkItem = textField.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible) { ApplyCaretColors(textField, theme); }
+                        else { HideCaret(textField); }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            textField.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+
+#pragma warning disable CS0618
+        private static void HideCaret(UITextField textField)
+        {
+            textField.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
+#pragma warning restore CS0618
 #endif
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)

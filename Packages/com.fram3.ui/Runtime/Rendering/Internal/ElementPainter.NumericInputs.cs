@@ -304,7 +304,9 @@ namespace Fram3.UI.Rendering.Internal
                 }
             });
 
-            intf.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(intf, theme));
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(intf, theme);
+#endif
             intf.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (
@@ -389,7 +391,9 @@ namespace Fram3.UI.Rendering.Internal
                 }
             });
 
-            uiFloatField.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(uiFloatField, theme));
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(uiFloatField, theme);
+#endif
             uiFloatField.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: true))
@@ -658,6 +662,72 @@ namespace Fram3.UI.Rendering.Internal
             field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
             field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
         }
+
+        private static void HideCaret(IntegerField field)
+        {
+            field.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
+
+        private static void HideCaret(UIFloatField field)
+        {
+            field.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
 #pragma warning restore CS0618
+
+#if !FRAM3_PURE_TESTS
+        private static void RegisterCaretBlink(IntegerField field, Theme theme)
+        {
+            IVisualElementScheduledItem blinkItem = null;
+            bool caretVisible = true;
+
+            field.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                ApplyCaretColors(field, theme);
+                if (blinkItem == null)
+                {
+                    blinkItem = field.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible) { ApplyCaretColors(field, theme); }
+                        else { HideCaret(field); }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            field.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+
+        private static void RegisterCaretBlink(UIFloatField field, Theme theme)
+        {
+            IVisualElementScheduledItem blinkItem = null;
+            bool caretVisible = true;
+
+            field.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                ApplyCaretColors(field, theme);
+                if (blinkItem == null)
+                {
+                    blinkItem = field.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible) { ApplyCaretColors(field, theme); }
+                        else { HideCaret(field); }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            field.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+#endif
     }
 }
