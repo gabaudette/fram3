@@ -80,8 +80,8 @@ namespace Fram3.UI.Storybook
 
         public static Element Create()
         {
-            var primaryFont = Resources.Load<Font>("Nunito");
-            DisplayFont = Resources.Load<Font>("PlayfairDisplay");
+            var primaryFont = Resources.Load<Font>("Nunito-Regular");
+            DisplayFont = Resources.Load<Font>("PlayfairDisplay-Regular");
             var theme = primaryFont != null
                 ? StorybookBaseTheme with { FontFamily = primaryFont }
                 : StorybookBaseTheme;

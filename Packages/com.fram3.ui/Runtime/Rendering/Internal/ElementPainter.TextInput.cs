@@ -198,7 +198,7 @@ namespace Fram3.UI.Rendering.Internal
             var effectiveFont = style.Font ?? theme?.FontFamily;
             if (effectiveFont != null)
             {
-                native.style.unityFont = effectiveFont;
+                native.style.unityFontDefinition = FontDefinition.FromFont(effectiveFont);
             }
 #endif
         }
