@@ -298,6 +298,9 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                    SetCursorWidth(textElement, 2f);
+#endif
                 }
             });
 
@@ -380,6 +383,9 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                    SetCursorWidth(textElement, 2f);
+#endif
                 }
             });
 

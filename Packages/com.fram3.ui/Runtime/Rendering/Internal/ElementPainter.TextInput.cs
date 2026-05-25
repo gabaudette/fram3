@@ -62,6 +62,9 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                    SetCursorWidth(textElement, 2f);
+#endif
                 }
             });
 
@@ -116,6 +119,9 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                    SetCursorWidth(textElement, 2f);
+#endif
                 }
             });
 
@@ -221,6 +227,15 @@ namespace Fram3.UI.Rendering.Internal
             textField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
         }
 #pragma warning restore CS0618
+
+#if !FRAM3_PURE_TESTS
+        private static void SetCursorWidth(VisualElement textElement, float width)
+        {
+            // cursorWidth is internal on ITextSelection with no USS equivalent; reflection is the only option.
+            typeof(TextElement).GetField("m_CursorWidth", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                ?.SetValue(textElement, width);
+        }
+#endif
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)
         {
