@@ -81,8 +81,8 @@ namespace Fram3.UI.Storybook
 
         public static Element Create()
         {
-            var primaryRaw = Resources.Load<Font>("Nunito-Regular");
-            var displayRaw = Resources.Load<Font>("PlayfairDisplay-Regular");
+            var primaryRaw = Resources.Load<Font>("LiberationSans-Regular");
+            var displayRaw = Resources.Load<Font>("LiberationSerif-Regular");
             var primaryAsset = primaryRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(primaryRaw) : null;
             DisplayFont = displayRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(displayRaw) : null;
             var theme = primaryAsset != null
