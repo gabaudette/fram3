@@ -1,4 +1,7 @@
 #nullable enable
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+using UnityEngine.TextCore.Text;
+#endif
 
 namespace Fram3.UI.Styling
 {
@@ -74,6 +77,16 @@ namespace Fram3.UI.Styling
 
         /// <summary>Color of the scrollbar border. Only applied when <see cref="ScrollbarBorder"/> is true.</summary>
         public FrameColor ScrollbarBorderColor { get; init; }
+
+        /// <summary>
+        /// The SDF font asset applied to all text in this theme's subtree.
+        /// Null uses Unity's default font. Can be overridden per-element via <see cref="TextStyle.FontAsset"/>.
+        /// </summary>
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+        public FontAsset? FontFamily { get; init; }
+#else
+        public object? FontFamily { get; init; }
+#endif
 
         /// <summary>
         /// A sensible light-theme set of default tokens. Use this as a starting point and override

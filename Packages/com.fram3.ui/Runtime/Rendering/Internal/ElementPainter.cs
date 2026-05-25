@@ -48,7 +48,7 @@ namespace Fram3.UI.Rendering.Internal
             switch (element)
             {
                 case Text text:
-                    return CreateLabel(text);
+                    return CreateLabel(text, theme);
                 case PasswordField passwordField:
                     return CreatePasswordField(passwordField, theme);
                 case Elements.Input.TextField textField:
@@ -155,7 +155,7 @@ namespace Fram3.UI.Rendering.Internal
             switch (element)
             {
                 case Text text when native is Label label:
-                    PaintText(text, label);
+                    PaintText(text, label, theme);
                     break;
                 case PasswordField passwordField when native is UITextField ptf:
                     PaintPasswordField(passwordField, ptf);

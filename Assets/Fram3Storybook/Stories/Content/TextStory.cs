@@ -3,6 +3,7 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
+using UnityEngine.TextCore.Text;
 
 namespace Fram3.UI.Storybook.Stories.Content
 {
@@ -23,6 +24,12 @@ namespace Fram3.UI.Storybook.Stories.Content
                         StoryHelpers.Section(
                             label: "Basic",
                             content: BuildBasic(theme),
+                            theme
+                        ),
+                        SizedBox.FromSize(height: theme.Spacing * 3f),
+                        StoryHelpers.Section(
+                            label: "Font Families",
+                            content: BuildFontFamilies(theme),
                             theme
                         ),
                         SizedBox.FromSize(height: theme.Spacing * 3f),
@@ -69,6 +76,68 @@ namespace Fram3.UI.Storybook.Stories.Content
                                 Color: theme.SecondaryTextColor
                             )
                         )
+                    }
+                };
+            }
+
+            private static Element BuildFontFamilies(Theme theme)
+            {
+                FontAsset? primaryFont = theme.FontFamily;
+                FontAsset? displayFont = StorybookApp.DisplayFont;
+
+                return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                {
+                    Children = new Element[]
+                    {
+                        // --- Global font via theme ---
+                        // Set Theme.FontFamily on the root ThemeProvider (or any ancestor ThemeProvider)
+                        // and every Text in that subtree inherits it automatically.
+                        new Text(
+                            "Global: set Theme.FontFamily on a ThemeProvider",
+                            style: new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: theme.SecondaryTextColor,
+                                Bold: true,
+                                LetterSpacing: 1f
+                            )
+                        ),
+                        SizedBox.FromSize(height: theme.Spacing),
+                        new ThemeProvider(theme with { FontFamily = primaryFont })
+                        {
+                            Child = new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                            {
+                                Children = new Element[]
+                                {
+                                    new Text("Heading — inherits global font",
+                                        style: new TextStyle(FontSize: 18f, Bold: true, Color: theme.PrimaryTextColor)),
+                                    new Text("Body — inherits global font",
+                                        style: new TextStyle(Color: theme.PrimaryTextColor)),
+                                    new Text("Caption — inherits global font",
+                                        style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
+                                }
+                            }
+                        },
+
+                        SizedBox.FromSize(height: theme.Spacing * 2f),
+
+                        // --- Spot override via TextStyle.FontAsset ---
+                        // Any single Text can break from the theme font by passing FontAsset directly.
+                        new Text(
+                            "Spot: pass FontAsset to TextStyle to override one element",
+                            style: new TextStyle(
+                                FontSize: theme.FontSizeSmall,
+                                Color: theme.SecondaryTextColor,
+                                Bold: true,
+                                LetterSpacing: 1f
+                            )
+                        ),
+                        SizedBox.FromSize(height: theme.Spacing),
+                        new Text("Inherits theme font",
+                            style: new TextStyle(Color: theme.PrimaryTextColor)),
+                        new Text("Spot override — display font",
+                            style: new TextStyle(Color: theme.PrimaryColor, FontAsset: displayFont)),
+                        new Text("Back to theme font",
+                            style: new TextStyle(Color: theme.PrimaryTextColor))
                     }
                 };
             }
