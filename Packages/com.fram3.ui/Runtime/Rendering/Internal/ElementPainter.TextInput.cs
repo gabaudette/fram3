@@ -215,7 +215,6 @@ namespace Fram3.UI.Rendering.Internal
         {
             textField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
             textField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
-            textField.textSelection.cursorWidth = 1f;
         }
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)

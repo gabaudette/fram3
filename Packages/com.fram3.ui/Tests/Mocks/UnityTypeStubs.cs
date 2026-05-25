@@ -368,7 +368,6 @@ namespace UnityEngine.UIElements
     {
         public Color cursorColor { get; set; }
         public Color selectionColor { get; set; }
-        public float cursorWidth { get; set; }
     }
 
     /// <summary>

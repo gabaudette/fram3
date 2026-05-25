@@ -641,14 +641,12 @@ namespace Fram3.UI.Rendering.Internal
         {
             field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
             field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
-            field.textSelection.cursorWidth = 1f;
         }
 
         private static void ApplyCaretColors(UIFloatField field, Theme theme)
         {
             field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
             field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
-            field.textSelection.cursorWidth = 1f;
         }
     }
 }
