@@ -14,7 +14,7 @@ using Fram3.UI.Storybook.Stories.Layout;
 using Fram3.UI.Storybook.Stories.Navigation;
 using Fram3.UI.Storybook.Stories.States;
 using Fram3.UI.Styling;
-using UnityEngine.TextCore.Text;
+using FontAsset = UnityEngine.TextCore.Text.FontAsset;
 
 namespace Fram3.UI.Storybook
 {

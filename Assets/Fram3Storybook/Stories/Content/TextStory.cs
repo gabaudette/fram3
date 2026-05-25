@@ -3,7 +3,7 @@ using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Layout;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Styling;
-using UnityEngine.TextCore.Text;
+using FontAsset = UnityEngine.TextCore.Text.FontAsset;
 
 namespace Fram3.UI.Storybook.Stories.Content
 {
@@ -102,9 +102,9 @@ namespace Fram3.UI.Storybook.Stories.Content
                             )
                         ),
                         SizedBox.FromSize(height: theme.Spacing),
-                        new ThemeProvider(theme with { FontFamily = primaryFont })
-                        {
-                            Child = new Column(crossAxisAlignment: CrossAxisAlignment.Start)
+                        new ThemeProvider(
+                            theme with { FontFamily = primaryFont },
+                            new Column(crossAxisAlignment: CrossAxisAlignment.Start)
                             {
                                 Children = new Element[]
                                 {
@@ -116,7 +116,7 @@ namespace Fram3.UI.Storybook.Stories.Content
                                         style: new TextStyle(FontSize: theme.FontSizeSmall, Color: theme.SecondaryTextColor))
                                 }
                             }
-                        },
+                        ),
 
                         SizedBox.FromSize(height: theme.Spacing * 2f),
 
