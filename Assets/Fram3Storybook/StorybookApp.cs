@@ -14,8 +14,7 @@ using Fram3.UI.Storybook.Stories.Layout;
 using Fram3.UI.Storybook.Stories.Navigation;
 using Fram3.UI.Storybook.Stories.States;
 using Fram3.UI.Styling;
-using TMPro;
-using FontAsset = UnityEngine.TextCore.Text.FontAsset;
+using UnityEngine;
 
 namespace Fram3.UI.Storybook
 {
@@ -54,7 +53,7 @@ namespace Fram3.UI.Storybook
         /// Font set on the StorybookRunner's DisplayFont inspector field.
         /// Exposed here so stories can reference it for spot-override demos.
         /// </summary>
-        internal static TMP_FontAsset? DisplayFont { get; private set; }
+        internal static Font? DisplayFont { get; private set; }
 
         private static readonly Theme StorybookBaseTheme = new Theme
         {
@@ -79,12 +78,11 @@ namespace Fram3.UI.Storybook
             Spacing = 8f
         };
 
-        public static Element Create(TMP_FontAsset? primaryFont = null, TMP_FontAsset? displayFont = null)
+        public static Element Create(Font? primaryFont = null, Font? displayFont = null)
         {
             DisplayFont = displayFont;
-            var fontFamily = (FontAsset?)(object?)primaryFont;
-            var theme = fontFamily != null
-                ? StorybookBaseTheme with { FontFamily = fontFamily }
+            var theme = primaryFont != null
+                ? StorybookBaseTheme with { FontFamily = primaryFont }
                 : StorybookBaseTheme;
             return new ThemeProvider(theme, new StorybookApp());
         }
