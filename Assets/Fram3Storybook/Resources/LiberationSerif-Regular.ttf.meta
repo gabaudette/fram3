@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1b787b239d538cfe9817e9f2912b9f4e
+guid: bafda7928d72e2794a5c4b556d458c64
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,7 +8,8 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontNames: []
+  fontNames:
+  - Liberation Serif
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
