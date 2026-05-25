@@ -38,6 +38,8 @@ namespace Fram3.UI.Rendering.Internal
                 textField.textEdition.placeholder = passwordField.Placeholder;
             }
 
+            ApplyCaretColors(textField, theme);
+
             textField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var input = textField.Q<VisualElement>(className: "unity-base-text-field__input");
@@ -60,10 +62,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
-
-                textField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
-                textField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
+
+            textField.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(textField, theme));
 
             if (passwordField.OnChanged == null)
             {
@@ -90,6 +91,8 @@ namespace Fram3.UI.Rendering.Internal
                 uiTextField.textEdition.placeholder = textField.Placeholder;
             }
 
+            ApplyCaretColors(uiTextField, theme);
+
             uiTextField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var input = uiTextField.Q<VisualElement>(className: "unity-base-text-field__input");
@@ -112,10 +115,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
-
-                uiTextField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
-                uiTextField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
+
+            uiTextField.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(uiTextField, theme));
 
             if (textField.OnChanged == null)
             {
@@ -207,6 +209,13 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.unityFontDefinition = FontDefinition.FromSDFFont(effectiveFont);
             }
 #endif
+        }
+
+        private static void ApplyCaretColors(UITextField textField, Theme theme)
+        {
+            textField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            textField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+            textField.textSelection.cursorWidth = 1f;
         }
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)

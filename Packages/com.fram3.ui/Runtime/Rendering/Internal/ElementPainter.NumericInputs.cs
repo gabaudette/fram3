@@ -269,6 +269,8 @@ namespace Fram3.UI.Rendering.Internal
                 intf.label = intField.Label;
             }
 
+            ApplyCaretColors(intf, theme);
+
             intf.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var label = intf.Q<VisualElement>(className: "unity-base-field__label");
@@ -296,11 +298,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
-
-                intf.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
-                intf.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
 
+            intf.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(intf, theme));
             intf.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (
@@ -350,6 +350,8 @@ namespace Fram3.UI.Rendering.Internal
                 uiFloatField.label = floatField.Label;
             }
 
+            ApplyCaretColors(uiFloatField, theme);
+
             uiFloatField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var label = uiFloatField.Q<VisualElement>(className: "unity-base-field__label");
@@ -377,11 +379,9 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
                 }
-
-                uiFloatField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
-                uiFloatField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
             });
 
+            uiFloatField.RegisterCallback<FocusInEvent>(_ => ApplyCaretColors(uiFloatField, theme));
             uiFloatField.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: true))
@@ -635,6 +635,20 @@ namespace Fram3.UI.Rendering.Internal
             p.ArcTo(new UnityEngine.Vector2(x, y), new UnityEngine.Vector2(x + rad, y), rad);
             p.ClosePath();
             p.Fill();
+        }
+
+        private static void ApplyCaretColors(IntegerField field, Theme theme)
+        {
+            field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+            field.textSelection.cursorWidth = 1f;
+        }
+
+        private static void ApplyCaretColors(UIFloatField field, Theme theme)
+        {
+            field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+            field.textSelection.cursorWidth = 1f;
         }
     }
 }
