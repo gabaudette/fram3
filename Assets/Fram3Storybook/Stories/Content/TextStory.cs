@@ -85,7 +85,7 @@ namespace Fram3.UI.Storybook.Stories.Content
             private static Element BuildFontFamilies(Theme theme)
             {
                 FontAsset? primaryFont = theme.FontFamily;
-                TMP_FontAsset? displayFont = StorybookApp.DisplayFont;
+                FontAsset? displayFont = (FontAsset?)(object?)StorybookApp.DisplayFont;
 
                 return new Column(crossAxisAlignment: CrossAxisAlignment.Start)
                 {

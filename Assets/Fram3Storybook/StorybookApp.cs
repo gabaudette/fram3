@@ -82,8 +82,9 @@ namespace Fram3.UI.Storybook
         public static Element Create(TMP_FontAsset? primaryFont = null, TMP_FontAsset? displayFont = null)
         {
             DisplayFont = displayFont;
-            var theme = primaryFont != null
-                ? StorybookBaseTheme with { FontFamily = primaryFont }
+            var fontFamily = (FontAsset?)(object?)primaryFont;
+            var theme = fontFamily != null
+                ? StorybookBaseTheme with { FontFamily = fontFamily }
                 : StorybookBaseTheme;
             return new ThemeProvider(theme, new StorybookApp());
         }
