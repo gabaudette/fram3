@@ -9,7 +9,7 @@ namespace Fram3.UI.Rendering.Internal
 {
     internal static partial class ElementPainter
     {
-        private static Label CreateLabel(Text text)
+        private static Label CreateLabel(Text text, Theme theme)
         {
             var label = new Label(text.Content)
             {
@@ -19,7 +19,7 @@ namespace Fram3.UI.Rendering.Internal
                 }
             };
 
-            PaintText(text, label);
+            PaintText(text, label, theme);
 
             return label;
         }
@@ -144,18 +144,19 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static void PaintText(Text text, Label label)
+        private static void PaintText(Text text, Label label, Theme theme)
         {
             label.text = text.Content;
             if (text.Style == null)
             {
+                ApplyTextStyle(TextStyle.Inherit, label, theme);
                 return;
             }
 
-            ApplyTextStyle(text.Style, label);
+            ApplyTextStyle(text.Style, label, theme);
         }
 
-        private static void ApplyTextStyle(TextStyle style, VisualElement native)
+        private static void ApplyTextStyle(TextStyle style, VisualElement native, Theme? theme = null)
         {
             if (style.ResetPadding)
             {
@@ -194,9 +195,10 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.unityTextAlign = style.TextAlign.Value;
             }
 
-            if (style.FontAsset != null)
+            var effectiveFont = style.FontAsset ?? theme?.FontFamily;
+            if (effectiveFont != null)
             {
-                native.style.unityFontDefinition = FontDefinition.FromSDFFont(style.FontAsset);
+                native.style.unityFontDefinition = FontDefinition.FromSDFFont(effectiveFont);
             }
 #endif
         }
