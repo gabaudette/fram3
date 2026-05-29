@@ -269,6 +269,9 @@ namespace Fram3.UI.Rendering.Internal
                 intf.label = intField.Label;
             }
 
+            ApplyCaretColors(intf, theme);
+            intf.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(intf, theme));
+
             intf.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var label = intf.Q<VisualElement>(className: "unity-base-field__label");
@@ -295,9 +298,15 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                    SetCursorWidth(textElement, 2f);
+#endif
                 }
             });
 
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(intf, theme);
+#endif
             intf.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (
@@ -347,6 +356,9 @@ namespace Fram3.UI.Rendering.Internal
                 uiFloatField.label = floatField.Label;
             }
 
+            ApplyCaretColors(uiFloatField, theme);
+            uiFloatField.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiFloatField, theme));
+
             uiFloatField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var label = uiFloatField.Q<VisualElement>(className: "unity-base-field__label");
@@ -373,9 +385,15 @@ namespace Fram3.UI.Rendering.Internal
                 if (textElement != null)
                 {
                     textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                    SetCursorWidth(textElement, 2f);
+#endif
                 }
             });
 
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(uiFloatField, theme);
+#endif
             uiFloatField.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: true))
@@ -630,5 +648,86 @@ namespace Fram3.UI.Rendering.Internal
             p.ClosePath();
             p.Fill();
         }
+
+#pragma warning disable CS0618
+        // No public runtime API exists for --unity-cursor-color; deprecated setter is the only option.
+        private static void ApplyCaretColors(IntegerField field, Theme theme)
+        {
+            field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+        }
+
+        private static void ApplyCaretColors(UIFloatField field, Theme theme)
+        {
+            field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+        }
+
+        private static void HideCaret(IntegerField field)
+        {
+            field.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
+
+        private static void HideCaret(UIFloatField field)
+        {
+            field.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
+#pragma warning restore CS0618
+
+#if !FRAM3_PURE_TESTS
+        private static void RegisterCaretBlink(IntegerField field, Theme theme)
+        {
+            IVisualElementScheduledItem blinkItem = null;
+            bool caretVisible = true;
+
+            field.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                ApplyCaretColors(field, theme);
+                if (blinkItem == null)
+                {
+                    blinkItem = field.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible) { ApplyCaretColors(field, theme); }
+                        else { HideCaret(field); }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            field.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+
+        private static void RegisterCaretBlink(UIFloatField field, Theme theme)
+        {
+            IVisualElementScheduledItem blinkItem = null;
+            bool caretVisible = true;
+
+            field.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                ApplyCaretColors(field, theme);
+                if (blinkItem == null)
+                {
+                    blinkItem = field.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible) { ApplyCaretColors(field, theme); }
+                        else { HideCaret(field); }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            field.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+#endif
     }
 }
