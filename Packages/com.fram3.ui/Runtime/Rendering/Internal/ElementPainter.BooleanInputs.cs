@@ -138,6 +138,7 @@ namespace Fram3.UI.Rendering.Internal
                 checkmark.Add(tick);
 
                 var strokeColor = ToUnity(theme.PrimaryColor);
+                
                 tick.generateVisualContent += ctx =>
                 {
                     var painter2D = ctx.painter2D;
@@ -166,7 +167,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var callback = checkbox.OnChanged;
-            
+
             toggle.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return toggle;

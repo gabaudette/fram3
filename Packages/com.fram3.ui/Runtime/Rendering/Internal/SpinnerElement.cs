@@ -78,7 +78,7 @@ namespace Fram3.UI.Rendering.Internal
             var controller = new AnimationController(duration: speed);
             controller.AddListener(OnTick);
             controller.Forward();
-            
+
             return controller;
         }
 

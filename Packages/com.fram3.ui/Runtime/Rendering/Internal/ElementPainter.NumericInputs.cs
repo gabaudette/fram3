@@ -42,12 +42,19 @@ namespace Fram3.UI.Rendering.Internal
 
                     // Attach a custom child with no USS class names so no !important rules apply.
                     // Inserted at index 0 so it renders behind all Unity-managed children.
-                    var trackBg = new VisualElement { pickingMode = PickingMode.Ignore };
-                    trackBg.style.position = Position.Absolute;
-                    trackBg.style.left = 0;
-                    trackBg.style.top = 0;
-                    trackBg.style.right = 0;
-                    trackBg.style.bottom = 0;
+                    var trackBg = new VisualElement
+                    {
+                        pickingMode = PickingMode.Ignore,
+                        style =
+                        {
+                            position = Position.Absolute,
+                            left = 0,
+                            top = 0,
+                            right = 0,
+                            bottom = 0
+                        }
+                    };
+
                     var trackBgColor = ToUnity(theme.TrackColor);
                     var trackBgRadius = theme.BorderRadius;
                     trackBg.generateVisualContent += ctx => PaintRoundedFill(ctx, trackBgColor, trackBgRadius);
@@ -90,19 +97,21 @@ namespace Fram3.UI.Rendering.Internal
                 }
 
                 var draggerBorder = slider.Q<VisualElement>(className: "unity-base-slider__dragger-border");
-                if (draggerBorder != null)
+                if (draggerBorder == null)
                 {
-                    draggerBorder.style.backgroundImage = StyleKeyword.None;
-                    draggerBorder.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                    draggerBorder.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                    draggerBorder.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                    draggerBorder.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                    draggerBorder.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    draggerBorder.style.borderTopLeftRadius = theme.SliderDraggerRadius;
-                    draggerBorder.style.borderTopRightRadius = theme.SliderDraggerRadius;
-                    draggerBorder.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
-                    draggerBorder.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                    return;
                 }
+
+                draggerBorder.style.backgroundImage = StyleKeyword.None;
+                draggerBorder.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                draggerBorder.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                draggerBorder.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                draggerBorder.style.borderBottomRightRadius = theme.SliderDraggerRadius;
             });
 
             if (frameSlider.OnChanged == null)
@@ -165,90 +174,98 @@ namespace Fram3.UI.Rendering.Internal
             IVisualElementScheduledItem? dropdownPoller = null;
 
             dropdownField.RegisterCallback<PointerDownEvent>(_ =>
-            {
-                dropdownPoller?.Pause();
-                var attempts = 0;
-                dropdownPoller = dropdownField.schedule.Execute(() =>
                 {
-                    var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
-                        className: "unity-base-dropdown"
-                    );
-
-                    if (popup == null)
-                    {
-                        if (++attempts >= 10) dropdownPoller?.Pause();
-                        return;
-                    }
-
                     dropdownPoller?.Pause();
+                    var attempts = 0;
+                    var poller = dropdownPoller;
 
-                    popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                    popup.style.borderTopWidth = 0f;
-                    popup.style.borderRightWidth = 0f;
-                    popup.style.borderBottomWidth = 0f;
-                    popup.style.borderLeftWidth = 0f;
-
-                    var containerOuter = popup.Q<VisualElement>(
-                        className: "unity-base-dropdown__container-outer"
-                    );
-
-                    var containerInner = popup.Q<VisualElement>(
-                        className: "unity-base-dropdown__container-inner"
-                    );
-
-                    var inner = containerOuter ?? containerInner ?? popup;
-
-                    inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                    inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                    inner.style.borderTopWidth = 1f;
-                    inner.style.borderRightWidth = 1f;
-                    inner.style.borderBottomWidth = 1f;
-                    inner.style.borderLeftWidth = 1f;
-                    inner.style.borderTopLeftRadius = theme.BorderRadius;
-                    inner.style.borderTopRightRadius = theme.BorderRadius;
-                    inner.style.borderBottomLeftRadius = theme.BorderRadius;
-                    inner.style.borderBottomRightRadius = theme.BorderRadius;
-
-                    if (containerOuter != null && containerInner != null)
+                    dropdownPoller = dropdownField.schedule.Execute(() =>
                     {
-                        containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
-                        containerInner.style.borderTopWidth = 0f;
-                        containerInner.style.borderRightWidth = 0f;
-                        containerInner.style.borderBottomWidth = 0f;
-                        containerInner.style.borderLeftWidth = 0f;
-                    }
+                        var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
+                            className: "unity-base-dropdown"
+                        );
 
-                    var dropdownItems = popup.Query<VisualElement>(
-                        className: "unity-base-dropdown__item"
-                    ).ToList();
-
-                    foreach (var dropdownItem in dropdownItems)
-                    {
-                        dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
-                        dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
-
-                        var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
-                        if (checkmark != null)
+                        if (popup == null)
                         {
-                            checkmark.style.visibility = Visibility.Hidden;
+                            if (++attempts >= 10)
+                            {
+                                poller?.Pause();
+                            }
+
+                            return;
                         }
 
-                        var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
-                        var surfaceColor = ToUnity(theme.SurfaceColor);
+                        poller?.Pause();
 
-                        dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
-                            dropdownItem.style.backgroundColor = hoverColor
+                        popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                        popup.style.borderTopWidth = 0f;
+                        popup.style.borderRightWidth = 0f;
+                        popup.style.borderBottomWidth = 0f;
+                        popup.style.borderLeftWidth = 0f;
+
+                        var containerOuter = popup.Q<VisualElement>(
+                            className: "unity-base-dropdown__container-outer"
                         );
 
-                        dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
-                            dropdownItem.style.backgroundColor = surfaceColor
+                        var containerInner = popup.Q<VisualElement>(
+                            className: "unity-base-dropdown__container-inner"
                         );
-                    }
-                }).Every(16);
-            }, TrickleDown.TrickleDown);
+
+                        var inner = containerOuter ?? containerInner ?? popup;
+
+                        inner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                        inner.style.borderTopColor = ToUnity(theme.InputBorderColor);
+                        inner.style.borderRightColor = ToUnity(theme.InputBorderColor);
+                        inner.style.borderBottomColor = ToUnity(theme.InputBorderColor);
+                        inner.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                        inner.style.borderTopWidth = 1f;
+                        inner.style.borderRightWidth = 1f;
+                        inner.style.borderBottomWidth = 1f;
+                        inner.style.borderLeftWidth = 1f;
+                        inner.style.borderTopLeftRadius = theme.BorderRadius;
+                        inner.style.borderTopRightRadius = theme.BorderRadius;
+                        inner.style.borderBottomLeftRadius = theme.BorderRadius;
+                        inner.style.borderBottomRightRadius = theme.BorderRadius;
+
+                        if (containerOuter != null && containerInner != null)
+                        {
+                            containerInner.style.backgroundColor = ToUnity(theme.SurfaceColor);
+                            containerInner.style.borderTopWidth = 0f;
+                            containerInner.style.borderRightWidth = 0f;
+                            containerInner.style.borderBottomWidth = 0f;
+                            containerInner.style.borderLeftWidth = 0f;
+                        }
+
+                        var dropdownItems = popup.Query<VisualElement>(
+                            className: "unity-base-dropdown__item"
+                        ).ToList();
+
+                        foreach (var dropdownItem in dropdownItems)
+                        {
+                            dropdownItem.style.color = ToUnity(theme.PrimaryTextColor);
+                            dropdownItem.style.backgroundColor = ToUnity(theme.SurfaceColor);
+
+                            var checkmark = dropdownItem.Q<VisualElement>(className: "unity-base-dropdown__checkmark");
+                            if (checkmark != null)
+                            {
+                                checkmark.style.visibility = Visibility.Hidden;
+                            }
+
+                            var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.15f));
+                            var surfaceColor = ToUnity(theme.SurfaceColor);
+
+                            dropdownItem.RegisterCallback<PointerEnterEvent>(_ =>
+                                dropdownItem.style.backgroundColor = hoverColor
+                            );
+
+                            dropdownItem.RegisterCallback<PointerLeaveEvent>(_ =>
+                                dropdownItem.style.backgroundColor = surfaceColor
+                            );
+                        }
+                    }).Every(16);
+                },
+                TrickleDown.TrickleDown
+            );
 
             if (dropdown.OnChanged == null)
             {
@@ -295,32 +312,36 @@ namespace Fram3.UI.Rendering.Internal
                 }
 
                 var textElement = intf.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
-#if !FRAM3_PURE_TESTS
-                    SetCursorWidth(textElement, 2f);
-#endif
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
 
 #if !FRAM3_PURE_TESTS
             RegisterCaretBlink(intf, theme);
 #endif
             intf.RegisterCallback<KeyDownEvent>(evt =>
-            {
-                if (
-                    !IsAllowedNumericKey(
-                        evt.character,
-                        evt.keyCode,
-                        evt.ctrlKey || evt.commandKey,
-                        allowDecimal: false
-                    )
-                )
                 {
-                    evt.StopImmediatePropagation();
-                }
-            }, TrickleDown.TrickleDown);
+                    if (
+                        !IsAllowedNumericKey(
+                            evt.character,
+                            evt.keyCode,
+                            evt.ctrlKey || evt.commandKey,
+                            allowDecimal: false
+                        )
+                    )
+                    {
+                        evt.StopImmediatePropagation();
+                    }
+                },
+                TrickleDown.TrickleDown
+            );
 
             if (intField.OnChanged == null)
             {
@@ -382,13 +403,15 @@ namespace Fram3.UI.Rendering.Internal
                 }
 
                 var textElement = uiFloatField.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
-#if !FRAM3_PURE_TESTS
-                    SetCursorWidth(textElement, 2f);
-#endif
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
 
 #if !FRAM3_PURE_TESTS
@@ -594,8 +617,12 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static bool IsAllowedNumericKey(char character, UnityEngine.KeyCode keyCode, bool ctrlOrCmd,
-            bool allowDecimal)
+        private static bool IsAllowedNumericKey(
+            char character,
+            UnityEngine.KeyCode keyCode,
+            bool ctrlOrCmd,
+            bool allowDecimal
+        )
         {
             if (ctrlOrCmd)
             {
@@ -630,23 +657,26 @@ namespace Fram3.UI.Rendering.Internal
         // Draws a filled rounded rectangle using painter2D, bypassing USS !important overrides.
         private static void PaintRoundedFill(MeshGenerationContext ctx, UnityEngine.Color color, float radius)
         {
-            var p = ctx.painter2D;
+            var painter2D = ctx.painter2D;
             var r = ctx.visualElement.contentRect;
+            
             float x = r.x, y = r.y, w = r.width, h = r.height;
-            float rad = UnityEngine.Mathf.Min(radius, w / 2f, h / 2f);
-            p.fillColor = color;
-            p.BeginPath();
-            p.MoveTo(new UnityEngine.Vector2(x + rad, y));
-            p.LineTo(new UnityEngine.Vector2(x + w - rad, y));
-            p.ArcTo(new UnityEngine.Vector2(x + w, y), new UnityEngine.Vector2(x + w, y + rad), rad);
-            p.LineTo(new UnityEngine.Vector2(x + w, y + h - rad));
-            p.ArcTo(new UnityEngine.Vector2(x + w, y + h), new UnityEngine.Vector2(x + w - rad, y + h), rad);
-            p.LineTo(new UnityEngine.Vector2(x + rad, y + h));
-            p.ArcTo(new UnityEngine.Vector2(x, y + h), new UnityEngine.Vector2(x, y + h - rad), rad);
-            p.LineTo(new UnityEngine.Vector2(x, y + rad));
-            p.ArcTo(new UnityEngine.Vector2(x, y), new UnityEngine.Vector2(x + rad, y), rad);
-            p.ClosePath();
-            p.Fill();
+            
+            var rad = UnityEngine.Mathf.Min(radius, w / 2f, h / 2f);
+            
+            painter2D.fillColor = color;
+            painter2D.BeginPath();
+            painter2D.MoveTo(new UnityEngine.Vector2(x + rad, y));
+            painter2D.LineTo(new UnityEngine.Vector2(x + w - rad, y));
+            painter2D.ArcTo(new UnityEngine.Vector2(x + w, y), new UnityEngine.Vector2(x + w, y + rad), rad);
+            painter2D.LineTo(new UnityEngine.Vector2(x + w, y + h - rad));
+            painter2D.ArcTo(new UnityEngine.Vector2(x + w, y + h), new UnityEngine.Vector2(x + w - rad, y + h), rad);
+            painter2D.LineTo(new UnityEngine.Vector2(x + rad, y + h));
+            painter2D.ArcTo(new UnityEngine.Vector2(x, y + h), new UnityEngine.Vector2(x, y + h - rad), rad);
+            painter2D.LineTo(new UnityEngine.Vector2(x, y + rad));
+            painter2D.ArcTo(new UnityEngine.Vector2(x, y), new UnityEngine.Vector2(x + rad, y), rad);
+            painter2D.ClosePath();
+            painter2D.Fill();
         }
 
 #pragma warning disable CS0618
@@ -677,20 +707,28 @@ namespace Fram3.UI.Rendering.Internal
 #if !FRAM3_PURE_TESTS
         private static void RegisterCaretBlink(IntegerField field, Theme theme)
         {
-            IVisualElementScheduledItem blinkItem = null;
-            bool caretVisible = true;
+            IVisualElementScheduledItem? blinkItem = null;
+            bool caretVisible;
 
             field.RegisterCallback<FocusInEvent>(_ =>
             {
                 caretVisible = true;
+                
                 ApplyCaretColors(field, theme);
+                
                 if (blinkItem == null)
                 {
                     blinkItem = field.schedule.Execute(() =>
                     {
                         caretVisible = !caretVisible;
-                        if (caretVisible) { ApplyCaretColors(field, theme); }
-                        else { HideCaret(field); }
+                        if (caretVisible)
+                        {
+                            ApplyCaretColors(field, theme);
+                        }
+                        else
+                        {
+                            HideCaret(field);
+                        }
                     }).Every(530);
                 }
                 else
@@ -704,20 +742,28 @@ namespace Fram3.UI.Rendering.Internal
 
         private static void RegisterCaretBlink(UIFloatField field, Theme theme)
         {
-            IVisualElementScheduledItem blinkItem = null;
-            bool caretVisible = true;
+            IVisualElementScheduledItem? blinkItem = null;
+            bool caretVisible;
 
             field.RegisterCallback<FocusInEvent>(_ =>
             {
                 caretVisible = true;
+                
                 ApplyCaretColors(field, theme);
+                
                 if (blinkItem == null)
                 {
                     blinkItem = field.schedule.Execute(() =>
                     {
                         caretVisible = !caretVisible;
-                        if (caretVisible) { ApplyCaretColors(field, theme); }
-                        else { HideCaret(field); }
+                        if (caretVisible)
+                        {
+                            ApplyCaretColors(field, theme);
+                        }
+                        else
+                        {
+                            HideCaret(field);
+                        }
                     }).Every(530);
                 }
                 else
