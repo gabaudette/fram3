@@ -229,7 +229,7 @@ namespace Fram3.UI.Rendering.Internal
 
                 foreach (var input in buttonInputs)
                 {
-                    input.style.marginRight = 0f;
+                    input.style.marginRight = 4f;
                 }
             });
 
