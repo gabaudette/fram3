@@ -1,6 +1,6 @@
 {
   "name": "com.fram3.ui",
-  "version": "2.0.0-beta.3",
+  "version": "3.0.0-beta",
   "displayName": "Fram3 UI",
   "description": "A declarative UI framework for Unity built on top of UIToolkit. Build composable, reactive user interfaces using pure C# with automatic reconciliation, state management, and two-way data binding.",
   "unity": "6000.3",
