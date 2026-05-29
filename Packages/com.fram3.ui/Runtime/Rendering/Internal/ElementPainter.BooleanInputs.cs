@@ -204,32 +204,16 @@ namespace Fram3.UI.Rendering.Internal
                     checkmarkBackground.style.backgroundColor = ToUnity(theme.SurfaceColor);
                 }
 
-                var labels = radioButtonGroup.Query<VisualElement>(
-                    className: "unity-base-field__label"
+                // unity-radio-button__text is m_Label inside visualInput — the actual visible text.
+                // unity-radio-button__label is the empty BaseField labelElement (not the displayed text).
+                var itemTexts = radioButtonGroup.Query<VisualElement>(
+                    className: "unity-radio-button__text"
                 ).ToList();
 
-                foreach (var label in labels)
+                foreach (var itemText in itemTexts)
                 {
-                    label.style.color = ToUnity(theme.PrimaryTextColor);
-                }
-
-                var itemLabels = radioButtonGroup.Query<VisualElement>(
-                    className: "unity-radio-button__label"
-                ).ToList();
-
-                foreach (var itemLabel in itemLabels)
-                {
-                    itemLabel.style.color = ToUnity(theme.PrimaryTextColor);
-                    itemLabel.style.marginLeft = 6f;
-                }
-
-                var buttonInputs = radioButtonGroup.Query<VisualElement>(
-                    className: "unity-radio-button__input"
-                ).ToList();
-
-                foreach (var input in buttonInputs)
-                {
-                    input.style.marginRight = 4f;
+                    itemText.style.color = ToUnity(theme.PrimaryTextColor);
+                    itemText.style.marginLeft = 6f;
                 }
             });
 
