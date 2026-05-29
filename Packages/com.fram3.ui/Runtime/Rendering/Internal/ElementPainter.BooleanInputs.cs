@@ -36,6 +36,10 @@ namespace Fram3.UI.Rendering.Internal
                 checkmark.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                checkmark.style.borderTopLeftRadius = theme.BorderRadius;
+                checkmark.style.borderTopRightRadius = theme.BorderRadius;
+                checkmark.style.borderBottomLeftRadius = theme.BorderRadius;
+                checkmark.style.borderBottomRightRadius = theme.BorderRadius;
 
                 var tick = new VisualElement
                 {
@@ -113,6 +117,10 @@ namespace Fram3.UI.Rendering.Internal
                 checkmark.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderBottomColor = ToUnity(theme.PrimaryColor);
                 checkmark.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                checkmark.style.borderTopLeftRadius = theme.BorderRadius;
+                checkmark.style.borderTopRightRadius = theme.BorderRadius;
+                checkmark.style.borderBottomLeftRadius = theme.BorderRadius;
+                checkmark.style.borderBottomRightRadius = theme.BorderRadius;
 
                 var tick = new VisualElement
                 {
@@ -130,6 +138,7 @@ namespace Fram3.UI.Rendering.Internal
                 checkmark.Add(tick);
 
                 var strokeColor = ToUnity(theme.PrimaryColor);
+                
                 tick.generateVisualContent += ctx =>
                 {
                     var painter2D = ctx.painter2D;
@@ -158,7 +167,7 @@ namespace Fram3.UI.Rendering.Internal
             }
 
             var callback = checkbox.OnChanged;
-            
+
             toggle.RegisterValueChangedCallback(evt => callback(evt.newValue));
 
             return toggle;
@@ -196,32 +205,16 @@ namespace Fram3.UI.Rendering.Internal
                     checkmarkBackground.style.backgroundColor = ToUnity(theme.SurfaceColor);
                 }
 
-                var labels = radioButtonGroup.Query<VisualElement>(
-                    className: "unity-base-field__label"
+                // unity-radio-button__text is m_Label inside visualInput — the actual visible text.
+                // unity-radio-button__label is the empty BaseField labelElement (not the displayed text).
+                var itemTexts = radioButtonGroup.Query<VisualElement>(
+                    className: "unity-radio-button__text"
                 ).ToList();
 
-                foreach (var label in labels)
+                foreach (var itemText in itemTexts)
                 {
-                    label.style.color = ToUnity(theme.PrimaryTextColor);
-                }
-
-                var itemLabels = radioButtonGroup.Query<VisualElement>(
-                    className: "unity-radio-button__label"
-                ).ToList();
-
-                foreach (var itemLabel in itemLabels)
-                {
-                    itemLabel.style.color = ToUnity(theme.PrimaryTextColor);
-                    itemLabel.style.marginLeft = 6f;
-                }
-
-                var buttonInputs = radioButtonGroup.Query<VisualElement>(
-                    className: "unity-radio-button__input"
-                ).ToList();
-
-                foreach (var input in buttonInputs)
-                {
-                    input.style.marginRight = 0f;
+                    itemText.style.color = ToUnity(theme.PrimaryTextColor);
+                    itemText.style.marginLeft = 6f;
                 }
             });
 

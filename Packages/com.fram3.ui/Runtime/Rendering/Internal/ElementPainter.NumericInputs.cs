@@ -34,29 +34,84 @@ namespace Fram3.UI.Rendering.Internal
                     label.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
+                var dragContainer = slider.Q<VisualElement>(className: "unity-base-slider__drag-container");
+                if (dragContainer != null)
+                {
+                    dragContainer.style.backgroundImage = StyleKeyword.None;
+                    dragContainer.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
+
+                    // Attach a custom child with no USS class names so no !important rules apply.
+                    // Inserted at index 0 so it renders behind all Unity-managed children.
+                    var trackBg = new VisualElement
+                    {
+                        pickingMode = PickingMode.Ignore,
+                        style =
+                        {
+                            position = Position.Absolute,
+                            left = 0,
+                            top = 0,
+                            right = 0,
+                            bottom = 0
+                        }
+                    };
+
+                    var trackBgColor = ToUnity(theme.TrackColor);
+                    var trackBgRadius = theme.BorderRadius;
+                    trackBg.generateVisualContent += ctx => PaintRoundedFill(ctx, trackBgColor, trackBgRadius);
+                    dragContainer.Insert(0, trackBg);
+                }
+
                 var tracker = slider.Q<VisualElement>(className: "unity-base-slider__tracker");
                 if (tracker != null)
                 {
-                    tracker.style.backgroundColor = ToUnity(theme.TrackColor);
+                    // Clear the tracker's own background so the trackBg child shows through.
+                    tracker.style.backgroundImage = StyleKeyword.None;
+                    tracker.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
                 }
 
                 var fill = slider.Q<VisualElement>(className: "unity-base-slider__fill");
                 if (fill != null)
                 {
-                    fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                    fill.style.backgroundImage = StyleKeyword.None;
+                    fill.style.backgroundColor = new UnityEngine.Color(0, 0, 0, 0);
+                    var fillColor = ToUnity(theme.PrimaryColor);
+                    var fillRadius = theme.BorderRadius;
+                    fill.generateVisualContent += ctx => PaintRoundedFill(ctx, fillColor, fillRadius);
                 }
 
+                // Unity 6 splits the dragger into __dragger (interaction) and __dragger-border (visual).
+                // Both need styling for the themed thumb to show correctly.
                 var dragger = slider.Q<VisualElement>(className: "unity-base-slider__dragger");
-                if (dragger == null)
+                if (dragger != null)
+                {
+                    dragger.style.backgroundImage = StyleKeyword.None;
+                    dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                    dragger.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                    dragger.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                }
+
+                var draggerBorder = slider.Q<VisualElement>(className: "unity-base-slider__dragger-border");
+                if (draggerBorder == null)
                 {
                     return;
                 }
 
-                dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.backgroundImage = StyleKeyword.None;
+                draggerBorder.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                draggerBorder.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                draggerBorder.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                draggerBorder.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                draggerBorder.style.borderBottomRightRadius = theme.SliderDraggerRadius;
             });
 
             if (frameSlider.OnChanged == null)
@@ -95,6 +150,14 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderRightColor = ToUnity(theme.InputBorderColor);
                     input.style.borderBottomColor = ToUnity(theme.InputBorderColor);
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    input.style.borderTopWidth = 1f;
+                    input.style.borderRightWidth = 1f;
+                    input.style.borderBottomWidth = 1f;
+                    input.style.borderLeftWidth = 1f;
+                    input.style.borderTopLeftRadius = theme.BorderRadius;
+                    input.style.borderTopRightRadius = theme.BorderRadius;
+                    input.style.borderBottomLeftRadius = theme.BorderRadius;
+                    input.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
                 var textEl = dropdownField.Q<VisualElement>(className: "unity-text-element");
@@ -102,10 +165,21 @@ namespace Fram3.UI.Rendering.Internal
                 {
                     textEl.style.color = ToUnity(theme.PrimaryTextColor);
                 }
+            });
 
-                dropdownField.RegisterCallback<PointerDownEvent>(_ =>
+            // Unity's DropdownField calls schedule.Execute(ShowMenu) on PointerDown — the popup
+            // is created asynchronously on the next panel update, not immediately. We poll every
+            // 16 ms until the popup appears in the visual tree, then style it once and stop.
+            // The poller reference is kept so rapid re-clicks cancel the previous poll.
+            IVisualElementScheduledItem? dropdownPoller = null;
+
+            dropdownField.RegisterCallback<PointerDownEvent>(_ =>
                 {
-                    dropdownField.schedule.Execute(() =>
+                    dropdownPoller?.Pause();
+                    var attempts = 0;
+                    var poller = dropdownPoller;
+
+                    dropdownPoller = dropdownField.schedule.Execute(() =>
                     {
                         var popup = dropdownField.panel?.visualTree.Q<VisualElement>(
                             className: "unity-base-dropdown"
@@ -113,8 +187,15 @@ namespace Fram3.UI.Rendering.Internal
 
                         if (popup == null)
                         {
+                            if (++attempts >= 10)
+                            {
+                                poller?.Pause();
+                            }
+
                             return;
                         }
+
+                        poller?.Pause();
 
                         popup.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
                         popup.style.borderTopWidth = 0f;
@@ -141,10 +222,10 @@ namespace Fram3.UI.Rendering.Internal
                         inner.style.borderRightWidth = 1f;
                         inner.style.borderBottomWidth = 1f;
                         inner.style.borderLeftWidth = 1f;
-                        inner.style.borderTopLeftRadius = 4f;
-                        inner.style.borderTopRightRadius = 4f;
-                        inner.style.borderBottomLeftRadius = 4f;
-                        inner.style.borderBottomRightRadius = 4f;
+                        inner.style.borderTopLeftRadius = theme.BorderRadius;
+                        inner.style.borderTopRightRadius = theme.BorderRadius;
+                        inner.style.borderBottomLeftRadius = theme.BorderRadius;
+                        inner.style.borderBottomRightRadius = theme.BorderRadius;
 
                         if (containerOuter != null && containerInner != null)
                         {
@@ -181,9 +262,10 @@ namespace Fram3.UI.Rendering.Internal
                                 dropdownItem.style.backgroundColor = surfaceColor
                             );
                         }
-                    }).ExecuteLater(1);
-                });
-            });
+                    }).Every(16);
+                },
+                TrickleDown.TrickleDown
+            );
 
             if (dropdown.OnChanged == null)
             {
@@ -204,6 +286,9 @@ namespace Fram3.UI.Rendering.Internal
                 intf.label = intField.Label;
             }
 
+            ApplyCaretColors(intf, theme);
+            intf.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(intf, theme));
+
             intf.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var label = intf.Q<VisualElement>(className: "unity-base-field__label");
@@ -220,29 +305,43 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderRightColor = ToUnity(theme.InputBorderColor);
                     input.style.borderBottomColor = ToUnity(theme.InputBorderColor);
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    input.style.borderTopLeftRadius = theme.BorderRadius;
+                    input.style.borderTopRightRadius = theme.BorderRadius;
+                    input.style.borderBottomLeftRadius = theme.BorderRadius;
+                    input.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
                 var textElement = intf.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
 
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(intf, theme);
+#endif
             intf.RegisterCallback<KeyDownEvent>(evt =>
-            {
-                if (
-                    !IsAllowedNumericKey(
-                        evt.character,
-                        evt.keyCode,
-                        evt.ctrlKey || evt.commandKey,
-                        allowDecimal: false
-                    )
-                )
                 {
-                    evt.StopImmediatePropagation();
-                }
-            }, TrickleDown.TrickleDown);
+                    if (
+                        !IsAllowedNumericKey(
+                            evt.character,
+                            evt.keyCode,
+                            evt.ctrlKey || evt.commandKey,
+                            allowDecimal: false
+                        )
+                    )
+                    {
+                        evt.StopImmediatePropagation();
+                    }
+                },
+                TrickleDown.TrickleDown
+            );
 
             if (intField.OnChanged == null)
             {
@@ -278,6 +377,9 @@ namespace Fram3.UI.Rendering.Internal
                 uiFloatField.label = floatField.Label;
             }
 
+            ApplyCaretColors(uiFloatField, theme);
+            uiFloatField.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiFloatField, theme));
+
             uiFloatField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var label = uiFloatField.Q<VisualElement>(className: "unity-base-field__label");
@@ -294,15 +396,27 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderRightColor = ToUnity(theme.InputBorderColor);
                     input.style.borderBottomColor = ToUnity(theme.InputBorderColor);
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    input.style.borderTopLeftRadius = theme.BorderRadius;
+                    input.style.borderTopRightRadius = theme.BorderRadius;
+                    input.style.borderBottomLeftRadius = theme.BorderRadius;
+                    input.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
                 var textElement = uiFloatField.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
 
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(uiFloatField, theme);
+#endif
             uiFloatField.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (!IsAllowedNumericKey(evt.character, evt.keyCode, evt.ctrlKey || evt.commandKey, allowDecimal: true))
@@ -362,53 +476,66 @@ namespace Fram3.UI.Rendering.Internal
                 var tracker = newMinMaxSlider.Q<VisualElement>(className: "unity-min-max-slider__tracker");
                 if (tracker != null)
                 {
+                    tracker.style.backgroundImage = StyleKeyword.None;
                     tracker.style.backgroundColor = ToUnity(theme.TrackColor);
+                    tracker.style.borderTopLeftRadius = theme.BorderRadius;
+                    tracker.style.borderTopRightRadius = theme.BorderRadius;
+                    tracker.style.borderBottomLeftRadius = theme.BorderRadius;
+                    tracker.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
                 var fill = newMinMaxSlider.Q<VisualElement>(className: "unity-min-max-slider__dragger");
                 if (fill != null)
                 {
+                    fill.style.backgroundImage = StyleKeyword.None;
                     fill.style.backgroundColor = ToUnity(theme.PrimaryColor);
                     fill.style.opacity = 0.4f;
-                    fill.style.borderTopLeftRadius = 3f;
-                    fill.style.borderTopRightRadius = 3f;
-                    fill.style.borderBottomLeftRadius = 3f;
-                    fill.style.borderBottomRightRadius = 3f;
+                    fill.style.borderTopLeftRadius = theme.BorderRadius;
+                    fill.style.borderTopRightRadius = theme.BorderRadius;
+                    fill.style.borderBottomLeftRadius = theme.BorderRadius;
+                    fill.style.borderBottomRightRadius = theme.BorderRadius;
                 }
 
-                var lowDraggers = newMinMaxSlider.Query<VisualElement>(
-                    className: "unity-min-max-slider__dragger-low"
-                ).ToList();
-
-                foreach (var dragger in lowDraggers)
+                // Unity 6 renamed dragger-low/dragger-high to min-thumb/max-thumb.
+                // Deferred one frame in case Unity finishes internal layout after attach.
+                newMinMaxSlider.schedule.Execute(() =>
                 {
-                    dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopLeftRadius = 4f;
-                    dragger.style.borderTopRightRadius = 4f;
-                    dragger.style.borderBottomLeftRadius = 4f;
-                    dragger.style.borderBottomRightRadius = 4f;
-                }
+                    var minThumbs = newMinMaxSlider.Query<VisualElement>(
+                        className: "unity-min-max-slider__min-thumb"
+                    ).ToList();
 
-                var highDraggers = newMinMaxSlider
-                    .Query<VisualElement>(className: "unity-min-max-slider__dragger-high")
-                    .ToList();
+                    foreach (var thumb in minThumbs)
+                    {
+                        thumb.style.backgroundImage = StyleKeyword.None;
+                        thumb.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                    }
 
-                foreach (var dragger in highDraggers)
-                {
-                    dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderLeftColor = ToUnity(theme.PrimaryColor);
-                    dragger.style.borderTopLeftRadius = 4f;
-                    dragger.style.borderTopRightRadius = 4f;
-                    dragger.style.borderBottomLeftRadius = 4f;
-                    dragger.style.borderBottomRightRadius = 4f;
-                }
+                    var maxThumbs = newMinMaxSlider
+                        .Query<VisualElement>(className: "unity-min-max-slider__max-thumb")
+                        .ToList();
+
+                    foreach (var thumb in maxThumbs)
+                    {
+                        thumb.style.backgroundImage = StyleKeyword.None;
+                        thumb.style.backgroundColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderRightColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderBottomColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderLeftColor = ToUnity(theme.PrimaryColor);
+                        thumb.style.borderTopLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderTopRightRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomLeftRadius = theme.SliderDraggerRadius;
+                        thumb.style.borderBottomRightRadius = theme.SliderDraggerRadius;
+                    }
+                }).ExecuteLater(0);
             });
 
             if (minMaxSlider.OnChanged == null)
@@ -490,8 +617,12 @@ namespace Fram3.UI.Rendering.Internal
             }
         }
 
-        private static bool IsAllowedNumericKey(char character, UnityEngine.KeyCode keyCode, bool ctrlOrCmd,
-            bool allowDecimal)
+        private static bool IsAllowedNumericKey(
+            char character,
+            UnityEngine.KeyCode keyCode,
+            bool ctrlOrCmd,
+            bool allowDecimal
+        )
         {
             if (ctrlOrCmd)
             {
@@ -522,5 +653,127 @@ namespace Fram3.UI.Rendering.Internal
                 _ => false
             };
         }
+
+        // Draws a filled rounded rectangle using painter2D, bypassing USS !important overrides.
+        private static void PaintRoundedFill(MeshGenerationContext ctx, UnityEngine.Color color, float radius)
+        {
+            var painter2D = ctx.painter2D;
+            var r = ctx.visualElement.contentRect;
+            
+            float x = r.x, y = r.y, w = r.width, h = r.height;
+            
+            var rad = UnityEngine.Mathf.Min(radius, w / 2f, h / 2f);
+            
+            painter2D.fillColor = color;
+            painter2D.BeginPath();
+            painter2D.MoveTo(new UnityEngine.Vector2(x + rad, y));
+            painter2D.LineTo(new UnityEngine.Vector2(x + w - rad, y));
+            painter2D.ArcTo(new UnityEngine.Vector2(x + w, y), new UnityEngine.Vector2(x + w, y + rad), rad);
+            painter2D.LineTo(new UnityEngine.Vector2(x + w, y + h - rad));
+            painter2D.ArcTo(new UnityEngine.Vector2(x + w, y + h), new UnityEngine.Vector2(x + w - rad, y + h), rad);
+            painter2D.LineTo(new UnityEngine.Vector2(x + rad, y + h));
+            painter2D.ArcTo(new UnityEngine.Vector2(x, y + h), new UnityEngine.Vector2(x, y + h - rad), rad);
+            painter2D.LineTo(new UnityEngine.Vector2(x, y + rad));
+            painter2D.ArcTo(new UnityEngine.Vector2(x, y), new UnityEngine.Vector2(x + rad, y), rad);
+            painter2D.ClosePath();
+            painter2D.Fill();
+        }
+
+#pragma warning disable CS0618
+        // No public runtime API exists for --unity-cursor-color; deprecated setter is the only option.
+        private static void ApplyCaretColors(IntegerField field, Theme theme)
+        {
+            field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+        }
+
+        private static void ApplyCaretColors(UIFloatField field, Theme theme)
+        {
+            field.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            field.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+        }
+
+        private static void HideCaret(IntegerField field)
+        {
+            field.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
+
+        private static void HideCaret(UIFloatField field)
+        {
+            field.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
+#pragma warning restore CS0618
+
+#if !FRAM3_PURE_TESTS
+        private static void RegisterCaretBlink(IntegerField field, Theme theme)
+        {
+            IVisualElementScheduledItem? blinkItem = null;
+            bool caretVisible;
+
+            field.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                
+                ApplyCaretColors(field, theme);
+                
+                if (blinkItem == null)
+                {
+                    blinkItem = field.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible)
+                        {
+                            ApplyCaretColors(field, theme);
+                        }
+                        else
+                        {
+                            HideCaret(field);
+                        }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            field.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+
+        private static void RegisterCaretBlink(UIFloatField field, Theme theme)
+        {
+            IVisualElementScheduledItem? blinkItem = null;
+            bool caretVisible;
+
+            field.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                
+                ApplyCaretColors(field, theme);
+                
+                if (blinkItem == null)
+                {
+                    blinkItem = field.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible)
+                        {
+                            ApplyCaretColors(field, theme);
+                        }
+                        else
+                        {
+                            HideCaret(field);
+                        }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            field.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+#endif
     }
 }

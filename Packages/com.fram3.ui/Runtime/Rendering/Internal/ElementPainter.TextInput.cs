@@ -9,7 +9,7 @@ namespace Fram3.UI.Rendering.Internal
 {
     internal static partial class ElementPainter
     {
-        private static Label CreateLabel(Text text)
+        private static Label CreateLabel(Text text, Theme theme)
         {
             var label = new Label(text.Content)
             {
@@ -19,7 +19,7 @@ namespace Fram3.UI.Rendering.Internal
                 }
             };
 
-            PaintText(text, label);
+            PaintText(text, label, theme);
 
             return label;
         }
@@ -38,6 +38,9 @@ namespace Fram3.UI.Rendering.Internal
                 textField.textEdition.placeholder = passwordField.Placeholder;
             }
 
+            ApplyCaretColors(textField, theme);
+            textField.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(textField, theme));
+
             textField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var input = textField.Q<VisualElement>(className: "unity-base-text-field__input");
@@ -48,15 +51,28 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderRightColor = ToUnity(theme.InputBorderColor);
                     input.style.borderBottomColor = ToUnity(theme.InputBorderColor);
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    input.style.borderTopLeftRadius = theme.BorderRadius;
+                    input.style.borderTopRightRadius = theme.BorderRadius;
+                    input.style.borderBottomLeftRadius = theme.BorderRadius;
+                    input.style.borderBottomRightRadius = theme.BorderRadius;
                     input.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
                 var textElement = textField.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
+
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(textField, theme);
+#endif
 
             if (passwordField.OnChanged == null)
             {
@@ -83,6 +99,9 @@ namespace Fram3.UI.Rendering.Internal
                 uiTextField.textEdition.placeholder = textField.Placeholder;
             }
 
+            ApplyCaretColors(uiTextField, theme);
+            uiTextField.RegisterCallback<CustomStyleResolvedEvent>(_ => ApplyCaretColors(uiTextField, theme));
+
             uiTextField.RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 var input = uiTextField.Q<VisualElement>(className: "unity-base-text-field__input");
@@ -93,15 +112,28 @@ namespace Fram3.UI.Rendering.Internal
                     input.style.borderRightColor = ToUnity(theme.InputBorderColor);
                     input.style.borderBottomColor = ToUnity(theme.InputBorderColor);
                     input.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                    input.style.borderTopLeftRadius = theme.BorderRadius;
+                    input.style.borderTopRightRadius = theme.BorderRadius;
+                    input.style.borderBottomLeftRadius = theme.BorderRadius;
+                    input.style.borderBottomRightRadius = theme.BorderRadius;
                     input.style.color = ToUnity(theme.PrimaryTextColor);
                 }
 
                 var textElement = uiTextField.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
+
+#if !FRAM3_PURE_TESTS
+            RegisterCaretBlink(uiTextField, theme);
+#endif
 
             if (textField.OnChanged == null)
             {
@@ -129,25 +161,26 @@ namespace Fram3.UI.Rendering.Internal
             uiTextField.value = textField.Value;
             uiTextField.isReadOnly = textField.ReadOnly;
             uiTextField.multiline = textField.Multiline;
-            
+
             if (textField.Placeholder != null)
             {
                 uiTextField.textEdition.placeholder = textField.Placeholder;
             }
         }
 
-        private static void PaintText(Text text, Label label)
+        private static void PaintText(Text text, Label label, Theme theme)
         {
             label.text = text.Content;
             if (text.Style == null)
             {
+                ApplyTextStyle(TextStyle.Inherit, label, theme);
                 return;
             }
 
-            ApplyTextStyle(text.Style, label);
+            ApplyTextStyle(text.Style, label, theme);
         }
 
-        private static void ApplyTextStyle(TextStyle style, VisualElement native)
+        private static void ApplyTextStyle(TextStyle style, VisualElement native, Theme? theme = null)
         {
             if (style.ResetPadding)
             {
@@ -186,12 +219,75 @@ namespace Fram3.UI.Rendering.Internal
                 native.style.unityTextAlign = style.TextAlign.Value;
             }
 
-            if (style.FontAsset != null)
+            var effectiveFont = style.FontAsset ?? theme?.FontFamily;
+            if (effectiveFont != null)
             {
-                native.style.unityFontDefinition = FontDefinition.FromSDFFont(style.FontAsset);
+                native.style.unityFontDefinition = FontDefinition.FromSDFFont(effectiveFont);
             }
 #endif
         }
+
+#pragma warning disable CS0618
+        private static void ApplyCaretColors(UITextField textField, Theme theme)
+        {
+            // No public runtime API exists for --unity-cursor-color; deprecated setter is the only option.
+            textField.textSelection.cursorColor = ToUnity(theme.PrimaryColor);
+            textField.textSelection.selectionColor = ToUnity(theme.PrimaryColor.WithAlpha(0.3f));
+        }
+#pragma warning restore CS0618
+
+#if !FRAM3_PURE_TESTS
+        private static void SetCursorWidth(VisualElement textElement, float width)
+        {
+            // cursorWidth is internal on ITextSelection with no USS equivalent; reflection is the only option.
+            typeof(TextElement).GetField(
+                "m_CursorWidth",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance
+            )?.SetValue(textElement, width);
+        }
+
+        private static void RegisterCaretBlink(UITextField textField, Theme theme)
+        {
+            IVisualElementScheduledItem? blinkItem = null;
+            bool caretVisible;
+
+            textField.RegisterCallback<FocusInEvent>(_ =>
+            {
+                caretVisible = true;
+                
+                ApplyCaretColors(textField, theme);
+                
+                if (blinkItem == null)
+                {
+                    blinkItem = textField.schedule.Execute(() =>
+                    {
+                        caretVisible = !caretVisible;
+                        if (caretVisible)
+                        {
+                            ApplyCaretColors(textField, theme);
+                        }
+                        else
+                        {
+                            HideCaret(textField);
+                        }
+                    }).Every(530);
+                }
+                else
+                {
+                    blinkItem.Resume();
+                }
+            });
+
+            textField.RegisterCallback<FocusOutEvent>(_ => blinkItem?.Pause());
+        }
+
+#pragma warning disable CS0618
+        private static void HideCaret(UITextField textField)
+        {
+            textField.textSelection.cursorColor = UnityEngine.Color.clear;
+        }
+#pragma warning restore CS0618
+#endif
 
         private static UnityEngine.FontStyle ResolveFontStyle(bool bold, bool italic)
         {

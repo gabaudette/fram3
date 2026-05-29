@@ -1,4 +1,7 @@
 #nullable enable
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+using UnityEngine.TextCore.Text;
+#endif
 
 namespace Fram3.UI.Styling
 {
@@ -57,11 +60,33 @@ namespace Fram3.UI.Styling
         /// <summary>Corner radius in pixels applied to buttons, cards, and input fields.</summary>
         public float BorderRadius { get; init; }
 
+        /// <summary>Corner radius in pixels applied to slider and min-max slider dragger handles.</summary>
+        public float SliderDraggerRadius { get; init; }
+
         /// <summary>Base spacing unit in pixels used for padding and gaps between elements.</summary>
         public float Spacing { get; init; }
 
         /// <summary>Width in pixels of vertical scrollbars and height of horizontal scrollbars.</summary>
         public float ScrollbarWidth { get; init; }
+
+        /// <summary>Whether scrollbars render a visible border.</summary>
+        public bool ScrollbarBorder { get; init; }
+
+        /// <summary>Width in pixels of the scrollbar border. Only applied when <see cref="ScrollbarBorder"/> is true.</summary>
+        public float ScrollbarBorderWidth { get; init; }
+
+        /// <summary>Color of the scrollbar border. Only applied when <see cref="ScrollbarBorder"/> is true.</summary>
+        public FrameColor ScrollbarBorderColor { get; init; }
+
+        /// <summary>
+        /// The SDF font asset applied to all text in this theme's subtree.
+        /// Null uses Unity's default font. Can be overridden per-element via <see cref="TextStyle.FontAsset"/>.
+        /// </summary>
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+        public FontAsset? FontFamily { get; init; }
+#else
+        public object? FontFamily { get; init; }
+#endif
 
         /// <summary>
         /// A sensible light-theme set of default tokens. Use this as a starting point and override
@@ -83,9 +108,13 @@ namespace Fram3.UI.Styling
             FontSize = 14f,
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
-            BorderRadius = 4f,
+            BorderRadius = 1f,
+            SliderDraggerRadius = 50f,
             Spacing = 8f,
-            ScrollbarWidth = 8f
+            ScrollbarWidth = 8f,
+            ScrollbarBorder = true,
+            ScrollbarBorderWidth = 1f,
+            ScrollbarBorderColor = FrameColor.FromHex("#E0E0E1")
         };
     }
 }

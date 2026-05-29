@@ -14,6 +14,8 @@ using Fram3.UI.Storybook.Stories.Layout;
 using Fram3.UI.Storybook.Stories.Navigation;
 using Fram3.UI.Storybook.Stories.States;
 using Fram3.UI.Styling;
+using UnityEngine;
+using FontAsset = UnityEngine.TextCore.Text.FontAsset;
 
 namespace Fram3.UI.Storybook
 {
@@ -48,7 +50,13 @@ namespace Fram3.UI.Storybook
 
     public sealed class StorybookApp : StatefulElement
     {
-        private static readonly Theme StorybookTheme = new Theme
+        /// <summary>
+        /// Font set on the StorybookRunner's DisplayFont inspector field.
+        /// Exposed here so stories can reference it for spot-override demos.
+        /// </summary>
+        internal static FontAsset? DisplayFont { get; private set; }
+
+        private static readonly Theme StorybookBaseTheme = new Theme
         {
             PrimaryColor = FrameColor.FromHex("#7B61FF"),
             SecondaryColor = FrameColor.FromHex("#00D4AA"),
@@ -62,19 +70,25 @@ namespace Fram3.UI.Storybook
             InputBorderColor = FrameColor.FromHex("#1F2436"),
             TrackColor = FrameColor.FromHex("#1A1F30"),
             ScrollbarWidth = 4f,
+            ScrollbarBorder = false,
             FontSize = 14f,
             FontSizeSmall = 12f,
             FontSizeLarge = 20f,
-            BorderRadius = 10f,
+            BorderRadius = 8f,
+            SliderDraggerRadius = 50f,
             Spacing = 8f
         };
 
         public static Element Create()
         {
-            return new ThemeProvider(
-                StorybookTheme,
-                new StorybookApp()
-            );
+            var primaryRaw = Resources.Load<Font>("LiberationSans-Regular");
+            var displayRaw = Resources.Load<Font>("LiberationSerif-Regular");
+            var primaryAsset = primaryRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(primaryRaw) : null;
+            DisplayFont = displayRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(displayRaw) : null;
+            var theme = primaryAsset != null
+                ? StorybookBaseTheme with { FontFamily = primaryAsset }
+                : StorybookBaseTheme;
+            return new ThemeProvider(theme, new StorybookApp());
         }
 
         /// <inheritdoc/>

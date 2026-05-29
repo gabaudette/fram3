@@ -51,6 +51,10 @@ namespace Fram3.UI.Rendering.Internal
             scroller.style.flexBasis = width;
             scroller.style.flexGrow = 0;
             scroller.style.flexShrink = 0;
+
+            scroller.slider.style.width = width;
+            scroller.slider.style.minWidth = width;
+            scroller.slider.style.maxWidth = width;
         }
 
         private static void ApplyScrollbarTheme(VisualElement container, Theme theme)
@@ -72,10 +76,16 @@ namespace Fram3.UI.Rendering.Internal
 
             foreach (var scrollContainer in scrollContainers)
             {
-                scrollContainer.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                scrollContainer.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                scrollContainer.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                scrollContainer.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                var borderWidth = theme.ScrollbarBorder ? theme.ScrollbarBorderWidth : 0f;
+                var borderColor = ToUnity(theme.ScrollbarBorderColor);
+                scrollContainer.style.borderTopWidth = borderWidth;
+                scrollContainer.style.borderRightWidth = borderWidth;
+                scrollContainer.style.borderBottomWidth = borderWidth;
+                scrollContainer.style.borderLeftWidth = borderWidth;
+                scrollContainer.style.borderTopColor = borderColor;
+                scrollContainer.style.borderRightColor = borderColor;
+                scrollContainer.style.borderBottomColor = borderColor;
+                scrollContainer.style.borderLeftColor = borderColor;
             }
 
             var lowButtons = container.Query<VisualElement>(className: "unity-scroller__low-button").ToList();
@@ -96,44 +106,52 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var scroller in container.Query<VisualElement>(className: "unity-scroller").ToList())
             {
                 scroller.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
-                scroller.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderLeftColor = ToUnity(theme.InputBorderColor);
-                scroller.style.borderTopWidth = 1f;
-                scroller.style.borderRightWidth = 1f;
-                scroller.style.borderBottomWidth = 1f;
-                scroller.style.borderLeftWidth = 1f;
+                var borderWidth = theme.ScrollbarBorder ? theme.ScrollbarBorderWidth : 0f;
+                var borderColor = ToUnity(theme.ScrollbarBorderColor);
+                scroller.style.borderTopWidth = borderWidth;
+                scroller.style.borderRightWidth = borderWidth;
+                scroller.style.borderBottomWidth = borderWidth;
+                scroller.style.borderLeftWidth = borderWidth;
+                scroller.style.borderTopColor = borderColor;
+                scroller.style.borderRightColor = borderColor;
+                scroller.style.borderBottomColor = borderColor;
+                scroller.style.borderLeftColor = borderColor;
                 scroller.style.paddingTop = 0f;
                 scroller.style.paddingBottom = 0f;
-                scroller.style.overflow = Overflow.Visible;
             }
 
             foreach (var scrollerSlider in container.Query<VisualElement>(className: "unity-scroller__slider").ToList())
             {
-                scrollerSlider.style.overflow = Overflow.Visible;
+                var borderWidth = theme.ScrollbarBorder ? theme.ScrollbarBorderWidth : 0f;
+                var borderColor = ToUnity(theme.ScrollbarBorderColor);
                 scrollerSlider.style.marginTop = 0f;
                 scrollerSlider.style.marginBottom = 0f;
                 scrollerSlider.style.paddingTop = 0f;
                 scrollerSlider.style.paddingBottom = 0f;
-                scrollerSlider.style.borderTopColor = ToUnity(theme.InputBorderColor);
-                scrollerSlider.style.borderRightColor = ToUnity(theme.InputBorderColor);
-                scrollerSlider.style.borderBottomColor = ToUnity(theme.InputBorderColor);
-                scrollerSlider.style.borderLeftColor = ToUnity(theme.InputBorderColor);
+                scrollerSlider.style.borderTopWidth = borderWidth;
+                scrollerSlider.style.borderRightWidth = borderWidth;
+                scrollerSlider.style.borderBottomWidth = borderWidth;
+                scrollerSlider.style.borderLeftWidth = borderWidth;
+                scrollerSlider.style.borderTopColor = borderColor;
+                scrollerSlider.style.borderRightColor = borderColor;
+                scrollerSlider.style.borderBottomColor = borderColor;
+                scrollerSlider.style.borderLeftColor = borderColor;
             }
 
             foreach (var baseSlider in container.Query<VisualElement>(className: "unity-base-slider").ToList())
             {
-                baseSlider.style.overflow = Overflow.Visible;
                 baseSlider.style.marginTop = 0f;
                 baseSlider.style.marginBottom = 0f;
                 baseSlider.style.paddingTop = 0f;
                 baseSlider.style.paddingBottom = 0f;
+                baseSlider.style.borderTopWidth = 0f;
+                baseSlider.style.borderRightWidth = 0f;
+                baseSlider.style.borderBottomWidth = 0f;
+                baseSlider.style.borderLeftWidth = 0f;
             }
 
             foreach (var sliderInput in container.Query<VisualElement>(className: "unity-slider__input").ToList())
             {
-                sliderInput.style.overflow = Overflow.Visible;
                 sliderInput.style.marginTop = 0f;
                 sliderInput.style.marginBottom = 0f;
                 sliderInput.style.paddingTop = 0f;
@@ -151,7 +169,6 @@ namespace Fram3.UI.Rendering.Internal
 
             foreach (var dragContainer in dragContainers)
             {
-                dragContainer.style.overflow = Overflow.Visible;
                 dragContainer.style.marginTop = 0f;
                 dragContainer.style.marginBottom = 0f;
                 dragContainer.style.paddingTop = 0f;
@@ -161,15 +178,19 @@ namespace Fram3.UI.Rendering.Internal
             foreach (var tracker in container.Query<VisualElement>(className: "unity-base-slider__tracker").ToList())
             {
                 tracker.style.backgroundColor = new UnityEngine.Color(0f, 0f, 0f, 0f);
+                tracker.style.borderTopWidth = 0f;
+                tracker.style.borderRightWidth = 0f;
+                tracker.style.borderBottomWidth = 0f;
+                tracker.style.borderLeftWidth = 0f;
             }
 
             foreach (var dragger in container.Query<VisualElement>(className: "unity-base-slider__dragger").ToList())
             {
                 dragger.style.backgroundColor = ToUnity(theme.PrimaryColor);
-                dragger.style.borderTopLeftRadius = 4f;
-                dragger.style.borderTopRightRadius = 4f;
-                dragger.style.borderBottomLeftRadius = 4f;
-                dragger.style.borderBottomRightRadius = 4f;
+                dragger.style.borderTopLeftRadius = theme.BorderRadius;
+                dragger.style.borderTopRightRadius = theme.BorderRadius;
+                dragger.style.borderBottomLeftRadius = theme.BorderRadius;
+                dragger.style.borderBottomRightRadius = theme.BorderRadius;
                 dragger.style.borderTopColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderRightColor = ToUnity(theme.PrimaryColor);
                 dragger.style.borderBottomColor = ToUnity(theme.PrimaryColor);
@@ -879,44 +900,59 @@ namespace Fram3.UI.Rendering.Internal
         )
         {
             const float gripSize = 16f;
+
+            var normalColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.5f));
+            var hoverColor = ToUnity(theme.PrimaryColor.WithAlpha(0.7f));
+            var currentColor = normalColor;
+
             var grip = new VisualElement
             {
                 style =
                 {
-                    alignSelf = Align.FlexEnd,
+                    position = Position.Absolute,
+                    bottom = 0,
+                    right = 0,
                     width = gripSize,
-                    height = gripSize,
-                    marginRight = 2f,
-                    marginBottom = 2f
+                    height = gripSize
                 }
             };
 
-            // Draw three diagonal lines as a classic resize grip.
-            // TODO: Fix this, the grip is like not in the right place and the lines are not perfectly diagonal
-            for (var i = 0; i < 3; i++)
+            grip.generateVisualContent += ctx =>
             {
-                var offset = i * 4f + 2f;
-                var line = new VisualElement
-                {
-                    style =
-                    {
-                        position = Position.Absolute,
-                        width = gripSize - offset,
-                        height = 1f,
-                        bottom = offset,
-                        right = 0,
-                        backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f)),
-                        transformOrigin = new StyleTransformOrigin(
-                            new TransformOrigin(
-                                Length.Percent(100), Length.Percent(0)
-                            )
-                        ),
-                        rotate = new StyleRotate(new Rotate(new Angle(45f, AngleUnit.Degree)))
-                    }
-                };
+                var painter = ctx.painter2D;
+                var w = ctx.visualElement.contentRect.width;
+                var h = ctx.visualElement.contentRect.height;
 
-                grip.Add(line);
-            }
+                painter.strokeColor = currentColor;
+                painter.lineWidth = 1.5f;
+                painter.lineCap = LineCap.Round;
+
+                // Inset endpoints by the line width so round caps don't bleed
+                // past the grip bounds into the panel's rounded corner.
+                const float inset = 1.5f;
+
+                // Three parallel diagonal lines stepping away from the bottom-right corner.
+                for (var i = 1; i <= 3; i++)
+                {
+                    var offset = i * 4f;
+                    painter.BeginPath();
+                    painter.MoveTo(new UnityEngine.Vector2(w - inset, h - offset));
+                    painter.LineTo(new UnityEngine.Vector2(w - offset, h - inset));
+                    painter.Stroke();
+                }
+            };
+
+            grip.RegisterCallback<PointerEnterEvent>(_ =>
+            {
+                currentColor = hoverColor;
+                grip.MarkDirtyRepaint();
+            });
+
+            grip.RegisterCallback<PointerLeaveEvent>(_ =>
+            {
+                currentColor = normalColor;
+                grip.MarkDirtyRepaint();
+            });
 
             grip.RegisterCallback<PointerDownEvent>(evt =>
             {
@@ -950,23 +986,6 @@ namespace Fram3.UI.Rendering.Internal
                 state.Resizing = false;
                 grip.ReleasePointer(evt.pointerId);
             });
-
-            grip.RegisterCallback<PointerEnterEvent>(_ =>
-            {
-                foreach (var line in grip.Children())
-                {
-                    line.style.backgroundColor = ToUnity(theme.PrimaryColor.WithAlpha(0.6f));
-                }
-            });
-
-            grip.RegisterCallback<PointerLeaveEvent>(_ =>
-                {
-                    foreach (var line in grip.Children())
-                    {
-                        line.style.backgroundColor = ToUnity(theme.SecondaryTextColor.WithAlpha(0.4f));
-                    }
-                }
-            );
 
             return grip;
         }

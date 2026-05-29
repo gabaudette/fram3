@@ -25,7 +25,7 @@ namespace Fram3.UI.Styling
     /// Null inherits from the parent. Maps to <c>style.unityTextAlign</c>.
     /// </param>
     /// <param name="FontAsset">
-    /// SDF font asset used for rendering. Null inherits from the parent.
+    /// SDF font asset for rendering. Null falls back to <see cref="Theme.FontFamily"/>, then Unity's default.
     /// Maps to <c>style.unityFontDefinition</c> via <c>FontDefinition.FromSDFFont</c>.
     /// </param>
     /// <param name="ResetPadding">
