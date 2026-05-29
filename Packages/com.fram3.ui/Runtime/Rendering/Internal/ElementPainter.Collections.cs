@@ -70,14 +70,14 @@ namespace Fram3.UI.Rendering.Internal
             if (structureChanged)
             {
                 container.Clear();
-                
+
                 BuildNativeGridRows(grid, container, theme);
-                
+
                 state.ColumnCount = grid.ColumnCount;
                 state.ColumnSpacing = grid.ColumnSpacing;
                 state.RowSpacing = grid.RowSpacing;
                 state.ItemCount = grid.ItemCount;
-                
+
                 return;
             }
 
@@ -111,27 +111,27 @@ namespace Fram3.UI.Rendering.Internal
 
             // Repaint existing cells in-place.
             var repaintRowCount = System.Math.Min(oldRowCount, newRowCount);
-            for (var r = 0; r < repaintRowCount; r++)
+            for (var repaintRow = 0; repaintRow < repaintRowCount; repaintRow++)
             {
-                var rowSlot = hasRowSpacing ? r * 2 : r;
+                var rowSlot = hasRowSpacing ? repaintRow * 2 : repaintRow;
                 var row = container[rowSlot];
-                for (var c = 0; c < columnCount; c++)
+                for (var cellSlot = 0; cellSlot < columnCount; cellSlot++)
                 {
                     // With columnSpacing each column after the first is preceded by a spacer.
-                    var actualCellSlot = grid.ColumnSpacing > 0f ? c * 2 : c;
+                    var actualCellSlot = grid.ColumnSpacing > 0f ? cellSlot * 2 : cellSlot;
                     if (actualCellSlot >= row.childCount)
                     {
                         break;
                     }
 
-                    var cellVe = row[actualCellSlot];
-                    var index = r * columnCount + c;
+                    var cellVisualElement = row[actualCellSlot];
+                    var index = repaintRow * columnCount + cellSlot;
 
-                    cellVe.Clear();
+                    cellVisualElement.Clear();
 
                     if (index < newItemCount)
                     {
-                        BuildNativeTree(grid.BuildItemAt(index), cellVe, theme);
+                        BuildNativeTree(grid.BuildItemAt(index), cellVisualElement, theme);
                     }
                 }
             }
@@ -298,6 +298,7 @@ namespace Fram3.UI.Rendering.Internal
                     if (item.userData == null)
                     {
                         item.userData = new object();
+                        
                         item.RegisterCallback<PointerEnterEvent>(_ =>
                             item.style.backgroundColor = ToUnity(theme.TrackColor)
                         );
@@ -364,7 +365,9 @@ namespace Fram3.UI.Rendering.Internal
                 }
 
                 if (listView.panel != null)
+                {
                     listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1);
+                }
 #endif
             }
 #if !FRAM3_PURE_TESTS
@@ -372,7 +375,9 @@ namespace Fram3.UI.Rendering.Internal
             {
                 listView.itemsSource = BuildIndexList(listViewDescriptor.ItemCount);
                 if (listView.panel != null)
+                {
                     listView.schedule.Execute(() => ApplyScrollbarTheme(listView, theme)).ExecuteLater(1);
+                }
             }
 #endif
         }

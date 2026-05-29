@@ -59,13 +59,15 @@ namespace Fram3.UI.Rendering.Internal
                 }
 
                 var textElement = textField.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
-#if !FRAM3_PURE_TESTS
-                    SetCursorWidth(textElement, 2f);
-#endif
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
 
 #if !FRAM3_PURE_TESTS
@@ -118,13 +120,15 @@ namespace Fram3.UI.Rendering.Internal
                 }
 
                 var textElement = uiTextField.Q<VisualElement>(className: "unity-text-element");
-                if (textElement != null)
+                if (textElement == null)
                 {
-                    textElement.style.color = ToUnity(theme.PrimaryTextColor);
-#if !FRAM3_PURE_TESTS
-                    SetCursorWidth(textElement, 2f);
-#endif
+                    return;
                 }
+
+                textElement.style.color = ToUnity(theme.PrimaryTextColor);
+#if !FRAM3_PURE_TESTS
+                SetCursorWidth(textElement, 2f);
+#endif
             });
 
 #if !FRAM3_PURE_TESTS
@@ -157,7 +161,7 @@ namespace Fram3.UI.Rendering.Internal
             uiTextField.value = textField.Value;
             uiTextField.isReadOnly = textField.ReadOnly;
             uiTextField.multiline = textField.Multiline;
-            
+
             if (textField.Placeholder != null)
             {
                 uiTextField.textEdition.placeholder = textField.Placeholder;
@@ -236,26 +240,36 @@ namespace Fram3.UI.Rendering.Internal
         private static void SetCursorWidth(VisualElement textElement, float width)
         {
             // cursorWidth is internal on ITextSelection with no USS equivalent; reflection is the only option.
-            typeof(TextElement).GetField("m_CursorWidth", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.SetValue(textElement, width);
+            typeof(TextElement).GetField(
+                "m_CursorWidth",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance
+            )?.SetValue(textElement, width);
         }
 
         private static void RegisterCaretBlink(UITextField textField, Theme theme)
         {
-            IVisualElementScheduledItem blinkItem = null;
-            bool caretVisible = true;
+            IVisualElementScheduledItem? blinkItem = null;
+            bool caretVisible;
 
             textField.RegisterCallback<FocusInEvent>(_ =>
             {
                 caretVisible = true;
+                
                 ApplyCaretColors(textField, theme);
+                
                 if (blinkItem == null)
                 {
                     blinkItem = textField.schedule.Execute(() =>
                     {
                         caretVisible = !caretVisible;
-                        if (caretVisible) { ApplyCaretColors(textField, theme); }
-                        else { HideCaret(textField); }
+                        if (caretVisible)
+                        {
+                            ApplyCaretColors(textField, theme);
+                        }
+                        else
+                        {
+                            HideCaret(textField);
+                        }
                     }).Every(530);
                 }
                 else
