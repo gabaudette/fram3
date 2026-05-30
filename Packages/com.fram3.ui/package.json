@@ -7,9 +7,7 @@
   "documentationUrl": "https://fram3-docs.vercel.app",
   "changelogUrl": "https://github.com/gabaudette/fram3/blob/main/CHANGELOG.md",
   "licensesUrl": "https://github.com/gabaudette/fram3/blob/main/LICENSE",
-  "dependencies": {
-    "com.unity.modules.uielements": "1.0.0"
-  },
+  "dependencies": {},
   "keywords": [
     "ui",
     "declarative",
