@@ -100,11 +100,73 @@ namespace Fram3.UI.Storybook
         /// <inheritdoc/>
         public override State CreateState() => new StorybookAppState();
 
+        // Wrapping each sidebar item in a StatelessElement with ShouldRebuild allows
+        // the reconciler to skip the GestureDetector→Container→Text subtree entirely
+        // when isSelected hasn't changed, avoiding the full 229-node cascade.
+        private sealed class SidebarStoryItem : StatelessElement
+        {
+            public string Name { get; }
+            public bool IsSelected { get; }
+            public Theme Theme { get; }
+            public Action OnTap { get; }
+
+            public SidebarStoryItem(string name, bool isSelected, Theme theme, Action onTap)
+            {
+                Name = name;
+                IsSelected = isSelected;
+                Theme = theme;
+                OnTap = onTap;
+            }
+
+            public override Element Build(BuildContext context)
+            {
+                var bgColor = IsSelected
+                    ? Theme.PrimaryColor.WithAlpha(0.15f)
+                    : FrameColor.Transparent;
+
+                var textColor = IsSelected ? Theme.PrimaryColor : Theme.PrimaryTextColor;
+
+                var accentBar = IsSelected
+                    ? new Border(Theme.PrimaryColor, 3f)
+                    : new Border(FrameColor.Transparent, 3f);
+
+                return new GestureDetector(
+                    onTap: OnTap,
+                    child: new Container(
+                        decoration: new BoxDecoration(
+                            Color: bgColor,
+                            BorderRadius: BorderRadius.All(6f),
+                            Border: accentBar
+                        ),
+                        padding: EdgeInsets.Symmetric(vertical: 8f, horizontal: Theme.Spacing)
+                    )
+                    {
+                        Child = new Text(
+                            Name,
+                            style: new TextStyle(
+                                FontSize: Theme.FontSize,
+                                Color: textColor,
+                                Bold: IsSelected
+                            )
+                        )
+                    }
+                );
+            }
+
+            public override bool ShouldRebuild(StatelessElement oldEl, StatelessElement newEl)
+            {
+                var o = (SidebarStoryItem)oldEl;
+                var n = (SidebarStoryItem)newEl;
+                return o.IsSelected != n.IsSelected || o.Name != n.Name || o.OnTap != n.OnTap;
+            }
+        }
+
         private sealed class StorybookAppState : State<StorybookApp>
         {
             private IReadOnlyList<Chapter>? _chapters;
             private int _selectedChapter;
             private int _selectedStory;
+            private readonly Dictionary<(int, int), Action> _tapCallbacks = new();
 
             public override void InitState()
             {
@@ -245,28 +307,15 @@ namespace Fram3.UI.Storybook
                     for (var storyIndex = 0; storyIndex < chapter.Stories.Count; storyIndex++)
                     {
                         var story = chapter.Stories[storyIndex];
-
-                        var capturedStoryIndex = storyIndex;
-
                         var isSelected = _selectedChapter == capturedChapterIndex &&
-                                         _selectedStory == capturedStoryIndex;
+                                         _selectedStory == storyIndex;
 
-                        items.Add(
-                            BuildSidebarItem(
-                                name: story.Name,
-                                isSelected,
-                                theme,
-                                onTap: () =>
-                                {
-                                    SetState(() =>
-                                    {
-                                        _selectedChapter = capturedChapterIndex;
-                                        _selectedStory = capturedStoryIndex;
-                                        UpdateActiveStory();
-                                    });
-                                }
-                            )
-                        );
+                        items.Add(new SidebarStoryItem(
+                            name: story.Name,
+                            isSelected: isSelected,
+                            theme: theme,
+                            onTap: GetTapCallback(capturedChapterIndex, storyIndex)
+                        ));
                     }
                 }
 
@@ -274,6 +323,24 @@ namespace Fram3.UI.Storybook
                 {
                     Children = items.ToArray()
                 };
+            }
+
+            private Action GetTapCallback(int chapterIndex, int storyIndex)
+            {
+                var key = (chapterIndex, storyIndex);
+                if (!_tapCallbacks.TryGetValue(key, out var callback))
+                {
+                    var ci = chapterIndex;
+                    var si = storyIndex;
+                    callback = () => SetState(() =>
+                    {
+                        _selectedChapter = ci;
+                        _selectedStory = si;
+                        UpdateActiveStory();
+                    });
+                    _tapCallbacks[key] = callback;
+                }
+                return callback;
             }
 
             private static Element BuildSidebarItem(
