@@ -1,6 +1,13 @@
 #nullable enable
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+using Unity.Profiling;
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+using System.Diagnostics;
+using Fram3.UI.Diagnostics;
+#endif
 
 namespace Fram3.UI.Core.Internal
 {
@@ -19,6 +26,9 @@ namespace Fram3.UI.Core.Internal
     {
         private readonly SortedSet<Node> _dirtyNodes;
         private bool _flushing;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+        private static readonly ProfilerMarker s_FlushMarker = new("Fram3.Flush");
+#endif
 
         internal RebuildScheduler()
         {
@@ -46,6 +56,12 @@ namespace Fram3.UI.Core.Internal
                 return;
             }
 
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            using var _ = s_FlushMarker.Auto();
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            var flushStart = Stopwatch.GetTimestamp();
+#endif
             _flushing = true;
             try
             {
@@ -54,6 +70,9 @@ namespace Fram3.UI.Core.Internal
             finally
             {
                 _flushing = false;
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+                Fram3Diagnostics.CurrentFrame.FlushDurationTicks += Stopwatch.GetTimestamp() - flushStart;
+#endif
             }
         }
 
@@ -75,6 +94,9 @@ namespace Fram3.UI.Core.Internal
                 }
 
                 expander.Rebuild(node);
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+                Fram3Diagnostics.CurrentFrame.DirtyNodesFlushed++;
+#endif
             }
         }
 

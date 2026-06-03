@@ -56,6 +56,12 @@ namespace Fram3.UI.Storybook
         /// </summary>
         internal static FontAsset? DisplayFont { get; private set; }
 
+        /// <summary>
+        /// The name of the story currently displayed, in "Chapter / Story" format.
+        /// Updated whenever the user navigates to a different story.
+        /// </summary>
+        internal static string? ActiveStory { get; private set; }
+
         private static readonly Theme StorybookBaseTheme = new Theme
         {
             PrimaryColor = FrameColor.FromHex("#7B61FF"),
@@ -105,6 +111,7 @@ namespace Fram3.UI.Storybook
                 _chapters = BuildChapters();
                 _selectedChapter = 0;
                 _selectedStory = 0;
+                UpdateActiveStory();
             }
 
             public override Element Build(BuildContext context)
@@ -255,6 +262,7 @@ namespace Fram3.UI.Storybook
                                     {
                                         _selectedChapter = capturedChapterIndex;
                                         _selectedStory = capturedStoryIndex;
+                                        UpdateActiveStory();
                                     });
                                 }
                             )
@@ -470,6 +478,14 @@ namespace Fram3.UI.Storybook
                         }
                     }
                 };
+            }
+
+            private void UpdateActiveStory()
+            {
+                if (_chapters == null || _chapters.Count == 0) return;
+                var chapter = _chapters[_selectedChapter];
+                if (chapter.Stories.Count == 0) return;
+                ActiveStory = $"{chapter.Title} / {chapter.Stories[_selectedStory].Name}";
             }
 
             private static IReadOnlyList<Chapter> BuildChapters()

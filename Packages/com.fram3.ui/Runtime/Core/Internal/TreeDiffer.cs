@@ -1,6 +1,13 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+using Unity.Profiling;
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+using System.Diagnostics;
+using Fram3.UI.Diagnostics;
+#endif
 
 namespace Fram3.UI.Core.Internal
 {
@@ -16,6 +23,9 @@ namespace Fram3.UI.Core.Internal
     /// <status>live</status>
     internal static class TreeDiffer
     {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+        private static readonly ProfilerMarker s_DiffMarker = new("Fram3.Diff");
+#endif
         /// <summary>
         /// Computes the diff between an old node list and a new element list.
         /// </summary>
@@ -31,6 +41,12 @@ namespace Fram3.UI.Core.Internal
             IReadOnlyList<Node> oldNodes,
             IReadOnlyList<Element> newElements)
         {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            using var _ = s_DiffMarker.Auto();
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            var diffStart = Stopwatch.GetTimestamp();
+#endif
             var ops = new List<DiffOp>();
 
             // unmatchedOldIndices tracks old-node indices that have not yet been
@@ -58,6 +74,9 @@ namespace Fram3.UI.Core.Internal
                 if (candidate == null)
                 {
                     ops.Add(DiffOp.Insert(newIndex, newElement));
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+                    Fram3Diagnostics.CurrentFrame.DiffOpsInsert++;
+#endif
                 }
                 else
                 {
@@ -70,15 +89,28 @@ namespace Fram3.UI.Core.Internal
 
                     unmatchedOldIndices.Remove(oldIndex);
 
-                    ops.Add(
-                        isInPlace
-                            ? DiffOp.Update(newIndex, candidate, newElement)
-                            : DiffOp.Move(newIndex, oldIndex, candidate, newElement)
-                    );
+                    if (isInPlace)
+                    {
+                        ops.Add(DiffOp.Update(newIndex, candidate, newElement));
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+                        Fram3Diagnostics.CurrentFrame.DiffOpsUpdate++;
+#endif
+                    }
+                    else
+                    {
+                        ops.Add(DiffOp.Move(newIndex, oldIndex, candidate, newElement));
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+                        Fram3Diagnostics.CurrentFrame.DiffOpsMove++;
+#endif
+                    }
                 }
             }
 
             AppendRemoveOps(oldNodes, unmatchedOldIndices, ops);
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            Fram3Diagnostics.CurrentFrame.DiffOpsRemove += unmatchedOldIndices.Count;
+            Fram3Diagnostics.CurrentFrame.DiffDurationTicks += Stopwatch.GetTimestamp() - diffStart;
+#endif
 
             return ops;
         }
