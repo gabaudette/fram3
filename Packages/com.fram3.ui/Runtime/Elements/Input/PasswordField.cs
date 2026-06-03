@@ -32,6 +32,17 @@ namespace Fram3.UI.Elements.Input
         /// </summary>
         public Action<string>? OnChanged { get; }
 
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (PasswordField)oldEl;
+            var n = (PasswordField)newEl;
+            return o.Value != n.Value
+                || o.Placeholder != n.Placeholder
+                || o.ReadOnly != n.ReadOnly
+                || o.OnChanged != n.OnChanged;
+        }
+
         /// <summary>
         /// Creates an <see cref="PasswordField"/> element.
         /// </summary>

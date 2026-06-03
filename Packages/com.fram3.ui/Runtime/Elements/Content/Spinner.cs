@@ -55,5 +55,16 @@ namespace Fram3.UI.Elements.Content
             Color = color;
             Speed = speed;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Spinner)oldEl;
+            var n = (Spinner)newEl;
+            return o.Size != n.Size
+                || o.StrokeWidth != n.StrokeWidth
+                || o.Color != n.Color
+                || o.Speed != n.Speed;
+        }
     }
 }

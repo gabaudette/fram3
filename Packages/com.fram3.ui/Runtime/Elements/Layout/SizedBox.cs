@@ -66,6 +66,15 @@ namespace Fram3.UI.Elements.Layout
         /// Returns the child element when one was set, or an empty list when used
         /// as a dimensioned spacer without a child.
         /// </summary>
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (SizedBox)oldEl;
+            var n = (SizedBox)newEl;
+            return o.Width != n.Width || o.Height != n.Height || o.IsExpand != n.IsExpand;
+        }
+
+        /// <inheritdoc/>
         public override IReadOnlyList<Element> GetChildren()
         {
             return HasChild ? base.GetChildren() : Array.Empty<Element>();

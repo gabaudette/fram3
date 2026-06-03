@@ -79,5 +79,17 @@ namespace Fram3.UI.Elements.Content
             Width = width;
             Height = height;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Icon)oldEl;
+            var n = (Icon)newEl;
+            return !Equals(o.Source, n.Source)
+                || o.ResourcePath != n.ResourcePath
+                || o.SvgPath != n.SvgPath
+                || o.Width != n.Width
+                || o.Height != n.Height;
+        }
     }
 }

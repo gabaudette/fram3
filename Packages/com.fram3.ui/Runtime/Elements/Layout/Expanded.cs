@@ -44,5 +44,13 @@ namespace Fram3.UI.Elements.Layout
             Padding = padding;
             OnTap = onTap;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Expanded)oldEl;
+            var n = (Expanded)newEl;
+            return o.Flex != n.Flex || o.Padding != n.Padding || o.OnTap != n.OnTap;
+        }
     }
 }

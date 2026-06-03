@@ -35,6 +35,18 @@ namespace Fram3.UI.Elements.Input
         /// </summary>
         public Action<string>? OnChanged { get; }
 
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (TextField)oldEl;
+            var n = (TextField)newEl;
+            return o.Value != n.Value
+                || o.Placeholder != n.Placeholder
+                || o.ReadOnly != n.ReadOnly
+                || o.Multiline != n.Multiline
+                || o.OnChanged != n.OnChanged;
+        }
+
         /// <summary>
         /// Creates an <see cref="TextField"/> element.
         /// </summary>

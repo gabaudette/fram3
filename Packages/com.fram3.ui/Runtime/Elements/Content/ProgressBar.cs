@@ -52,5 +52,13 @@ namespace Fram3.UI.Elements.Content
             Max = max;
             Title = title;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (ProgressBar)oldEl;
+            var n = (ProgressBar)newEl;
+            return o.Value != n.Value || o.Min != n.Min || o.Max != n.Max || o.Title != n.Title;
+        }
     }
 }

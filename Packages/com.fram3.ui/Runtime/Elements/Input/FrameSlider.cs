@@ -31,6 +31,18 @@ namespace Fram3.UI.Elements.Input
         /// </summary>
         public Action<float>? OnChanged { get; }
 
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (FrameSlider)oldEl;
+            var n = (FrameSlider)newEl;
+            return o.Value != n.Value
+                || o.Min != n.Min
+                || o.Max != n.Max
+                || o.Label != n.Label
+                || o.OnChanged != n.OnChanged;
+        }
+
         /// <summary>
         /// Creates an <see cref="FrameSlider"/> element.
         /// </summary>

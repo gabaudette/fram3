@@ -38,5 +38,14 @@ namespace Fram3.UI.Elements.Layout
             MainAxisAlignment = mainAxisAlignment;
             CrossAxisAlignment = crossAxisAlignment;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Column)oldEl;
+            var n = (Column)newEl;
+            return o.MainAxisAlignment != n.MainAxisAlignment
+                || o.CrossAxisAlignment != n.CrossAxisAlignment;
+        }
     }
 }

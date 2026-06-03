@@ -104,7 +104,7 @@ namespace Fram3.UI.Core.Internal
         /// Re-expands the children of a dirty node after a rebuild. The node's element
         /// must already have been updated to the new description before calling this.
         /// </summary>
-        internal void Rebuild(Node node)
+        internal void Rebuild(Node node, bool callOnRebuilt = true)
         {
 #if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
             using var _ = s_RebuildMarker.Auto();
@@ -117,7 +117,10 @@ namespace Fram3.UI.Core.Internal
             TreePatcher.Patch(node, newChildren, this);
 
             node.IsDirty = false;
-            _adapter?.OnRebuilt(node);
+            if (callOnRebuilt)
+            {
+                _adapter?.OnRebuilt(node);
+            }
         }
 
         /// <summary>

@@ -31,5 +31,13 @@ namespace Fram3.UI.Elements.Content
             Content = text ?? string.Empty;
             Style = style;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Text)oldEl;
+            var n = (Text)newEl;
+            return o.Content != n.Content || o.Style != n.Style;
+        }
     }
 }

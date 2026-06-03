@@ -90,12 +90,19 @@ namespace Fram3.UI.Core.Internal
                 expander.UpdateElement(op.ExistingNode, op.NewElement);
             }
 
-            if (
-                oldElement is StatelessElement oldStateless &&
-                op.ExistingNode.Element is StatelessElement newStateless &&
-                !newStateless.ShouldRebuild(oldStateless, newStateless)
-            )
+            var newElement = op.ExistingNode.Element;
+            var shouldRebuild = op.NewElement == null || newElement.ShouldRebuild(oldElement, newElement);
+
+            if (!shouldRebuild)
             {
+                if (newElement is StatelessElement)
+                {
+                    // StatelessElement: false means Build() and the entire subtree are skipped.
+                    return;
+                }
+
+                // All other elements: false means skip repaint only — children are still reconciled.
+                expander.Rebuild(op.ExistingNode, callOnRebuilt: false);
                 return;
             }
 

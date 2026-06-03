@@ -19,5 +19,8 @@ namespace Fram3.UI.Elements.Layout
         public Stack(Key? key = null) : base(key)
         {
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl) => false;
     }
 }

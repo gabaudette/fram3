@@ -30,6 +30,10 @@ namespace Fram3.UI.Elements.Content
         {
             ScrollDirection = scrollDirection;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+            => ((ScrollView)oldEl).ScrollDirection != ((ScrollView)newEl).ScrollDirection;
     }
 
     /// <summary>
