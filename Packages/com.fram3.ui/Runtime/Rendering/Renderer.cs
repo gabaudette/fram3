@@ -10,6 +10,12 @@ using Fram3.UI.Elements.Theme;
 using Fram3.UI.Rendering.Internal;
 using Fram3.UI.Styling;
 using UnityEngine.UIElements;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+using Unity.Profiling;
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+using Fram3.UI.Diagnostics;
+#endif
 
 namespace Fram3.UI.Rendering
 {
@@ -32,6 +38,9 @@ namespace Fram3.UI.Rendering
         private readonly NativeAdapter _adapter;
         private Node? _rootNode;
         private bool _disposed;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+        private static readonly ProfilerMarker s_TickMarker = new("Fram3.Tick");
+#endif
 
         /// <summary>
         /// Initializes a new <see cref="Renderer"/>.
@@ -93,12 +102,21 @@ namespace Fram3.UI.Rendering
         /// </param>
         public void Tick(float deltaTime)
         {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            using var _ = s_TickMarker.Auto();
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            Fram3Diagnostics.ResetFrame();
+#endif
             AnimationSystem.Tick(deltaTime);
 
             if (_scheduler.HasDirtyNodes)
             {
                 _scheduler.Flush(_expander);
             }
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            Fram3Diagnostics.Emit();
+#endif
         }
 
         /// <summary>

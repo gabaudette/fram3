@@ -2,6 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+using Unity.Profiling;
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+using Fram3.UI.Diagnostics;
+#endif
 
 namespace Fram3.UI.Core.Internal
 {
@@ -21,6 +27,11 @@ namespace Fram3.UI.Core.Internal
     {
         private readonly RebuildScheduler _scheduler;
         private readonly IRenderAdapter? _adapter;
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+        private static readonly ProfilerMarker s_MountMarker = new("Fram3.Mount");
+        private static readonly ProfilerMarker s_UnmountMarker = new("Fram3.Unmount");
+        private static readonly ProfilerMarker s_RebuildMarker = new("Fram3.Rebuild");
+#endif
 
         internal NodeExpander(RebuildScheduler scheduler, IRenderAdapter? adapter = null)
         {
@@ -35,6 +46,12 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal Node Mount(Element element, Node? parent)
         {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            using var _ = s_MountMarker.Auto();
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            Fram3Diagnostics.CurrentFrame.NodesMounted++;
+#endif
             var node = new Node(element, parent, _scheduler);
 
             if (element is StatefulElement stateful)
@@ -60,6 +77,12 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal void Unmount(Node node)
         {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            using var _ = s_UnmountMarker.Auto();
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            Fram3Diagnostics.CurrentFrame.NodesUnmounted++;
+#endif
             node.MarkUnmounted();
 
             if (node.Element.Key is GlobalKey globalKey)
@@ -83,10 +106,16 @@ namespace Fram3.UI.Core.Internal
         /// </summary>
         internal void Rebuild(Node node)
         {
+#if !FRAM3_PURE_TESTS && !FRAM3_DOC_BUILD
+            using var _ = s_RebuildMarker.Auto();
+#endif
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            Fram3Diagnostics.CurrentFrame.NodesRebuilt++;
+#endif
             var newChildren = ResolveChildren(node);
-            
+
             TreePatcher.Patch(node, newChildren, this);
-            
+
             node.IsDirty = false;
             _adapter?.OnRebuilt(node);
         }
@@ -186,7 +215,9 @@ namespace Fram3.UI.Core.Internal
         {
             node.IsFaulted = true;
             Debug.WriteLine($"[fram3] Unhandled exception in Build() for {node.Element.GetType().Name}: {ex}");
-            
+#if FRAM3_FRAMEWORK_DIAGNOSTICS
+            Fram3Diagnostics.CurrentFrame.BuildExceptions++;
+#endif
             return new Element[] { new ErrorPlaceholder(ex) };
         }
 
