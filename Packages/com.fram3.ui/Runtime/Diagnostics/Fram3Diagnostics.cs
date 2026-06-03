@@ -1,6 +1,7 @@
 #nullable enable
 #if FRAM3_FRAMEWORK_DIAGNOSTICS
 using System;
+using System.Collections.Generic;
 
 namespace Fram3.UI.Diagnostics
 {
@@ -26,9 +27,30 @@ namespace Fram3.UI.Diagnostics
         /// </summary>
         public static event Action<FrameMetrics>? OnFrameMetrics;
 
+        /// <summary>
+        /// The distinct element type names that were rebuilt during the last frame,
+        /// in the order they were first encountered. Reset at the start of each tick.
+        /// </summary>
+        public static IReadOnlyList<string> LastFrameRebuiltTypes => _rebuiltTypes;
+
         internal static FrameMetrics CurrentFrame;
 
-        internal static void ResetFrame() => CurrentFrame = default;
+        private static readonly List<string> _rebuiltTypes = new();
+
+        internal static void TrackRebuild(string elementTypeName)
+        {
+            CurrentFrame.NodesRebuilt++;
+            if (!_rebuiltTypes.Contains(elementTypeName))
+            {
+                _rebuiltTypes.Add(elementTypeName);
+            }
+        }
+
+        internal static void ResetFrame()
+        {
+            CurrentFrame = default;
+            _rebuiltTypes.Clear();
+        }
 
         internal static void Emit() => OnFrameMetrics?.Invoke(CurrentFrame);
     }

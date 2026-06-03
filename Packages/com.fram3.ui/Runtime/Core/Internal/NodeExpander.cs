@@ -110,7 +110,7 @@ namespace Fram3.UI.Core.Internal
             using var _ = s_RebuildMarker.Auto();
 #endif
 #if FRAM3_FRAMEWORK_DIAGNOSTICS
-            Fram3Diagnostics.CurrentFrame.NodesRebuilt++;
+            Fram3Diagnostics.TrackRebuild(node.Element.GetType().Name);
 #endif
             var newChildren = ResolveChildren(node);
 
