@@ -584,7 +584,7 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Standalone: FRAM3_TABLE_DEBUG
+    Standalone: FRAM3_TABLE_DEBUG;FRAM3_FRAMEWORK_DIAGNOSTICS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

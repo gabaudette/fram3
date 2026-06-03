@@ -91,12 +91,12 @@ namespace Fram3.UI.Core.Internal
             }
 
             _adapter?.OnUnmounting(node);
-            
+
             UnmountChildren(node);
-            
+
             DisposeState(node);
             RemoveInheritedDependencies(node);
-            
+
             node.ClearChildren();
         }
 

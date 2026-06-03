@@ -40,6 +40,7 @@ namespace Fram3.UI.Diagnostics
         internal static void TrackRebuild(string elementTypeName)
         {
             CurrentFrame.NodesRebuilt++;
+
             if (!_rebuiltTypes.Contains(elementTypeName))
             {
                 _rebuiltTypes.Add(elementTypeName);
