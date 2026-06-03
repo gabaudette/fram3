@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.1.0-beta] - 2026-06-03
+
+### Added
+
+- **ProfilerMarkers**: `Fram3.Tick`, `Fram3.Flush`, `Fram3.Rebuild`, `Fram3.Diff`, `Fram3.Mount`, and `Fram3.Unmount` markers are now emitted unconditionally. They appear in the Unity Profiler timeline with zero overhead when the profiler is not attached (#89)
+- **FRAM3_FRAMEWORK_DIAGNOSTICS**: opt-in scripting define that activates per-frame `FrameMetrics` collection (flush/diff timing, mount/unmount/rebuild counts, diff op breakdown, build exceptions). Metrics are emitted via `Fram3Diagnostics.OnFrameMetrics` at the end of each `Renderer.Tick`. Completely invisible to end users unless the define is set (#89)
+
+## [3.0.1-beta] - 2026-05-30
+
+### Fixed
+
+- **package.json**: removed incorrect `com.unity.modules.uielements` dependency that was never required (#88)
+
+## [3.0.0-beta] - 2026-05-23
+
+### Added
+
+- **Theme.FontFamily**: new token for setting a global `FontAsset` applied to all text elements; individual `TextStyle` instances can override it per-element (#82)
+- **Theme.ScrollbarBorder**: new boolean token to toggle scrollbar border visibility (#80)
+- **Theme.ScrollbarBorderWidth**: new token controlling scrollbar border width in pixels (#80)
+- **Theme.ScrollbarBorderColor**: new token controlling scrollbar border color (#80)
+
+### Fixed
+
+- **All text inputs** (TextField, PasswordField, IntField, FloatField): themed blinking caret now appears using `PrimaryColor`; cursor width set to 2px via reflection on `m_CursorWidth`; blinks at 530ms interval on focus and hides on blur (#83)
+- **RadioGroup**: label text (`.unity-radio-button__text`) now has correct left margin and theme color; previous code was targeting the empty `BaseField` label element instead (#84)
+- **FrameSlider**: track, fill, and drag container now render with `BorderRadius` and rounded corners via `Painter2D`; background images cleared to prevent Unity defaults overriding theme styles (#81)
+- **Dropdown**: closed-state input now applies `BorderRadius` and `InputBorderColor` correctly (#81)
+- **All inputs and controls**: `Theme.BorderRadius` now propagates to inner sub-elements (checkmark backgrounds, input containers, scrollbars) (#81)
+- **DraggablePanel**: resize grip rewritten with `generateVisualContent`; endpoints inset to prevent corner overflow (#78)
+- **PlayerPrefsAdapter**: replaced external JSON dependencies with `JsonUtility` to remove Newtonsoft.Json and fix serialization on all Unity platforms (#77, #79)
+
 ## [2.0.0-beta.2] - 2026-05-19
 
 ### Added
