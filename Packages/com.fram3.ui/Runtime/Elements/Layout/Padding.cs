@@ -23,5 +23,9 @@ namespace Fram3.UI.Elements.Layout
         {
             Insets = padding;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+            => ((Padding)oldEl).Insets != ((Padding)newEl).Insets;
     }
 }

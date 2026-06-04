@@ -35,6 +35,19 @@ namespace Fram3.UI.Elements.Input
         /// </summary>
         public Action<float, float>? OnChanged { get; }
 
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (MinMaxSlider)oldEl;
+            var n = (MinMaxSlider)newEl;
+            return o.MinValue != n.MinValue
+                || o.MaxValue != n.MaxValue
+                || o.LowLimit != n.LowLimit
+                || o.HighLimit != n.HighLimit
+                || o.Label != n.Label
+                || o.OnChanged != n.OnChanged;
+        }
+
         /// <summary>
         /// Creates an <see cref="MinMaxSlider"/> element.
         /// </summary>

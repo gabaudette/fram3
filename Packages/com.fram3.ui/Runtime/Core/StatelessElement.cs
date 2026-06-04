@@ -33,8 +33,8 @@ namespace Fram3.UI.Core
 
         /// <summary>
         /// Called by the framework before rebuilding this element when its parent
-        /// rebuilds. Return <c>false</c> to skip the rebuild and keep the existing
-        /// subtree. Return <c>true</c> (the default) to rebuild as normal.
+        /// rebuilds. Return <c>false</c> to skip <c>Build()</c>, child reconciliation,
+        /// and repaint entirely. Return <c>true</c> (the default) to rebuild as normal.
         /// Override this to avoid rebuilding when the new element description is
         /// equivalent to the previous one.
         /// </summary>
@@ -45,6 +45,12 @@ namespace Fram3.UI.Core
         public virtual bool ShouldRebuild(StatelessElement oldElement, StatelessElement newElement)
         {
             return true;
+        }
+
+        /// <inheritdoc/>
+        public sealed override bool ShouldRebuild(Element oldElement, Element newElement)
+        {
+            return ShouldRebuild((StatelessElement)oldElement, (StatelessElement)newElement);
         }
     }
 }

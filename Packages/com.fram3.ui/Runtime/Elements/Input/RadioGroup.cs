@@ -27,6 +27,16 @@ namespace Fram3.UI.Elements.Input
         /// </summary>
         public Action<string>? OnChanged { get; }
 
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (RadioGroup)oldEl;
+            var n = (RadioGroup)newEl;
+            return !ReferenceEquals(o.Options, n.Options)
+                || o.SelectedValue != n.SelectedValue
+                || o.OnChanged != n.OnChanged;
+        }
+
         /// <summary>
         /// Creates an <see cref="RadioGroup"/> element.
         /// </summary>

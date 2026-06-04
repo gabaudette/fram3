@@ -25,6 +25,14 @@ namespace Fram3.UI.Elements.Input
         /// </summary>
         public Action<int>? OnChanged { get; }
 
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (IntField)oldEl;
+            var n = (IntField)newEl;
+            return o.Value != n.Value || o.Label != n.Label || o.OnChanged != n.OnChanged;
+        }
+
         /// <summary>
         /// Creates an <see cref="IntField"/> element.
         /// </summary>

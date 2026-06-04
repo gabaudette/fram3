@@ -27,5 +27,9 @@ namespace Fram3.UI.Elements.Layout
             Insets = margin;
             Child = child ?? throw new ArgumentNullException(nameof(child));
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+            => ((Margin)oldEl).Insets != ((Margin)newEl).Insets;
     }
 }

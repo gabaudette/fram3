@@ -5,6 +5,7 @@ using Fram3.UI.Core;
 using Fram3.UI.Elements.Content;
 using Fram3.UI.Elements.Gesture;
 using Fram3.UI.Elements.Layout;
+using Fram3.UI.Elements.State;
 using Fram3.UI.Elements.Theme;
 using Fram3.UI.Storybook.Stories.Theming;
 using Fram3.UI.Storybook.Stories.Animation;
@@ -89,11 +90,16 @@ namespace Fram3.UI.Storybook
         {
             var primaryRaw = Resources.Load<Font>("LiberationSans-Regular");
             var displayRaw = Resources.Load<Font>("LiberationSerif-Regular");
-            var primaryAsset = primaryRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(primaryRaw) : null;
-            DisplayFont = displayRaw != null ? UnityEngine.TextCore.Text.FontAsset.CreateFontAsset(displayRaw) : null;
+            var primaryAsset = primaryRaw != null
+                ? FontAsset.CreateFontAsset(primaryRaw)
+                : null;
+
+            DisplayFont = displayRaw != null ? FontAsset.CreateFontAsset(displayRaw) : null;
+
             var theme = primaryAsset != null
                 ? StorybookBaseTheme with { FontFamily = primaryAsset }
                 : StorybookBaseTheme;
+
             return new ThemeProvider(theme, new StorybookApp());
         }
 
@@ -103,15 +109,41 @@ namespace Fram3.UI.Storybook
         private sealed class StorybookAppState : State<StorybookApp>
         {
             private IReadOnlyList<Chapter>? _chapters;
-            private int _selectedChapter;
-            private int _selectedStory;
+
+            // One notifier per sidebar item: fires only when that item's selection state changes.
+            private Dictionary<(int, int), ValueNotifier<bool>>? _itemSelected;
+
+            // Drives the content area; fires when the active story changes.
+            private ValueNotifier<(int chapter, int story)>? _activeSelection;
+
+            private readonly Dictionary<(int, int), Action> _tapCallbacks = new();
 
             public override void InitState()
             {
                 _chapters = BuildChapters();
-                _selectedChapter = 0;
-                _selectedStory = 0;
-                UpdateActiveStory();
+                _itemSelected = new Dictionary<(int, int), ValueNotifier<bool>>();
+                
+                for (var chapterIndex = 0; chapterIndex < _chapters.Count; chapterIndex++)
+                {
+                    for (var storyIndex = 0; storyIndex < _chapters[chapterIndex].Stories.Count; storyIndex++)
+                    {
+                        var valueNotifier = new ValueNotifier<bool>(chapterIndex == 0 && storyIndex == 0);
+                        _itemSelected[(chapterIndex, storyIndex)] = valueNotifier;
+                    }
+                }
+
+                _activeSelection = new ValueNotifier<(int, int)>((0, 0));
+                UpdateActiveStory(0, 0);
+            }
+
+            public override void Dispose()
+            {
+                foreach (var value in _itemSelected!.Values)
+                {
+                    value.Dispose();
+                }
+
+                _activeSelection?.Dispose();
             }
 
             public override Element Build(BuildContext context)
@@ -211,6 +243,8 @@ namespace Fram3.UI.Storybook
                 };
             }
 
+            // Called once from Build. Each item embeds its own ValueListenableBuilder<bool>
+            // so that only the two items whose isSelected state changes will ever rebuild.
             private Element BuildChapterList(Theme theme)
             {
                 var items = new List<Element>();
@@ -218,7 +252,7 @@ namespace Fram3.UI.Storybook
                 for (var chapterIndex = 0; chapterIndex < _chapters!.Count; chapterIndex++)
                 {
                     var chapter = _chapters[chapterIndex];
-                    var capturedChapterIndex = chapterIndex;
+                    var currentChapterIndex = chapterIndex;
 
                     if (chapterIndex > 0)
                     {
@@ -245,26 +279,17 @@ namespace Fram3.UI.Storybook
                     for (var storyIndex = 0; storyIndex < chapter.Stories.Count; storyIndex++)
                     {
                         var story = chapter.Stories[storyIndex];
-
-                        var capturedStoryIndex = storyIndex;
-
-                        var isSelected = _selectedChapter == capturedChapterIndex &&
-                                         _selectedStory == capturedStoryIndex;
+                        var currentStoryIndex = storyIndex;
 
                         items.Add(
-                            BuildSidebarItem(
-                                name: story.Name,
-                                isSelected,
-                                theme,
-                                onTap: () =>
-                                {
-                                    SetState(() =>
-                                    {
-                                        _selectedChapter = capturedChapterIndex;
-                                        _selectedStory = capturedStoryIndex;
-                                        UpdateActiveStory();
-                                    });
-                                }
+                            new ValueListenableBuilder<bool>(
+                                _itemSelected![(currentChapterIndex, currentStoryIndex)],
+                                (_, isSelected) => BuildSidebarItem(
+                                    name: story.Name,
+                                    isSelected: isSelected,
+                                    theme: theme,
+                                    onTap: GetTapCallback(currentChapterIndex, currentStoryIndex)
+                                )
                             )
                         );
                     }
@@ -274,6 +299,37 @@ namespace Fram3.UI.Storybook
                 {
                     Children = items.ToArray()
                 };
+            }
+
+            private Action GetTapCallback(int chapterIndex, int storyIndex)
+            {
+                var key = (chapterIndex, storyIndex);
+                if (_tapCallbacks.TryGetValue(key, out var callback))
+                {
+                    return callback;
+                }
+
+                var currentChapterIndex = chapterIndex;
+                var currentStoryIndex = storyIndex;
+
+                callback = () =>
+                {
+                    var old = _activeSelection!.Value;
+                    if (old == (currentChapterIndex, currentStoryIndex))
+                    {
+                        return;
+                    }
+
+                    _itemSelected![old].Value = false;
+                    _itemSelected[(currentChapterIndex, currentStoryIndex)].Value = true;
+                    _activeSelection.Value = (currentChapterIndex, currentStoryIndex);
+
+                    UpdateActiveStory(currentChapterIndex, currentStoryIndex);
+                };
+
+                _tapCallbacks[key] = callback;
+
+                return callback;
             }
 
             private static Element BuildSidebarItem(
@@ -324,13 +380,16 @@ namespace Fram3.UI.Storybook
                     {
                         Child = new Padding(EdgeInsets.All(theme.Spacing * 3f))
                         {
-                            Child = BuildSelectedStoryCard(theme)
+                            Child = new ValueListenableBuilder<(int chapter, int story)>(
+                                _activeSelection!,
+                                (_, selection) => BuildSelectedStoryCard(selection.chapter, selection.story, theme)
+                            )
                         }
                     }
                 };
             }
 
-            private Element BuildSelectedStoryCard(Theme theme)
+            private Element BuildSelectedStoryCard(int chapterIndex, int storyIndex, Theme theme)
             {
                 if (_chapters == null || _chapters.Count == 0)
                 {
@@ -340,7 +399,7 @@ namespace Fram3.UI.Storybook
                     );
                 }
 
-                var chapter = _chapters[_selectedChapter];
+                var chapter = _chapters[chapterIndex];
                 if (chapter.Stories.Count == 0)
                 {
                     return new Text(
@@ -349,7 +408,7 @@ namespace Fram3.UI.Storybook
                     );
                 }
 
-                var story = chapter.Stories[_selectedStory];
+                var story = chapter.Stories[storyIndex];
 
                 return new Container(
                     decoration: new BoxDecoration(
@@ -480,12 +539,20 @@ namespace Fram3.UI.Storybook
                 };
             }
 
-            private void UpdateActiveStory()
+            private void UpdateActiveStory(int chapterIndex, int storyIndex)
             {
-                if (_chapters == null || _chapters.Count == 0) return;
-                var chapter = _chapters[_selectedChapter];
-                if (chapter.Stories.Count == 0) return;
-                ActiveStory = $"{chapter.Title} / {chapter.Stories[_selectedStory].Name}";
+                if (_chapters == null || _chapters.Count == 0)
+                {
+                    return;
+                }
+
+                var chapter = _chapters[chapterIndex];
+                if (chapter.Stories.Count == 0)
+                {
+                    return;
+                }
+
+                ActiveStory = $"{chapter.Title} / {chapter.Stories[storyIndex].Name}";
             }
 
             private static IReadOnlyList<Chapter> BuildChapters()

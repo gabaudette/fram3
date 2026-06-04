@@ -18,5 +18,8 @@ namespace Fram3.UI.Elements.Layout
         public Center(Key? key = null) : base(key)
         {
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl) => false;
     }
 }

@@ -74,5 +74,18 @@ namespace Fram3.UI.Elements.Gesture
             OnPointerExit = onPointerExit;
             OnSecondaryTap = onSecondaryTap;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (GestureDetector)oldEl;
+            var n = (GestureDetector)newEl;
+            return o.OnTap != n.OnTap
+                || o.OnDoubleTap != n.OnDoubleTap
+                || o.OnLongPress != n.OnLongPress
+                || o.OnPointerEnter != n.OnPointerEnter
+                || o.OnPointerExit != n.OnPointerExit
+                || o.OnSecondaryTap != n.OnSecondaryTap;
+        }
     }
 }

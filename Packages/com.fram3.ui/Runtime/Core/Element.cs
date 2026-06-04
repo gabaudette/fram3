@@ -69,6 +69,28 @@ namespace Fram3.UI.Core
         }
 
         /// <summary>
+        /// Called by the framework before updating this element's native representation
+        /// when its parent rebuilds. Return <c>false</c> to skip repainting this element
+        /// (its children will still be reconciled). Return <c>true</c> (the default) to
+        /// repaint as normal.
+        /// <para>
+        /// For <see cref="StatelessElement"/> this method is shadowed by its typed
+        /// <c>ShouldRebuild(StatelessElement, StatelessElement)</c> override, which skips the
+        /// entire subtree — not just the paint — when it returns <c>false</c>.
+        /// For all other element types returning <c>false</c> skips only the
+        /// <c>ElementPainter.Paint</c> call; children are still reconciled normally.
+        /// </para>
+        /// </summary>
+        /// <param name="oldElement">The previous element description.</param>
+        /// <param name="newElement">The incoming element description from the parent.</param>
+        /// <returns><c>true</c> to repaint; <c>false</c> to skip paint for this element.</returns>
+        // ReSharper disable once UnusedParameter.Global
+        public virtual bool ShouldRebuild(Element oldElement, Element newElement)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Returns the children of this element for tree traversal.
         /// Override this in subclasses that contain child elements.
         /// The default implementation returns an empty collection.

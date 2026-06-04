@@ -32,6 +32,17 @@ namespace Fram3.UI.Elements.Input
         /// </summary>
         public Action<int>? OnChanged { get; }
 
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Dropdown)oldEl;
+            var n = (Dropdown)newEl;
+            return !ReferenceEquals(o.Options, n.Options)
+                || o.SelectedIndex != n.SelectedIndex
+                || o.Label != n.Label
+                || o.OnChanged != n.OnChanged;
+        }
+
         /// <summary>
         /// Creates an <see cref="Dropdown"/> element.
         /// </summary>

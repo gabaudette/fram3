@@ -84,6 +84,20 @@ namespace Fram3.UI.Elements.Layout
         /// Returns the child element when one was set, or an empty list when used
         /// as a styled box without content.
         /// </summary>
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Container)oldEl;
+            var n = (Container)newEl;
+            return o.Decoration != n.Decoration
+                || o.Width != n.Width
+                || o.Height != n.Height
+                || o.Padding != n.Padding
+                || o.CenterChild != n.CenterChild
+                || o.OnTap != n.OnTap;
+        }
+
+        /// <inheritdoc/>
         public override IReadOnlyList<Element> GetChildren()
         {
             return HasChild ? base.GetChildren() : Array.Empty<Element>();

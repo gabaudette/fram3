@@ -53,6 +53,17 @@ namespace Fram3.UI.Elements.Layout
             Color = color;
             Indent = indent;
         }
+
+        /// <inheritdoc/>
+        public override bool ShouldRebuild(Element oldEl, Element newEl)
+        {
+            var o = (Divider)oldEl;
+            var n = (Divider)newEl;
+            return o.Axis != n.Axis
+                || o.Thickness != n.Thickness
+                || o.Color != n.Color
+                || o.Indent != n.Indent;
+        }
     }
 
     /// <summary>
