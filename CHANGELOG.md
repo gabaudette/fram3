@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.2.0-beta] - 2026-06-04
+
+### Performance
+
+- **ShouldRebuild on all built-in elements**: the reconciler now skips `Paint` calls for elements whose props have not changed, eliminating redundant VisualElement style writes on every reconcile pass (#90)
+- **Storybook navigation**: replaced the `SetState` cascade with a per-item `ValueNotifier<bool>` pattern; a story selection now rebuilds only the two changed sidebar items and the content area — rebuilt count reduced from 66 to 29, update ops from ~120 to ~26 per navigation
+
 ## [3.1.0-beta] - 2026-06-03
 
 ### Added
